@@ -56,25 +56,20 @@ class TestCaseJob(Resource):
 
             if execution_data['suite_id'] and not (
                     execution_data['case_id_list']):
-                # run_by_suite_id(user_id, execution_data['suite_id'])
                 create_job(user_id, execution_data['suite_id'])
-                # suite_data = {"suite_id": execution_data['suite_id']}
                 return api_response(True, APIMessages.RETURN_SUCCESS,
                                     STATUS_CREATED)
 
             elif not (execution_data['suite_id']) \
                     and execution_data['case_id_list']:
-                test_case_obj = TestCase.query.filter_by(test_case_id=int(
-                    (execution_data['case_id_list'][0])).first())
+                test_case_obj = TestCase.query.filter_by(
+                    test_case_id=execution_data['case_id_list'][0]).first()
                 test_suite_id = test_case_obj.test_suite_id
                 create_job(user_id, test_suite_id,
                            execution_data['case_id_list'])
-                # run_by_case_id(execution_data['case_id_list'][0], user_id)
-                # case_data = {"case_id_list": execution_data["case_id_list"]}
                 return api_response(True, APIMessages.RETURN_SUCCESS,
                                     STATUS_CREATED
                                     )
-
             else:
                 return api_response(False, APIMessages.INTERNAL_ERROR,
                                     STATUS_SERVER_ERROR)

@@ -65,7 +65,7 @@ def create_job(user_id, suite_id, case_id_list=None):
     """
     Method to create a job id for each test_case
     Args:
-        user_id (int):
+        user_id (int): user_id of
         suite_id (int):
         case_id_list (list):
 
@@ -102,9 +102,7 @@ def create_job(user_id, suite_id, case_id_list=None):
             case_obj = TestCase.query.filter_by(test_case_id=each_case).first()
             save_case_log(case_obj.test_case_id, execution_status_new, job_id)
         # blocking Function
-
         run_case(job_id, user_id)
-
         return True
 
 
