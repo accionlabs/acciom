@@ -85,7 +85,7 @@ def save_case_log(case_log, case_log_execution_status):
     """
     case = TestCase.query.filter_by(
         test_case_id=case_log.test_case_id).first()
-    case.test_status = case_log_execution_status
+    case.latest_execution_status = case_log_execution_status
     case.save_to_db()
 
 

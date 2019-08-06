@@ -57,7 +57,7 @@ def save_case_log(test_case_id, execution_status,
     return temp_log
 
 
-def run_by_case_id(case_log, test_case_id, user_id, is_external=False):
+def run_by_case_id(case_log, test_case_id, user_id):
     """
     This runs the case based on its test_case_id
        Args:
@@ -69,27 +69,17 @@ def run_by_case_id(case_log, test_case_id, user_id, is_external=False):
 
     test_case = TestCase.query.filter_by(test_case_id=test_case_id).first()
     test_suite_id = test_case.test_suite_id
-    res = run_test(case_log, test_case, user_id, test_suite_id, is_external)
+    res = run_test(case_log, test_case, user_id, test_suite_id)
     return {"status": True, "result": res}
 
 
-def run_test(case_log, case_id, user_id, test_suite_id, is_external=False):
-    # run_test(case_id, user_id, test_suite_id)
-    """
-    This method implements the execution of job
-
-    Args:
-        case_id: test_case_id of the Case.
-
-    Returns: Runs the job based on the testCaseClass
-    """
+def run_test(case_log, case_id, user_id, test_suite_id):
     inprogress = ExecutionStatus().get_execution_status_id_by_name(
         'inprogress')
     save_test_status(case_id, inprogress)  # case_id saved
-    # case_log = save_case_log(case_id.test_case_id, inprogress,
+    case_log.execution_status = inprogress
     if case_id.latest_execution_status == ExecutionStatus().get_execution_status_id_by_name(
             'inprogress'):
-
         if case_id.test_case_class == SupportedTestClass(). \
                 get_test_class_id_by_name('countcheck'):
             src_detail = db_details(case_id.test_case_detail['src_db_id'])
@@ -186,8 +176,6 @@ def run_test(case_log, case_id, user_id, test_suite_id, is_external=False):
             case_log.execution_log = data
             case_log.dqi_percentage = 100
             case_log.save_to_db()
-            # update job table too
-            # job.execution_status
 
         elif result[
             'res'] == ExecutionStatus().get_execution_status_id_by_name(
@@ -201,9 +189,6 @@ def run_test(case_log, case_id, user_id, test_suite_id, is_external=False):
             case_log.dqi_percentage = dqi
             case_log.save_to_db()
 
-            # update job table too
-            # job.execution_status
-
         elif result[
             'res'] == ExecutionStatus().get_execution_status_id_by_name(
             'error'):
@@ -213,8 +198,6 @@ def run_test(case_log, case_id, user_id, test_suite_id, is_external=False):
             case_log.execution_log = result['Execution_log']
             case_log.dqi_percentage = 0
             case_log.save_to_db()
-            # update job table too
-            # job.execution_status
 
         elif result[
             'res'] == ExecutionStatus().get_execution_status_id_by_name(
@@ -275,6 +258,7 @@ def save_case_log_information(case_log, case_log_execution_status,
     Returns: Submit the log to the TestCaseLog Table
 
     """
+    print(case_log_execution_status)
     case_log.execution_status = case_log_execution_status
     if src_log == '[]':
         src_log = None

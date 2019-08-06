@@ -2,115 +2,59 @@ from application.common.constants import ExecutionStatus
 from application.helper.runnerclass import run_by_case_id
 from application.helper.runnerclass import save_job_status, save_case_log
 from application.model.models import TestSuite, TestCase, TestCaseLog
+from flask_celery import make_celery
+from index import app
+
+celery = make_celery(app)
 
 
-def run_by_suite_id(current_user, suite_id, is_external=False):
+def create_job(user_id, suite_id, is_external, case_id_list=None):
     """
-    Method will run suite by Id
+     Method will create a job , submit the job for the given id.
+     Args:
+         user_id (Int): User id of the executor
+         suite_id (Int): suite id of the test suite passed
+         is_external (bool): boolean value
+         case_id_list (List): list of all the cases
 
-    Args:
-        current_user(Object): user object
-        suite_id(int): suite_id of the suite.
-
-    Returns: Runs each job in the test suite
-
-    """
-    test_suite = TestSuite.query.filter_by(
-        test_suite_id=suite_id).first()
-    for each_test in test_suite.test_case:
-        run_by_case_id(each_test.test_case_id, current_user, is_external)
-    return True
-
-
-def run_by_case_id_list(current_user, case_id_list, is_external=False):
-    """
-    Method to execute the test case from the list of test_cases
-     provided in the list
-    Args:
-        current_user (int): current user id
-        case_id_list (list): list of case_id objects
-        is_external (boolean): determine weather job run from
-        system or external
-
-    Returns: executes the job and returns the status
-
-    """
-    for each_test in case_id_list:
-        run_by_case_id(each_test, current_user, is_external)
-    return True
-
-
-def execute_external_job(user_id, case_id_list):
-    is_external = True
-    case_list = case_id_list
-    case_obj = TestCase.query.filter_by(
-        test_case_id=case_list[0]).first()
-    test_suite_obj = TestSuite.query.filter_by(
-        test_suite_id=case_obj.test_suite_id).first()
-    case_id_list = [case_id.test_case_id for case_id in
-                    test_suite_obj.test_case]
-    print(case_id_list)
-
-    for each_case in case_list:
-        if each_case not in case_id_list:
-            return False
-    run_by_case_id_list(user_id,
-                        case_id_list,
-                        is_external)
-
-    return True
-
-
-def create_job(user_id, suite_id, case_id_list=None):
-    """
-    Method to create a job id for each test_case
-    Args:
-        user_id (int): user_id of
-        suite_id (int):
-        case_id_list (list):
-
-    Returns:
+     Returns: submit the job through celery ,and returns its status
 
     """
     execution_status_new = ExecutionStatus().get_execution_status_id_by_name(
         'new')
-    is_external = False
     suite_obj = TestSuite.query.filter_by(test_suite_id=int(suite_id)).first()
-
     if not case_id_list:
-        print("81")
-        case_id_list = [case for case in suite_obj.test_case]
-        print(case_id_list)
-        job, job_id = save_job_status(suite_obj.test_suite_id, user_id,
-                                      is_external)
-
-        for each_case in case_id_list:
-            case_obj = TestCase.query.filter_by(
-                test_case_id=each_case.test_case_id).first()
-            save_case_log(case_obj.test_case_id,
-                          execution_status_new,
-                          job_id)
-
-        run_case(job_id, user_id)
-        print("finish")
-        return True
-
-    else:
-        case_id_list = case_id_list
-        job, job_id = save_job_status(suite_id, user_id, is_external)
-        for each_case in case_id_list:
-            case_obj = TestCase.query.filter_by(test_case_id=each_case).first()
-            save_case_log(case_obj.test_case_id, execution_status_new, job_id)
-        # blocking Function
-        run_case(job_id, user_id)
-        return True
+        case_id_list = [case.test_case_id for case in suite_obj.test_case]
+    job, job_id = save_job_status(suite_obj.test_suite_id, user_id,
+                                  is_external)
+    for each_case in case_id_list:
+        case_obj = TestCase.query.filter_by(test_case_id=each_case).first()
+        save_case_log(case_obj.test_case_id, execution_status_new, job_id)
+    job_submit.delay(job_id, user_id)  # submit the job
+    return True
 
 
-def run_case(job_id, user_id):
+@celery.task(name='job_submit')
+def job_submit(job_id, user_id):
+    """
+    Method will submit each case associated with the job id in the celery queue
+    parralely.
+    Args:
+        job_id (Int): Job id of the job passed
+        user_id (int): User id associated with the executor
+
+    Returns: Status of the jobs
+
+    """
     execution_status_new = ExecutionStatus().get_execution_status_id_by_name(
         'new')
     test_case_log_obj = TestCaseLog.query.filter_by(job_id=job_id).all()
+    # change job status ->inprogress
     for each_case in test_case_log_obj:
         if each_case.execution_status == execution_status_new:
-            run_by_case_id(each_case, each_case.test_case_id, user_id,
-                           is_external=False)
+            # Submit to 2 queues based on type
+            run_by_case_id(each_case, each_case.test_case_id, user_id)
+    # Wait for all sub-jobs to be completed
+    # change job status -> pass/failed
+    # Based on config send mail using another queue
+    # send_mail(job_id)

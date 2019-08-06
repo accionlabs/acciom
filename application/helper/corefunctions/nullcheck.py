@@ -40,6 +40,7 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
     Returns: Runs the Null check on the particular case.
 
     """
+    print(column)
     try:
         col_list = []
         newlst = []
@@ -107,7 +108,8 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
                                       'NULL_CHECK_MAX_RECORDS')]}})
         else:
             return {"res": ExecutionStatus().get_execution_status_id_by_name(
-                'pass'), "Execution_log": None}
+                'pass'), "Execution_log": {"source_execution_log": None,
+                                           "dest_execution_log": None}}
 
     except Exception as e:
         app.logger.debug(e)

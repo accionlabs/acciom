@@ -11,15 +11,13 @@ from application.common.constants import (APIMessages, ExecutionStatus,
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
-from application.common.runbysuiteid import run_by_suite_id, \
-    execute_external_job, create_job
+from application.common.runbysuiteid import create_job
 from application.common.token import (token_required)
 from application.common.utils import (get_table_name,
                                       db_details_without_password)
 from application.helper.runnerclass import (save_case_log_information)
 from application.helper.runnerclasshelpers import (
-    save_case_log,
-    save_job_status)
+    save_case_log)
 from application.model.models import (TestCaseLog, TestCase, DbConnection,
                                       PersonalToken)
 from index import db
@@ -53,10 +51,10 @@ class TestCaseJob(Resource):
                                 type=list, location="json",
                                 help=APIMessages.PARSER_MESSAGE)
             execution_data = parser.parse_args()
-
+            is_external = False
             if execution_data['suite_id'] and not (
                     execution_data['case_id_list']):
-                create_job(user_id, execution_data['suite_id'])
+                create_job(user_id, execution_data['suite_id'], is_external)
                 return api_response(True, APIMessages.RETURN_SUCCESS,
                                     STATUS_CREATED)
 
@@ -65,7 +63,7 @@ class TestCaseJob(Resource):
                 test_case_obj = TestCase.query.filter_by(
                     test_case_id=execution_data['case_id_list'][0]).first()
                 test_suite_id = test_case_obj.test_suite_id
-                create_job(user_id, test_suite_id,
+                create_job(user_id, test_suite_id, is_external,
                            execution_data['case_id_list'])
                 return api_response(True, APIMessages.RETURN_SUCCESS,
                                     STATUS_CREATED
@@ -129,7 +127,7 @@ class TestCaseSparkJob(Resource):
                                           (target_count), None,
                                           case_log.test_case_id)
                 save_case_log(case_log, case_log_execution_status)
-                save_job_status(case_log, case_log_execution_status)
+                # save_job_status(case_log, case_log_execution_status)
 
             elif result_count != 0:
                 case_log_execution_status = ExecutionStatus(). \
@@ -142,7 +140,7 @@ class TestCaseSparkJob(Resource):
                                           result_des, case_log.test_case_id)
 
                 save_case_log(case_log, case_log_execution_status)
-                save_job_status(case_log, case_log_execution_status)
+                # save_job_status(case_log, case_log_execution_status)
 
 
 class EditTestCase(Resource):
@@ -422,24 +420,27 @@ class TestCaseJobExternal(Resource):
             token = execution_data['token']
             personal_token_obj = PersonalToken.query.filter_by(
                 encrypted_personal_token=token).first()
+            print(execution_data)
             if execution_data['case_id_list'] and not execution_data[
                 'suite_id']:
                 if personal_token_obj.user_id == user_id:
-                    run_result = execute_external_job(user_id,
-                                                      execution_data[
-                                                          'case_id_list'])
-                    if run_result:
-                        return api_response(True, APIMessages.RETURN_SUCCESS,
-                                            STATUS_CREATED)
-                    else:
-                        return api_response(False, APIMessages.INTERNAL_ERROR,
-                                            STATUS_SERVER_ERROR)
+                    test_case_obj = TestCase.query.filter_by(
+                        test_case_id=execution_data['case_id_list'][0]).first()
+                    test_suite_id = test_case_obj.test_suite_id
+                    run_result = create_job(user_id, test_suite_id,
+                                            execution_data['case_id_list'],
+                                            is_external)
+                    return api_response(True, APIMessages.RETURN_SUCCESS,
+                                        STATUS_CREATED)
+                else:
+                    return api_response(False, APIMessages.TOKEN_MISMATCH,
+                                        STATUS_SERVER_ERROR)
 
             elif execution_data['suite_id'] and not execution_data[
                 'case_id_list']:
                 if personal_token_obj.user_id == user_id:
-                    run_by_suite_id(user_id, execution_data['suite_id'],
-                                    is_external)
+                    create_job(user_id, execution_data['suite_id'],
+                               is_external)
                     return api_response(True, APIMessages.RETURN_SUCCESS,
                                         STATUS_CREATED)
                 else:
