@@ -123,9 +123,8 @@ class TestCaseSparkJob(Resource):
             result_des = parsed_log['result']['dest_to_src']
             for x in range(0, len(result_des)):
                 result_des[x] = ast.literal_eval(result_des[x])
-            dest_processed_data = manage_none_value(result_des,
-                                                    parsed_log['result'][
-                                                        'dest_columns_name'])
+            dest_processed_data = manage_none_value(result_des, parsed_log
+            ['result']['dest_columns_name'])
 
             src_count = parsed_log['src_result_count']
             target_count = parsed_log["target_result_count"]
