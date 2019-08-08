@@ -1,5 +1,4 @@
 import ast
-import json
 
 from flask import current_app as app
 from flask import request
@@ -16,6 +15,7 @@ from application.common.runbysuiteid import run_by_suite_id, \
 from application.common.token import (token_required)
 from application.common.utils import (get_table_name,
                                       db_details_without_password)
+from application.helper.corefunctions.datavalidation import manage_none_value
 from application.helper.runnerclass import (run_by_case_id,
                                             save_case_log_information)
 from application.helper.runnerclasshelpers import (
@@ -114,8 +114,18 @@ class TestCaseSparkJob(Resource):
             save_case_log(case_log, case_test_status)
 
         else:
-            result_src = json.dumps(parsed_log['result']['src_to_dest'])
-            result_des = json.dumps(parsed_log['result']['dest_to_src'])
+            result_src = parsed_log['result']['src_to_dest']
+            for x in range(0, len(result_src)):
+                result_src[x] = ast.literal_eval(result_src[x])
+            src_processed_data = manage_none_value(result_src, parsed_log
+            ['result']['src_columns_name'])
+
+            result_des = parsed_log['result']['dest_to_src']
+            for x in range(0, len(result_des)):
+                result_des[x] = ast.literal_eval(result_des[x])
+            dest_processed_data = manage_none_value(result_des, parsed_log
+            ['result']['dest_columns_name'])
+
             src_count = parsed_log['src_result_count']
             target_count = parsed_log["target_result_count"]
             result_count = parsed_log['result_count']
@@ -137,10 +147,11 @@ class TestCaseSparkJob(Resource):
                     get_execution_status_id_by_name('fail')
                 save_case_log_information(case_log, case_log_execution_status,
                                           parsed_log['src_count'][0],
-                                          src_count, result_src,
+                                          src_count, src_processed_data,
                                           parsed_log['dest_count'][0],
                                           target_count,
-                                          result_des, case_log.test_case_id)
+                                          dest_processed_data,
+                                          case_log.test_case_id)
 
                 save_case_log(case_log, case_log_execution_status)
                 save_job_status(case_log, case_log_execution_status)

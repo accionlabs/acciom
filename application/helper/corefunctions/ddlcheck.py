@@ -1,4 +1,3 @@
-import json
 from collections import OrderedDict
 
 from flask import current_app as app
@@ -85,8 +84,8 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
         source_schema_values = list(source_schema_orderdict.values())
         target_schema_values = list(target_schema_orderdict.values())
 
-        source_schema_results = json.dumps(source_schema_values)
-        target_schema_results = json.dumps(target_schema_values)
+        source_schema_results = source_schema_values
+        target_schema_results = target_schema_values
 
         if source_schema == [] and target_schema == []:
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
