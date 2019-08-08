@@ -8,7 +8,7 @@ from application.common.response import (api_response, STATUS_BAD_REQUEST,
 from application.common.token import token_required
 from application.common.utils import validate_empty_fields
 from application.helper.encrypt import encrypt
-from application.model.models import DbConnection
+from application.model.models import DbConnection, Project
 from index import db
 
 
@@ -114,15 +114,17 @@ class DbDetails(Resource):
             if db_connection_id:
                 db_obj = DbConnection.query.filter_by(
                     db_connection_id=db_connection_id).first()
+
                 if db_obj:
+
                     return api_response(
                         True, APIMessages.DATA_LOADED, STATUS_CREATED,
                         {'project_id': db_obj.project_id,
-                         'connection_name': db_obj.db_connection_name,
-                         'db_type_id': db_obj.db_connection_id,
+                         'db_connection_name': db_obj.db_connection_name,
+                         'db_connection_id': db_obj.db_connection_id,
                          'db_type_name': SupportedDBType().get_db_name_by_id(
                              db_obj.db_type),
-                         'db_type': db_obj.db_type,
+                         'db_type_id': db_obj.db_type,
                          "db_name": db_obj.db_name,
                          'db_hostname': db_obj.db_hostname,
                          'db_username': db_obj.db_username,
@@ -138,16 +140,20 @@ class DbDetails(Resource):
             if project_id:
                 project_obj = DbConnection.query.filter_by(
                     project_id=project_id).first()
+                project_name_obj = Project.query.filter_by(
+                    project_id=project_id).first()
+
                 if project_obj:
                     def to_json(projectid):
                         return {
                             'project_id': projectid.project_id,
-                            'connection_name': projectid.db_connection_name,
-                            'db_type_id': projectid.db_connection_id,
+                            'project_name': project_name_obj.project_name,
+                            'db_connection_name': projectid.db_connection_name,
+                            'db_connection_id': projectid.db_connection_id,
                             'db_type_name':
                                 SupportedDBType().get_db_name_by_id(
                                     projectid.db_type),
-                            'db_type': projectid.db_type,
+                            'db_type_id': projectid.db_type,
                             'db_name': projectid.db_name,
                             'db_hostname': projectid.db_hostname,
                             'db_username': projectid.db_username}

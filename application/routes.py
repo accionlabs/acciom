@@ -17,9 +17,9 @@ from application.api.project import ProjectAPI
 from application.api.role import RoleAPI
 from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
                                       EditTestCase, TestCaseJobExternal)
-from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
-                                       ExportTestLog)
-from application.api.user_management import UserAPI
+from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
+                                       ExportTestLog, TestCaseLogAPI)
+from application.api.user_management import UserAPI, UserRoleAPI
 from application.model.models import db
 from index import (app, api, static_folder)
 
@@ -52,7 +52,8 @@ def serve(path):
 api.add_resource(Login, '/api/login')
 api.add_resource(LogOut, '/api/logout')
 api.add_resource(AddUser, '/api/register')
-api.add_resource(AddTestSuite, '/api/test-suite')
+api.add_resource(TestSuiteAPI, '/api/test-suite')
+api.add_resource(TestCaseLogAPI, '/api/each-case-detail')
 api.add_resource(TestCaseJob, '/api/test-case-job')
 api.add_resource(TestCaseSparkJob,
                  '/api/spark-job-status/<int:test_case_log_id>')
@@ -80,3 +81,4 @@ api.add_resource(GetToken, '/api/generate-token')
 api.add_resource(TestCaseJobExternal, '/api/test-case-job-external')
 api.add_resource(ChangePassword, '/api/change-password')
 api.add_resource(UserAPI, '/api/user')
+api.add_resource(UserRoleAPI, '/api/user-role')
