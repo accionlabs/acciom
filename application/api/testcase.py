@@ -52,27 +52,28 @@ class TestCaseJob(Resource):
                                 help=APIMessages.PARSER_MESSAGE)
             execution_data = parser.parse_args()
             is_external = False
-            if execution_data['suite_id'] and not (
-                    execution_data['case_id_list']):
+            if execution_data['suite_id']:
                 test_suite_obj = TestSuite.query.filter_by(
                     test_suite_id=int(execution_data['suite_id'])).first()
                 if not test_suite_obj:
                     return api_response(False, APIMessages.SUITE_NOT_EXIST,
                                         STATUS_SERVER_ERROR)
+                # Create a Job
                 create_job(user_id, test_suite_obj, is_external)
                 return api_response(True, APIMessages.RETURN_SUCCESS,
                                     STATUS_CREATED)
 
-            elif not (execution_data['suite_id']) \
-                    and execution_data['case_id_list']:
+            elif execution_data['case_id_list']:
                 test_case_obj = TestCase.query.filter_by(
                     test_case_id=execution_data['case_id_list'][0]).first()
                 if not test_case_obj:
-                    return api_response(False, APIMessages.SUITE_NOT_EXIST,
+                    return api_response(False,
+                                        APIMessages.TEST_CASE_NOT_IN_DBsss,
                                         STATUS_SERVER_ERROR)
                 test_suite_id = test_case_obj.test_suite_id
                 test_suite_obj = TestSuite.query.filter_by(
                     test_suite_id=test_suite_id).first()
+                # Create a Job
                 create_job(user_id, test_suite_obj, is_external,
                            execution_data['case_id_list'])
                 return api_response(True, APIMessages.RETURN_SUCCESS,

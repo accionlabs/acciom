@@ -48,7 +48,8 @@ def job_submit(job_id, user_id):
     execution_status_new = ExecutionStatus().get_execution_status_id_by_name(
         'new')
     test_case_log_obj = TestCaseLog.query.filter_by(job_id=job_id).all()
-    # change job status ->inprogress
+    # change job status ->
+    print("came here 52")
     for each_case in test_case_log_obj:
         if each_case.execution_status == execution_status_new:
             # Submit to 2 queues based on type

@@ -69,16 +69,16 @@ def run_by_case_id(case_log, test_case_id, user_id):
 
     test_case = TestCase.query.filter_by(test_case_id=test_case_id).first()
     test_suite_id = test_case.test_suite_id
-    res = run_test(case_log, test_case, user_id, test_suite_id)
+    res = run_test(case_log, test_case)
     return {"status": True, "result": res}
 
 
-def run_test(case_log, case_id, user_id, test_suite_id):
-    print("came @ 77")
+def run_test(case_log, case_id):
     inprogress = ExecutionStatus().get_execution_status_id_by_name(
         'inprogress')
     save_test_status(case_id, inprogress)  # case_id saved
     case_log.execution_status = inprogress
+    case_log.save_to_db()
     if case_id.latest_execution_status == ExecutionStatus().get_execution_status_id_by_name(
             'inprogress'):
         if case_id.test_case_class == SupportedTestClass(). \
