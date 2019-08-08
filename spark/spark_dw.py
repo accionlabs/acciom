@@ -62,7 +62,8 @@ def get_connection_detail(db_detail):
                                                      db_detail["db_name"])
             driver = "org.postgresql.Driver"
         elif db_detail["db_type"] == "oracle":
-            # "url"------>"jdbc:oracle:thin:username/password@//hostname:portnumber/SID"
+            # "url"------>"jdbc:oracle:thin:username/password@//hostname:
+            # portnumber/SID"
             url = "jdbc:oracle:thin:{0}/{1}@//{2}/{3}".format(
                 db_detail["username"], db_detail["password"],
                 db_detail["hostname"], db_detail["db_name"])
@@ -70,14 +71,15 @@ def get_connection_detail(db_detail):
         return url, driver
     except Exception as e:
         raise Exception(
-            'Exception Occurred in get_connection_detail method. Exception: {}'.format(
-                e))
+            'Exception Occurred in get_connection_detail method. Exception: {}'
+                .format(e))
 
 
 def get_count(db_detail):
     try:
 
-        # Count of 1 might return incorrect count, in case the first column has null value
+        # Count of 1 might return incorrect count, in case the first column
+        # has null value
         if not db_detail["custom_query"]:
             if db_detail["db_type"] == "oracle":
                 query = "(SELECT count(1) as count FROM {}) t".format(
@@ -97,13 +99,15 @@ def get_count(db_detail):
             "url", url).option("driver", driver).option(
             "dbtable", query).option("user", db_detail["username"]).option(
             "password", db_detail["password"]).load()
+
         print(query)
-        # For Oracle DB, COUNT(1) Type is Decimal and returning count in CAPS, so type casting it to Integer and changing key to count
+        # For Oracle DB, COUNT(1) Type is Decimal and returning count in CAPS,
+        # so type casting it to Integer and changing key to count
         if db_detail["db_type"] == "oracle":
             changedtypedf = df.withColumn("count",
                                           df["COUNT"].cast(LongType()))
-        count = changedtypedf.collect() if db_detail[
-                                               "db_type"] == "oracle" else df.collect()
+        count = changedtypedf.collect() if db_detail["db_type"] == "oracle" \
+            else df.collect()
         print("COUNT   -----", count)
         return count[0] if count else None
     except Exception as e:
@@ -125,8 +129,8 @@ def get_df_select(db_detail, start, end):
                                                    start,
                                                    end)
             elif db_detail["db_type"] == "mysql":
-                query = "(SELECT * FROM {0} ORDER BY 1 LIMIT {1}, {2}) AS t".format(
-                    db_detail["table_name"], start, end)
+                query = "(SELECT * FROM {0} ORDER BY 1 LIMIT {1}, {2}) AS t". \
+                    format(db_detail["table_name"], start, end)
             elif db_detail["db_type"] == "postgres":
                 query = "(SELECT * FROM  {0} ORDER BY 1 OFFSET {1} " \
                         "LIMIT {2} ) AS t".format(db_detail["table_name"],
@@ -147,8 +151,8 @@ def get_df_select(db_detail, start, end):
                         "ROWS ONLY ) as t ".format(db_detail["custom_query"],
                                                    start, end)
             elif db_detail["db_type"] == "mysql":
-                query = "(SELECT * FROM ({0}) as tt ORDER BY 1 LIMIT {1}, {2}) AS t".format(
-                    db_detail["custom_query"], start, end)
+                query = "(SELECT * FROM ({0}) as tt ORDER BY 1 LIMIT {1}, {2})" \
+                        " AS t".format(db_detail["custom_query"], start, end)
             elif db_detail["db_type"] == "postgres":
                 query = "(SELECT * FROM  ({0}) as tt ORDER BY 1 OFFSET {1} " \
                         "LIMIT {2} ) AS t".format(db_detail["custom_query"],
@@ -293,10 +297,13 @@ if __name__ == '__main__':
         for testcase, api_end_point in testcases_tbr.items():
             result = {}
             if testcase == "datavalidation":
+                result['src_columns_name'] = df_src_master.columns
+                result['dest_columns_name'] = df_dest_master.columns
                 src_to_dest = data_validation(df_src_master, df_dest_master)
                 dest_to_src = data_validation(df_dest_master, df_src_master)
                 print("line 270", len(src_to_dest), type(src_to_dest))
-                # Filtering the number of rows to be passed to DB based on value mentioned in config file
+                # Filtering the number of rows to be passed to DB based on
+                # value mentioned in config file
                 result["src_to_dest"] = src_to_dest[
                                         :source_record_count] if isinstance(
                     src_to_dest, list) else []
@@ -309,7 +316,6 @@ if __name__ == '__main__':
 
                 print("source count", df_src_master.count())
                 print("TARGET count", df_dest_master.count())
-
                 data = {"result": result,
                         "src_result_count": len(src_to_dest),
                         "target_result_count": len(dest_to_src),
