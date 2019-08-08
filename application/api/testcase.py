@@ -19,7 +19,7 @@ from application.helper.runnerclass import (save_case_log_information)
 from application.helper.runnerclasshelpers import (
     save_case_log)
 from application.model.models import (TestCaseLog, TestCase, DbConnection,
-                                      PersonalToken)
+                                      PersonalToken, TestSuite)
 from index import db
 
 
@@ -54,7 +54,12 @@ class TestCaseJob(Resource):
             is_external = False
             if execution_data['suite_id'] and not (
                     execution_data['case_id_list']):
-                create_job(user_id, execution_data['suite_id'], is_external)
+                test_suite_obj = TestSuite.query.filter_by(
+                    test_suite_id=int(execution_data['suite_id'])).first()
+                if not test_suite_obj:
+                    return api_response(False, APIMessages.SUITE_NOT_EXIST,
+                                        STATUS_SERVER_ERROR)
+                create_job(user_id, test_suite_obj, is_external)
                 return api_response(True, APIMessages.RETURN_SUCCESS,
                                     STATUS_CREATED)
 
@@ -62,8 +67,13 @@ class TestCaseJob(Resource):
                     and execution_data['case_id_list']:
                 test_case_obj = TestCase.query.filter_by(
                     test_case_id=execution_data['case_id_list'][0]).first()
+                if not test_case_obj:
+                    return api_response(False, APIMessages.SUITE_NOT_EXIST,
+                                        STATUS_SERVER_ERROR)
                 test_suite_id = test_case_obj.test_suite_id
-                create_job(user_id, test_suite_id, is_external,
+                test_suite_obj = TestSuite.query.filter_by(
+                    test_suite_id=test_suite_id).first()
+                create_job(user_id, test_suite_obj, is_external,
                            execution_data['case_id_list'])
                 return api_response(True, APIMessages.RETURN_SUCCESS,
                                     STATUS_CREATED

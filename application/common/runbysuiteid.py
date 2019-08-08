@@ -1,19 +1,19 @@
 from application.common.constants import ExecutionStatus
 from application.helper.runnerclass import run_by_case_id
 from application.helper.runnerclass import save_job_status, save_case_log
-from application.model.models import TestSuite, TestCase, TestCaseLog
+from application.model.models import TestCase, TestCaseLog
 from flask_celery import make_celery
 from index import app
 
 celery = make_celery(app)
 
 
-def create_job(user_id, suite_id, is_external, case_id_list=None):
+def create_job(user_id, suite_obj, is_external, case_id_list=None):
     """
      Method will create a job , submit the job for the given id.
      Args:
          user_id (Int): User id of the executor
-         suite_id (Int): suite id of the test suite passed
+         suite_obj (Obj): suite id of the test suite passed
          is_external (bool): boolean value
          case_id_list (List): list of all the cases
 
@@ -22,7 +22,6 @@ def create_job(user_id, suite_id, is_external, case_id_list=None):
     """
     execution_status_new = ExecutionStatus().get_execution_status_id_by_name(
         'new')
-    suite_obj = TestSuite.query.filter_by(test_suite_id=int(suite_id)).first()
     if not case_id_list:
         case_id_list = [case.test_case_id for case in suite_obj.test_case]
     job, job_id = save_job_status(suite_obj.test_suite_id, user_id,

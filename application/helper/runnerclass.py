@@ -74,6 +74,7 @@ def run_by_case_id(case_log, test_case_id, user_id):
 
 
 def run_test(case_log, case_id, user_id, test_suite_id):
+    print("came @ 77")
     inprogress = ExecutionStatus().get_execution_status_id_by_name(
         'inprogress')
     save_test_status(case_id, inprogress)  # case_id saved
