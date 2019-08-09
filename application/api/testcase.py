@@ -68,7 +68,7 @@ class TestCaseJob(Resource):
                     test_case_id=execution_data['case_id_list'][0]).first()
                 if not test_case_obj:
                     return api_response(False,
-                                        APIMessages.TEST_CASE_NOT_IN_DBsss,
+                                        APIMessages.TEST_CASE_NOT_IN_DB,
                                         STATUS_SERVER_ERROR)
                 test_suite_id = test_case_obj.test_suite_id
                 test_suite_obj = TestSuite.query.filter_by(

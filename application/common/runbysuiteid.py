@@ -1,6 +1,8 @@
 from application.common.constants import ExecutionStatus
-from application.helper.runnerclass import run_by_case_id
-from application.helper.runnerclass import save_job_status, save_case_log
+from application.common.constants import SupportedTestClass
+from application.helper.runnerclass import (save_job_status, save_case_log,
+                                            run_by_case_id_other,
+                                            run_by_case_id_dv)
 from application.model.models import TestCase, TestCaseLog
 from flask_celery import make_celery
 from index import app
@@ -33,7 +35,7 @@ def create_job(user_id, suite_obj, is_external, case_id_list=None):
     return True
 
 
-@celery.task(name='job_submit')
+@celery.task(name='job_submit', queue="master_Q")
 def job_submit(job_id, user_id):
     """
     Method will submit each case associated with the job id in the celery queue
@@ -45,15 +47,27 @@ def job_submit(job_id, user_id):
     Returns: Status of the jobs
 
     """
+
     execution_status_new = ExecutionStatus().get_execution_status_id_by_name(
         'new')
     test_case_log_obj = TestCaseLog.query.filter_by(job_id=job_id).all()
-    # change job status ->
-    print("came here 52")
+    # # change job status ->
     for each_case in test_case_log_obj:
-        if each_case.execution_status == execution_status_new:
-            # Submit to 2 queues based on type
-            run_by_case_id(each_case, each_case.test_case_id, user_id)
+        case_obj = each_case.test_case_id
+        case = TestCase.query.filter_by(test_case_id=case_obj).first()
+        if (each_case.execution_status == execution_status_new) and (
+                case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
+            'datavalidation')):
+            pass
+
+            run_by_case_id_dv.delay(each_case.test_case_log_id,
+                                    each_case.test_case_id,
+                                    user_id)
+        else:
+            run_by_case_id_other.delay(each_case.test_case_log_id,
+                                       each_case.test_case_id,
+                                       user_id)
+
     # Wait for all sub-jobs to be completed
     # change job status -> pass/failed
     # Based on config send mail using another queue
