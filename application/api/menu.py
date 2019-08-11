@@ -1,7 +1,7 @@
 """File to handle Menu API calls."""
 from flask_restful import Resource, reqparse
 from application.common.constants import APIMessages
-from application.common.response import (STATUS_SERVER_ERROR, STATUS_OK,
+from application.common.response import (STATUS_OK,
                                          STATUS_BAD_REQUEST,
                                          STATUS_UNAUTHORIZED)
 from application.common.response import api_response
@@ -29,32 +29,25 @@ class MenuAPI(Resource):
             'org_id', help=APIMessages.PARSER_MESSAGE,
             required=True, type=int)
         get_menu_data = get_menu_parser.parse_args()
-        try:
-            # Check if org id is valid
-            valid_org = Organization.query.filter_by(
-                org_id=get_menu_data['org_id']).first()
-            if not valid_org:
-                return api_response(
-                    False, APIMessages.NO_RESOURCE.format('Organization'),
-                    STATUS_BAD_REQUEST)
-            # checking if user is authorized to make this call
-            if not check_permission(
-                ["view_org", "view_project", "edit_project"],
-                    session.user, org_id=get_menu_data['org_id']):
-                return api_response(
-                    False, APIMessages.UNAUTHORIZED, STATUS_UNAUTHORIZED)
-            # TODO: Check if user has permission to access the Menu Items
-            result_dict = {'menu_items': []}
-            get_menu_items = Menu.query.filter_by(
-                is_active=True).order_by(Menu.menu_order).all()
-            for each_menu in get_menu_items:
-                result_dict['menu_items'].append(
-                    {'menu_id': each_menu.menu_id,
-                     'menu_name': each_menu.menu_name,
-                     'menu_order': each_menu.menu_order})
+        # Check if org id is valid
+        valid_org = Organization.query.filter_by(
+            org_id=get_menu_data['org_id']).first()
+        if not valid_org:
             return api_response(
-                True, APIMessages.SUCCESS, STATUS_OK, result_dict)
-        except Exception as e:
+                False, APIMessages.NO_RESOURCE.format('Organization'),
+                STATUS_BAD_REQUEST)
+        # checking if user is authorized to make this call
+        if not check_permission(session.user, org_id=get_menu_data['org_id']):
             return api_response(
-                False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR,
-                {'error_log': str(e)})
+                False, APIMessages.UNAUTHORIZED, STATUS_UNAUTHORIZED)
+        # TODO: Check if user has permission to access the Menu Items
+        result_dict = {'menu_items': []}
+        get_menu_items = Menu.query.filter_by(
+            is_active=True).order_by(Menu.menu_order).all()
+        for each_menu in get_menu_items:
+            result_dict['menu_items'].append(
+                {'menu_id': each_menu.menu_id,
+                 'menu_name': each_menu.menu_name,
+                 'menu_order': each_menu.menu_order})
+        return api_response(
+            True, APIMessages.SUCCESS, STATUS_OK, result_dict)

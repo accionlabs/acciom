@@ -21,7 +21,7 @@ class User(db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     password_hash = db.Column(db.TEXT, nullable=False)
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
-    is_super_user = db.Column(db.Boolean, nullable=False, default=False)
+    is_super_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
@@ -34,13 +34,13 @@ class User(db.Model):
         db.session.commit()
 
     def __init__(self, email, first_name, last_name, password_hash,
-                 is_verified=False, is_super_user=False):
+                 is_verified=False, is_super_admin=False):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
         self.password_hash = password_hash
         self.is_verified = is_verified
-        self.is_super_user = is_super_user
+        self.is_super_admin = is_super_admin
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config.get('SECRET_KEY'), expires_sec)

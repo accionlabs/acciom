@@ -4,7 +4,7 @@ from application.model.models import User, UserProjectRole, RolePermission,\
 from index import db
 
 
-def check_permission(list_of_permissions, user_object,
+def check_permission(user_object, list_of_permissions=None,
                      org_id=None, project_id=None):
     """
     Mthod to check if user is authorized.
@@ -33,7 +33,9 @@ def check_permission(list_of_permissions, user_object,
             UserProjectRole.project_id == project_id,
             UserProjectRole.user_id == user_object.user_id
         ).all()
-        if list_of_permissions in project_permission:
+        if list_of_permissions is None and project_permission:
+            return True
+        elif list_of_permissions in project_permission:
             return True
     # Check for Organization permission
     if org_id:
@@ -44,5 +46,8 @@ def check_permission(list_of_permissions, user_object,
             UserOrgRole.org_id == org_id,
             UserOrgRole.user_id == user_object.user_id
         ).all()
-        if list_of_permissions in org_permission:
+        if list_of_permissions is None and org_permission:
             return True
+        elif list_of_permissions in org_permission:
+            return True
+    return False
