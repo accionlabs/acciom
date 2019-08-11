@@ -1,5 +1,3 @@
-import ast
-
 from application.common.constants import SupportedTestClass
 from application.common.dbconnect import dbconnection
 from application.helper.runnerclasshelpers import (db_details, split_table)
@@ -68,10 +66,8 @@ def calculate_dqi(execution_log, test_case_id):
 
     if test_case_obj.test_case_class == SupportedTestClass(). \
             get_test_class_id_by_name("ddlcheck"):
-        execution_log_list_src = ast.literal_eval(
-            execution_log["source_execution_log"])
-        execution_log_list_dist = ast.literal_eval(
-            execution_log["dest_execution_log"])
+        execution_log_list_src = execution_log["source_execution_log"]
+        execution_log_list_dist = execution_log["dest_execution_log"]
         column_mismatch = len(execution_log_list_src) + len(
             execution_log_list_dist)
         src_detail = db_details(

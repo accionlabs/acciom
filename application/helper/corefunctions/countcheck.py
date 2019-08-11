@@ -52,7 +52,6 @@ def count_check(source_cursor, target_cursor, source_table,
                                          "dest_execution_log": target_count}}
             app.logger.info("count check fail")
     except Exception as e:
-        app.logger.error(e)
         execution_result = ExecutionStatus(). \
             get_execution_status_id_by_name('error')
         payload = {"res": execution_result,

@@ -92,7 +92,7 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
 
         all_results = []
         for row in target_cursor:
-            all_results.append(list(map(str, row)))
+            all_results.append(list(row))
 
         if all_results:
             if flag:

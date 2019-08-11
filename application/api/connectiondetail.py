@@ -1,4 +1,3 @@
-from flask import request
 from flask_restful import Resource, reqparse
 
 from application.common.constants import APIMessages
@@ -26,30 +25,20 @@ class SelectConnection(Resource):
         Returns:will allow user to select connection for particular user
         """
         try:
-            print((request))
-            print(request)
             parser = reqparse.RequestParser()
             parser.add_argument('connection_reference',
                                 help=APIMessages.PARSER_MESSAGE,
                                 required=True)
-            print("36")
-            # parser.add_argument('case_id_list',
-            #                     help=APIMessages.PARSER_MESSAGE,
-            #                     required=True,
-            #                     type=args_as_list, default=[])
             parser.add_argument('case_id_list',
                                 type=list, location="json",
                                 help=APIMessages.PARSER_MESSAGE)
-
-            print("41")
             parser.add_argument('db_connection_id',
                                 help=APIMessages.PARSER_MESSAGE,
                                 required=True)
-            print("45")
             data = parser.parse_args()
-            print(data)
             user = session.user_id
             select_connection(data, user)
+
             return api_response(True, APIMessages.RETURN_SUCCESS,
                                 STATUS_CREATED)
 

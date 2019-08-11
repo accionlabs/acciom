@@ -80,3 +80,24 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
             api_end_point),
         shell=True, universal_newlines=False)
     app.logger.debug(str(datetime.datetime.now()))
+
+
+def manage_none_value(diff_result, column_list):
+    """
+    To handle None values,it appends Null to the missing column name in the
+    result.
+
+    Args:
+        diff_result(list):Result of the datavalidation.
+        column_list(list):List of column names of the table.
+
+    Returns:
+        Return the list of dictionaries with processed data.
+    """
+    processed_data = list()
+    for each_dict in diff_result:
+        temp_dict = dict()
+        for each_key in column_list:
+            temp_dict[each_key] = each_dict.get(each_key, None)
+        processed_data.append(temp_dict)
+    return processed_data
