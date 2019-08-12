@@ -20,7 +20,7 @@ def check_permission(user_object, list_of_permissions=None,
     """
     # check if user is super admin
     super_user = User.query.filter_by(user_id=user_object.user_id).first()
-    if super_user.is_super_user:
+    if super_user.is_super_admin:
         return True
     # check for project permission
     if project_id:
