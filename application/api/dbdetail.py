@@ -63,20 +63,52 @@ class DbDetails(Resource):
                                     message=request_data_validation,
                                     http_status_code=STATUS_BAD_REQUEST,
                                     data={})
-            db_password = encrypt(db_detail["db_password"])
-            new_db = DbConnection(project_id=db_detail["project_id"],
-                                  owner_id=session.user_id,
-                                  db_connection_name=db_detail[
-                                      'connection_name'],
-                                  db_type=SupportedDBType().get_db_id_by_name(
-                                      db_detail['db_type_name']),
-                                  db_name=db_detail['db_name'],
-                                  db_hostname=db_detail['db_hostname'],
-                                  db_username=db_detail['db_username'],
-                                  db_encrypted_password=db_password, )
-            new_db.save_to_db()
-            return api_response(True, APIMessages.DB_DETAILS_ADDED,
-                                STATUS_CREATED)
+            # check whether combination of db_type,db_name,db_username,
+            # db_hostname,project_id is already present in db or not
+            temp_connection = DbConnection.query.filter(
+                DbConnection.project_id == db_detail["project_id"],
+                DbConnection.db_type == SupportedDBType().get_db_id_by_name(
+                    db_detail['db_type_name']),
+                DbConnection.db_name == db_detail['db_name'],
+                DbConnection.db_hostname.ilike(
+                    db_detail['db_hostname']),
+                DbConnection.db_username == db_detail['db_username']).first()
+            if temp_connection:
+                return api_response(False, APIMessages.
+                                    DB_DETAILS_ALREADY_PRESENT,
+                                    STATUS_BAD_REQUEST)
+            else:
+                # Check Db connection name already exist in db or not
+                temp_connection = DbConnection.query.filter(
+                    DbConnection.db_connection_name == db_detail[
+                        "connection_name"],
+                    DbConnection.project_id == db_detail["project_id"]).first()
+                if temp_connection:
+                    return api_response(False, APIMessages.
+                                        DB_CONNECTION_NAME_ALREADY_PRESENT,
+                                        STATUS_BAD_REQUEST)
+                # Checking spaces in username and hostname
+                spacecount_dbusername = db_detail["db_username"].find(" ")
+                spacecount_dbhostanme = db_detail["db_hostname"].find(" ")
+                if spacecount_dbusername > -1 or spacecount_dbhostanme > -1:
+                    return api_response(False, APIMessages.
+                                        NO_SPACES,
+                                        STATUS_BAD_REQUEST)
+                db_password = encrypt(db_detail["db_password"])
+                new_db = DbConnection(project_id=db_detail["project_id"],
+                                      owner_id=session.user_id,
+                                      db_connection_name=db_detail[
+                                          'connection_name'],
+                                      db_type=SupportedDBType().
+                                      get_db_id_by_name(
+                                          db_detail['db_type_name']),
+                                      db_name=db_detail['db_name'],
+                                      db_hostname=db_detail["db_hostname"],
+                                      db_username=db_detail["db_username"],
+                                      db_encrypted_password=db_password, )
+                new_db.save_to_db()
+                return api_response(True, APIMessages.DB_DETAILS_ADDED,
+                                    STATUS_CREATED)
         except SQLAlchemyError as e:
             db.session.rollback()
             return api_response(False, APIMessages.INTERNAL_ERROR,
@@ -213,33 +245,80 @@ class DbDetails(Resource):
         db_connection_id = db_detail["db_connection_id"]
 
         try:
+            # Remove keys which contain None values in db_details dictionary
+            for key, value in dict(db_detail).items():
+                if value == None:
+                    del db_detail[key]
             if db_connection_id:
                 db_obj = DbConnection.query.filter_by(
                     db_connection_id=db_connection_id).first()
                 del db_detail["db_connection_id"]
+                # Updating values present in database with user given values
+                data_base_dict = db_obj.__dict__
+                data_base_dict.update(db_detail)
+
                 if db_obj:
-                    for key, value in db_detail.items():
-                        if value and value.strip():
-                            # checking if value provided by user is
-                            # neither None nor Null
-                            if key == 'db_password':
-                                db_password = encrypt(value)
-                                db_obj.db_encrypted_password = db_password
-                            elif key == 'db_connection_name':
-                                db_obj.db_connection_name = value
-                            elif key == 'db_type':
-                                db_obj.db_type = SupportedDBType(). \
-                                    get_db_id_by_name(value)
-                            elif key == 'db_name':
-                                db_obj.db_name = value
-                            elif key == 'db_hostname':
-                                db_obj.db_hostname = value
-                            elif key == 'db_username':
-                                db_obj.db_username = value
-                    db_obj.save_to_db()
-                    return api_response(
-                        True, APIMessages.DB_DETAILS_UPDATED.format(
-                            db_connection_id), STATUS_CREATED)
+                    # check whether combination of db_type,db_name,db_username,
+                    # db_hostname,project_id is already present in db or not
+                    temp_connection = DbConnection.query.filter(
+                        DbConnection.db_connection_id != db_connection_id,
+                        DbConnection.db_type == data_base_dict['db_type'],
+                        DbConnection.db_name == data_base_dict['db_name'],
+                        DbConnection.db_username == data_base_dict[
+                            'db_username'],
+                        DbConnection.db_hostname.ilike(
+                            data_base_dict['db_hostname']),
+                        DbConnection.project_id == data_base_dict[
+                            'project_id']).all()
+                    if temp_connection != []:
+                        return api_response(False, APIMessages.
+                                            DB_DETAILS_ALREADY_PRESENT,
+                                            STATUS_BAD_REQUEST)
+                    else:
+                        # Check Db connection name already exist in db or not
+                        temp_connection = DbConnection.query.filter(
+                            DbConnection.db_connection_name == db_detail[
+                                "db_connection_name"],
+                            DbConnection.project_id ==
+                            db_obj.project_id).first()
+                        if temp_connection:
+                            return api_response(False, APIMessages.
+                                                DB_CONNECTION_NAME_ALREADY_PRESENT,
+                                                STATUS_BAD_REQUEST)
+                        # Checking spaces in username and hostname
+                        if db_detail["db_username"] or db_detail[
+                            "db_hostname"]:
+                            spacecount_dbusername = db_detail[
+                                "db_username"].find(" ")
+                            spacecount_dbhostname = db_detail[
+                                "db_hostname"].find(" ")
+                            if spacecount_dbusername > -1 or \
+                                    spacecount_dbhostname > -1:
+                                return api_response(False, APIMessages.
+                                                    NO_SPACES,
+                                                    STATUS_BAD_REQUEST)
+                        for key, value in db_detail.items():
+                            if value and value.strip():
+                                # checking if value provided by user is
+                                # neither None nor Null
+                                if key == 'db_password':
+                                    db_password = encrypt(value)
+                                    db_obj.db_encrypted_password = db_password
+                                elif key == 'db_connection_name':
+                                    db_obj.db_connection_name = value
+                                elif key == 'db_type':
+                                    db_obj.db_type = SupportedDBType(). \
+                                        get_db_id_by_name(value)
+                                elif key == 'db_name':
+                                    db_obj.db_name = value
+                                elif key == 'db_hostname':
+                                    db_obj.db_hostname = value
+                                elif key == 'db_username':
+                                    db_obj.db_username = value
+                        db_obj.save_to_db()
+                        return api_response(
+                            True, APIMessages.DB_DETAILS_UPDATED.format(
+                                db_connection_id), STATUS_CREATED)
                 else:
                     return api_response(False,
                                         APIMessages.DBID_NOT_IN_DB.format(
