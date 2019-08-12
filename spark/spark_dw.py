@@ -49,7 +49,7 @@ def get_db_details(db_type, hostname, db_name, username, password, table_name,
 def get_connection_detail(db_detail):
     try:
 
-        if db_detail["db_type"] == "sqlserver":
+        if db_detail["db_type"] == "mssql":
             url = "jdbc:sqlserver://{0};databaseName={1}".format(
                 db_detail["hostname"], db_detail["db_name"])
             driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
@@ -121,7 +121,7 @@ def get_df_select(db_detail, start, end):
         url, driver = get_connection_detail(db_detail)
         query = ""
         if not db_detail["custom_query"]:
-            if db_detail["db_type"] == "sqlserver":
+            if db_detail["db_type"] == "mssql":
                 query = "(SELECT * FROM {} " \
                         "ORDER BY 1 OFFSET {} " \
                         "ROWS FETCH NEXT  {} " \
@@ -144,7 +144,7 @@ def get_df_select(db_detail, start, end):
                                                 end)
 
         else:
-            if db_detail["db_type"] == "sqlserver":
+            if db_detail["db_type"] == "mssql":
                 query = "(SELECT * FROM ({}) as tt " \
                         "ORDER BY 1 OFFSET {} " \
                         "ROWS FETCH NEXT  {} " \
