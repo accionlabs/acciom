@@ -15,6 +15,7 @@ from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
 from application.api.organization import (OrganizationAPI, DashBoardStatus)
 from application.api.project import ProjectAPI
 from application.api.role import RoleAPI
+from application.api.menu import MenuAPI
 from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
                                       EditTestCase, TestCaseJobExternal)
 from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
@@ -82,3 +83,4 @@ api.add_resource(TestCaseJobExternal, '/api/test-case-job-external')
 api.add_resource(ChangePassword, '/api/change-password')
 api.add_resource(UserAPI, '/api/user')
 api.add_resource(UserRoleAPI, '/api/user-role')
+api.add_resource(MenuAPI, '/api/menu')

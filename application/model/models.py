@@ -383,12 +383,11 @@ class Menu(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def __init__(self, menu_id, menu_name, menu_order, menu_permission_id,
+    def __init__(self, menu_name, menu_order, permission_id,
                  owner_id, is_active=True):
-        self.menu_id = menu_id
         self.menu_name = menu_name
         self.menu_order = menu_order
-        self.menu_permission_id = menu_permission_id
+        self.permission_id = permission_id
         self.owner_id = owner_id
         self.is_active = is_active
 
