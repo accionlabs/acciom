@@ -51,14 +51,14 @@ class RoleAPI(Resource):
             # TODO: Check if org_id is valid
             # checking if role_name already exists with given org
             get_role_details = Role.query.filter(and_(
-                Role.name.ilike(create_role_data['role_name']),
+                Role.role_name.ilike(create_role_data['role_name']),
                 Role.org_id == create_role_data['org_id'])).first()
             if get_role_details:
                 return api_response(
                     False, APIMessages.RESOURCE_EXISTS.format('Role'),
                     STATUS_BAD_REQUEST)
             new_role = Role(
-                name=create_role_data['role_name'],
+                role_name=create_role_data['role_name'],
                 org_id=create_role_data['org_id'],
                 owner_id=session.user_id)
             new_role.save_to_db()
@@ -69,7 +69,7 @@ class RoleAPI(Resource):
                     role_id=new_role.role_id, permission_id=each_permission,
                     owner_id=session.user_id)
                 add_role_permission.save_to_db()
-            payload = {'role_name': new_role.name,
+            payload = {'role_name': new_role.role_name,
                        'role_id': new_role.role_id,
                        'permissions_granted': valid_permissions}
             return api_response(
@@ -137,7 +137,7 @@ def retrieve_roles_under_org(org_id):
     get_role = Role.query.filter_by(org_id=org_id).all()
     for each_role in get_role:
         roles_to_send.append({'role_id': each_role.role_id,
-                              'name': each_role.name,
+                              'role_name': each_role.role_name,
                               'permissions': []})
     for role in roles_to_send:
         get_role_permission = RolePermission.query.filter_by(
@@ -146,7 +146,8 @@ def retrieve_roles_under_org(org_id):
             role['permissions'].append(
                 {'permission_id': each_role_permission.permission.
                     permission_id,
-                 'permission_name': each_role_permission.permission.name})
+                 'permission_name':
+                     each_role_permission.permission.permission_name})
     return roles_to_send
 
 
@@ -167,7 +168,7 @@ def check_permission_exists(permission_id_given_by_user):
     valid_permission_list = \
         [permission.permission_id for permission in check_permission]
     permission_names_list = \
-        [permission.name for permission in check_permission]
+        [permission.permission_name for permission in check_permission]
     if len(valid_permission_list) != len(permission_id_given_by_user):
         invalid_permissions = set(permission_id_given_by_user).difference(
             valid_permission_list)
