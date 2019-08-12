@@ -22,19 +22,14 @@ class TestCaseExecution():
         Returns: this Method creates a connector for given db details
 
         """
-        try:
-            connector = dbconnection(test_case_details['db_name'],
-                                     test_case_details['db_type'],
-                                     test_case_details[
-                                         'db_hostname'].lower(),
-                                     test_case_details['db_username'],
-                                     test_case_details[
-                                         'db_password']).cursor()
-            return connector
-        except Exception as e:
-            return {
-
-            }
+        connector = dbconnection(test_case_details['db_name'],
+                                 test_case_details['db_type'],
+                                 test_case_details[
+                                     'db_hostname'].lower(),
+                                 test_case_details['db_username'],
+                                 test_case_details[
+                                     'db_password']).cursor()
+        return connector
 
     def get_tables(test_case_detail):
         """
@@ -83,7 +78,7 @@ class TestCaseExecution():
             execution_result = ExecutionStatus(). \
                 get_execution_status_id_by_name('error')
             result = {"res": execution_result,
-                      "Execution_log": {"error_log": e}}
+                      "Execution_log": {"error_log": str(e)}}
             return result
 
     @classmethod
@@ -105,16 +100,16 @@ class TestCaseExecution():
             target_db_connector = cls.create_connector(target_detail)
             table_name = cls.get_tables(test_case_details)
             query = get_query(test_case_details)
+            column = get_column(test_case_details)
             result = null_check(target_db_connector,
-                                table_name['src_table'],
-                                table_name['target_table'],
-                                query)
+                                table_name['target_table'], column,
+                                query, target_detail['db_type'])
             return result
         except Exception as e:
             execution_result = ExecutionStatus(). \
                 get_execution_status_id_by_name('error')
             result = {"res": execution_result,
-                      "Execution_log": {"error_log": e}}
+                      "Execution_log": {"error_log": str(e)}}
             return result
 
     @classmethod
@@ -136,16 +131,16 @@ class TestCaseExecution():
             target_db_connector = cls.create_connector(target_detail)
             table_name = cls.get_tables(test_case_details)
             query = get_query(test_case_details)
+            column = get_column(test_case_details)
             result = duplication(target_db_connector,
-                                 table_name['src_table'],
-                                 table_name['target_table'],
-                                 query)
+                                 table_name['target_table'], column,
+                                 query, target_detail['db_type'])
             return result
         except Exception as e:
             execution_result = ExecutionStatus(). \
                 get_execution_status_id_by_name('error')
             result = {"res": execution_result,
-                      "Execution_log": {"error_log": e}}
+                      "Execution_log": {"error_log": str(e)}}
             return result
 
     @classmethod
@@ -171,13 +166,14 @@ class TestCaseExecution():
             result = ddl_check(source_db_connector, target_db_connector,
                                table_name['src_table'],
                                table_name['target_table'],
-                               query)
+                               query, src_detail['db_type'],
+                               target_detail['db_type'])
             return result
         except Exception as e:
             execution_result = ExecutionStatus(). \
                 get_execution_status_id_by_name('error')
             result = {"res": execution_result,
-                      "Execution_log": {"error_log": e}}
+                      "Execution_log": {"error_log": str(e)}}
             return result
 
     @classmethod
@@ -225,7 +221,7 @@ class TestCaseExecution():
             execution_result = ExecutionStatus(). \
                 get_execution_status_id_by_name('error')
             result = {"res": execution_result,
-                      "Execution_log": {"error_log": e}}
+                      "Execution_log": {"error_log": str(e)}}
             return result
 
 
