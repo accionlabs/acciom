@@ -67,6 +67,7 @@ class APIMessages:
     DB_CONNECTION_NAME_ALREADY_PRESENT = "Db details with this connection name " \
                                          "already exist"
     NO_SPACES = "User name or host name cannot contain spaces"
+    UNAUTHORIZED = "Unauthorized Access"
 
 
 class GenericStrings:
