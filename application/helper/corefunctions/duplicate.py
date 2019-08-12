@@ -42,6 +42,7 @@ def duplication(target_cursor, target_table, column_name, test_queries,
     col_list = []
     newlst = []
     try:
+        app.logger.debug(db_type)
         if db_type == SupportedDBType().get_db_id_by_name('oracle'):
             target_cursor.execute("SELECT column_name FROM "
                                   "user_tab_cols"

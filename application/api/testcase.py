@@ -10,19 +10,18 @@ from application.common.constants import (APIMessages, ExecutionStatus,
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
-from application.common.runbysuiteid import run_by_suite_id, \
-    execute_external_job
+from application.common.runbysuiteid import create_job
 from application.common.token import (token_required)
 from application.common.utils import (get_table_name,
                                       db_details_without_password)
 from application.helper.corefunctions.datavalidation import manage_none_value
 from application.helper.runnerclass import (run_by_case_id,
                                             save_case_log_information)
+from application.helper.runnerclass import (save_case_log_information)
 from application.helper.runnerclasshelpers import (
-    save_case_log,
-    save_job_status)
+    save_case_log)
 from application.model.models import (TestCaseLog, TestCase, DbConnection,
-                                      PersonalToken)
+                                      PersonalToken, TestSuite)
 from index import db
 
 
@@ -54,23 +53,34 @@ class TestCaseJob(Resource):
                                 type=list, location="json",
                                 help=APIMessages.PARSER_MESSAGE)
             execution_data = parser.parse_args()
-
-            if execution_data['suite_id'] and not (
-                    execution_data['case_id_list']):
-                run_by_suite_id(user_id, execution_data['suite_id'])
-                suite_data = {"suite_id": execution_data['suite_id']}
+            is_external = False
+            if execution_data['suite_id']:
+                test_suite_obj = TestSuite.query.filter_by(
+                    test_suite_id=int(execution_data['suite_id'])).first()
+                if not test_suite_obj:
+                    return api_response(False, APIMessages.SUITE_NOT_EXIST,
+                                        STATUS_SERVER_ERROR)
+                # Create a Job
+                create_job(user_id, test_suite_obj, is_external)
                 return api_response(True, APIMessages.RETURN_SUCCESS,
-                                    STATUS_CREATED,
-                                    suite_data)
+                                    STATUS_CREATED)
 
-            elif not (execution_data['suite_id']) \
-                    and execution_data['case_id_list']:
-                run_by_case_id(execution_data['case_id_list'][0], user_id)
-                case_data = {"case_id_list": execution_data["case_id_list"]}
+            elif execution_data['case_id_list']:
+                test_case_obj = TestCase.query.filter_by(
+                    test_case_id=execution_data['case_id_list'][0]).first()
+                if not test_case_obj:
+                    return api_response(False,
+                                        APIMessages.TEST_CASE_NOT_IN_DB,
+                                        STATUS_SERVER_ERROR)
+                test_suite_id = test_case_obj.test_suite_id
+                test_suite_obj = TestSuite.query.filter_by(
+                    test_suite_id=test_suite_id).first()
+                # Create a Job
+                create_job(user_id, test_suite_obj, is_external,
+                           execution_data['case_id_list'])
                 return api_response(True, APIMessages.RETURN_SUCCESS,
-                                    STATUS_CREATED,
-                                    case_data)
-
+                                    STATUS_CREATED
+                                    )
             else:
                 return api_response(False, APIMessages.INTERNAL_ERROR,
                                     STATUS_SERVER_ERROR)
@@ -140,7 +150,7 @@ class TestCaseSparkJob(Resource):
                                           (target_count), None,
                                           case_log.test_case_id)
                 save_case_log(case_log, case_log_execution_status)
-                save_job_status(case_log, case_log_execution_status)
+                # save_job_status(case_log, case_log_execution_status)
 
             elif result_count != 0:
                 case_log_execution_status = ExecutionStatus(). \
@@ -154,7 +164,7 @@ class TestCaseSparkJob(Resource):
                                           case_log.test_case_id)
 
                 save_case_log(case_log, case_log_execution_status)
-                save_job_status(case_log, case_log_execution_status)
+                # save_job_status(case_log, case_log_execution_status)
 
 
 class EditTestCase(Resource):
@@ -437,21 +447,23 @@ class TestCaseJobExternal(Resource):
             if execution_data['case_id_list'] and not execution_data[
                 'suite_id']:
                 if personal_token_obj.user_id == user_id:
-                    run_result = execute_external_job(user_id,
-                                                      execution_data[
-                                                          'case_id_list'])
-                    if run_result:
-                        return api_response(True, APIMessages.RETURN_SUCCESS,
-                                            STATUS_CREATED)
-                    else:
-                        return api_response(False, APIMessages.INTERNAL_ERROR,
-                                            STATUS_SERVER_ERROR)
+                    test_case_obj = TestCase.query.filter_by(
+                        test_case_id=execution_data['case_id_list'][0]).first()
+                    test_suite_id = test_case_obj.test_suite_id
+                    run_result = create_job(user_id, test_suite_id,
+                                            execution_data['case_id_list'],
+                                            is_external)
+                    return api_response(True, APIMessages.RETURN_SUCCESS,
+                                        STATUS_CREATED)
+                else:
+                    return api_response(False, APIMessages.TOKEN_MISMATCH,
+                                        STATUS_SERVER_ERROR)
 
             elif execution_data['suite_id'] and not execution_data[
                 'case_id_list']:
                 if personal_token_obj.user_id == user_id:
-                    run_by_suite_id(user_id, execution_data['suite_id'],
-                                    is_external)
+                    create_job(user_id, execution_data['suite_id'],
+                               is_external)
                     return api_response(True, APIMessages.RETURN_SUCCESS,
                                         STATUS_CREATED)
                 else:

@@ -22,6 +22,10 @@ def select_connection(case_data, user):
             testcase_object.test_case_detail = test_case_detail
             testcase_object.save_to_db()
 
+
+            testcase_object.test_case_detail = test_case_detail
+            testcase_object.save_to_db()
+
     elif case_data['connection_reference'] == (
             APIMessages.DESTINATION).lower():
         for each_case in list(case_data['case_id_list']):

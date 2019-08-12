@@ -7,7 +7,7 @@ from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
 from application.common.returnlog import return_all_log
-from application.common.runbysuiteid import run_by_suite_id
+from application.common.runbysuiteid import create_job
 from application.common.token import (token_required)
 from application.helper.exportTestcaselog import export_test_case_log
 from application.helper.returnallsuites import (return_all_suites,
@@ -55,8 +55,7 @@ class TestSuiteAPI(Resource):
                                        test_suite_data['project_id'],
                                        test_suite_data, file)
         if int(test_suite_data['upload_and_execute']) == 1:
-            run_by_suite_id(current_user,
-                            suite_result['Suite'].test_suite_id)
+            create_job(current_user, suite_result['Suite'].test_suite_id)
         return api_response(True, APIMessages.ADD_DATA, STATUS_CREATED)
 
     @token_required

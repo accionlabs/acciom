@@ -1,7 +1,228 @@
 import ast
 
+from application.common.constants import ExecutionStatus
+from application.common.dbconnect import dbconnection
+from application.helper.corefunctions.countcheck import count_check
+from application.helper.corefunctions.datavalidation import datavalidation
+from application.helper.corefunctions.ddlcheck import ddl_check
+from application.helper.corefunctions.duplicate import duplication
+from application.helper.corefunctions.nullcheck import null_check
 from application.helper.encrypt import decrypt
 from application.model.models import DbConnection, TestCase, Job
+
+
+class TestCaseExecution():
+    """
+    This class will execute test case based on its test case class
+    """
+
+    def create_connector(test_case_details):
+        """
+
+        Returns: this Method creates a connector for given db details
+
+        """
+        connector = dbconnection(test_case_details['db_name'],
+                                 test_case_details['db_type'],
+                                 test_case_details[
+                                     'db_hostname'].lower(),
+                                 test_case_details['db_username'],
+                                 test_case_details[
+                                     'db_password']).cursor()
+        return connector
+
+    def get_tables(test_case_detail):
+        """
+
+        Returns: Returns table from the test_case_details stored as json
+
+        """
+        return split_table(test_case_detail)
+
+    def get_query(test_case_detail):
+        """
+
+        Returns:Returns query from the test_case_details stored as json
+
+        """
+        return get_query(test_case_detail)
+
+    @classmethod
+    def count_check(cls, src_db_id, target_db_id, test_case_details):
+        """
+
+        Args:
+            src_db_id (int): source_db_id used to find db_details
+            target_db_id (int): target_db_id used to find db_details
+            test_case_details (json): json details used for finding table,
+            queries
+
+        Returns: Execute CountCheck and returns the status
+
+        """
+        try:
+
+            src_detail = db_details(src_db_id)
+            target_detail = db_details(target_db_id)
+            source_db_connector = cls.create_connector(src_detail)
+            target_db_connector = cls.create_connector(target_detail)
+            table_name = cls.get_tables(test_case_details)
+            query = get_query(test_case_details)
+            result = count_check(source_db_connector,
+                                 target_db_connector,
+                                 table_name['src_table'],
+                                 table_name['target_table'],
+                                 query)
+            return result
+        except Exception as e:
+            execution_result = ExecutionStatus(). \
+                get_execution_status_id_by_name('error')
+            result = {"res": execution_result,
+                      "Execution_log": {"error_log": str(e)}}
+            return result
+
+    @classmethod
+    def null_check(cls, src_db_id, target_db_id, test_case_details):
+        """
+
+               Args:
+                   src_db_id (int): source_db_id used to find db_details
+                   target_db_id (int): target_db_id used to find db_details
+                   test_case_details (json): json details used for finding table,
+                   queries
+
+               Returns: Execute NullCheck and returns the status
+
+               """
+        try:
+
+            target_detail = db_details(target_db_id)
+            target_db_connector = cls.create_connector(target_detail)
+            table_name = cls.get_tables(test_case_details)
+            query = get_query(test_case_details)
+            column = get_column(test_case_details)
+            result = null_check(target_db_connector,
+                                table_name['target_table'], column,
+                                query, target_detail['db_type'])
+            return result
+        except Exception as e:
+            execution_result = ExecutionStatus(). \
+                get_execution_status_id_by_name('error')
+            result = {"res": execution_result,
+                      "Execution_log": {"error_log": str(e)}}
+            return result
+
+    @classmethod
+    def duplicate_check(cls, src_db_id, target_db_id, test_case_details):
+        """
+
+               Args:
+                   src_db_id (int): source_db_id used to find db_details
+                   target_db_id (int): target_db_id used to find db_details
+                   test_case_details (json): json details used for finding table,
+                   queries
+
+               Returns: Execute Duplicate and returns the status
+
+               """
+        try:
+
+            target_detail = db_details(target_db_id)
+            target_db_connector = cls.create_connector(target_detail)
+            table_name = cls.get_tables(test_case_details)
+            query = get_query(test_case_details)
+            column = get_column(test_case_details)
+            result = duplication(target_db_connector,
+                                 table_name['target_table'], column,
+                                 query, target_detail['db_type'])
+            return result
+        except Exception as e:
+            execution_result = ExecutionStatus(). \
+                get_execution_status_id_by_name('error')
+            result = {"res": execution_result,
+                      "Execution_log": {"error_log": str(e)}}
+            return result
+
+    @classmethod
+    def ddlcheck(cls, src_db_id, target_db_id, test_case_details):
+        """
+
+               Args:
+                   src_db_id (int): source_db_id used to find db_details
+                   target_db_id (int): target_db_id used to find db_details
+                   test_case_details (json): json details used for finding table,
+                   queries
+
+               Returns: Execute DDLcheck and returns the status
+
+               """
+        try:
+            src_detail = db_details(src_db_id)
+            source_db_connector = cls.create_connector(src_detail)
+            target_detail = db_details(target_db_id)
+            target_db_connector = cls.create_connector(target_detail)
+            table_name = cls.get_tables(test_case_details)
+            query = get_query(test_case_details)
+            result = ddl_check(source_db_connector, target_db_connector,
+                               table_name['src_table'],
+                               table_name['target_table'],
+                               query, src_detail['db_type'],
+                               target_detail['db_type'])
+            return result
+        except Exception as e:
+            execution_result = ExecutionStatus(). \
+                get_execution_status_id_by_name('error')
+            result = {"res": execution_result,
+                      "Execution_log": {"error_log": str(e)}}
+            return result
+
+    @classmethod
+    def data_validation(cls, src_db_id, target_db_id, test_case_details,
+                        case_log):
+        """
+
+               Args:
+                   src_db_id (int): source_db_id used to find db_details
+                   target_db_id (int): target_db_id used to find db_details
+                   test_case_details (json): json details used for finding table,
+                   queries
+                   case_log
+
+               Returns: Execute Datavalidation and returns the status
+
+               """
+        try:
+            src_detail = db_details(src_db_id)
+            target_detail = db_details(target_db_id)
+            table_name = cls.get_tables(test_case_details)
+            query = get_query(test_case_details)
+            if query == {}:
+                src_qry = ""
+                target_qry = ""
+            else:
+                src_qry = query[
+                    'sourceqry'] if 'sourceqry' in query else ""
+                target_qry = query[
+                    'targetqry'] if 'targetqry' in query else ""
+            datavalidation(src_detail['db_name'],
+                           table_name['src_table'],
+                           src_detail['db_type'],
+                           target_detail['db_name'],
+                           table_name['target_table'],
+                           target_detail['db_type'],
+                           src_detail['db_username'],
+                           src_detail['db_password'],
+                           src_detail['db_hostname'],
+                           target_detail['db_username'],
+                           target_detail['db_password'],
+                           target_detail['db_hostname'],
+                           src_qry, target_qry, case_log)
+        except Exception as e:
+            execution_result = ExecutionStatus(). \
+                get_execution_status_id_by_name('error')
+            result = {"res": execution_result,
+                      "Execution_log": {"error_log": str(e)}}
+            return result
 
 
 def db_details(db_id):
@@ -85,7 +306,7 @@ def save_case_log(case_log, case_log_execution_status):
     """
     case = TestCase.query.filter_by(
         test_case_id=case_log.test_case_id).first()
-    case.test_status = case_log_execution_status
+    case.latest_execution_status = case_log_execution_status
     case.save_to_db()
 
 

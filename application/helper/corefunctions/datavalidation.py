@@ -52,7 +52,7 @@ def datavalidation(source_db, source_table, src_db_type, des_db,
     app.logger.info(
         "Data validation Job start at = {}".format(datetime.datetime.now()))
 
-    subprocess.Popen(
+    subprocess.check_output(
         'spark-submit --driver-memory {0} '
         '--executor-memory {1} --jars {2},{3},{4},{5}'
         ' {6} {7} {8} {9} {10} {11} {12} '
