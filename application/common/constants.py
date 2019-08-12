@@ -62,7 +62,11 @@ class APIMessages:
     EMAIL_USER = "Either User Id or Email Id is mandatory"
     NO_NAME_DEFINE = "No name define"
     DEFAULT_DB_CONNECTION_PREFIX = "Connection"
-    TESTSUITE_NOT_IN_DB = "test suite {} not present in db"
+    TESTSUITE_NOT_IN_DB = "Test suite {} not present in db"
+    DB_DETAILS_ALREADY_PRESENT = "Db details already exist"
+    DB_CONNECTION_NAME_ALREADY_PRESENT = "Db details with this connection name " \
+                                         "already exist"
+    NO_SPACES = "User name or host name cannot contain spaces"
 
 
 class GenericStrings:
