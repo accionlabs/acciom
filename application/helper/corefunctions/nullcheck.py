@@ -40,7 +40,6 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
     Returns: Runs the Null check on the particular case.
 
     """
-    print(column)
     try:
         col_list = []
         newlst = []
