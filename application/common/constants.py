@@ -64,6 +64,7 @@ class APIMessages:
     DEFAULT_DB_CONNECTION_PREFIX = "Connection"
     TESTSUITE_NOT_IN_DB = "test suite {} not present in db"
     UNAUTHORIZED = "Unauthorized Access"
+    PROJECT_NOT_UNDER_ORG = "Project Id provided is not under given org"
 
 
 class GenericStrings:
