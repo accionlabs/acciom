@@ -14,7 +14,8 @@ from application.helper.returnallsuites import (return_all_suites,
                                                 test_case_details)
 from application.helper.runnerclasshelpers import args_as_list
 from application.helper.uploadfiledb import save_file_to_db
-from application.model.models import (Project, TestCaseLog, TestCase)
+from application.model.models import (Project, TestCaseLog, TestCase,
+                                      TestSuite)
 
 
 class TestSuiteAPI(Resource):
@@ -55,7 +56,9 @@ class TestSuiteAPI(Resource):
                                        test_suite_data['project_id'],
                                        test_suite_data, file)
         if int(test_suite_data['upload_and_execute']) == 1:
-            create_job(current_user, suite_result['Suite'].test_suite_id)
+            test_suite_obj = TestSuite.query.filter_by(
+                test_suite_id=int(suite_result['Suite'].test_suite_id)).first()
+            create_job(current_user, test_suite_obj, False)
         return api_response(True, APIMessages.ADD_DATA, STATUS_CREATED)
 
     @token_required
