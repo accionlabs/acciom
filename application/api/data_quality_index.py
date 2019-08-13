@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 import datetime
-from datetime import datetime
+from datetime import datetime as dt
 from datetime import date
 from statistics import mean
 from index import db
@@ -176,10 +176,10 @@ class ProjectDQIHistory(Resource):
             # check if user passed dates in yyyy-mm-dd format
             start_date, end_date = "", ""
             if dqi_history_data['start_date'] and dqi_history_data['end_date']:
-                start_date = datetime.strptime(
+                start_date = dt.strptime(
                     dqi_history_data['start_date'] + " 00:00:00",
                                                     "%Y-%m-%d %H:%M:%S")
-                end_date = datetime.strptime(
+                end_date = dt.strptime(
                     dqi_history_data['end_date'] + " 23:59:59",
                                                   "%Y-%m-%d %H:%M:%S")
         except ValueError:
@@ -211,7 +211,7 @@ def get_project_dqi_history(project_id, start_date=None, end_date=None):
     # If start and end date are not mentioned, take current month range
     if not start_date and not end_date:
         # If start and end date are not given, take current month range
-        current_day = datetime.today()
+        current_day = dt.today()
         current_month_first_day = date.today().replace(day=1)
         start_date = current_month_first_day
         end_date = current_day
