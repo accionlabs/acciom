@@ -7,7 +7,7 @@ from application.api.checkconnection import CheckConnection
 from application.api.connectiondetail import (SelectConnection, DbConnection,
                                               CaseDetails)
 from application.api.dashboard import SideBarMenu
-from application.api.data_quality_index import (ProjectDQI, OrganizationDQI)
+from application.api.data_quality_index import (ProjectDQI, OrganizationDQI, ProjectDQIHistory)
 from application.api.dbdetail import DbDetails
 from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
                                    ForgotPasswordVerifyToken, ResetPassword,
@@ -81,3 +81,4 @@ api.add_resource(TestCaseJobExternal, '/api/test-case-job-external')
 api.add_resource(ChangePassword, '/api/change-password')
 api.add_resource(UserAPI, '/api/user')
 api.add_resource(UserRoleAPI, '/api/user-role')
+api.add_resource(ProjectDQIHistory, '/api/project-dqi-history')
