@@ -1,8 +1,13 @@
 from flask_restful import Resource, reqparse
 import datetime
-
+from datetime import datetime as dt
+from datetime import date
+from statistics import mean
+from index import db
+from sqlalchemy import Date
 from application.common.response import (api_response, STATUS_OK,
-                                         STATUS_SERVER_ERROR, STATUS_NOT_FOUND)
+                                         STATUS_SERVER_ERROR,
+                                         STATUS_BAD_REQUEST, STATUS_NOT_FOUND)
 from application.common.token import token_required
 from application.common.constants import (APIMessages, SupportedTestClass)
 from application.model.models import ( Organization, Project, TestSuite,
@@ -124,6 +129,157 @@ class OrganizationDQI(Resource):
         except Exception as e:
             return api_response(False, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR, {'error_log': str(e)})
+
+
+class ProjectDQIHistory(Resource):
+    """
+    URL: /api/project-dqi-history
+        Returns the Projects Data Quality Index for specified time range (OR)
+        for all the test suites
+    Actions:
+        GET:
+            - Returns Data Quality Index for given project id on a test case
+            type level.
+    """
+    @token_required
+    def get(self, session):
+        dqi_history_parser = reqparse.RequestParser()
+        dqi_history_parser.add_argument('project_id',
+                                        help=APIMessages.PARSER_MESSAGE.format(
+                                            'org_id'), required=True,
+                                        type=int, location='args')
+        dqi_history_parser.add_argument("start_date",
+                                        help=APIMessages.PARSER_MESSAGE.format(
+                                            'start_date'), required=False,
+                                        type=str, location='args')
+        dqi_history_parser.add_argument("end_date",
+                                        help=APIMessages.PARSER_MESSAGE.format(
+                                            'end_date'), required=False,
+                                        type=str, location='args')
+        dqi_history_data = dqi_history_parser.parse_args()
+
+        # check if project Id exists
+        check_valid_project = Project.query.filter_by(
+            project_id=dqi_history_data['project_id']).first()
+        if not check_valid_project:
+            return api_response(
+                False, APIMessages.NO_RESOURCE.format('Project'),
+                STATUS_BAD_REQUEST)
+        # Check if both start and end date are passed instead either of them
+        if (dqi_history_data['start_date']
+            and not dqi_history_data['end_date']) or \
+                (not dqi_history_data['start_date'] and
+                 dqi_history_data['end_date']):
+            return api_response(False, APIMessages.START_END_DATE,
+                                STATUS_BAD_REQUEST)
+        try:
+            # check if user passed dates in yyyy-mm-dd format
+            start_date, end_date = "", ""
+            if dqi_history_data['start_date'] and dqi_history_data['end_date']:
+                start_date = dt.strptime(
+                    dqi_history_data['start_date'] + " 00:00:00",
+                                                    "%Y-%m-%d %H:%M:%S")
+                end_date = dt.strptime(
+                    dqi_history_data['end_date'] + " 23:59:59",
+                                                  "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            return api_response(False, APIMessages.DATE_FORMAT,
+                                STATUS_BAD_REQUEST)
+        # calling get_project_dqi_history to get day wise data
+        daily_dqi = get_project_dqi_history(
+            dqi_history_data['project_id'], start_date=start_date,
+            end_date=end_date)
+        dqi_response = dict()
+        dqi_response['project_id'] = dqi_history_data['project_id']
+        dqi_response['project_name'] = check_valid_project.project_name
+        dqi_response['dqi_history'] = daily_dqi
+        return api_response(True, APIMessages.SUCCESS, STATUS_OK, dqi_response)
+
+
+def get_project_dqi_history(project_id, start_date=None, end_date=None):
+    """
+    Method to return day wise dqi for each class.
+
+    Args:
+        project_id (int): Id of the project
+        start_date (datetime): Date in YY-MM-DD H:M:S format
+        end_date(datetime): Date in YY-MM-DD H:M:S format
+
+    Returns: dict of dqi for each class with key as date
+
+    """
+    # If start and end date are not mentioned, take current month range
+    if not start_date and not end_date:
+        # If start and end date are not given, take current month range
+        current_day = dt.today()
+        current_month_first_day = date.today().replace(day=1)
+        start_date = current_month_first_day
+        end_date = current_day
+    # Query that returns distinct rows with Date, dqi, test case class, test
+    # suite id, and test case id order by last modified date
+    dqi_for_each_day = db.session.query(
+        TestCaseLog.modified_at.cast(Date), TestCaseLog.dqi_percentage,
+        TestCase.test_case_class, TestSuite.test_suite_id,
+        TestCase.test_case_id).distinct(
+        TestCaseLog.modified_at.cast(Date), TestCase.test_case_id,
+        TestSuite.test_suite_id).order_by(
+        TestCaseLog.modified_at.cast(Date).desc(), TestCase.test_case_id,
+        TestSuite.test_suite_id).order_by(
+        TestCaseLog.modified_at.desc()).filter(
+        TestCaseLog.modified_at >= start_date,
+        TestCaseLog.modified_at <= end_date,
+        TestCaseLog.dqi_percentage != None).join(
+        TestCase, TestCaseLog.test_case_id == TestCase.test_case_id).join(
+        TestSuite, TestCase.test_suite_id == TestSuite.test_suite_id).join(
+        Project, TestSuite.project_id == Project.project_id).filter(
+        Project.project_id == project_id).all()
+    # temp dict is used to store values from tuple with each day
+    temp_dict = {}
+    for each_tuple in dqi_for_each_day:
+        if each_tuple[3] not in temp_dict:
+            temp_dict[each_tuple[3]] = {}
+        if each_tuple[3] in temp_dict and each_tuple[2] not in \
+                temp_dict[each_tuple[3]]:
+            temp_dict[each_tuple[3]][each_tuple[2]] = {}
+        if each_tuple[2] in temp_dict[each_tuple[3]] and each_tuple[4] not in \
+                temp_dict[each_tuple[3]][each_tuple[2]]:
+            temp_dict[each_tuple[3]][each_tuple[2]][each_tuple[4]] = {}
+        if each_tuple[0].strftime("%Y-%m-%d") not in \
+                temp_dict[each_tuple[3]][each_tuple[2]][each_tuple[4]]:
+                temp_dict[each_tuple[3]][each_tuple[2]][each_tuple[4]][
+                    each_tuple[0].strftime("%Y-%m-%d")] = {}
+        temp_dict[each_tuple[3]][each_tuple[2]][each_tuple[4]][each_tuple[0].
+            strftime(
+            "%Y-%m-%d")][SupportedTestClass(
+        ).get_test_class_name_by_id(each_tuple[2])] = each_tuple[1]
+    # dict_dqi_for_each_class is used to store
+    # list of dqi for each class for each day
+    dict_dqi_for_each_class ={}
+    for suite_key, suite_value in temp_dict.items():
+        for class_key, class_value in suite_value.items():
+            for test_case_key, test_case_value in class_value.items():
+                for date_key, date_value in test_case_value.items():
+                    if date_key not in dict_dqi_for_each_class:
+                        dict_dqi_for_each_class[date_key] = {}
+                    for class_name, class_value in date_value.items():
+                        if class_name not in dict_dqi_for_each_class[date_key]:
+                            dict_dqi_for_each_class[date_key][class_name] = []
+                        dict_dqi_for_each_class[date_key][class_name].append(
+                            class_value)
+    # result_dict is used to store average of each class dqi for each day and
+    # average dqi for each class
+    result_dict = {}
+    # Calculating average of all dqi for same classes
+    for key_date, dqi_values in dict_dqi_for_each_class.items():
+        if key_date not in result_dict:
+            result_dict[key_date] = {}
+        for dqi_class, list_dqi_values in dqi_values.items():
+            result_dict[key_date][dqi_class] = round(mean(list_dqi_values), 4)
+    # Calculating average of all dqi for different classes
+    for each_date, percentage in result_dict.items():
+        result_dict[each_date]['average_dqi'] = round(mean(
+            percentage.values()), 4)
+    return result_dict
 
 
 def get_project_dqi(project_id , start_date=None, end_date=None):
