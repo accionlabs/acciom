@@ -41,7 +41,7 @@ class APIMessages:
     PASS_DBID_or_PROJECTID = "Please pass db id or project id"
     TEST_CASE_DELETED = "Test case with test case id {} deleted successfully"
     PASS_TESTCASEID = "Please pass test case id"
-    TEST_CASE_NOT_IN_DB = "Test case details fot TestCase ID {},does not exist"
+    TEST_CASE_NOT_IN_DB = "Test case details for TestCase ID {},does not exist"
     TEST_CASE_DETAILS_UPDATED = "Test case details updated successfully"
     DB_TYPE_NAME = "DataBase Name is not valid. Supported Databases" \
                    " are postgresql, mysql, mssql, oracle, sqlite"
@@ -62,6 +62,15 @@ class APIMessages:
     EMAIL_USER = "Either User Id or Email Id is mandatory"
     DATE_FORMAT = "Date should be passed in YYYY-MM-DD format"
     START_END_DATE = "Both start and end date are required"
+    NO_NAME_DEFINE = "No name define"
+    DEFAULT_DB_CONNECTION_PREFIX = "Connection"
+    TESTSUITE_NOT_IN_DB = "Test suite {} not present in db"
+    DB_DETAILS_ALREADY_PRESENT = "Db details already exist"
+    DB_CONNECTION_NAME_ALREADY_PRESENT = "Db details with this connection name " \
+                                         "already exist"
+    NO_SPACES = "User name or host name cannot contain spaces"
+    UNAUTHORIZED = "Unauthorized Access"
+    PROJECT_NOT_UNDER_ORG = "Project Id provided is not under given org"
 
 
 class GenericStrings:

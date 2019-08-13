@@ -7,7 +7,8 @@ from application.api.checkconnection import CheckConnection
 from application.api.connectiondetail import (SelectConnection, DbConnection,
                                               CaseDetails)
 from application.api.dashboard import SideBarMenu
-from application.api.data_quality_index import (ProjectDQI, OrganizationDQI, ProjectDQIHistory)
+from application.api.data_quality_index import (ProjectDQI, OrganizationDQI,
+                                                ProjectDQIHistory)
 from application.api.dbdetail import DbDetails
 from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
                                    ForgotPasswordVerifyToken, ResetPassword,
@@ -15,10 +16,11 @@ from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
 from application.api.organization import (OrganizationAPI, DashBoardStatus)
 from application.api.project import ProjectAPI
 from application.api.role import RoleAPI
+from application.api.menu import MenuAPI
 from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
                                       EditTestCase, TestCaseJobExternal)
-from application.api.testsuite import (AddTestSuite, TestCaseLogDetail,
-                                       ExportTestLog)
+from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
+                                       ExportTestLog, TestCaseLogAPI)
 from application.api.user_management import UserAPI, UserRoleAPI
 from application.model.models import db
 from index import (app, api, static_folder)
@@ -52,7 +54,8 @@ def serve(path):
 api.add_resource(Login, '/api/login')
 api.add_resource(LogOut, '/api/logout')
 api.add_resource(AddUser, '/api/register')
-api.add_resource(AddTestSuite, '/api/test-suite')
+api.add_resource(TestSuiteAPI, '/api/test-suite')
+api.add_resource(TestCaseLogAPI, '/api/each-case-detail')
 api.add_resource(TestCaseJob, '/api/test-case-job')
 api.add_resource(TestCaseSparkJob,
                  '/api/spark-job-status/<int:test_case_log_id>')
@@ -82,3 +85,4 @@ api.add_resource(ChangePassword, '/api/change-password')
 api.add_resource(UserAPI, '/api/user')
 api.add_resource(UserRoleAPI, '/api/user-role')
 api.add_resource(ProjectDQIHistory, '/api/project-dqi-history')
+api.add_resource(MenuAPI, '/api/menu')

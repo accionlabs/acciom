@@ -21,6 +21,7 @@ class User(db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     password_hash = db.Column(db.TEXT, nullable=False)
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
+    is_super_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
@@ -33,12 +34,13 @@ class User(db.Model):
         db.session.commit()
 
     def __init__(self, email, first_name, last_name, password_hash,
-                 is_verified=False):
+                 is_verified=False, is_super_admin=False):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
         self.password_hash = password_hash
         self.is_verified = is_verified
+        self.is_super_admin = is_super_admin
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config.get('SECRET_KEY'), expires_sec)
@@ -89,13 +91,13 @@ class Role(db.Model):
     role_id = db.Column(db.Integer, primary_key=True, index=True)
     org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=False,
                        index=True)
-    name = db.Column(db.String(50), nullable=False)
+    role_name = db.Column(db.String(50), nullable=False)
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, name, org_id, owner_id):
-        self.name = name
+    def __init__(self, role_name, org_id, owner_id):
+        self.role_name = role_name
         self.org_id = org_id
         self.owner_id = owner_id
 
@@ -156,7 +158,7 @@ class UserOrgRole(db.Model):
 class Permission(db.Model):
     __tablename__ = "permission"
     permission_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text, nullable=False)
+    permission_name = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=False)
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
@@ -166,8 +168,8 @@ class Permission(db.Model):
     role_permission = db.relationship("RolePermission",
                                       back_populates='permission', lazy=True)
 
-    def __init__(self, name, description, owner_id):
-        self.name = name
+    def __init__(self, permission_name, description, owner_id):
+        self.permission_name = permission_name
         self.description = description
         self.owner_id = owner_id
 
@@ -362,6 +364,32 @@ class PersonalToken(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+
+
+class Menu(db.Model):
+    __tablename__ = 'menu'
+    menu_id = db.Column(db.Integer, primary_key=True)
+    menu_name = db.Column(db.String(60), nullable=False)
+    menu_order = db.Column(db.Integer, nullable=False)
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
+    permission_id = db.Column(db.ForeignKey(
+        'permission.permission_id'), nullable=False)
+    parameters = db.Column(JSON, nullable=True)
+    owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    modified_at = db.Column(db.DateTime, default=datetime.now)
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def __init__(self, menu_name, menu_order, permission_id,
+                 owner_id, is_active=True):
+        self.menu_name = menu_name
+        self.menu_order = menu_order
+        self.permission_id = permission_id
+        self.owner_id = owner_id
+        self.is_active = is_active
 
 
 class Session(db.Model):

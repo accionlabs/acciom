@@ -6,7 +6,7 @@ from application.common.response import (api_response, STATUS_OK,
                                          STATUS_BAD_REQUEST)
 from application.common.token import (token_required)
 from application.model.models import (UserOrgRole, UserProjectRole, User,
-                                      Organization)
+                                      Organization, Project)
 from application.common.utils import generate_hash
 
 
@@ -95,6 +95,35 @@ class UserRoleAPI(Resource):
                             required=True, type=list, location='json')
         create_role_api_parser = parser.parse_args()
         try:
+            # check if user id is valid
+            if create_role_api_parser['user_id']:
+                valid_user = User.query.filter_by(
+                    user_id=create_role_api_parser['user_id']).first()
+                if not valid_user:
+                    return api_response(
+                        False, APIMessages.NO_RESOURCE.format('User'),
+                        STATUS_BAD_REQUEST)
+            # check if org is valid
+            valid_org = Organization.query.filter_by(
+                org_id=create_role_api_parser['org_id']).first()
+            if not valid_org:
+                return api_response(
+                    False, APIMessages.NO_RESOURCE.format('Organization'),
+                    STATUS_BAD_REQUEST)
+            # check if project ids passed are related to org
+            if create_role_api_parser['project_role_list']:
+                list_of_projects_passed = \
+                    [each_project['project_id'] for each_project in
+                     create_role_api_parser['project_role_list']]
+            projects_under_given_org = Project.query.filter_by(
+                org_id=create_role_api_parser['org_id']).all()
+            list_projects_under_org = \
+                [project.project_id for project in projects_under_given_org]
+            if not (set(list_of_projects_passed).issubset(
+                    set(list_projects_under_org))):
+                return api_response(
+                    False, APIMessages.PROJECT_NOT_UNDER_ORG,
+                    STATUS_BAD_REQUEST)
             # check if email is passed in request
             if create_role_api_parser['email_id'] and \
                     not create_role_api_parser['user_id']:
