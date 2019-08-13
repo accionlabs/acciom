@@ -1,4 +1,5 @@
 from flask_restful import Resource, reqparse
+import datetime
 from datetime import datetime
 from datetime import date
 from statistics import mean
@@ -164,6 +165,7 @@ class ProjectDQIHistory(Resource):
             return api_response(
                 False, APIMessages.NO_RESOURCE.format('Project'),
                 STATUS_BAD_REQUEST)
+        # Check if both start and end date are passed instead either of them
         if (dqi_history_data['start_date']
             and not dqi_history_data['end_date']) or \
                 (not dqi_history_data['start_date'] and
@@ -171,6 +173,7 @@ class ProjectDQIHistory(Resource):
             return api_response(False, APIMessages.START_END_DATE,
                                 STATUS_BAD_REQUEST)
         try:
+            # check if user passed dates in yyyy-mm-dd format
             start_date, end_date = "", ""
             if dqi_history_data['start_date'] and dqi_history_data['end_date']:
                 start_date = datetime.strptime(
@@ -182,10 +185,11 @@ class ProjectDQIHistory(Resource):
         except ValueError:
             return api_response(False, APIMessages.DATE_FORMAT,
                                 STATUS_BAD_REQUEST)
+        # calling get_project_dqi_history to get day wise data
         daily_dqi = get_project_dqi_history(
             dqi_history_data['project_id'], start_date=start_date,
             end_date=end_date)
-        dqi_response = {}
+        dqi_response = dict()
         dqi_response['project_id'] = dqi_history_data['project_id']
         dqi_response['project_name'] = check_valid_project.project_name
         dqi_response['dqi_history'] = daily_dqi
