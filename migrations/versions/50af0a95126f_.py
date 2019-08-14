@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1b9abe68d00e
+Revision ID: 50af0a95126f
 Revises: 
-Create Date: 2019-08-01 15:22:59.906044
+Create Date: 2019-08-11 15:16:55.091796
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '1b9abe68d00e'
+revision = '50af0a95126f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,6 +25,7 @@ def upgrade():
     sa.Column('last_name', sa.String(length=50), nullable=False),
     sa.Column('password_hash', sa.TEXT(), nullable=False),
     sa.Column('is_verified', sa.Boolean(), nullable=False),
+    sa.Column('is_super_admin', sa.Boolean(), nullable=False),
     sa.Column('is_deleted', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('modified_at', sa.DateTime(), nullable=True),
@@ -43,7 +44,7 @@ def upgrade():
     )
     op.create_table('permission',
     sa.Column('permission_id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.Text(), nullable=False),
+    sa.Column('permission_name', sa.Text(), nullable=False),
     sa.Column('description', sa.Text(), nullable=False),
     sa.Column('owner_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
@@ -69,6 +70,20 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('session_id')
     )
+    op.create_table('menu',
+    sa.Column('menu_id', sa.Integer(), nullable=False),
+    sa.Column('menu_name', sa.String(length=60), nullable=False),
+    sa.Column('menu_order', sa.Integer(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('permission_id', sa.Integer(), nullable=False),
+    sa.Column('parameters', postgresql.JSON(astext_type=sa.Text()), nullable=True),
+    sa.Column('owner_id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('modified_at', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['owner_id'], ['user.user_id'], ),
+    sa.ForeignKeyConstraint(['permission_id'], ['permission.permission_id'], ),
+    sa.PrimaryKeyConstraint('menu_id')
+    )
     op.create_table('project',
     sa.Column('project_id', sa.Integer(), nullable=False),
     sa.Column('project_name', sa.String(length=50), nullable=False),
@@ -85,7 +100,7 @@ def upgrade():
     op.create_table('role',
     sa.Column('role_id', sa.Integer(), nullable=False),
     sa.Column('org_id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=50), nullable=False),
+    sa.Column('role_name', sa.String(length=50), nullable=False),
     sa.Column('owner_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('modified_at', sa.DateTime(), nullable=True),
@@ -257,6 +272,7 @@ def downgrade():
     op.drop_table('role')
     op.drop_index(op.f('ix_project_org_id'), table_name='project')
     op.drop_table('project')
+    op.drop_table('menu')
     op.drop_table('session')
     op.drop_index(op.f('ix_personal_token_user_id'), table_name='personal_token')
     op.drop_index(op.f('ix_personal_token_encrypted_personal_token'), table_name='personal_token')
