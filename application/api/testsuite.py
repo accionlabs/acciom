@@ -249,13 +249,14 @@ class CreateNewTestSuite(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('case_id_list',
                             help=APIMessages.PARSER_MESSAGE,
-                            required=True, type=args_as_list, default=[])
+                            required=True, type=list, location='json')
         parser.add_argument('suite_name',
                             help=APIMessages.PARSER_MESSAGE,
-                            required=False, type=str)
+                            required=False, type=str, location='json')
         test_suite_data = parser.parse_args()
         current_user = session.user_id
         testcaseids = test_suite_data["case_id_list"]
+        print(testcaseids)
         get_excel_name_and_project_id = return_excel_name_and_project_id(
             testcaseids[0])
         project_id = \
