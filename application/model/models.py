@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.dialects.postgresql import JSON
@@ -251,7 +250,8 @@ class TestSuite(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
     test_case = db.relationship("TestCase",
-                                back_populates='test_suite', lazy=True)
+                                back_populates='test_suite', lazy=True,
+                                order_by='TestCase.created_at')
 
     def __init__(self, project_id, owner_id, excel_name, test_suite_name):
         self.project_id = project_id
@@ -282,7 +282,8 @@ class TestCase(db.Model):
     test_suite = db.relationship(TestSuite,
                                  back_populates='test_case', lazy=True)
     test_case_log = db.relationship("TestCaseLog",
-                                    back_populates='test_cases', lazy=True)
+                                    back_populates='test_cases', lazy=True,
+                                    order_by='TestCaseLog.created_at')
 
     def __init__(self, test_suite_id, owner_id, test_case_class,
                  test_case_detail):

@@ -72,10 +72,11 @@ def return_all_suites(project_id):
                                        suite_id.test_case))
         }
 
+    test_suite_list = TestSuite.query.filter_by(
+        project_id=project_id).order_by(TestSuite.created_at).all()
     return {'test_suite_details_list': list(
         map(lambda suite_id: test_suite_to_json(suite_id),
-            TestSuite.query.filter_by(
-                project_id=project_id)))}
+            test_suite_list))}
 
 
 def test_case_details(case_id):

@@ -191,10 +191,12 @@ class DbDetails(Resource):
                             'db_username': projectid.db_username}
 
                     db_detail_dic = {}
+                    project_list = DbConnection.query.filter_by(
+                        project_id=project_id).order_by(
+                        DbConnection.created_at).all()
                     db_detail_dic["db_details"] = list(
                         map(lambda projectid: to_json(projectid),
-                            DbConnection.query.filter_by(
-                                project_id=project_id)))
+                            project_list))
                     return api_response(True, APIMessages.DATA_LOADED,
                                         STATUS_CREATED,
                                         db_detail_dic)
