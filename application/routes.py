@@ -12,14 +12,15 @@ from application.api.dbdetail import DbDetails
 from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
                                    ForgotPasswordVerifyToken, ResetPassword,
                                    GetToken, ChangePassword)
+from application.api.menu import MenuAPI
 from application.api.organization import (OrganizationAPI, DashBoardStatus)
 from application.api.project import ProjectAPI
 from application.api.role import RoleAPI
-from application.api.menu import MenuAPI
 from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
                                       EditTestCase, TestCaseJobExternal)
 from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
-                                       ExportTestLog, TestCaseLogAPI)
+                                       ExportTestLog, TestCaseLogAPI,
+                                       CreateNewTestSuite)
 from application.api.user_management import UserAPI, UserRoleAPI
 from application.model.models import db
 from index import (app, api, static_folder)
@@ -84,3 +85,4 @@ api.add_resource(ChangePassword, '/api/change-password')
 api.add_resource(UserAPI, '/api/user')
 api.add_resource(UserRoleAPI, '/api/user-role')
 api.add_resource(MenuAPI, '/api/menu')
+api.add_resource(CreateNewTestSuite, '/api/create-new-test-suite')
