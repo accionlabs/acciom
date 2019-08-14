@@ -242,8 +242,8 @@ class DbDetails(Resource):
         put_db_detail_parser.add_argument('db_username', type=str)
         put_db_detail_parser.add_argument('db_password', type=str)
         db_detail = put_db_detail_parser.parse_args()
+        db_details = put_db_detail_parser.parse_args()
         db_connection_id = db_detail["db_connection_id"]
-
         try:
             # Remove keys which contain None values in db_details dictionary
             for key, value in dict(db_detail).items():
@@ -260,6 +260,10 @@ class DbDetails(Resource):
                 if db_obj:
                     # check whether combination of db_type,db_name,db_username,
                     # db_hostname,project_id is already present in db or not
+                    if db_details["db_type"] != None:
+                        data_base_dict[
+                            'db_type'] = SupportedDBType().get_db_id_by_name(
+                            data_base_dict['db_type'])
                     temp_connection = DbConnection.query.filter(
                         DbConnection.db_connection_id != db_connection_id,
                         DbConnection.db_type == data_base_dict['db_type'],
@@ -276,27 +280,32 @@ class DbDetails(Resource):
                                             STATUS_BAD_REQUEST)
                     else:
                         # Check Db connection name already exist in db or not
-                        temp_connection = DbConnection.query.filter(
-                            DbConnection.db_connection_name == db_detail[
-                                "db_connection_name"],
-                            DbConnection.project_id ==
-                            db_obj.project_id).first()
-                        if temp_connection:
-                            return api_response(False, APIMessages.
-                                                DB_CONNECTION_NAME_ALREADY_PRESENT,
-                                                STATUS_BAD_REQUEST)
+                        if db_details["db_connection_name"] != None:
+                            temp_connection = DbConnection.query.filter(
+                                DbConnection.db_connection_name == db_detail[
+                                    "db_connection_name"],
+                                DbConnection.project_id ==
+                                db_obj.project_id).first()
+                            if temp_connection:
+                                return api_response(False, APIMessages.
+                                                    DB_CONNECTION_NAME_ALREADY_PRESENT,
+                                                    STATUS_BAD_REQUEST)
                         # Checking spaces in username and hostname
-                        if db_detail["db_username"] or db_detail[
-                            "db_hostname"]:
+                        if db_details["db_username"] != None:
                             spacecount_dbusername = db_detail[
                                 "db_username"].find(" ")
-                            spacecount_dbhostname = db_detail[
-                                "db_hostname"].find(" ")
-                            if spacecount_dbusername > -1 or \
-                                    spacecount_dbhostname > -1:
+                            if spacecount_dbusername > -1:
                                 return api_response(False, APIMessages.
                                                     NO_SPACES,
                                                     STATUS_BAD_REQUEST)
+                        if db_details["db_hostname"] != None:
+                            spacecount_dbhostname = db_detail[
+                                "db_hostname"].find(" ")
+                            if spacecount_dbhostname > -1:
+                                return api_response(False, APIMessages.
+                                                    NO_SPACES,
+                                                    STATUS_BAD_REQUEST)
+
                         for key, value in db_detail.items():
                             if value and value.strip():
                                 # checking if value provided by user is
@@ -315,6 +324,7 @@ class DbDetails(Resource):
                                     db_obj.db_hostname = value
                                 elif key == 'db_username':
                                     db_obj.db_username = value
+
                         db_obj.save_to_db()
                         return api_response(
                             True, APIMessages.DB_DETAILS_UPDATED.format(
