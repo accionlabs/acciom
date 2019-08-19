@@ -1,8 +1,11 @@
 from flask import current_app as app
 from flask import request
 from flask_restful import reqparse, Resource
+from sqlalchemy.exc import SQLAlchemyError
 
 from application.common.constants import APIMessages
+from application.common.constants import SupportedTestClass
+from application.common.createdbdetail import create_dbconnection
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
@@ -16,6 +19,7 @@ from application.helper.runnerclasshelpers import args_as_list
 from application.helper.uploadfiledb import save_file_to_db
 from application.model.models import (Project, TestCaseLog, TestCase,
                                       TestSuite)
+from index import db
 
 
 class TestSuiteAPI(Resource):
@@ -78,7 +82,6 @@ class TestSuiteAPI(Resource):
                                                type=int,
                                                location='args')
             project_id = get_project_id_parser.parse_args()
-            print(project_id)
             project_obj = Project.query.filter_by(
                 project_id=project_id['project_id']).first()
             if not project_obj:
@@ -92,6 +95,142 @@ class TestSuiteAPI(Resource):
             app.logger.debug(str(e))
             return api_response(True, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR)
+
+
+class AddTestSuiteManually(Resource):
+    """ To add a test suite manually by a user."""
+
+    @token_required
+    def post(self, session):
+        """
+        It handles a POST API to add new test suite into database.
+
+       Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message saying
+            that test suite added successfully) and http status code.
+        """
+        try:
+            test_suite_parser = reqparse.RequestParser()
+            test_suite_parser.add_argument('suite_name',
+                                           help=APIMessages.PARSER_MESSAGE,
+                                           required=True, type=str)
+            test_suite_parser.add_argument('project_id',
+                                           help=APIMessages.PARSER_MESSAGE,
+                                           required=True, type=int)
+            test_suite_parser.add_argument('test_case_detail',
+                                           help=APIMessages.PARSER_MESSAGE,
+                                           required=True, type=list,
+                                           location='json')
+            test_suite_data = test_suite_parser.parse_args()
+
+            test_suite = TestSuite(project_id=test_suite_data["project_id"],
+                                   owner_id=session.user_id,
+                                   excel_name=None,
+                                   test_suite_name=test_suite_data[
+                                       'suite_name'])
+            test_suite.save_to_db()
+            keys = []
+            for each_test_case in test_suite_data['test_case_detail']:
+                for key in each_test_case:
+                    keys.append(key)
+                if "source_db_existing_connection" not in keys:
+                    src_db_id = create_dbconnection(session.user_id,
+                                                    each_test_case[
+                                                        'source_db_type'].lower(),
+                                                    each_test_case[
+                                                        'source_db_name'],
+                                                    each_test_case[
+                                                        'source_db_server'].lower(),
+                                                    each_test_case[
+                                                        'source_db_username'],
+                                                    each_test_case[
+                                                        "project_id"])
+                else:
+                    src_db_id = each_test_case[
+                        "source_db_existing_connection"]
+                if "target_db_existing_connection" not in keys:
+                    target_db_id = create_dbconnection(session.user_id,
+                                                       each_test_case[
+                                                           'target_db_type'].lower(),
+                                                       each_test_case[
+                                                           'target_db_name'],
+                                                       each_test_case[
+                                                           'target_db_server'].lower(),
+                                                       each_test_case[
+                                                           'target_db_username'],
+                                                       each_test_case[
+                                                           "project_id"])
+                else:
+                    target_db_id = each_test_case[
+                        "target_db_existing_connection"]
+                table = {}
+                table[each_test_case["source_table"]] = each_test_case[
+                    "target_table"]
+                if "column" not in keys:
+                    column = {}
+                else:
+                    each_test_case["column"] = each_test_case[
+                        "column"].replace(
+                        " ",
+                        "")
+                    if ";" and ":" in each_test_case["column"]:
+                        column = {}
+                        user_columns = each_test_case["column"].split(
+                            ";")
+                        for columnpair in user_columns:
+                            if ":" in columnpair:
+                                singlecolumn = columnpair.split(
+                                    ":")
+                                column[singlecolumn[0]] = \
+                                    singlecolumn[1]
+                            else:
+                                column[columnpair] = columnpair
+                    elif ";" in each_test_case["column"]:
+                        column = {}
+                        columns = each_test_case["column"].split(";")
+                        for singlecolumn in columns:
+                            column[singlecolumn] = singlecolumn
+                    else:
+                        column = {}
+                        column[each_test_case["column"]] = \
+                            each_test_case["column"]
+                query = {}
+                if "source_query" not in keys and "target_query" not in keys:
+                    query["sourceqry"] = ""
+                    query["targetqry"] = ""
+                elif "source_query" not in keys:
+                    query["sourceqry"] = ""
+                    query["targetqry"] = each_test_case["target_query"]
+                else:
+                    query["sourceqry"] = each_test_case["source_query"]
+                    query["targetqry"] = each_test_case["target_query"]
+                jsondict = {"column": column, "table": table, "query": query,
+                            "src_db_id": src_db_id,
+                            "target_db_id": target_db_id,
+                            "test_desc": each_test_case["test_description"]}
+
+                test_case = TestCase(test_suite_id=test_suite.test_suite_id,
+                                     owner_id=session.user_id,
+                                     test_case_class=SupportedTestClass().
+                                     get_test_class_id_by_name(
+                                         each_test_case["test_case_class"]),
+                                     test_case_detail=jsondict)
+
+                test_case.save_to_db()
+            return api_response(True, APIMessages.TEST_SUITE_ADDED,
+                                STATUS_CREATED)
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
 
 
 class TestCaseLogDetail(Resource):

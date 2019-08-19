@@ -15,8 +15,6 @@ from application.common.token import (token_required)
 from application.common.utils import (get_table_name,
                                       db_details_without_password)
 from application.helper.corefunctions.datavalidation import manage_none_value
-from application.helper.runnerclass import (run_by_case_id,
-                                            save_case_log_information)
 from application.helper.runnerclass import (save_case_log_information)
 from application.helper.runnerclasshelpers import (
     save_case_log)
@@ -396,6 +394,39 @@ class EditTestCase(Resource):
                                         STATUS_BAD_REQUEST)
             else:
                 return api_response(False, APIMessages.PASS_TESTCASEID,
+                                    STATUS_BAD_REQUEST)
+
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+
+    @token_required
+    def delete(self, session):
+        delete_db_detail_parser = reqparse.RequestParser()
+        delete_db_detail_parser.add_argument('test_case_id', required=True,
+                                             type=int,
+                                             location='args')
+        testcaseid = delete_db_detail_parser.parse_args()
+        test_case_id = testcaseid.get("test_case_id")
+        try:
+            del_obj = TestCase.query.filter_by(
+                test_case_id=test_case_id).one()
+            if del_obj:
+                db.session.delete(del_obj)
+                db.session.commit()
+                return {"success": True,
+                        "message": "Succesfully Deleted case {0}".format(
+                            test_case_id)}
+            else:
+                return api_response(False,
+                                    APIMessages.DBID_NOT_IN_DB.format(
+                                        test_case_id),
                                     STATUS_BAD_REQUEST)
 
         except SQLAlchemyError as e:

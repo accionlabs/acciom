@@ -71,6 +71,7 @@ class APIMessages:
     NO_SPACES = "User name or host name cannot contain spaces"
     UNAUTHORIZED = "Unauthorized Access"
     PROJECT_NOT_UNDER_ORG = "Project Id provided is not under given org"
+    TEST_SUITE_ADDED = "Test suite added successfully"
 
 
 class GenericStrings:
