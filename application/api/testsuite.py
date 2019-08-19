@@ -1,14 +1,16 @@
 from flask import current_app as app
 from flask import request
 from flask_restful import reqparse, Resource
+from sqlalchemy.exc import SQLAlchemyError
 
-from application.common.constants import APIMessages
+from application.common.constants import APIMessages, SupportedTestClass
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
 from application.common.returnlog import return_all_log
 from application.common.runbysuiteid import create_job
 from application.common.token import (token_required)
+from application.common.utils import return_excel_name_and_project_id
 from application.helper.exportTestcaselog import export_test_case_log
 from application.helper.returnallsuites import (return_all_suites,
                                                 test_case_details)
@@ -16,6 +18,7 @@ from application.helper.runnerclasshelpers import args_as_list
 from application.helper.uploadfiledb import save_file_to_db
 from application.model.models import (Project, TestCaseLog, TestCase,
                                       TestSuite)
+from index import db
 
 
 class TestSuiteAPI(Resource):
@@ -78,7 +81,6 @@ class TestSuiteAPI(Resource):
                                                type=int,
                                                location='args')
             project_id = get_project_id_parser.parse_args()
-            print(project_id)
             project_obj = Project.query.filter_by(
                 project_id=project_id['project_id']).first()
             if not project_obj:
@@ -92,6 +94,215 @@ class TestSuiteAPI(Resource):
             app.logger.debug(str(e))
             return api_response(True, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR)
+
+    @token_required
+    def put(self, session):
+        """
+        To update the test suite in the database for the user provided
+        test case id.
+
+        Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+             Standard API Response with message(returns message saying
+            that test suite updated successfully) and http status code.
+        """
+        # TODO: Need to use save to db only at the last(after all the fileds)
+        put_testcase_parser = reqparse.RequestParser(bundle_errors=True)
+        put_testcase_parser.add_argument('test_case_detail', required=True,
+                                         type=list, location='json')
+        dict_test_case_details = put_testcase_parser.parse_args()
+        test_case_detail = dict_test_case_details["test_case_detail"]
+        try:
+            for each_test_case in test_case_detail:
+                keys = []
+                for key in each_test_case:
+                    keys.append(key)
+                if not "test_case_id" in keys:
+                    return api_response(False, APIMessages.PASS_TESTCASEID,
+                                        STATUS_BAD_REQUEST)
+                test_case_id = each_test_case["test_case_id"]
+                db_obj = TestCase.query.filter_by(
+                    test_case_id=test_case_id).first()
+                if not db_obj:
+                    return api_response(False,
+                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                            test_case_id),
+                                        STATUS_BAD_REQUEST)
+                testcasedetail = db_obj.test_case_detail
+                if "src_db_id" in keys:
+                    testcasedetail["src_db_id"] = \
+                        each_test_case["src_db_id"]
+                    db_obj.save_to_db()
+                if "target_db_id" in keys:
+                    testcasedetail["target_db_id"] = \
+                        each_test_case["target_db_id"]
+                    db_obj.save_to_db()
+                if "test_class" in keys:
+                    db_obj.test_case_class = SupportedTestClass(). \
+                        get_test_class_id_by_name \
+                        (each_test_case["test_class"])
+                    db_obj.save_to_db()
+                if "test_description" in keys:
+                    testcasedetail["test_desc"] = \
+                        each_test_case["test_description"]
+                    db_obj.save_to_db()
+                if "src_table" in keys:
+                    table = testcasedetail["table"]
+                    for key in table:
+                        target_table = table[key]
+                    table[each_test_case["src_table"]] = key
+                    del table[key]
+                    table[
+                        each_test_case[
+                            "src_table"]] = target_table
+                    db_obj.save_to_db()
+                if "target_table" in keys:
+                    table = testcasedetail["table"]
+                    for key in table:
+                        table[key] = each_test_case[
+                            "target_table"]
+                    db_obj.save_to_db()
+                if "src_qry" in keys:
+                    queries = testcasedetail["query"]
+                    queries["sourceqry"] = each_test_case[
+                        "src_qry"]
+                    db_obj.save_to_db()
+                if "target_qry" in keys:
+                    queries = testcasedetail["query"]
+                    queries["targetqry"] = each_test_case[
+                        "target_qry"]
+                    db_obj.save_to_db()
+                if "column" in keys:
+                    column = testcasedetail["column"]
+                    if ";" and ":" in each_test_case[
+                        "column"]:
+                        column = {}
+                        user_columns = each_test_case[
+                            "column"].split(
+                            ";")
+                        for columnpair in user_columns:
+                            if ":" in columnpair:
+                                singlecolumn = columnpair.split(
+                                    ":")
+                                column[singlecolumn[0]] = \
+                                    singlecolumn[1]
+                            else:
+                                column[columnpair] = columnpair
+                        testcasedetail["column"] = column
+                    elif ";" in each_test_case["column"]:
+                        column = {}
+                        columns = each_test_case[
+                            "column"].split(";")
+                        for singlecolumn in columns:
+                            column[singlecolumn] = singlecolumn
+                        testcasedetail["column"] = column
+                    else:
+                        column = {}
+                        column[each_test_case["column"]] = \
+                            each_test_case["column"]
+                        testcasedetail["column"] = column
+                    db_obj.save_to_db()
+
+                db_obj.test_case_detail = testcasedetail
+                db_obj.save_to_db()
+            return api_response(
+                True, APIMessages.TEST_SUITE_UPDATED.format(
+                    test_case_id), STATUS_CREATED)
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+
+
+class CreateNewTestSuite(Resource):
+    """ To handle POST API to create a new test suite."""
+
+    @token_required
+    def post(self, session):
+        """
+            To create a new test suite from the given test case list.
+
+             Args:
+                 session (object):By using this object we can get the user_id.
+
+             Returns:
+                 Standard API Response with message(returns message saying
+                 that New Test Suite created),http status code.
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('case_id_list',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=True, type=list, location='json')
+        parser.add_argument('suite_name',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=False, type=str, location='json')
+        test_suite_data = parser.parse_args()
+        current_user = session.user_id
+        testcaseids = test_suite_data["case_id_list"]
+        print(testcaseids)
+        get_excel_name_and_project_id = return_excel_name_and_project_id(
+            testcaseids[0])
+        project_id = \
+            get_excel_name_and_project_id["user"][0]["test_suite_id"][0][
+                "project_id"]
+        excel_name = \
+            get_excel_name_and_project_id["user"][0]["test_suite_id"][0][
+                "excel_name"]
+        if test_suite_data["suite_name"] == None or test_suite_data[
+            "suite_name"] == " ":
+            test_suite_data["suite_name"] = "Quality Suite"
+            new_test_suite = TestSuite(project_id=project_id,
+                                       owner_id=current_user,
+                                       excel_name=excel_name,
+                                       test_suite_name=test_suite_data[
+                                           "suite_name"])
+            new_test_suite.save_to_db()
+            for each_test_case_id in test_suite_data["case_id_list"]:
+                test_case = TestCase.query.filter_by(
+                    test_case_id=each_test_case_id).first()
+                if not test_case:
+                    return api_response(False,
+                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                            each_test_case_id),
+                                        STATUS_BAD_REQUEST)
+                new_test_case = TestCase(
+                    test_suite_id=new_test_suite.test_suite_id,
+                    owner_id=current_user,
+                    test_case_class=test_case.test_case_class,
+                    test_case_detail=test_case.test_case_detail)
+                new_test_case.save_to_db()
+            return api_response(True, APIMessages.NEW_TEST_SUITE_CREATED,
+                                STATUS_CREATED)
+        else:
+            new_test_suite = TestSuite(project_id=project_id,
+                                       owner_id=current_user,
+                                       excel_name=excel_name,
+                                       test_suite_name=test_suite_data[
+                                           "suite_name"])
+            new_test_suite.save_to_db()
+            for each_test_case_id in test_suite_data["case_id_list"]:
+                test_case = TestCase.query.filter_by(
+                    test_case_id=each_test_case_id).first()
+                if not test_case:
+                    return api_response(False,
+                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                            each_test_case_id),
+                                        STATUS_BAD_REQUEST)
+                new_test_case = TestCase(
+                    test_suite_id=new_test_suite.test_suite_id,
+                    owner_id=current_user,
+                    test_case_class=test_case.test_case_class,
+                    test_case_detail=test_case.test_case_detail)
+                new_test_case.save_to_db()
+            return api_response(True, APIMessages.NEW_TEST_SUITE_CREATED,
+                                STATUS_CREATED)
 
 
 class TestCaseLogDetail(Resource):
