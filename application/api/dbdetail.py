@@ -36,7 +36,7 @@ class DbDetails(Resource):
             post_db_detail_parser.add_argument('project_id', required=True,
                                                type=int,
                                                help=APIMessages.PARSER_MESSAGE)
-            post_db_detail_parser.add_argument('connection_name',
+            post_db_detail_parser.add_argument('db_connection_name',
                                                required=False, type=str,
                                                help=APIMessages.PARSER_MESSAGE)
             post_db_detail_parser.add_argument('db_type_name', required=True,
@@ -81,7 +81,7 @@ class DbDetails(Resource):
                 # Check Db connection name already exist in db or not
                 temp_connection = DbConnection.query.filter(
                     DbConnection.db_connection_name == db_detail[
-                        "connection_name"],
+                        "db_connection_name"],
                     DbConnection.project_id == db_detail["project_id"]).first()
                 if temp_connection:
                     return api_response(False, APIMessages.
@@ -98,7 +98,7 @@ class DbDetails(Resource):
                 new_db = DbConnection(project_id=db_detail["project_id"],
                                       owner_id=session.user_id,
                                       db_connection_name=db_detail[
-                                          'connection_name'],
+                                          'db_connection_name'],
                                       db_type=SupportedDBType().
                                       get_db_id_by_name(
                                           db_detail['db_type_name']),
