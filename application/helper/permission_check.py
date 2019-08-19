@@ -1,7 +1,8 @@
-"""Helper file t0 check if user has valid permissions."""
+"""Helper file to check if user has valid permissions."""
 from application.model.models import User, UserProjectRole, RolePermission,\
     Permission, UserOrgRole
 from index import db
+from application.common.common_exception import UnauthorizedException
 
 
 def check_permission(user_object, list_of_permissions=None,
@@ -35,8 +36,11 @@ def check_permission(user_object, list_of_permissions=None,
         ).all()
         if list_of_permissions is None and project_permission:
             return True
-        elif list_of_permissions in project_permission:
-            return True
+        if project_permission:
+            project_permission_from_db = \
+                [each_permission[0] for each_permission in project_permission]
+            if set(list_of_permissions).issubset(project_permission_from_db):
+                return True
     # Check for Organization permission
     if org_id:
         org_permission = db.session.query(Permission.permission_name).join(
@@ -48,6 +52,9 @@ def check_permission(user_object, list_of_permissions=None,
         ).all()
         if list_of_permissions is None and org_permission:
             return True
-        elif list_of_permissions in org_permission:
-            return True
-    return False
+        if org_permission:
+            org_permission_from_db = \
+                [each_permission[0] for each_permission in org_permission]
+            if set(list_of_permissions).issubset(org_permission_from_db):
+                return True
+    raise UnauthorizedException
