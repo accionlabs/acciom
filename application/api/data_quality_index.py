@@ -15,6 +15,11 @@ from application.model.models import (Organization, Project, TestSuite,
                                       TestCase, TestCaseLog)
 from index import db
 
+from application.common.constants import (APIMessages, SupportedTestClass)
+from application.model.models import ( Organization, Project, TestSuite,
+                                       TestCase, TestCaseLog)
+from application.helper.permission_check import check_permission
+from collections import OrderedDict
 
 class ProjectDQI(Resource):
     """
@@ -163,7 +168,6 @@ class ProjectDQIHistory(Resource):
                                             'end_date'), required=False,
                                         type=str, location='args')
         dqi_history_data = dqi_history_parser.parse_args()
-
         # check if project Id exists
         check_valid_project = Project.query.filter_by(
             project_id=dqi_history_data['project_id']).first()
@@ -171,6 +175,10 @@ class ProjectDQIHistory(Resource):
             return api_response(
                 False, APIMessages.NO_RESOURCE.format('Project'),
                 STATUS_BAD_REQUEST)
+            # checking if user is authorized to make this call
+        check_permission(session.user,list_of_permissions=["view_project"],
+                         org_id=check_valid_project.org_id,
+                         project_id=dqi_history_data['project_id'])
         # Check if both start and end date are passed instead either of them
         if (dqi_history_data['start_date']
             and not dqi_history_data['end_date']) or \
@@ -195,7 +203,7 @@ class ProjectDQIHistory(Resource):
         daily_dqi = get_project_dqi_history(
             dqi_history_data['project_id'], start_date=start_date,
             end_date=end_date)
-        dqi_response = dict()
+        dqi_response = OrderedDict()
         dqi_response['project_id'] = dqi_history_data['project_id']
         dqi_response['project_name'] = check_valid_project.project_name
         dqi_response['dqi_history'] = daily_dqi
@@ -240,7 +248,7 @@ def get_project_dqi_history(project_id, start_date=None, end_date=None):
         Project, TestSuite.project_id == Project.project_id).filter(
         Project.project_id == project_id).all()
     # temp dict is used to store values from tuple with each day
-    temp_dict = {}
+    temp_dict = dict()
     for each_tuple in dqi_for_each_day:
         if each_tuple[3] not in temp_dict:
             temp_dict[each_tuple[3]] = {}
@@ -260,6 +268,7 @@ def get_project_dqi_history(project_id, start_date=None, end_date=None):
         ).get_test_class_name_by_id(each_tuple[2])] = each_tuple[1]
     # dict_dqi_for_each_class is used to store
     # list of dqi for each class for each day
+    dict_dqi_for_each_class = dict()
     dict_dqi_for_each_class = {}
     for suite_key, suite_value in temp_dict.items():
         for class_key, class_value in suite_value.items():
@@ -274,7 +283,7 @@ def get_project_dqi_history(project_id, start_date=None, end_date=None):
                             class_value)
     # result_dict is used to store average of each class dqi for each day and
     # average dqi for each class
-    result_dict = {}
+    result_dict = dict()
     # Calculating average of all dqi for same classes
     for key_date, dqi_values in dict_dqi_for_each_class.items():
         if key_date not in result_dict:
@@ -285,7 +294,10 @@ def get_project_dqi_history(project_id, start_date=None, end_date=None):
     for each_date, percentage in result_dict.items():
         result_dict[each_date]['average_dqi'] = round(mean(
             percentage.values()), 4)
-    return result_dict
+    sorted_result_dict = OrderedDict()
+    for each_sorted_key in sorted(result_dict.keys()):
+        sorted_result_dict[each_sorted_key] = result_dict[each_sorted_key]
+    return sorted_result_dict
 
 
 def get_project_dqi(project_id, start_date=None, end_date=None):

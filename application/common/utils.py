@@ -6,7 +6,7 @@ from passlib.hash import pbkdf2_sha256 as sha256
 
 from application.common.constants import APIMessages
 from application.model.models import DbConnection
-from application.model.models import User
+from application.model.models import User, TestSuite, TestCase
 from index import app
 
 
@@ -137,3 +137,34 @@ def generate_hash(userpassword):
         It returns hashed password for the new password enter by the user.
     """
     return sha256.hash(userpassword)
+
+
+def return_excel_name_and_project_id(test_case_id):
+    """
+    It takes test case id and gives the excelname and project id for the
+    particular test case id.
+
+    Args:
+        test_case_id(int):test case id.
+
+    Returns:
+    The excel name and project id.
+    """
+
+    def test_suite_to_json(test_suite):
+        return {
+            'excel_name': test_suite.excel_name,
+            'project_id': test_suite.project_id
+        }
+
+    def test_case_to_json(test_case):
+        return {
+            'test_suite_id': list(
+                map(lambda test_suite: test_suite_to_json(test_suite),
+                    TestSuite.query.
+                    filter_by(
+                        test_suite_id=test_case.test_suite_id)))}
+
+    return {'user': list(map(lambda test_case: test_case_to_json(test_case),
+                             TestCase.query.filter_by(
+                                 test_case_id=test_case_id)))}
