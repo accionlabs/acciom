@@ -132,8 +132,8 @@ class AddTestSuiteManually(Resource):
                                    test_suite_name=test_suite_data[
                                        'suite_name'])
             test_suite.save_to_db()
-            keys = []
             for each_test_case in test_suite_data['test_case_detail']:
+                keys = []
                 for key in each_test_case:
                     keys.append(key)
                 if "source_db_existing_connection" not in keys:

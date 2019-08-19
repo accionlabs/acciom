@@ -408,6 +408,16 @@ class EditTestCase(Resource):
 
     @token_required
     def delete(self, session):
+        """
+        To delete the Test Case for the user provided test case id.
+
+       Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message saying
+            that Test Case Deleted Successfully) and http status code.
+        """
         delete_db_detail_parser = reqparse.RequestParser()
         delete_db_detail_parser.add_argument('test_case_id', required=True,
                                              type=int,
@@ -415,20 +425,23 @@ class EditTestCase(Resource):
         testcaseid = delete_db_detail_parser.parse_args()
         test_case_id = testcaseid.get("test_case_id")
         try:
+            if not test_case_id:
+                return api_response(False,
+                                    APIMessages.PASS_TESTCASEID.format(
+                                        test_case_id),
+                                    STATUS_BAD_REQUEST)
             del_obj = TestCase.query.filter_by(
                 test_case_id=test_case_id).one()
-            if del_obj:
-                db.session.delete(del_obj)
-                db.session.commit()
-                return {"success": True,
-                        "message": "Succesfully Deleted case {0}".format(
-                            test_case_id)}
-            else:
+            if not del_obj:
                 return api_response(False,
                                     APIMessages.DBID_NOT_IN_DB.format(
                                         test_case_id),
                                     STATUS_BAD_REQUEST)
-
+            db.session.delete(del_obj)
+            db.session.commit()
+            return api_response(True,
+                                APIMessages.DB_DELETED,
+                                STATUS_BAD_REQUEST)
         except SQLAlchemyError as e:
             db.session.rollback()
             return api_response(False, APIMessages.INTERNAL_ERROR,
