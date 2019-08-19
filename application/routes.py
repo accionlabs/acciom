@@ -24,6 +24,10 @@ from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
 from application.api.user_management import UserAPI, UserRoleAPI
 from application.model.models import db
 from index import (app, api, static_folder)
+from application.common.common_exception import UnauthorizedException
+from application.common.response import (api_response, STATUS_UNAUTHORIZED,
+                                         STATUS_SERVER_ERROR)
+from application.common.constants import APIMessages
 
 db
 
@@ -49,6 +53,19 @@ def serve(path):
         return send_from_directory(static_folder, 'index.html')
     elif path == "":
         return send_from_directory(static_folder, 'index.html')
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Handle Generic Exception."""
+    return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR,
+                        {'error_log': str(e)})
+
+
+@app.errorhandler(UnauthorizedException)
+def handle_unauthorized_exception(e):
+    """Handle Unauthorized Access Exception."""
+    return api_response(False, APIMessages.UNAUTHORIZED, STATUS_UNAUTHORIZED)
 
 
 api.add_resource(Login, '/api/login')
