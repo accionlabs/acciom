@@ -190,8 +190,13 @@ class EditTestCase(Resource):
             if testcase_id:
                 test_case_id = testcase_id.get("test_case_id")
                 db_obj = TestCase.query.filter_by(
-                    test_case_id=test_case_id).one()
-                if db_obj:
+                    test_case_id=test_case_id).first()
+                if db_obj == None:
+                    return api_response(False,
+                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                            test_case_id),
+                                        STATUS_BAD_REQUEST)
+                if db_obj.is_deleted == False:
                     test_case_detail = db_obj.test_case_detail
                     source_db_id = test_case_detail["src_db_id"]
                     target_db_id = test_case_detail["target_db_id"]
@@ -418,29 +423,30 @@ class EditTestCase(Resource):
             Standard API Response with message(returns message saying
             that Test Case Deleted Successfully) and http status code.
         """
-        delete_db_detail_parser = reqparse.RequestParser()
-        delete_db_detail_parser.add_argument('test_case_id', required=True,
-                                             type=int,
-                                             location='args')
-        testcaseid = delete_db_detail_parser.parse_args()
+        delete_test_case_detail_parser = reqparse.RequestParser()
+        delete_test_case_detail_parser.add_argument('test_case_id',
+                                                    required=True,
+                                                    type=int,
+                                                    location='args')
+        testcaseid = delete_test_case_detail_parser.parse_args()
         test_case_id = testcaseid.get("test_case_id")
         try:
             if not test_case_id:
                 return api_response(False,
-                                    APIMessages.PASS_TESTCASEID.format(
-                                        test_case_id),
+                                    APIMessages.PASS_TESTCASEID,
                                     STATUS_BAD_REQUEST)
             del_obj = TestCase.query.filter_by(
-                test_case_id=test_case_id).one()
+                test_case_id=test_case_id).first()
             if not del_obj:
                 return api_response(False,
-                                    APIMessages.DBID_NOT_IN_DB.format(
+                                    APIMessages.TEST_CASE_NOT_IN_DB.format(
                                         test_case_id),
                                     STATUS_BAD_REQUEST)
-            db.session.delete(del_obj)
-            db.session.commit()
+            del_obj.is_deleted = True
+            del_obj.save_to_db()
             return api_response(True,
-                                APIMessages.DB_DELETED,
+                                APIMessages.TEST_CASE_DELETED.format(
+                                    test_case_id),
                                 STATUS_BAD_REQUEST)
         except SQLAlchemyError as e:
             db.session.rollback()

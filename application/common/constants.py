@@ -72,7 +72,8 @@ class APIMessages:
     UNAUTHORIZED = "Unauthorized Access"
     PROJECT_NOT_UNDER_ORG = "Project Id provided is not under given org"
     TEST_SUITE_ADDED = "Test suite added successfully"
-    DB_DELETED = "Test Case Deleted Successfully"
+    PASS_DB_ID = "Please pass DB ID"
+    DB_DELETED = "Data Base with db id {} Deleted Sucessfully"
 
 
 class GenericStrings:
