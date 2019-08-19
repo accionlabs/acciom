@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.dialects.postgresql import JSON
@@ -244,7 +245,7 @@ class TestSuite(db.Model):
                            nullable=False, index=True)
     owner_id = db.Column(db.ForeignKey('user.user_id'),
                          nullable=False)
-    excel_name = db.Column(db.Text, nullable=False)
+    excel_name = db.Column(db.Text)
     test_suite_name = db.Column(db.Text, nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)

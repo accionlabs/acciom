@@ -21,14 +21,15 @@ from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
                                       EditTestCase, TestCaseJobExternal)
 from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
                                        ExportTestLog, TestCaseLogAPI,
+                                       AddTestSuiteManually,
                                        CreateNewTestSuite)
 from application.api.user_management import UserAPI, UserRoleAPI
-from application.model.models import db
-from index import (app, api, static_folder)
 from application.common.common_exception import UnauthorizedException
+from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_UNAUTHORIZED,
                                          STATUS_SERVER_ERROR)
-from application.common.constants import APIMessages
+from application.model.models import db
+from index import (app, api, static_folder)
 
 db
 
@@ -104,4 +105,5 @@ api.add_resource(UserAPI, '/api/user')
 api.add_resource(UserRoleAPI, '/api/user-role')
 api.add_resource(ProjectDQIHistory, '/api/project-dqi-history')
 api.add_resource(MenuAPI, '/api/menu')
+api.add_resource(AddTestSuiteManually, '/api/add-test-suite-manually')
 api.add_resource(CreateNewTestSuite, '/api/create-new-test-suite')
