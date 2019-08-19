@@ -71,6 +71,9 @@ class APIMessages:
     NO_SPACES = "User name or host name cannot contain spaces"
     UNAUTHORIZED = "Unauthorized Access"
     PROJECT_NOT_UNDER_ORG = "Project Id provided is not under given org"
+    TEST_SUITE_ADDED = "Test suite added successfully"
+    PASS_DB_ID = "Please pass DB ID"
+    DB_DELETED = "Data Base with db id {} Deleted Sucessfully"
     TEST_SUITE_UPDATED = "Test Suite updated successfully"
     NEW_TEST_SUITE_CREATED = "New Test Suite created"
 

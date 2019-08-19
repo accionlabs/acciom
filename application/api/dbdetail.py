@@ -36,7 +36,7 @@ class DbDetails(Resource):
             post_db_detail_parser.add_argument('project_id', required=True,
                                                type=int,
                                                help=APIMessages.PARSER_MESSAGE)
-            post_db_detail_parser.add_argument('connection_name',
+            post_db_detail_parser.add_argument('db_connection_name',
                                                required=False, type=str,
                                                help=APIMessages.PARSER_MESSAGE)
             post_db_detail_parser.add_argument('db_type_name', required=True,
@@ -81,7 +81,7 @@ class DbDetails(Resource):
                 # Check Db connection name already exist in db or not
                 temp_connection = DbConnection.query.filter(
                     DbConnection.db_connection_name == db_detail[
-                        "connection_name"],
+                        "db_connection_name"],
                     DbConnection.project_id == db_detail["project_id"]).first()
                 if temp_connection:
                     return api_response(False, APIMessages.
@@ -98,7 +98,7 @@ class DbDetails(Resource):
                 new_db = DbConnection(project_id=db_detail["project_id"],
                                       owner_id=session.user_id,
                                       db_connection_name=db_detail[
-                                          'connection_name'],
+                                          'db_connection_name'],
                                       db_type=SupportedDBType().
                                       get_db_id_by_name(
                                           db_detail['db_type_name']),
@@ -146,9 +146,12 @@ class DbDetails(Resource):
             if db_connection_id:
                 db_obj = DbConnection.query.filter_by(
                     db_connection_id=db_connection_id).first()
-
-                if db_obj:
-
+                if db_obj == None:
+                    return api_response(False,
+                                        APIMessages.DBID_NOT_IN_DB.format(
+                                            db_connection_id),
+                                        STATUS_BAD_REQUEST)
+                if db_obj.is_deleted == False:
                     return api_response(
                         True, APIMessages.DATA_LOADED, STATUS_CREATED,
                         {'project_id': db_obj.project_id,
@@ -191,24 +194,23 @@ class DbDetails(Resource):
                             'db_username': projectid.db_username}
 
                     db_detail_dic = {}
-                    project_list = DbConnection.query.filter_by(
+                    db_list = DbConnection.query.filter_by(
                         project_id=project_id).order_by(
                         DbConnection.created_at).all()
+                    db_connection_list = [each_db for each_db in db_list if
+                                          each_db.is_deleted == False]
                     db_detail_dic["db_details"] = list(
-                        map(lambda projectid: to_json(projectid),
-                            project_list))
+                        map(lambda db_connection_id: to_json(db_connection_id),
+                            db_connection_list))
                     return api_response(True, APIMessages.DATA_LOADED,
                                         STATUS_CREATED,
                                         db_detail_dic)
-                else:
-                    return api_response(False,
-                                        APIMessages.NO_DB_UNDER_PROJECT.format(
-                                            db_connection_id),
-                                        STATUS_BAD_REQUEST)
+                return api_response(False,
+                                    APIMessages.PROJECT_NOT_EXIST,
+                                    STATUS_BAD_REQUEST)
             else:
                 return api_response(False,
-                                    APIMessages.PASS_DBID_or_PROJECTID.format(
-                                        db_connection_id),
+                                    APIMessages.PASS_DBID_or_PROJECTID,
                                     STATUS_BAD_REQUEST)
         except SQLAlchemyError as e:
             db.session.rollback()
@@ -340,6 +342,54 @@ class DbDetails(Resource):
                 return api_response(False, APIMessages.ABSENCE_OF_DBID,
                                     STATUS_BAD_REQUEST)
 
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+
+    @token_required
+    def delete(self, session):
+        """
+        To delete the data base for the user provided data base id.
+
+       Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message saying
+            that Data Base Deleted Successfully) and http status code.
+        """
+        delete_db_detail_parser = reqparse.RequestParser()
+        delete_db_detail_parser.add_argument('db_connection_id',
+                                             required=True,
+                                             type=int,
+                                             location='args')
+        databaseid = delete_db_detail_parser.parse_args()
+        data_base_id = databaseid.get("db_connection_id")
+        try:
+            if not data_base_id:
+                return api_response(False,
+                                    APIMessages.PASS_DB_ID,
+                                    STATUS_BAD_REQUEST)
+            del_obj = DbConnection.query.filter_by(
+                db_connection_id=data_base_id).first()
+            if del_obj:
+                del_obj.is_deleted = True
+                del_obj.save_to_db()
+                return api_response(True,
+                                    APIMessages.DB_DELETED.format(
+                                        data_base_id),
+                                    STATUS_BAD_REQUEST)
+            else:
+                return api_response(False,
+                                    APIMessages.DBID_NOT_IN_DB.format(
+                                        data_base_id),
+                                    STATUS_BAD_REQUEST)
         except SQLAlchemyError as e:
             db.session.rollback()
             return api_response(False, APIMessages.INTERNAL_ERROR,

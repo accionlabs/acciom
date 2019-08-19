@@ -15,8 +15,6 @@ from application.common.token import (token_required)
 from application.common.utils import (get_table_name,
                                       db_details_without_password)
 from application.helper.corefunctions.datavalidation import manage_none_value
-from application.helper.runnerclass import (run_by_case_id,
-                                            save_case_log_information)
 from application.helper.runnerclass import (save_case_log_information)
 from application.helper.runnerclasshelpers import (
     save_case_log)
@@ -192,8 +190,13 @@ class EditTestCase(Resource):
             if testcase_id:
                 test_case_id = testcase_id.get("test_case_id")
                 db_obj = TestCase.query.filter_by(
-                    test_case_id=test_case_id).one()
-                if db_obj:
+                    test_case_id=test_case_id).first()
+                if db_obj == None:
+                    return api_response(False,
+                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                            test_case_id),
+                                        STATUS_BAD_REQUEST)
+                if db_obj.is_deleted == False:
                     test_case_detail = db_obj.test_case_detail
                     source_db_id = test_case_detail["src_db_id"]
                     target_db_id = test_case_detail["target_db_id"]
@@ -398,6 +401,53 @@ class EditTestCase(Resource):
                 return api_response(False, APIMessages.PASS_TESTCASEID,
                                     STATUS_BAD_REQUEST)
 
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+        except Exception as e:
+            return api_response(False, APIMessages.INTERNAL_ERROR,
+                                STATUS_SERVER_ERROR,
+                                {'error_log': str(e)})
+
+    @token_required
+    def delete(self, session):
+        """
+        To delete the Test Case for the user provided test case id.
+
+       Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message saying
+            that Test Case Deleted Successfully) and http status code.
+        """
+        delete_test_case_detail_parser = reqparse.RequestParser()
+        delete_test_case_detail_parser.add_argument('test_case_id',
+                                                    required=True,
+                                                    type=int,
+                                                    location='args')
+        testcaseid = delete_test_case_detail_parser.parse_args()
+        test_case_id = testcaseid.get("test_case_id")
+        try:
+            if not test_case_id:
+                return api_response(False,
+                                    APIMessages.PASS_TESTCASEID,
+                                    STATUS_BAD_REQUEST)
+            del_obj = TestCase.query.filter_by(
+                test_case_id=test_case_id).first()
+            if not del_obj:
+                return api_response(False,
+                                    APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                        test_case_id),
+                                    STATUS_BAD_REQUEST)
+            del_obj.is_deleted = True
+            del_obj.save_to_db()
+            return api_response(True,
+                                APIMessages.TEST_CASE_DELETED.format(
+                                    test_case_id),
+                                STATUS_BAD_REQUEST)
         except SQLAlchemyError as e:
             db.session.rollback()
             return api_response(False, APIMessages.INTERNAL_ERROR,
