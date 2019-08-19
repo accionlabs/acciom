@@ -3,8 +3,7 @@ from flask import request
 from flask_restful import reqparse, Resource
 from sqlalchemy.exc import SQLAlchemyError
 
-from application.common.constants import APIMessages
-from application.common.constants import SupportedTestClass
+from application.common.constants import APIMessages, SupportedTestClass
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
@@ -111,115 +110,106 @@ class TestSuiteAPI(Resource):
         """
         # TODO: Need to use save to db only at the last(after all the fileds)
         put_testcase_parser = reqparse.RequestParser(bundle_errors=True)
-        put_testcase_parser.add_argument('test_case_id', required=True,
-                                         type=int)
-        put_testcase_parser.add_argument('src_table', type=str)
-        put_testcase_parser.add_argument('target_table', type=str)
-        put_testcase_parser.add_argument('src_qry', type=str)
-        put_testcase_parser.add_argument('target_qry', type=str)
-        put_testcase_parser.add_argument('column', type=str)
-        put_testcase_parser.add_argument('src_db_id', type=int)
-        put_testcase_parser.add_argument('target_db_id', type=int)
-        put_testcase_parser.add_argument('test_class', type=str)
-        put_testcase_parser.add_argument('test_description', type=str)
-        user_test_case_detail = put_testcase_parser.parse_args()
-        test_case_id = user_test_case_detail["test_case_id"]
+        put_testcase_parser.add_argument('test_case_detail', required=True,
+                                         type=list, location='json')
+        dict_test_case_details = put_testcase_parser.parse_args()
+        test_case_detail = dict_test_case_details["test_case_detail"]
         try:
-            if test_case_id:
+            for each_test_case in test_case_detail:
+                keys = []
+                for key in each_test_case:
+                    keys.append(key)
+                if not "test_case_id" in keys:
+                    return api_response(False, APIMessages.PASS_TESTCASEID,
+                                        STATUS_BAD_REQUEST)
+                test_case_id = each_test_case["test_case_id"]
                 db_obj = TestCase.query.filter_by(
                     test_case_id=test_case_id).first()
-                del user_test_case_detail["test_case_id"]
-                if db_obj:
-                    testcasedetail = db_obj.test_case_detail
-                    for key, value in user_test_case_detail.items():
-                        if value and str(value).strip():
-                            if key == 'src_db_id':
-                                testcasedetail["src_db_id"] = \
-                                    user_test_case_detail["src_db_id"]
-                                db_obj.save_to_db()
-                            if key == 'target_db_id':
-                                testcasedetail["target_db_id"] = \
-                                    user_test_case_detail["target_db_id"]
-                                db_obj.save_to_db()
-                            if key == 'test_class':
-                                db_obj.test_case_class = SupportedTestClass(). \
-                                    get_test_class_id_by_name \
-                                    (user_test_case_detail["test_class"])
-                                db_obj.save_to_db()
-                            if key == 'test_description':
-                                testcasedetail["test_desc"] = \
-                                    user_test_case_detail["test_description"]
-                            if key == 'src_table':
-                                table = testcasedetail["table"]
-                                for key in table:
-                                    target_table = table[key]
-                                table[user_test_case_detail['src_table']] = key
-                                del table[key]
-                                table[
-                                    user_test_case_detail[
-                                        'src_table']] = target_table
-                                db_obj.save_to_db()
-                            if key == "target_table":
-                                table = testcasedetail["table"]
-                                for key in table:
-                                    table[key] = user_test_case_detail[
-                                        "target_table"]
-                                db_obj.save_to_db()
-                            if key == "src_qry":
-                                queries = testcasedetail["query"]
-                                queries["sourceqry"] = user_test_case_detail[
-                                    "src_qry"]
-                                db_obj.save_to_db()
-                            if key == "target_qry":
-                                queries = testcasedetail["query"]
-                                queries["targetqry"] = user_test_case_detail[
-                                    "target_qry"]
-                                db_obj.save_to_db()
-                            if key == "column":
-                                column = testcasedetail["column"]
-                                if ";" and ":" in user_test_case_detail[
-                                    "column"]:
-                                    column = {}
-
-                                    user_columns = user_test_case_detail[
-                                        "column"].split(
-                                        ";")
-                                    for columnpair in user_columns:
-                                        if ":" in columnpair:
-                                            singlecolumn = columnpair.split(
-                                                ":")
-                                            column[singlecolumn[0]] = \
-                                                singlecolumn[1]
-                                        else:
-                                            column[columnpair] = columnpair
-                                    testcasedetail["column"] = column
-                                elif ";" in user_test_case_detail["column"]:
-                                    column = {}
-                                    columns = user_test_case_detail[
-                                        "column"].split(";")
-                                    for singlecolumn in columns:
-                                        column[singlecolumn] = singlecolumn
-                                    testcasedetail["column"] = column
-                                else:
-                                    column = {}
-                                    column[user_test_case_detail["column"]] = \
-                                        user_test_case_detail["column"]
-                                    testcasedetail["column"] = column
-                                db_obj.save_to_db()
-                    db_obj.test_case_detail = testcasedetail
-                    db_obj.save_to_db()
-                    return api_response(
-                        True, APIMessages.TEST_SUITE_UPDATED.format(
-                            test_case_id), STATUS_CREATED)
-                else:
+                if not db_obj:
                     return api_response(False,
                                         APIMessages.TEST_CASE_NOT_IN_DB.format(
                                             test_case_id),
                                         STATUS_BAD_REQUEST)
-            else:
-                return api_response(False, APIMessages.PASS_TESTCASEID,
-                                    STATUS_BAD_REQUEST)
+                testcasedetail = db_obj.test_case_detail
+                if "src_db_id" in keys:
+                    testcasedetail["src_db_id"] = \
+                        each_test_case["src_db_id"]
+                    db_obj.save_to_db()
+                if "target_db_id" in keys:
+                    testcasedetail["target_db_id"] = \
+                        each_test_case["target_db_id"]
+                    db_obj.save_to_db()
+                if "test_class" in keys:
+                    db_obj.test_case_class = SupportedTestClass(). \
+                        get_test_class_id_by_name \
+                        (each_test_case["test_class"])
+                    db_obj.save_to_db()
+                if "test_description" in keys:
+                    testcasedetail["test_desc"] = \
+                        each_test_case["test_description"]
+                    db_obj.save_to_db()
+                if "src_table" in keys:
+                    table = testcasedetail["table"]
+                    for key in table:
+                        target_table = table[key]
+                    table[each_test_case["src_table"]] = key
+                    del table[key]
+                    table[
+                        each_test_case[
+                            "src_table"]] = target_table
+                    db_obj.save_to_db()
+                if "target_table" in keys:
+                    table = testcasedetail["table"]
+                    for key in table:
+                        table[key] = each_test_case[
+                            "target_table"]
+                    db_obj.save_to_db()
+                if "src_qry" in keys:
+                    queries = testcasedetail["query"]
+                    queries["sourceqry"] = each_test_case[
+                        "src_qry"]
+                    db_obj.save_to_db()
+                if "target_qry" in keys:
+                    queries = testcasedetail["query"]
+                    queries["targetqry"] = each_test_case[
+                        "target_qry"]
+                    db_obj.save_to_db()
+                if "column" in keys:
+                    column = testcasedetail["column"]
+                    if ";" and ":" in each_test_case[
+                        "column"]:
+                        column = {}
+                        user_columns = each_test_case[
+                            "column"].split(
+                            ";")
+                        for columnpair in user_columns:
+                            if ":" in columnpair:
+                                singlecolumn = columnpair.split(
+                                    ":")
+                                column[singlecolumn[0]] = \
+                                    singlecolumn[1]
+                            else:
+                                column[columnpair] = columnpair
+                        testcasedetail["column"] = column
+                    elif ";" in each_test_case["column"]:
+                        column = {}
+                        columns = each_test_case[
+                            "column"].split(";")
+                        for singlecolumn in columns:
+                            column[singlecolumn] = singlecolumn
+                        testcasedetail["column"] = column
+                    else:
+                        column = {}
+                        column[each_test_case["column"]] = \
+                            each_test_case["column"]
+                        testcasedetail["column"] = column
+                    db_obj.save_to_db()
 
+                db_obj.test_case_detail = testcasedetail
+                db_obj.save_to_db()
+            return api_response(
+                True, APIMessages.TEST_SUITE_UPDATED.format(
+                    test_case_id), STATUS_CREATED)
         except SQLAlchemyError as e:
             db.session.rollback()
             return api_response(False, APIMessages.INTERNAL_ERROR,
