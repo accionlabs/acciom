@@ -1,9 +1,7 @@
 """File to handle Menu API calls."""
 from flask_restful import Resource, reqparse
 from application.common.constants import APIMessages
-from application.common.response import (STATUS_OK,
-                                         STATUS_BAD_REQUEST,
-                                         STATUS_UNAUTHORIZED)
+from application.common.response import (STATUS_OK, STATUS_BAD_REQUEST)
 from application.common.response import api_response
 from application.common.token import token_required
 from application.model.models import Organization, Menu
@@ -37,9 +35,7 @@ class MenuAPI(Resource):
                 False, APIMessages.NO_RESOURCE.format('Organization'),
                 STATUS_BAD_REQUEST)
         # checking if user is authorized to make this call
-        if not check_permission(session.user, org_id=get_menu_data['org_id']):
-            return api_response(
-                False, APIMessages.UNAUTHORIZED, STATUS_UNAUTHORIZED)
+        check_permission(session.user, org_id=get_menu_data['org_id'])
         # TODO: Check if user has permission to access the Menu Items
         result_dict = {'menu_items': []}
         get_menu_items = Menu.query.filter_by(

@@ -21,8 +21,13 @@ from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
                                       EditTestCase, TestCaseJobExternal)
 from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
                                        ExportTestLog, TestCaseLogAPI,
-                                       AddTestSuiteManually)
+                                       AddTestSuiteManually,
+                                       CreateNewTestSuite)
 from application.api.user_management import UserAPI, UserRoleAPI
+from application.common.common_exception import UnauthorizedException
+from application.common.constants import APIMessages
+from application.common.response import (api_response, STATUS_UNAUTHORIZED,
+                                         STATUS_SERVER_ERROR)
 from application.model.models import db
 from index import (app, api, static_folder)
 
@@ -50,6 +55,19 @@ def serve(path):
         return send_from_directory(static_folder, 'index.html')
     elif path == "":
         return send_from_directory(static_folder, 'index.html')
+
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Handle Generic Exception."""
+    return api_response(False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR,
+                        {'error_log': str(e)})
+
+
+@app.errorhandler(UnauthorizedException)
+def handle_unauthorized_exception(e):
+    """Handle Unauthorized Access Exception."""
+    return api_response(False, APIMessages.UNAUTHORIZED, STATUS_UNAUTHORIZED)
 
 
 api.add_resource(Login, '/api/login')
@@ -88,3 +106,4 @@ api.add_resource(UserRoleAPI, '/api/user-role')
 api.add_resource(ProjectDQIHistory, '/api/project-dqi-history')
 api.add_resource(MenuAPI, '/api/menu')
 api.add_resource(AddTestSuiteManually, '/api/add-test-suite-manually')
+api.add_resource(CreateNewTestSuite, '/api/create-new-test-suite')
