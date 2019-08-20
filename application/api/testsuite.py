@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import current_app as app
 from flask import request
 from flask_restful import reqparse, Resource
@@ -56,6 +58,15 @@ class TestSuiteAPI(Resource):
         test_suite_data = parser.parse_args()
         current_user = session.user_id
         file = request.files['inputFile']
+        # Check Test Suite name already exist in db or not
+        temp_connection = TestSuite.query.filter(
+            TestSuite.test_suite_name == test_suite_data[
+                "suite_name"],
+            TestSuite.project_id == test_suite_data["project_id"]).first()
+        if temp_connection:
+            return api_response(False, APIMessages.
+                                TEST_SUITE_NAME_ALREADY_PRESENT,
+                                STATUS_BAD_REQUEST)
         suite_result = save_file_to_db(current_user,
                                        test_suite_data['project_id'],
                                        test_suite_data, file)
@@ -247,7 +258,6 @@ class CreateNewTestSuite(Resource):
         test_suite_data = parser.parse_args()
         current_user = session.user_id
         testcaseids = test_suite_data["case_id_list"]
-        print(testcaseids)
         get_excel_name_and_project_id = return_excel_name_and_project_id(
             testcaseids[0])
         project_id = \
@@ -256,9 +266,20 @@ class CreateNewTestSuite(Resource):
         excel_name = \
             get_excel_name_and_project_id["user"][0]["test_suite_id"][0][
                 "excel_name"]
+        # Check Test Suite name already exist in db or not
+        temp_connection = TestSuite.query.filter(
+            TestSuite.test_suite_name == test_suite_data[
+                "suite_name"],
+            TestSuite.project_id == project_id).first()
+        if temp_connection:
+            return api_response(False, APIMessages.
+                                TEST_SUITE_NAME_ALREADY_PRESENT,
+                                STATUS_BAD_REQUEST)
         if test_suite_data["suite_name"] == None or test_suite_data[
             "suite_name"] == " ":
-            test_suite_data["suite_name"] = "Quality Suite"
+            now = datetime.now()
+            date_time_now = now.strftime("%d/%m/%Y %H:%M:%S")
+            test_suite_data["suite_name"] = "Quality Suite " + date_time_now
             new_test_suite = TestSuite(project_id=project_id,
                                        owner_id=current_user,
                                        excel_name=excel_name,
@@ -334,7 +355,15 @@ class AddTestSuiteManually(Resource):
                                            required=True, type=list,
                                            location='json')
             test_suite_data = test_suite_parser.parse_args()
-
+            # Check Test Suite name already exist in db or not
+            temp_connection = TestSuite.query.filter(
+                TestSuite.test_suite_name == test_suite_data[
+                    "suite_name"],
+                TestSuite.project_id == test_suite_data["project_id"]).first()
+            if temp_connection:
+                return api_response(False, APIMessages.
+                                    TEST_SUITE_NAME_ALREADY_PRESENT,
+                                    STATUS_BAD_REQUEST)
             test_suite = TestSuite(project_id=test_suite_data["project_id"],
                                    owner_id=session.user_id,
                                    excel_name=None,
@@ -355,7 +384,7 @@ class AddTestSuiteManually(Resource):
                                                         'source_db_server'].lower(),
                                                     each_test_case[
                                                         'source_db_username'],
-                                                    each_test_case[
+                                                    test_suite_data[
                                                         "project_id"])
                 else:
                     src_db_id = each_test_case[
@@ -370,7 +399,7 @@ class AddTestSuiteManually(Resource):
                                                            'target_db_server'].lower(),
                                                        each_test_case[
                                                            'target_db_username'],
-                                                       each_test_case[
+                                                       test_suite_data[
                                                            "project_id"])
                 else:
                     target_db_id = each_test_case[
@@ -420,7 +449,6 @@ class AddTestSuiteManually(Resource):
                             "src_db_id": src_db_id,
                             "target_db_id": target_db_id,
                             "test_desc": each_test_case["test_description"]}
-
                 test_case = TestCase(test_suite_id=test_suite.test_suite_id,
                                      owner_id=session.user_id,
                                      test_case_class=SupportedTestClass().
