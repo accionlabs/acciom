@@ -18,9 +18,7 @@ def save_file_to_db(current_user, project_id, data, file):
         project_id(int): project id passed associated with the user
         data(data provided in the args parser):
         file(Excel file object):Excel file
-
     Returns: Parse Excel and save data to db.
-
     """
     temp_file = TestSuite(project_id=project_id, owner_id=current_user,
                           excel_name=file.filename,
