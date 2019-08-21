@@ -338,72 +338,77 @@ class EditTestCase(Resource):
                          project_id_org_id[1])
         testcasedetail = test_case_obj.test_case_detail
         for key, value in user_test_case_detail.items():
-            if value and str(value).strip():
-                if key == 'src_db_id':
-                    testcasedetail["src_db_id"] = \
-                        user_test_case_detail["src_db_id"]
-                    test_case_obj.save_to_db()
-                if key == 'target_db_id':
-                    testcasedetail["target_db_id"] = \
-                        user_test_case_detail["target_db_id"]
-                    test_case_obj.save_to_db()
-                if key == 'src_table':
-                    table = testcasedetail["table"]
-                    for key in table:
-                        target_table = table[key]
-                    table[user_test_case_detail['src_table']] = key
-                    del table[key]
-                    table[
-                        user_test_case_detail[
-                            'src_table']] = target_table
-                    test_case_obj.save_to_db()
-                if key == "target_table":
-                    table = testcasedetail["table"]
-                    for key in table:
-                        table[key] = user_test_case_detail[
-                            "target_table"]
-                    test_case_obj.save_to_db()
-                if key == "src_qry":
-                    queries = testcasedetail["query"]
-                    queries["sourceqry"] = user_test_case_detail[
-                        "src_qry"]
-                    test_case_obj.save_to_db()
-                if key == "target_qry":
-                    queries = testcasedetail["query"]
-                    queries["targetqry"] = user_test_case_detail[
-                        "target_qry"]
-                    test_case_obj.save_to_db()
-                if key == "column":
-                    column = testcasedetail["column"]
-                    if ";" and ":" in user_test_case_detail[
-                        "column"]:
-                        column = {}
+            if key == 'src_db_id' and value != None:
+                testcasedetail["src_db_id"] = \
+                    user_test_case_detail["src_db_id"]
+                test_case_obj.save_to_db()
+            if key == 'target_db_id' and value != None:
+                testcasedetail["target_db_id"] = \
+                    user_test_case_detail["target_db_id"]
+                test_case_obj.save_to_db()
+            if key == 'src_table' and value != None:
+                user_test_case_detail['src_table'] = user_test_case_detail[
+                    'src_table'].replace(" ", "")
+                table = testcasedetail["table"]
+                for key in table:
+                    target_table = table[key]
+                table[user_test_case_detail['src_table']] = key
+                del table[key]
+                table[
+                    user_test_case_detail[
+                        'src_table']] = target_table
+                test_case_obj.save_to_db()
+            if key == "target_table" and value != None:
+                user_test_case_detail["target_table"] = user_test_case_detail[
+                    "target_table"].replace(" ", "")
+                table = testcasedetail["table"]
+                for key in table:
+                    table[key] = user_test_case_detail[
+                        "target_table"]
+                test_case_obj.save_to_db()
+            if key == "src_qry" and value != None:
+                queries = testcasedetail["query"]
+                queries["sourceqry"] = user_test_case_detail[
+                    "src_qry"]
+                test_case_obj.save_to_db()
+            if key == "target_qry" and value != None:
+                queries = testcasedetail["query"]
+                queries["targetqry"] = user_test_case_detail[
+                    "target_qry"]
+                test_case_obj.save_to_db()
+            if key == "column" and value != None:
+                column = testcasedetail["column"]
+                user_test_case_detail["column"] = user_test_case_detail[
+                    "column"].replace(" ", "")
+                if ";" and ":" in user_test_case_detail[
+                    "column"]:
+                    column = {}
 
-                        user_columns = user_test_case_detail[
-                            "column"].split(
-                            ";")
-                        for columnpair in user_columns:
-                            if ":" in columnpair:
-                                singlecolumn = columnpair.split(
-                                    ":")
-                                column[singlecolumn[0]] = \
-                                    singlecolumn[1]
-                            else:
-                                column[columnpair] = columnpair
-                        testcasedetail["column"] = column
-                    elif ";" in user_test_case_detail["column"]:
-                        column = {}
-                        columns = user_test_case_detail[
-                            "column"].split(";")
-                        for singlecolumn in columns:
-                            column[singlecolumn] = singlecolumn
-                        testcasedetail["column"] = column
-                    else:
-                        column = {}
-                        column[user_test_case_detail["column"]] = \
-                            user_test_case_detail["column"]
-                        testcasedetail["column"] = column
-                    test_case_obj.save_to_db()
+                    user_columns = user_test_case_detail[
+                        "column"].split(
+                        ";")
+                    for columnpair in user_columns:
+                        if ":" in columnpair:
+                            singlecolumn = columnpair.split(
+                                ":")
+                            column[singlecolumn[0]] = \
+                                singlecolumn[1]
+                        else:
+                            column[columnpair] = columnpair
+                    testcasedetail["column"] = column
+                elif ";" in user_test_case_detail["column"]:
+                    column = {}
+                    columns = user_test_case_detail[
+                        "column"].split(";")
+                    for singlecolumn in columns:
+                        column[singlecolumn] = singlecolumn
+                    testcasedetail["column"] = column
+                else:
+                    column = {}
+                    column[user_test_case_detail["column"]] = \
+                        user_test_case_detail["column"]
+                    testcasedetail["column"] = column
+                test_case_obj.save_to_db()
         test_case_obj.test_case_detail = testcasedetail
         test_case_obj.save_to_db()
         return api_response(
