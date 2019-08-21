@@ -76,6 +76,7 @@ class APIMessages:
     DB_DELETED = "Data Base with db id {} Deleted Sucessfully"
     TEST_SUITE_UPDATED = "Test Suite updated successfully"
     NEW_TEST_SUITE_CREATED = "New Test Suite created"
+    NO_TEST_CASE = "This test case not present in any test suite"
 
 
 class GenericStrings:

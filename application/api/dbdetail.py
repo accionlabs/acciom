@@ -384,7 +384,7 @@ class DbDetails(Resource):
                 return api_response(True,
                                     APIMessages.DB_DELETED.format(
                                         data_base_id),
-                                    STATUS_BAD_REQUEST)
+                                    STATUS_CREATED)
             else:
                 return api_response(False,
                                     APIMessages.DBID_NOT_IN_DB.format(
