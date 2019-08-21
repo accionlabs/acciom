@@ -3,7 +3,6 @@ import ast
 from flask import current_app as app
 from flask import request
 from flask_restful import Resource, reqparse
-from sqlalchemy.exc import SQLAlchemyError
 
 from application.common.constants import (APIMessages, ExecutionStatus,
                                           SupportedTestClass, SupportedDBType)
@@ -15,11 +14,13 @@ from application.common.token import (token_required)
 from application.common.utils import (get_table_name,
                                       db_details_without_password)
 from application.helper.corefunctions.datavalidation import manage_none_value
+from application.helper.permission_check import check_permission
 from application.helper.runnerclass import (save_case_log_information)
 from application.helper.runnerclasshelpers import (
     save_case_log)
 from application.model.models import (TestCaseLog, TestCase, DbConnection,
-                                      PersonalToken, TestSuite)
+                                      PersonalToken, TestSuite, Project,
+                                      Organization)
 from index import db
 
 
@@ -185,106 +186,103 @@ class EditTestCase(Resource):
         get_testcase_parser.add_argument('test_case_id', required=True,
                                          type=int,
                                          location='args')
-        testcase_id = get_testcase_parser.parse_args()
-        try:
-            if testcase_id:
-                test_case_id = testcase_id.get("test_case_id")
-                db_obj = TestCase.query.filter_by(
-                    test_case_id=test_case_id).first()
-                if db_obj == None:
-                    return api_response(False,
-                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
-                                            test_case_id),
-                                        STATUS_BAD_REQUEST)
-                if db_obj.is_deleted == False:
-                    test_case_detail = db_obj.test_case_detail
-                    source_db_id = test_case_detail["src_db_id"]
-                    target_db_id = test_case_detail["target_db_id"]
-                    table_names_dic = get_table_name(test_case_detail["table"])
-                    DbConnection_object_src = DbConnection.query.filter_by(
-                        db_connection_id=source_db_id).first()
-                    DbConnection_object_target = DbConnection.query.filter_by(
-                        db_connection_id=target_db_id).first()
-                    DbConnection_detail_src = db_details_without_password(
-                        DbConnection_object_src.db_connection_id)
-                    DbConnection_detail_target = db_details_without_password(
-                        DbConnection_object_target.db_connection_id)
-                    if test_case_detail["column"] == {}:
-                        column = ''
-                    else:
-                        column = test_case_detail["column"]
-                    test_case_class = SupportedTestClass(). \
-                        get_test_class_name_by_id(
-                        db_obj.test_case_class)
-                    queries = test_case_detail["query"]
+        test_case_data = get_testcase_parser.parse_args()
+        test_case_obj = TestCase.query.filter(
+            TestCase.test_case_id == test_case_data[
+                "test_case_id"],
+            TestCase.is_deleted == False).first()
+        if not test_case_obj:
+            return api_response(False,
+                                APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                    test_case_data["test_case_id"]),
+                                STATUS_BAD_REQUEST)
+        project_id_org_id = db.session.query(
+            Organization.org_id,
+            Project.project_id).filter(Organization.is_deleted == False).join(
+            Project,
+            Organization.org_id == Project.org_id).filter(
+            Project.is_deleted == False).join(
+            TestSuite,
+            Project.project_id == TestSuite.project_id).filter(
+            TestSuite.test_suite_id == test_case_obj.test_suite_id,
+            TestSuite.is_deleted == False
+        ).first()
+        if project_id_org_id == ():
+            return api_response(False,
+                                APIMessages.NO_TEST_CASE,
+                                STATUS_BAD_REQUEST)
+        check_permission(session.user, ["view_suite"], project_id_org_id[0],
+                         project_id_org_id[1])
+        test_case_detail = test_case_obj.test_case_detail
+        source_db_id = test_case_detail["src_db_id"]
+        target_db_id = test_case_detail["target_db_id"]
+        table_names_dic = get_table_name(test_case_detail["table"])
+        DbConnection_object_src = DbConnection.query.filter_by(
+            db_connection_id=source_db_id).first()
+        DbConnection_object_target = DbConnection.query.filter_by(
+            db_connection_id=target_db_id).first()
+        DbConnection_detail_src = db_details_without_password(
+            DbConnection_object_src.db_connection_id)
+        DbConnection_detail_target = db_details_without_password(
+            DbConnection_object_target.db_connection_id)
+        if test_case_detail["column"] == {}:
+            column = ''
+        else:
+            column = test_case_detail["column"]
+        test_case_class = SupportedTestClass(). \
+            get_test_class_name_by_id(
+            test_case_obj.test_case_class)
+        queries = test_case_detail["query"]
 
-                    if test_case_detail["query"] == {}:
-                        src_qry = ''
-                        target_qry = ''
-                    else:
-                        query_list = []
-                        if test_case_class == "countcheck" or \
-                                test_case_class == "datavalidation":
-                            src_query = queries["sourceqry"]
-                            target_query = queries["targetqry"]
-                            query_list.append(src_query)
-                            query_list.append(target_query)
-                            src_qry = query_list[0]
-                            target_qry = query_list[1]
-                        else:
-                            src_qry = 'None'
-                            target_qry = queries["targetqry"]
-                    payload = {"test_case_id": db_obj.test_case_id,
-                               "test_case_class": test_case_class,
-                               "test_status": ExecutionStatus().
-                                   get_execution_status_by_id(
-                                   db_obj.latest_execution_status),
-                               "src_table": table_names_dic["src_table"],
-                               "target_table": table_names_dic["target_table"],
-                               "src_db_id": source_db_id,
-                               "target_db_id": target_db_id,
-                               "src_db_name": DbConnection_detail_src[
-                                   "db_name"],
-                               "des_db_name": DbConnection_detail_target[
-                                   "db_name"],
-                               "src_db_type": SupportedDBType().
-                                   get_db_name_by_id(
-                                   DbConnection_detail_src["db_type"]),
-                               "des_db_type": SupportedDBType().
-                                   get_db_name_by_id(
-                                   DbConnection_detail_target["db_type"]),
-                               "src_connection_name": DbConnection_detail_src[
-                                   "db_connection_name"],
-                               "target_connection_name":
-                                   DbConnection_detail_target[
-                                       "db_connection_name"],
-
-                               "column": column,
-                               "test_queries": test_case_detail["query"],
-                               "src_qry": src_qry,
-                               "des_qry": target_qry
-                               }
-                    return api_response(True, APIMessages.DATA_LOADED,
-                                        STATUS_CREATED,
-                                        payload)
-                else:
-                    return api_response(False,
-                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
-                                            test_case_id),
-                                        STATUS_BAD_REQUEST)
+        if test_case_detail["query"] == {}:
+            src_qry = ''
+            target_qry = ''
+        else:
+            query_list = []
+            if test_case_class == "countcheck" or \
+                    test_case_class == "datavalidation":
+                src_query = queries["sourceqry"]
+                target_query = queries["targetqry"]
+                query_list.append(src_query)
+                query_list.append(target_query)
+                src_qry = query_list[0]
+                target_qry = query_list[1]
             else:
-                return api_response(False,
-                                    APIMessages.PASS_TESTCASEID,
-                                    STATUS_BAD_REQUEST)
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
-        except Exception as e:
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
+                src_qry = 'None'
+                target_qry = queries["targetqry"]
+        payload = {"test_case_id": test_case_obj.test_case_id,
+                   "test_case_class": test_case_class,
+                   "test_status": ExecutionStatus().
+                       get_execution_status_by_id(
+                       test_case_obj.latest_execution_status),
+                   "src_table": table_names_dic["src_table"],
+                   "target_table": table_names_dic["target_table"],
+                   "src_db_id": source_db_id,
+                   "target_db_id": target_db_id,
+                   "src_db_name": DbConnection_detail_src[
+                       "db_name"],
+                   "des_db_name": DbConnection_detail_target[
+                       "db_name"],
+                   "src_db_type": SupportedDBType().
+                       get_db_name_by_id(
+                       DbConnection_detail_src["db_type"]),
+                   "des_db_type": SupportedDBType().
+                       get_db_name_by_id(
+                       DbConnection_detail_target["db_type"]),
+                   "src_connection_name": DbConnection_detail_src[
+                       "db_connection_name"],
+                   "target_connection_name":
+                       DbConnection_detail_target[
+                           "db_connection_name"],
+                   "column": column,
+                   "test_queries": test_case_detail["query"],
+                   "targetqry": target_qry,
+                   "sourceqry": src_qry,
+
+                   }
+        return api_response(True, APIMessages.DATA_LOADED,
+                            STATUS_CREATED,
+                            payload)
 
     @token_required
     def put(self, session):
@@ -312,104 +310,110 @@ class EditTestCase(Resource):
         put_testcase_parser.add_argument('target_db_id', type=int)
         user_test_case_detail = put_testcase_parser.parse_args()
         test_case_id = user_test_case_detail["test_case_id"]
-        try:
-            if test_case_id:
-                db_obj = TestCase.query.filter_by(
-                    test_case_id=test_case_id).first()
-                del user_test_case_detail["test_case_id"]
-                if db_obj:
-                    testcasedetail = db_obj.test_case_detail
-                    for key, value in user_test_case_detail.items():
-                        if value and str(value).strip():
-                            if key == 'src_db_id':
-                                testcasedetail["src_db_id"] = \
-                                    user_test_case_detail["src_db_id"]
-                                db_obj.save_to_db()
-                            if key == 'target_db_id':
-                                testcasedetail["target_db_id"] = \
-                                    user_test_case_detail["target_db_id"]
-                                db_obj.save_to_db()
-                            if key == 'src_table':
-                                table = testcasedetail["table"]
-                                for key in table:
-                                    target_table = table[key]
-                                table[user_test_case_detail['src_table']] = key
-                                del table[key]
-                                table[
-                                    user_test_case_detail[
-                                        'src_table']] = target_table
-                                db_obj.save_to_db()
-                            if key == "target_table":
-                                table = testcasedetail["table"]
-                                for key in table:
-                                    table[key] = user_test_case_detail[
-                                        "target_table"]
-                                db_obj.save_to_db()
-                            if key == "src_qry":
-                                queries = testcasedetail["query"]
-                                queries["sourceqry"] = user_test_case_detail[
-                                    "src_qry"]
-                                db_obj.save_to_db()
-                            if key == "target_qry":
-                                queries = testcasedetail["query"]
-                                queries["targetqry"] = user_test_case_detail[
-                                    "target_qry"]
-                                db_obj.save_to_db()
-                            if key == "column":
-                                column = testcasedetail["column"]
-                                if ";" and ":" in user_test_case_detail[
-                                    "column"]:
-                                    column = {}
+        test_case_obj = TestCase.query.filter(
+            TestCase.test_case_id == test_case_id,
+            TestCase.is_deleted == False).first()
+        del user_test_case_detail["test_case_id"]
+        if not test_case_obj:
+            return api_response(False,
+                                APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                    test_case_id),
+                                STATUS_BAD_REQUEST)
+        project_id_org_id = db.session.query(
+            Organization.org_id,
+            Project.project_id).filter(Organization.is_deleted == False).join(
+            Project,
+            Organization.org_id == Project.org_id).filter(
+            Project.is_deleted == False).join(
+            TestSuite,
+            Project.project_id == TestSuite.project_id).filter(
+            TestSuite.test_suite_id == test_case_obj.test_suite_id,
+            TestSuite.is_deleted == False
+        ).first()
+        if project_id_org_id == ():
+            return api_response(False,
+                                APIMessages.NO_TEST_CASE,
+                                STATUS_BAD_REQUEST)
+        check_permission(session.user, ["edit_suite"], project_id_org_id[0],
+                         project_id_org_id[1])
+        testcasedetail = test_case_obj.test_case_detail
+        for key, value in user_test_case_detail.items():
+            if key == 'src_db_id' and value != None:
+                testcasedetail["src_db_id"] = \
+                    user_test_case_detail["src_db_id"]
+                test_case_obj.save_to_db()
+            if key == 'target_db_id' and value != None:
+                testcasedetail["target_db_id"] = \
+                    user_test_case_detail["target_db_id"]
+                test_case_obj.save_to_db()
+            if key == 'src_table' and value != None:
+                user_test_case_detail['src_table'] = user_test_case_detail[
+                    'src_table'].replace(" ", "")
+                table = testcasedetail["table"]
+                for key in table:
+                    target_table = table[key]
+                table[user_test_case_detail['src_table']] = key
+                del table[key]
+                table[
+                    user_test_case_detail[
+                        'src_table']] = target_table
+                test_case_obj.save_to_db()
+            if key == "target_table" and value != None:
+                user_test_case_detail["target_table"] = user_test_case_detail[
+                    "target_table"].replace(" ", "")
+                table = testcasedetail["table"]
+                for key in table:
+                    table[key] = user_test_case_detail[
+                        "target_table"]
+                test_case_obj.save_to_db()
+            if key == "src_qry" and value != None:
+                queries = testcasedetail["query"]
+                queries["sourceqry"] = user_test_case_detail[
+                    "src_qry"]
+                test_case_obj.save_to_db()
+            if key == "target_qry" and value != None:
+                queries = testcasedetail["query"]
+                queries["targetqry"] = user_test_case_detail[
+                    "target_qry"]
+                test_case_obj.save_to_db()
+            if key == "column" and value != None:
+                column = testcasedetail["column"]
+                user_test_case_detail["column"] = user_test_case_detail[
+                    "column"].replace(" ", "")
+                if ";" and ":" in user_test_case_detail[
+                    "column"]:
+                    column = {}
 
-                                    user_columns = user_test_case_detail[
-                                        "column"].split(
-                                        ";")
-                                    for columnpair in user_columns:
-                                        if ":" in columnpair:
-                                            singlecolumn = columnpair.split(
-                                                ":")
-                                            column[singlecolumn[0]] = \
-                                                singlecolumn[1]
-                                        else:
-                                            column[columnpair] = columnpair
-                                    testcasedetail["column"] = column
-                                elif ";" in user_test_case_detail["column"]:
-                                    column = {}
-                                    columns = user_test_case_detail[
-                                        "column"].split(";")
-                                    for singlecolumn in columns:
-                                        column[singlecolumn] = singlecolumn
-                                    testcasedetail["column"] = column
-                                else:
-                                    column = {}
-                                    column[user_test_case_detail["column"]] = \
-                                        user_test_case_detail["column"]
-                                    testcasedetail["column"] = column
-                                db_obj.save_to_db()
-
-                    db_obj.test_case_detail = testcasedetail
-                    db_obj.save_to_db()
-                    return api_response(
-                        True, APIMessages.TEST_CASE_DETAILS_UPDATED.format(
-                            test_case_id), STATUS_CREATED)
+                    user_columns = user_test_case_detail[
+                        "column"].split(
+                        ";")
+                    for columnpair in user_columns:
+                        if ":" in columnpair:
+                            singlecolumn = columnpair.split(
+                                ":")
+                            column[singlecolumn[0]] = \
+                                singlecolumn[1]
+                        else:
+                            column[columnpair] = columnpair
+                    testcasedetail["column"] = column
+                elif ";" in user_test_case_detail["column"]:
+                    column = {}
+                    columns = user_test_case_detail[
+                        "column"].split(";")
+                    for singlecolumn in columns:
+                        column[singlecolumn] = singlecolumn
+                    testcasedetail["column"] = column
                 else:
-                    return api_response(False,
-                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
-                                            test_case_id),
-                                        STATUS_BAD_REQUEST)
-            else:
-                return api_response(False, APIMessages.PASS_TESTCASEID,
-                                    STATUS_BAD_REQUEST)
-
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
-        except Exception as e:
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
+                    column = {}
+                    column[user_test_case_detail["column"]] = \
+                        user_test_case_detail["column"]
+                    testcasedetail["column"] = column
+                test_case_obj.save_to_db()
+        test_case_obj.test_case_detail = testcasedetail
+        test_case_obj.save_to_db()
+        return api_response(
+            True, APIMessages.TEST_CASE_DETAILS_UPDATED.format(
+                test_case_id), STATUS_CREATED)
 
     @token_required
     def delete(self, session):
@@ -428,35 +432,38 @@ class EditTestCase(Resource):
                                                     required=True,
                                                     type=int,
                                                     location='args')
-        testcaseid = delete_test_case_detail_parser.parse_args()
-        test_case_id = testcaseid.get("test_case_id")
-        try:
-            if not test_case_id:
-                return api_response(False,
-                                    APIMessages.PASS_TESTCASEID,
-                                    STATUS_BAD_REQUEST)
-            del_obj = TestCase.query.filter_by(
-                test_case_id=test_case_id).first()
-            if not del_obj:
-                return api_response(False,
-                                    APIMessages.TEST_CASE_NOT_IN_DB.format(
-                                        test_case_id),
-                                    STATUS_BAD_REQUEST)
-            del_obj.is_deleted = True
-            del_obj.save_to_db()
-            return api_response(True,
-                                APIMessages.TEST_CASE_DELETED.format(
-                                    test_case_id),
+        test_case_data = delete_test_case_detail_parser.parse_args()
+        test_case_obj = TestCase.query.filter(
+            TestCase.test_case_id == test_case_data["test_case_id"],
+            TestCase.is_deleted == False).first()
+        if not test_case_obj:
+            return api_response(False,
+                                APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                    test_case_data["test_case_id"]),
                                 STATUS_BAD_REQUEST)
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
-        except Exception as e:
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
+        project_id_org_id = db.session.query(
+            Organization.org_id,
+            Project.project_id).filter(Organization.is_deleted == False).join(
+            Project,
+            Organization.org_id == Project.org_id).filter(
+            Project.is_deleted == False).join(
+            TestSuite,
+            Project.project_id == TestSuite.project_id).filter(
+            TestSuite.test_suite_id == test_case_obj.test_suite_id,
+            TestSuite.is_deleted == False
+        ).first()
+        if project_id_org_id == ():
+            return api_response(False,
+                                APIMessages.NO_TEST_CASE,
+                                STATUS_BAD_REQUEST)
+        check_permission(session.user, ["delete_suite"], project_id_org_id[0],
+                         project_id_org_id[1])
+        test_case_obj.is_deleted = True
+        test_case_obj.save_to_db()
+        return api_response(True,
+                            APIMessages.TEST_CASE_DELETED.format(
+                                test_case_data["test_case_id"]),
+                            STATUS_CREATED)
 
 
 class TestCaseJobExternal(Resource):
