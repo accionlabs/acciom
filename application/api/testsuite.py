@@ -279,7 +279,8 @@ class CreateNewTestSuite(Resource):
             "suite_name"] == " ":
             now = datetime.now()
             date_time_now = now.strftime("%d/%m/%Y %H:%M:%S")
-            test_suite_data["suite_name"] = "Quality Suite " + date_time_now
+            test_suite_data[
+                "suite_name"] = APIMessages.QUALITY_SUITE + date_time_now
             new_test_suite = TestSuite(project_id=project_id,
                                        owner_id=current_user,
                                        excel_name=excel_name,
