@@ -1,8 +1,9 @@
 """Helper file to check if user has valid permissions."""
 from application.model.models import User, UserProjectRole, RolePermission,\
-    Permission, UserOrgRole
+    Permission, UserOrgRole, Organization, Project
 from index import db
-from application.common.common_exception import UnauthorizedException
+from application.common.common_exception import (UnauthorizedException,
+                                                 ResourceNotAvailableException)
 
 
 def check_permission(user_object, list_of_permissions=None,
@@ -58,3 +59,25 @@ def check_permission(user_object, list_of_permissions=None,
             if set(list_of_permissions).issubset(org_permission_from_db):
                 return True
     raise UnauthorizedException
+
+
+def check_valid_id_passed_by_user(org_id=None, project_id=None, user_id=None,
+                                  **kwargs):
+    """Check if Ids passed are valid in DB."""
+    valid_org, valid_project, valid_user = None, None, None
+    if org_id:
+        valid_org = Organization.query.filter_by(
+            org_id=org_id, is_deleted=False).first()
+        if not valid_org:
+            raise ResourceNotAvailableException("Organization")
+    if project_id:
+        valid_project = Project.query.filter_by(
+            project_id=project_id, is_deleted=False).first()
+        if not valid_project:
+            raise ResourceNotAvailableException("Project")
+    if user_id:
+        valid_user = User.query.filter_by(
+            user_id=user_id, is_deleted=False).first()
+        if not valid_user:
+            raise ResourceNotAvailableException("User")
+    return valid_org, valid_project, valid_user

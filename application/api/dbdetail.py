@@ -384,7 +384,6 @@ class DbDetails(Resource):
                                              location='args')
         databaseid = delete_db_detail_parser.parse_args()
         data_base_id = databaseid.get("db_connection_id")
-
         if not data_base_id:
             return api_response(False,
                                 APIMessages.PASS_DB_ID,

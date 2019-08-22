@@ -76,9 +76,16 @@ class APIMessages:
     DB_DELETED = "Data Base with db id {} Deleted Sucessfully"
     TEST_SUITE_UPDATED = "Test Suite updated successfully"
     NEW_TEST_SUITE_CREATED = "New Test Suite created"
+    ROLE_NOT_UNDER_ORG = "Role Ids provided are not under given Org"
+    NO_TEST_CASE = "This test case not present in any test suite"
     TEST_SUITE_NAME_ALREADY_PRESENT = "Test suite name already exist"
     QUALITY_SUITE = "Quality Suite"
     NO_DB_ID = "No data base under this project"
+    ORG_PROJECT_REQUIRED = "Either Org Id or Project Id are mandatory"
+    ONLY_ORG_OR_PROJECT = "Pass only Org Id or Project Id"
+    PERMISSION_LIST = "permission_id_list should not be blank"
+    NO_ROLES = "There are no roles associated with given Organization"
+    ONLY_USER_OR_EMAIL = "Pass only User id or Email"
 
 
 class GenericStrings:
