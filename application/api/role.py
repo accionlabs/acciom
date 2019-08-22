@@ -1,15 +1,15 @@
 """File to handle Role API Operations."""
 from flask_restful import Resource, reqparse
 from sqlalchemy import and_
-
 from application.common.constants import APIMessages
-from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
-                                         STATUS_OK, STATUS_NOT_FOUND,
-                                         STATUS_BAD_REQUEST)
+from application.common.response import (STATUS_CREATED,
+                                         STATUS_OK, STATUS_BAD_REQUEST)
 from application.common.response import api_response
 from application.common.token import token_required
 from application.model.models import (Project, Role, Permission,
                                       RolePermission)
+from application.common.common_exception import GenericBadRequestException
+from application.helper.permission_check import check_valid_id_passed_by_user
 
 
 class RoleAPI(Resource):
@@ -37,48 +37,46 @@ class RoleAPI(Resource):
             'permission_id_list', help=APIMessages.PARSER_MESSAGE,
             required=True, type=list, location='json')
         create_role_data = create_role_parser.parse_args()
-        try:
-            permission_id_given_by_user = set(
-                create_role_data['permission_id_list'])
-            # checking if permissions are valid
-            valid_permissions = check_permission_exists(
-                permission_id_given_by_user)
-            if isinstance(valid_permissions, tuple):
-                return api_response(
-                    False, APIMessages.NO_RESOURCE.format('Permission'),
-                    STATUS_BAD_REQUEST,
-                    {'invalid_permissions': list(valid_permissions[0])})
-            # TODO: Check if org_id is valid
-            # checking if role_name already exists with given org
-            get_role_details = Role.query.filter(and_(
-                Role.role_name.ilike(create_role_data['role_name']),
-                Role.org_id == create_role_data['org_id'])).first()
-            if get_role_details:
-                return api_response(
-                    False, APIMessages.RESOURCE_EXISTS.format('Role'),
-                    STATUS_BAD_REQUEST)
-            new_role = Role(
-                role_name=create_role_data['role_name'],
+        # check if permission_id_list is not empty
+        if not create_role_data['permission_id_list']:
+            raise GenericBadRequestException(APIMessages.PERMISSION_LIST)
+        # TODO: Check User Management access
+        permission_id_given_by_user = set(
+            create_role_data['permission_id_list'])
+        # checking if permissions are valid
+        valid_permissions = check_permission_exists(
+            permission_id_given_by_user)
+        if isinstance(valid_permissions, tuple):
+            return api_response(
+                False, APIMessages.NO_RESOURCE.format('Permission'),
+                STATUS_BAD_REQUEST,
+                {'invalid_permissions': list(valid_permissions[0])})
+        check_valid_id_passed_by_user(org_id=create_role_data['org_id'])
+        # checking if role_name already exists with given org
+        get_role_details = Role.query.filter(and_(
+            Role.role_name.ilike(create_role_data['role_name']),
+            Role.org_id == create_role_data['org_id'])).first()
+        if get_role_details:
+            raise GenericBadRequestException(
+                APIMessages.RESOURCE_EXISTS.format('Role'))
+        new_role = Role(
+            role_name=create_role_data['role_name'],
+            org_id=create_role_data['org_id'],
+            owner_id=session.user_id)
+        new_role.save_to_db()
+        # add permission to role
+        for each_permission in set(create_role_data['permission_id_list']):
+            add_role_permission = RolePermission(
                 org_id=create_role_data['org_id'],
+                role_id=new_role.role_id, permission_id=each_permission,
                 owner_id=session.user_id)
-            new_role.save_to_db()
-            # add permission to role
-            for each_permission in create_role_data['permission_id_list']:
-                add_role_permission = RolePermission(
-                    org_id=create_role_data['org_id'],
-                    role_id=new_role.role_id, permission_id=each_permission,
-                    owner_id=session.user_id)
-                add_role_permission.save_to_db()
-            payload = {'role_name': new_role.role_name,
-                       'role_id': new_role.role_id,
-                       'permissions_granted': valid_permissions}
-            return api_response(
-                True, APIMessages.CREATE_RESOURCE.format('Role'),
-                STATUS_CREATED, payload)
-        except Exception as e:
-            return api_response(
-                False, APIMessages.INTERNAL_ERROR,
-                STATUS_SERVER_ERROR, {'error_log': str(e)})
+            add_role_permission.save_to_db()
+        payload = {'role_name': new_role.role_name,
+                   'role_id': new_role.role_id,
+                   'permissions_granted': valid_permissions}
+        return api_response(
+            True, APIMessages.CREATE_RESOURCE.format('Role'),
+            STATUS_CREATED, payload)
 
     @token_required
     def get(self, session):
@@ -100,27 +98,28 @@ class RoleAPI(Resource):
             type=str, location='args')
         get_role_data = get_role_parser.parse_args()
         payload = None
-        try:
-            if get_role_data['org_id'] and not get_role_data['project_id']:
-                # get all roles based on org_id
-                # TODO: Returns roles with permission not exceeding the User's
-                #  permissions
-                payload = retrieve_roles_under_org(get_role_data['org_id'])
-            if get_role_data['project_id'] and not get_role_data['org_id']:
-                get_project = Project.query.filter_by(
-                    project_id=get_role_data['project_id']).first()
-                payload = retrieve_roles_under_org(get_project.org_id)
-            if payload:
-                return api_response(True, APIMessages.SUCCESS, STATUS_OK,
-                                    {'roles': payload})
-            else:
-                return api_response(
-                    False, APIMessages.NO_RESOURCE.format('Role'),
-                    STATUS_NOT_FOUND)
-        except Exception as e:
-            return api_response(
-                False, APIMessages.INTERNAL_ERROR,
-                STATUS_SERVER_ERROR, {'error_log': str(e)})
+        # Check if either Org Id or Project is passed
+        if not get_role_data['org_id'] and not get_role_data['project_id']:
+            raise GenericBadRequestException(APIMessages.ORG_PROJECT_REQUIRED)
+        if get_role_data['org_id'] and get_role_data['project_id']:
+            raise GenericBadRequestException(APIMessages.ONLY_ORG_OR_PROJECT)
+        if get_role_data['org_id'] and not get_role_data['project_id']:
+            # get all roles based on org_id
+            # TODO: Returns roles with permission not exceeding the User's
+            #  permissions
+            check_valid_id_passed_by_user(org_id=get_role_data['org_id'])
+            payload = retrieve_roles_under_org(get_role_data['org_id'])
+        if get_role_data['project_id'] and not get_role_data['org_id']:
+            check_valid_id_passed_by_user(
+                project_id=get_role_data['project_id'])
+            get_project = Project.query.filter_by(
+                project_id=get_role_data['project_id'],
+                is_deleted=False).first()
+            payload = retrieve_roles_under_org(get_project.org_id)
+        if payload:
+            return api_response(True, APIMessages.SUCCESS, STATUS_OK,
+                                {'roles': payload})
+        raise GenericBadRequestException(APIMessages.NO_ROLES)
 
 
 def retrieve_roles_under_org(org_id):

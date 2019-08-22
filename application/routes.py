@@ -75,14 +75,14 @@ def handle_unauthorized_exception(e):
 
 @app.errorhandler(ResourceNotAvailableException)
 def handle_resource_not_available_exception(e):
-    """Handle Unauthorized Access Exception."""
+    """Handle Resource Not Available Exception."""
     return api_response(
         False, APIMessages.NO_RESOURCE.format(e), STATUS_BAD_REQUEST)
 
 
 @app.errorhandler(GenericBadRequestException)
 def handle_bad_request_exception(e):
-    """Handle Unauthorized Access Exception."""
+    """Handle Generic Bad Request Exception."""
     return api_response(False, str(e), STATUS_BAD_REQUEST)
 
 
