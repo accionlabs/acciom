@@ -1,6 +1,6 @@
+from application.common.common_exception import GenericBadRequestException
 from application.common.constants import APIMessages
 from application.common.constants import SupportedTestClass, ExecutionStatus
-from application.common.response import (api_response, STATUS_BAD_REQUEST)
 from application.model.models import DbConnection, TestSuite, TestCase
 
 
@@ -55,8 +55,7 @@ def get_db_connection(project_id):
     db_obj = DbConnection.query.filter(DbConnection.project_id == project_id,
                                        DbConnection.is_deleted == False).all()
     if not db_obj:
-        return api_response(False, APIMessages.NO_DB_UNDER_PROJECT,
-                            STATUS_BAD_REQUEST)
+        raise GenericBadRequestException(APIMessages.NO_DB_UNDER_PROJECT)
     all_connection = [
         {"db_connection_id": each_db_detail.db_connection_id,
          "db_connection_name": each_db_detail.db_connection_name}

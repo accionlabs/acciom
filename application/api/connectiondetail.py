@@ -1,15 +1,15 @@
 from flask_restful import Resource, reqparse
 
+from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_SERVER_ERROR,
-                                         STATUS_CREATED, STATUS_BAD_REQUEST)
+                                         STATUS_CREATED)
 from application.common.token import (token_required)
 from application.helper.connectiondetails import (select_connection,
                                                   get_db_connection,
                                                   get_case_detail)
 from application.helper.permission_check import check_permission
-from application.model.models import (Project, TestSuite, Organization)
-from index import db
+from application.model.models import (Project, TestSuite)
 
 
 class SelectConnection(Resource):
@@ -77,18 +77,9 @@ class DbConnection(Resource):
             Project.project_id == project_data['project_id'],
             Project.is_deleted == False).first()
         if not project_obj:
-            return api_response(False, APIMessages.PROJECT_NOT_EXIST,
-                                STATUS_BAD_REQUEST)
-        org_id = db.session.query(
-            Organization.org_id).filter(
-            Organization.org_id == project_obj.org_id,
-            Organization.is_deleted == False).first()
-        if org_id == ():
-            return api_response(False,
-                                APIMessages.NO_DB_ID,
-                                STATUS_BAD_REQUEST)
+            raise ResourceNotAvailableException("Project")
         check_permission(session.user, ["view_db_details"],
-                         org_id[0], project_data["project_id"])
+                         project_obj.org_id, project_data["project_id"])
         payload = get_db_connection(project_data['project_id'])
         return api_response(True, APIMessages.SUCCESS,
                             STATUS_CREATED, payload)
