@@ -1,4 +1,5 @@
 """File to handle Database connection operations."""
+
 from flask_restful import Resource, reqparse
 
 from application.common.constants import APIMessages, SupportedDBType
@@ -61,16 +62,8 @@ class DbDetails(Resource):
         if not project_obj:
             return api_response(False, APIMessages.PROJECT_NOT_EXIST,
                                 STATUS_BAD_REQUEST)
-        org_id = db.session.query(
-            Organization.org_id).filter(
-            Organization.org_id == project_obj.org_id,
-            Organization.is_deleted == False).first()
-        if org_id == ():
-            return api_response(False,
-                                APIMessages.NO_DB_ID,
-                                STATUS_BAD_REQUEST)
         check_permission(session.user, ["add_db_details"],
-                         org_id[0], db_detail["project_id"])
+                         project_obj.org_id, db_detail["project_id"])
         list_of_args = [arg.name for arg in post_db_detail_parser.args]
         request_data_validation = validate_empty_fields(db_detail,
                                                         list_of_args)
@@ -197,47 +190,39 @@ class DbDetails(Resource):
             project_name_obj = Project.query.filter_by(
                 project_id=project_id).first()
 
-            if project_obj:
-                org_id = db.session.query(
-                    Organization.org_id).filter(
-                    Organization.org_id == project_name_obj.org_id,
-                    Organization.is_deleted == False).first()
-                if org_id == ():
-                    return api_response(False,
-                                        APIMessages.NO_DB_ID,
-                                        STATUS_BAD_REQUEST)
-                check_permission(session.user, ["view_db_details"],
-                                 org_id[0], project_id)
+            if not project_name_obj:
+                return api_response(False,
+                                    APIMessages.PROJECT_NOT_EXIST,
+                                    STATUS_BAD_REQUEST)
+            check_permission(session.user, ["view_db_details"],
+                             project_name_obj.org_id, project_id)
 
-                def to_json(projectid):
-                    return {
-                        'project_id': projectid.project_id,
-                        'project_name': project_name_obj.project_name,
-                        'db_connection_name': projectid.db_connection_name,
-                        'db_connection_id': projectid.db_connection_id,
-                        'db_type_name':
-                            SupportedDBType().get_db_name_by_id(
-                                projectid.db_type),
-                        'db_type_id': projectid.db_type,
-                        'db_name': projectid.db_name,
-                        'db_hostname': projectid.db_hostname,
-                        'db_username': projectid.db_username}
+            def to_json(projectid):
+                return {
+                    'project_id': projectid.project_id,
+                    'project_name': project_name_obj.project_name,
+                    'db_connection_name': projectid.db_connection_name,
+                    'db_connection_id': projectid.db_connection_id,
+                    'db_type_name':
+                        SupportedDBType().get_db_name_by_id(
+                            projectid.db_type),
+                    'db_type_id': projectid.db_type,
+                    'db_name': projectid.db_name,
+                    'db_hostname': projectid.db_hostname,
+                    'db_username': projectid.db_username}
 
-                db_detail_dic = {}
-                db_list = DbConnection.query.filter_by(
-                    project_id=project_id).order_by(
-                    DbConnection.created_at).all()
-                db_connection_list = [each_db for each_db in db_list if
-                                      each_db.is_deleted == False]
-                db_detail_dic["db_details"] = list(
-                    map(lambda db_connection_id: to_json(db_connection_id),
-                        db_connection_list))
-                return api_response(True, APIMessages.DATA_LOADED,
-                                    STATUS_CREATED,
-                                    db_detail_dic)
-            return api_response(False,
-                                APIMessages.PROJECT_NOT_EXIST,
-                                STATUS_BAD_REQUEST)
+            db_detail_dic = {}
+            db_list = DbConnection.query.filter_by(
+                project_id=project_id).order_by(
+                DbConnection.created_at).all()
+            db_connection_list = [each_db for each_db in db_list if
+                                  each_db.is_deleted == False]
+            db_detail_dic["db_details"] = list(
+                map(lambda db_connection_id: to_json(db_connection_id),
+                    db_connection_list))
+            return api_response(True, APIMessages.DATA_LOADED,
+                                STATUS_CREATED,
+                                db_detail_dic)
         else:
             return api_response(False,
                                 APIMessages.PASS_DBID_or_PROJECTID,
@@ -257,6 +242,7 @@ class DbDetails(Resource):
             Standard API Response with message(returns message db details
             uploaded successfully), data and http status code.
         """
+
         put_db_detail_parser = reqparse.RequestParser(bundle_errors=True)
         put_db_detail_parser.add_argument('db_connection_id', required=True,
                                           type=int)
@@ -267,126 +253,117 @@ class DbDetails(Resource):
         put_db_detail_parser.add_argument('db_username', type=str)
         put_db_detail_parser.add_argument('db_password', type=str)
         db_detail = put_db_detail_parser.parse_args()
-        print(db_detail)
         db_details = put_db_detail_parser.parse_args()
         db_connection_id = db_detail["db_connection_id"]
         # Remove keys which contain None values in db_details dictionary
         for key, value in dict(db_detail).items():
             if value == None:
                 del db_detail[key]
-        if db_connection_id:
+        if not db_connection_id:
+            return api_response(False, APIMessages.ABSENCE_OF_DBID,
+                                STATUS_BAD_REQUEST)
+        db_obj = DbConnection.query.filter(
+            DbConnection.db_connection_id == db_connection_id,
+            DbConnection.is_deleted == False).first()
+        if not db_obj:
+            return api_response(False,
+                                APIMessages.DBID_NOT_IN_DB.format(
+                                    db_connection_id),
+                                STATUS_BAD_REQUEST)
+        project_id = db_obj.project_id
+        project_id_org_id = db.session.query(
+            Organization.org_id,
+            Project.project_id).filter(
+            Organization.is_deleted == False).join(
+            Project,
+            Organization.org_id == Project.org_id).filter(
+            Project.project_id == db_obj.project_id,
+            Project.is_deleted == False
+        ).first()
+        if project_id_org_id == ():
+            return api_response(False,
+                                APIMessages.NO_DB_ID,
+                                STATUS_BAD_REQUEST)
+        check_permission(session.user, ["edit_db_details"],
+                         project_id_org_id[0],
+                         project_id_org_id[1])
+
+        del db_detail["db_connection_id"]
+        # Updating values present in database with user given values
+        data_base_dict = db_obj.__dict__
+        data_base_dict.update(db_detail)
+        # check whether combination of db_type,db_name,db_username,
+        # db_hostname,project_id is already present in db or not
+        if db_details["db_type"] != None:
+            data_base_dict[
+                'db_type'] = SupportedDBType().get_db_id_by_name(
+                data_base_dict['db_type'])
+        db_obj = DbConnection.query.filter(
+            DbConnection.db_connection_id != db_connection_id,
+            DbConnection.db_type == data_base_dict['db_type'],
+            DbConnection.db_name == data_base_dict['db_name'],
+            DbConnection.db_username == data_base_dict[
+                'db_username'],
+            DbConnection.db_hostname.ilike(
+                data_base_dict['db_hostname']),
+            DbConnection.project_id == data_base_dict[
+                'project_id'], DbConnection.is_deleted == False).all()
+        if db_obj != []:
+            return api_response(False, APIMessages.
+                                DB_DETAILS_ALREADY_PRESENT,
+                                STATUS_BAD_REQUEST)
+        else:
+            # Check Db connection name already exist in db or not
+            if db_details["db_connection_name"] != None:
+                db_obj = DbConnection.query.filter(
+                    DbConnection.db_connection_name == db_detail[
+                        "db_connection_name"],
+                    DbConnection.project_id == project_id,
+                    DbConnection.is_deleted == False).first()
+                if db_obj:
+                    return api_response(False, APIMessages.
+                                        DB_CONNECTION_NAME_ALREADY_PRESENT,
+                                        STATUS_BAD_REQUEST)
+            # Checking spaces in username and hostname
+            if db_details["db_username"] != None:
+                spacecount_dbusername = db_detail[
+                    "db_username"].find(" ")
+                if spacecount_dbusername > -1:
+                    return api_response(False, APIMessages.
+                                        NO_SPACES,
+                                        STATUS_BAD_REQUEST)
+            if db_details["db_hostname"] != None:
+                spacecount_dbhostname = db_detail[
+                    "db_hostname"].find(" ")
+                if spacecount_dbhostname > -1:
+                    return api_response(False, APIMessages.
+                                        NO_SPACES, STATUS_BAD_REQUEST)
             db_obj = DbConnection.query.filter(
                 DbConnection.db_connection_id == db_connection_id,
                 DbConnection.is_deleted == False).first()
-            if db_obj:
-                project_id_org_id = db.session.query(
-                    Organization.org_id,
-                    Project.project_id).filter(
-                    Organization.is_deleted == False).join(
-                    Project,
-                    Organization.org_id == Project.org_id).filter(
-                    Project.project_id == db_obj.project_id,
-                    Project.is_deleted == False
-                ).first()
-                if project_id_org_id == ():
-                    return api_response(False,
-                                        APIMessages.NO_DB_ID,
-                                        STATUS_BAD_REQUEST)
-                check_permission(session.user, ["edit_db_details"],
-                                 project_id_org_id[0],
-                                 project_id_org_id[1])
-
-                del db_detail["db_connection_id"]
-                # Updating values present in database with user given values
-                data_base_dict = db_obj.__dict__
-                data_base_dict.update(db_detail)
-                # check whether combination of db_type,db_name,db_username,
-                # db_hostname,project_id is already present in db or not
-                if db_details["db_type"] != None:
-                    data_base_dict[
-                        'db_type'] = SupportedDBType().get_db_id_by_name(
-                        data_base_dict['db_type'])
-                temp_connection = DbConnection.query.filter(
-                    DbConnection.db_connection_id != db_connection_id,
-                    DbConnection.db_type == data_base_dict['db_type'],
-                    DbConnection.db_name == data_base_dict['db_name'],
-                    DbConnection.db_username == data_base_dict[
-                        'db_username'],
-                    DbConnection.db_hostname.ilike(
-                        data_base_dict['db_hostname']),
-                    DbConnection.project_id == data_base_dict[
-                        'project_id'], DbConnection.is_deleted == False).all()
-                if temp_connection != []:
-                    return api_response(False, APIMessages.
-                                        DB_DETAILS_ALREADY_PRESENT,
-                                        STATUS_BAD_REQUEST)
-                else:
-                    # Check Db connection name already exist in db or not
-                    if db_details["db_connection_name"] != None:
-                        temp_connection = DbConnection.query.filter(
-                            DbConnection.db_connection_name == db_detail[
-                                "db_connection_name"],
-                            DbConnection.project_id ==
-                            db_obj.project_id,
-                            DbConnection.is_deleted == False).first()
-                        if temp_connection:
-                            return api_response(False, APIMessages.
-                                                DB_CONNECTION_NAME_ALREADY_PRESENT,
-                                                STATUS_BAD_REQUEST)
-                    # Checking spaces in username and hostname
-                    if db_details["db_username"] != None:
-                        spacecount_dbusername = db_detail[
-                            "db_username"].find(" ")
-                        if spacecount_dbusername > -1:
-                            return api_response(False, APIMessages.
-                                                NO_SPACES,
-                                                STATUS_BAD_REQUEST)
-                    if db_details["db_hostname"] != None:
-                        spacecount_dbhostname = db_detail[
-                            "db_hostname"].find(" ")
-                        if spacecount_dbhostname > -1:
-                            return api_response(False, APIMessages.
-                                                NO_SPACES,
-                                                STATUS_BAD_REQUEST)
-                    for key, value in db_detail.items():
-                        if value and value.strip():
-                            # checking if value provided by user is
-                            # neither None nor Null
-                            if key == 'db_password':
-                                db_password = encrypt(value)
-                                db_obj.db_encrypted_password = db_password
-                                # db_obj.save_to_db()
-                            elif key == 'db_connection_name':
-                                db_obj.db_connection_name = value
-                                print(db_obj.db_connection_name)
-                                # db_obj.save_to_db()
-                                print(db_obj.db_connection_name)
-                            elif key == 'db_type':
-                                db_obj.db_type = SupportedDBType(). \
-                                    get_db_id_by_name(value)
-                                # db_obj.save_to_db()
-                            elif key == 'db_name':
-                                db_obj.db_name = value
-                                # db_obj.save_to_db()
-                            elif key == 'db_hostname':
-                                db_obj.db_hostname = value
-                                # db_obj.save_to_db()
-                            elif key == 'db_username':
-                                db_obj.db_username = value
-                                # db_obj.save_to_db()
-                    db_obj.save_to_db()
-                    # print("378", db_obj.db_name, db_obj.db_connection_name)
-                    return api_response(
-                        True, APIMessages.DB_DETAILS_UPDATED.format(
-                            db_connection_id), STATUS_CREATED)
-            else:
-                return api_response(False,
-                                    APIMessages.DBID_NOT_IN_DB.format(
-                                        db_connection_id),
-                                    STATUS_BAD_REQUEST)
-        else:
-            return api_response(False, APIMessages.ABSENCE_OF_DBID,
-                                STATUS_BAD_REQUEST)
+            for key, value in db_detail.items():
+                if value and value.strip():
+                    # checking if value provided by user is
+                    # neither None nor Null
+                    if key == 'db_password':
+                        db_password = encrypt(value)
+                        db_obj.db_encrypted_password = db_password
+                    elif key == 'db_connection_name':
+                        db_obj.db_connection_name = value
+                        db_obj.save_to_db()
+                    elif key == 'db_type':
+                        db_obj.db_type = SupportedDBType(). \
+                            get_db_id_by_name(value)
+                    elif key == 'db_name':
+                        db_obj.db_name = value
+                    elif key == 'db_hostname':
+                        db_obj.db_hostname = value
+                    elif key == 'db_username':
+                        db_obj.db_username = value
+            db_obj.save_to_db()
+            return api_response(
+                True, APIMessages.DB_DETAILS_UPDATED.format(
+                    db_connection_id), STATUS_CREATED)
 
     @token_required
     def delete(self, session):
