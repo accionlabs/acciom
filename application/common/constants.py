@@ -80,6 +80,7 @@ class APIMessages:
     NO_TEST_CASE = "This test case not present in any test suite"
     TEST_SUITE_NAME_ALREADY_PRESENT = "Test suite name already exist"
     QUALITY_SUITE = "Quality Suite"
+    NO_DB_ID = "No DB Details under this project"
 
 
 class GenericStrings:
