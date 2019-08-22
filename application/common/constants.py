@@ -80,7 +80,7 @@ class APIMessages:
     NO_TEST_CASE = "This test case not present in any test suite"
     TEST_SUITE_NAME_ALREADY_PRESENT = "Test suite name already exist"
     QUALITY_SUITE = "Quality Suite"
-
+    
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
