@@ -78,6 +78,7 @@ class APIMessages:
     NEW_TEST_SUITE_CREATED = "New Test Suite created"
     TEST_SUITE_NAME_ALREADY_PRESENT = "Test suite name already exist"
     QUALITY_SUITE = "Quality Suite"
+    NO_DB_ID = "No data base under this project"
 
 
 class GenericStrings:
