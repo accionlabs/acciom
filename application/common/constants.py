@@ -76,6 +76,7 @@ class APIMessages:
     DB_DELETED = "Data Base with db id {} Deleted Sucessfully"
     TEST_SUITE_UPDATED = "Test Suite updated successfully"
     NEW_TEST_SUITE_CREATED = "New Test Suite created"
+    ROLE_NOT_UNDER_ORG = "Role Ids provided are not under given Org"
     NO_TEST_CASE = "This test case not present in any test suite"
     TEST_SUITE_NAME_ALREADY_PRESENT = "Test suite name already exist"
     QUALITY_SUITE = "Quality Suite"
