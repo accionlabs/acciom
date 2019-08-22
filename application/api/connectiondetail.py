@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 
+from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_SERVER_ERROR,
                                          STATUS_CREATED)
@@ -7,7 +8,8 @@ from application.common.token import (token_required)
 from application.helper.connectiondetails import (select_connection,
                                                   get_db_connection,
                                                   get_case_detail)
-from application.model.models import Project, TestSuite
+from application.helper.permission_check import check_permission
+from application.model.models import (Project, TestSuite)
 
 
 class SelectConnection(Resource):
@@ -50,39 +52,37 @@ class SelectConnection(Resource):
 
 class DbConnection(Resource):
     """
-    Class will be a get call to give all the db_connection_ids
-     associated with the project_id
+    Class to handle GET API to give all the db_connection_ids
+    associated with the project_id.
     """
 
     @token_required
     def get(self, session):
         """
-        Method will give all the db_connection_ids associated with the
-        project_id which we will pass in the argument
+        Method will give all the db_connection_ids and db connection name.
 
-        Returns: give all the db_connection_ids associated with the
-        project_id which we will pass in the argument
+        Args:
+             session (object):By using this object we can get the user_id.
+
+        Returns:
+              Standard API Response with message(returns message saying
+              that success), data and http status code.
         """
-        try:
-
-            db_connection_detail = reqparse.RequestParser()
-            db_connection_detail.add_argument('project_id', required=False,
-                                              type=int,
-                                              location='args')
-
-            project_id = db_connection_detail.parse_args()
-            project_obj = Project.query.filter_by(
-                project_id=project_id['project_id']).first()
-            if not project_obj:
-                return api_response(False, APIMessages.PROJECT_NOT_EXIST,
-                                    STATUS_SERVER_ERROR)
-            else:
-                payload = get_db_connection(project_id['project_id'])
-                return api_response(True, APIMessages.SUCCESS,
-                                    STATUS_CREATED, payload)
-        except Exception as e:
-            return api_response(False, APIMessages.PROJECT_NOT_EXIST,
-                                STATUS_SERVER_ERROR)
+        db_connection_detail = reqparse.RequestParser()
+        db_connection_detail.add_argument('project_id', required=True,
+                                          type=int,
+                                          location='args')
+        project_data = db_connection_detail.parse_args()
+        project_obj = Project.query.filter(
+            Project.project_id == project_data['project_id'],
+            Project.is_deleted == False).first()
+        if not project_obj:
+            raise ResourceNotAvailableException("Project")
+        check_permission(session.user, ["view_db_details"],
+                         project_obj.org_id, project_data["project_id"])
+        payload = get_db_connection(project_data['project_id'])
+        return api_response(True, APIMessages.SUCCESS,
+                            STATUS_CREATED, payload)
 
 
 class CaseDetails(Resource):

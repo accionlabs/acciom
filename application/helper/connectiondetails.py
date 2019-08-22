@@ -1,3 +1,4 @@
+from application.common.common_exception import GenericBadRequestException
 from application.common.constants import APIMessages
 from application.common.constants import SupportedTestClass, ExecutionStatus
 from application.model.models import DbConnection, TestSuite, TestCase
@@ -22,7 +23,6 @@ def select_connection(case_data, user):
             testcase_object.test_case_detail = test_case_detail
             testcase_object.save_to_db()
 
-
             testcase_object.test_case_detail = test_case_detail
             testcase_object.save_to_db()
 
@@ -41,7 +41,21 @@ def select_connection(case_data, user):
 
 
 def get_db_connection(project_id):
-    db_obj = DbConnection.query.filter_by(project_id=project_id).all()
+    """
+    Method to give list of db connection id and db connection name.
+
+    Args:
+        project_id(int):project id
+
+    Returns:
+        give all the db_connection_ids and db connection name
+        associated with the project_id which we will pass in the argument
+
+    """
+    db_obj = DbConnection.query.filter(DbConnection.project_id == project_id,
+                                       DbConnection.is_deleted == False).all()
+    if not db_obj:
+        raise GenericBadRequestException(APIMessages.NO_DB_UNDER_PROJECT)
     all_connection = [
         {"db_connection_id": each_db_detail.db_connection_id,
          "db_connection_name": each_db_detail.db_connection_name}
