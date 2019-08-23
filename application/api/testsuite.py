@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from flask import current_app as app
 from flask import request
 from flask_restful import reqparse, Resource
@@ -15,12 +14,13 @@ from application.common.runbysuiteid import create_job
 from application.common.token import (token_required)
 from application.common.utils import return_excel_name_and_project_id
 from application.helper.exportTestcaselog import export_test_case_log
+from application.helper.permission_check import check_permission
 from application.helper.returnallsuites import (return_all_suites,
                                                 test_case_details)
 from application.helper.runnerclasshelpers import args_as_list
 from application.helper.uploadfiledb import save_file_to_db
 from application.model.models import (Project, TestCaseLog, TestCase,
-                                      TestSuite)
+                                      TestSuite, User)
 from index import db
 
 
@@ -58,6 +58,14 @@ class TestSuiteAPI(Resource):
         test_suite_data = parser.parse_args()
         current_user = session.user_id
         file = request.files['inputFile']
+        user_obj = User.query.filter_by(user_id=current_user).first()
+        project_obj = Project.query.filter_by(
+            project_id=test_suite_data['project_id'], is_deleted=False).first()
+        # check_permission
+        check_permission(user_obj,
+                         list_of_permissions=["upload_suite"],
+                         org_id=project_obj.org_id,
+                         project_id=project_obj.project_id)
         # Check Test Suite name already exist in db or not
         temp_connection = TestSuite.query.filter(
             TestSuite.test_suite_name == test_suite_data[
@@ -479,28 +487,25 @@ class TestCaseLogDetail(Resource):
         test_case_log_id
         Returns: return the log of the case_log_id
         """
-        try:
-            test_case_log = reqparse.RequestParser()
-            test_case_log.add_argument('test_case_log_id',
-                                       required=True,
-                                       type=int,
-                                       location='args')
-            test_case_logid = test_case_log.parse_args()
-            db_obj = TestCaseLog.query.filter_by(
-                test_case_log_id=test_case_logid['test_case_log_id']).first()
-            if not db_obj:
-                return api_response(False,
-                                    APIMessages.TESTCASELOGID_NOT_IN_DB.format(
-                                        test_case_logid['test_case_log_id']),
-                                    STATUS_BAD_REQUEST)
-            test_case_log = test_case_log.parse_args()
-            log_data = {"test_case_log": return_all_log(
-                test_case_log['test_case_log_id']),
-                "success": True}
-            return api_response(True, APIMessages.RETURN_SUCCESS,
-                                STATUS_CREATED, log_data)
-        except Exception as e:
-            return api_response(True, APIMessages.INTERNAL_ERROR, str(e))
+        test_case_log = reqparse.RequestParser()
+        test_case_log.add_argument('test_case_log_id',
+                                   required=True,
+                                   type=int,
+                                   location='args')
+        test_case_logid = test_case_log.parse_args()
+        db_obj = TestCaseLog.query.filter_by(
+            test_case_log_id=test_case_logid['test_case_log_id']).first()
+        if not db_obj:
+            return api_response(False,
+                                APIMessages.TESTCASELOGID_NOT_IN_DB.format(
+                                    test_case_logid['test_case_log_id']),
+                                STATUS_BAD_REQUEST)
+        test_case_log = test_case_log.parse_args()
+        log_data = {"test_case_log": return_all_log(
+            test_case_log['test_case_log_id']),
+            "success": True}
+        return api_response(True, APIMessages.RETURN_SUCCESS,
+                            STATUS_CREATED, log_data)
 
 
 class ExportTestLog(Resource):
