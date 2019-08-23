@@ -86,6 +86,8 @@ class APIMessages:
     PERMISSION_LIST = "permission_id_list should not be blank"
     NO_ROLES = "There are no roles associated with given Organization"
     ONLY_USER_OR_EMAIL = "Pass only User id or Email"
+    DB_NOT_EXIST = "Db not exist"
+    PROJECT_CONTAIN_SUITE_NOT_EXIST = "Project containing this suite not exist"
 
 
 class GenericStrings:
