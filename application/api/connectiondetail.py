@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_SERVER_ERROR,
-                                         STATUS_CREATED)
+                                         STATUS_CREATED, STATUS_BAD_REQUEST)
 from application.common.token import (token_required)
 from application.helper.connectiondetails import (select_connection,
                                                   get_db_connection,
@@ -87,35 +87,44 @@ class DbConnection(Resource):
 
 class CaseDetails(Resource):
     """
-    Class will take all the case_ids associated with a particular
-    test_Suite_id
+    To handle GET API to give all the test case details for a particular suite
+    id.
+
     """
 
     @token_required
     def get(self, session):
         """
-        Method will return all the case_ids associated with
-         the particular case_id provided in the args
+        It returns all the test case details associated with the particular
+        suite id provided in the args.
 
-        Returns:return all the case_ids associated with
-         the particular case_id provided in the args
+        Args:
+             session (object):By using this object we can get the user_id.
+
+        Returns:
+              Standard API Response with message(returns message saying
+              that success), data and http status code.
         """
-        try:
-            suite_detail = reqparse.RequestParser()
-            suite_detail.add_argument('suite_id', required=False,
-                                      type=int,
-                                      location='args')
-
-            suite_id = suite_detail.parse_args()
-            suite_obj = TestSuite.query.filter_by(
-                test_suite_id=suite_id['suite_id']).first()
-            if not suite_obj:
-                return api_response(False, APIMessages.SUITE_NOT_EXIST,
-                                    STATUS_SERVER_ERROR)
-            else:
-                payload = get_case_detail(suite_id['suite_id'])
-                return api_response(True, APIMessages.SUCCESS,
-                                    STATUS_CREATED, payload)
-        except Exception as e:
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR)
+        suite_detail = reqparse.RequestParser()
+        suite_detail.add_argument('suite_id', required=True,
+                                  type=int,
+                                  location='args')
+        suite_data = suite_detail.parse_args()
+        suite_obj = TestSuite.query.filter(
+            TestSuite.test_suite_id == suite_data['suite_id'],
+            TestSuite.is_deleted == False).first()
+        if not suite_obj:
+            raise ResourceNotAvailableException("test suite")
+        else:
+            project_obj = Project.query.filter(
+                Project.project_id == suite_obj.project_id,
+                Project.is_deleted == False).first()
+            if not project_obj:
+                return api_response(False,
+                                    APIMessages.PROJECT_CONTAIN_SUITE_NOT_EXIST,
+                                    STATUS_BAD_REQUEST)
+            check_permission(session.user, ["view_suite"],
+                             project_obj.org_id, suite_obj.project_id)
+            payload = get_case_detail(suite_data['suite_id'])
+            return api_response(True, APIMessages.SUCCESS,
+                                STATUS_CREATED, payload)
