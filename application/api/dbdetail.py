@@ -251,7 +251,7 @@ class DbDetails(Resource):
         put_db_detail_parser.add_argument('db_connection_id', required=True,
                                           type=int)
         put_db_detail_parser.add_argument('db_connection_name', type=str)
-        put_db_detail_parser.add_argument('db_type', type=str)
+        put_db_detail_parser.add_argument('db_type_name', type=str)
         put_db_detail_parser.add_argument('db_name', type=str)
         put_db_detail_parser.add_argument('db_hostname', type=str)
         put_db_detail_parser.add_argument('db_username', type=str)
@@ -300,13 +300,13 @@ class DbDetails(Resource):
         data_base_dict.update(db_detail)
         # check whether combination of db_type,db_name,db_username,
         # db_hostname,project_id is already present in db or not
-        if db_details["db_type"] != None:
+        if db_details["db_type_name"] != None:
             data_base_dict[
-                'db_type'] = SupportedDBType().get_db_id_by_name(
-                data_base_dict['db_type'])
+                'db_type_name'] = SupportedDBType().get_db_id_by_name(
+                data_base_dict['db_type_name'])
         db_obj = DbConnection.query.filter(
             DbConnection.db_connection_id != db_connection_id,
-            DbConnection.db_type == data_base_dict['db_type'],
+            DbConnection.db_type == data_base_dict['db_type_name'],
             DbConnection.db_name == data_base_dict['db_name'],
             DbConnection.db_username == data_base_dict[
                 'db_username'],
@@ -358,7 +358,7 @@ class DbDetails(Resource):
                     elif key == 'db_connection_name':
                         db_obj.db_connection_name = value
                         db_obj.save_to_db()
-                    elif key == 'db_type':
+                    elif key == 'db_type_name':
                         db_obj.db_type = SupportedDBType(). \
                             get_db_id_by_name(value)
                     elif key == 'db_name':
