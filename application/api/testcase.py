@@ -223,7 +223,7 @@ class EditTestCase(Resource):
             TestSuite.test_suite_id == test_case_obj.test_suite_id,
             TestSuite.is_deleted == False
         ).first()
-        if project_id_org_id == ():
+        if project_id_org_id == () or project_id_org_id == None:
             return api_response(False,
                                 APIMessages.NO_TEST_CASE,
                                 STATUS_BAD_REQUEST)
@@ -233,14 +233,40 @@ class EditTestCase(Resource):
         source_db_id = test_case_detail["src_db_id"]
         target_db_id = test_case_detail["target_db_id"]
         table_names_dic = get_table_name(test_case_detail["table"])
-        DbConnection_object_src = DbConnection.query.filter_by(
-            db_connection_id=source_db_id).first()
-        DbConnection_object_target = DbConnection.query.filter_by(
-            db_connection_id=target_db_id).first()
-        DbConnection_detail_src = db_details_without_password(
-            DbConnection_object_src.db_connection_id)
-        DbConnection_detail_target = db_details_without_password(
-            DbConnection_object_target.db_connection_id)
+        DbConnection_object_src = DbConnection.query.filter(
+            DbConnection.db_connection_id == source_db_id,
+            DbConnection.is_deleted == False).first()
+        if DbConnection_object_src == None:
+            src_db_name = APIMessages.DB_NOT_EXIST
+            src_db_type = APIMessages.DB_NOT_EXIST
+            src_connection_name = APIMessages.DB_NOT_EXIST
+            srcdbid = APIMessages.DB_NOT_EXIST
+        else:
+            DbConnection_detail_src = db_details_without_password(
+                DbConnection_object_src.db_connection_id)
+            src_db_name = DbConnection_detail_src["db_name"]
+            src_db_type = SupportedDBType().get_db_name_by_id(
+                DbConnection_detail_src["db_type"])
+            src_connection_name = DbConnection_detail_src["db_connection_name"]
+            srcdbid = test_case_detail["src_db_id"]
+
+        DbConnection_object_target = DbConnection.query.filter(
+            DbConnection.db_connection_id == target_db_id,
+            DbConnection.is_deleted == False).first()
+        if DbConnection_object_target == None:
+            des_db_name = APIMessages.DB_NOT_EXIST
+            des_db_type = APIMessages.DB_NOT_EXIST
+            target_connection_name = APIMessages.DB_NOT_EXIST
+            targetdbid = APIMessages.DB_NOT_EXIST
+        else:
+            DbConnection_detail_target = db_details_without_password(
+                DbConnection_object_target.db_connection_id)
+            des_db_name = DbConnection_detail_target["db_name"]
+            des_db_type = SupportedDBType().get_db_name_by_id(
+                DbConnection_detail_target["db_type"])
+            target_connection_name = DbConnection_detail_target[
+                "db_connection_name"]
+            targetdbid = test_case_detail["target_db_id"]
         if test_case_detail["column"] == {}:
             column = ''
         else:
@@ -273,23 +299,14 @@ class EditTestCase(Resource):
                        test_case_obj.latest_execution_status),
                    "src_table": table_names_dic["src_table"],
                    "target_table": table_names_dic["target_table"],
-                   "src_db_id": source_db_id,
-                   "target_db_id": target_db_id,
-                   "src_db_name": DbConnection_detail_src[
-                       "db_name"],
-                   "des_db_name": DbConnection_detail_target[
-                       "db_name"],
-                   "src_db_type": SupportedDBType().
-                       get_db_name_by_id(
-                       DbConnection_detail_src["db_type"]),
-                   "des_db_type": SupportedDBType().
-                       get_db_name_by_id(
-                       DbConnection_detail_target["db_type"]),
-                   "src_connection_name": DbConnection_detail_src[
-                       "db_connection_name"],
-                   "target_connection_name":
-                       DbConnection_detail_target[
-                           "db_connection_name"],
+                   "src_db_id": srcdbid,
+                   "target_db_id": targetdbid,
+                   "src_db_name": src_db_name,
+                   "des_db_name": des_db_name,
+                   "src_db_type": src_db_type,
+                   "des_db_type": des_db_type,
+                   "src_connection_name": src_connection_name,
+                   "target_connection_name": target_connection_name,
                    "column": column,
                    "test_queries": test_case_detail["query"],
                    "targetqry": target_qry,
@@ -346,7 +363,7 @@ class EditTestCase(Resource):
             TestSuite.test_suite_id == test_case_obj.test_suite_id,
             TestSuite.is_deleted == False
         ).first()
-        if project_id_org_id == ():
+        if project_id_org_id == () or project_id_org_id == None:
             return api_response(False,
                                 APIMessages.NO_TEST_CASE,
                                 STATUS_BAD_REQUEST)
@@ -383,11 +400,15 @@ class EditTestCase(Resource):
                         "target_table"]
                 test_case_obj.save_to_db()
             if key == "src_qry" and value != None:
+                user_test_case_detail["src_qry"] = user_test_case_detail[
+                    "src_qry"].strip()
                 queries = testcasedetail["query"]
                 queries["sourceqry"] = user_test_case_detail[
                     "src_qry"]
                 test_case_obj.save_to_db()
             if key == "target_qry" and value != None:
+                user_test_case_detail["target_qry"] = user_test_case_detail[
+                    "target_qry"].strip()
                 queries = testcasedetail["query"]
                 queries["targetqry"] = user_test_case_detail[
                     "target_qry"]
@@ -468,7 +489,7 @@ class EditTestCase(Resource):
             TestSuite.test_suite_id == test_case_obj.test_suite_id,
             TestSuite.is_deleted == False
         ).first()
-        if project_id_org_id == ():
+        if project_id_org_id == () or project_id_org_id == None:
             return api_response(False,
                                 APIMessages.NO_TEST_CASE,
                                 STATUS_BAD_REQUEST)

@@ -162,9 +162,11 @@ def return_excel_name_and_project_id(test_case_id):
             'test_suite_id': list(
                 map(lambda test_suite: test_suite_to_json(test_suite),
                     TestSuite.query.
-                    filter_by(
-                        test_suite_id=test_case.test_suite_id)))}
+                    filter(
+                        TestSuite.test_suite_id == test_case.test_suite_id,
+                        TestSuite.is_deleted == False)))}
 
     return {'user': list(map(lambda test_case: test_case_to_json(test_case),
-                             TestCase.query.filter_by(
-                                 test_case_id=test_case_id)))}
+                             TestCase.query.filter(
+                                 TestCase.test_case_id == test_case_id,
+                                 TestCase.is_deleted == False)))}

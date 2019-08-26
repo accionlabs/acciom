@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import current_app as app
+
 from flask import request
 from flask_restful import reqparse, Resource
 from sqlalchemy.exc import SQLAlchemyError
@@ -271,24 +271,44 @@ class CreateNewTestSuite(Resource):
                             required=False, type=str, location='json')
         test_suite_data = parser.parse_args()
         current_user = session.user_id
-        testcaseids = test_suite_data["case_id_list"]
+        # checking whether test cases passed by user are present in db or not
+        for each_test_case_id in test_suite_data["case_id_list"]:
+            test_case = TestCase.query.filter(
+                TestCase.test_case_id == each_test_case_id,
+                TestCase.is_deleted == False).first()
+            if not test_case:
+                return api_response(False, APIMessages.TEST_CASE_ABSENT,
+                                    STATUS_BAD_REQUEST)
+        project_id_org_id = db.session.query(
+            Organization.org_id,
+            Project.project_id).filter(Organization.is_deleted == False).join(
+            Project,
+            Organization.org_id == Project.org_id).filter(
+            Project.is_deleted == False).join(
+            TestSuite,
+            Project.project_id == TestSuite.project_id).filter(
+            TestSuite.test_suite_id == test_case.test_suite_id,
+            TestSuite.is_deleted == False
+        ).first()
+        if project_id_org_id == () or project_id_org_id == None:
+            return api_response(False,
+                                APIMessages.NO_TEST_CASE,
+                                STATUS_BAD_REQUEST)
+        check_permission(session.user, ["upload_suite"], project_id_org_id[0],
+                         project_id_org_id[1])
         get_excel_name_and_project_id = return_excel_name_and_project_id(
-            testcaseids[0])
+            test_suite_data["case_id_list"][0])
+        # check whether test suite present in db or not
+        if get_excel_name_and_project_id["user"][0]["test_suite_id"] == []:
+            return api_response(False, APIMessages.TEST_SUITE_ABSENT,
+                                STATUS_BAD_REQUEST)
         project_id = \
             get_excel_name_and_project_id["user"][0]["test_suite_id"][0][
                 "project_id"]
         excel_name = \
             get_excel_name_and_project_id["user"][0]["test_suite_id"][0][
                 "excel_name"]
-        # Check Test Suite name already exist in db or not
-        temp_connection = TestSuite.query.filter(
-            TestSuite.test_suite_name == test_suite_data[
-                "suite_name"],
-            TestSuite.project_id == project_id).first()
-        if temp_connection:
-            return api_response(False, APIMessages.
-                                TEST_SUITE_NAME_ALREADY_PRESENT,
-                                STATUS_BAD_REQUEST)
+
         if test_suite_data["suite_name"] == None or test_suite_data[
             "suite_name"] == " ":
             now = datetime.now()
@@ -304,11 +324,6 @@ class CreateNewTestSuite(Resource):
             for each_test_case_id in test_suite_data["case_id_list"]:
                 test_case = TestCase.query.filter_by(
                     test_case_id=each_test_case_id).first()
-                if not test_case:
-                    return api_response(False,
-                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
-                                            each_test_case_id),
-                                        STATUS_BAD_REQUEST)
                 new_test_case = TestCase(
                     test_suite_id=new_test_suite.test_suite_id,
                     owner_id=current_user,
@@ -318,6 +333,18 @@ class CreateNewTestSuite(Resource):
             return api_response(True, APIMessages.NEW_TEST_SUITE_CREATED,
                                 STATUS_CREATED)
         else:
+            # Check Test Suite name already exist in db or not
+            test_suite_data["suite_name"] = test_suite_data[
+                "suite_name"].strip()
+            temp_connection = TestSuite.query.filter(
+                TestSuite.test_suite_name == test_suite_data[
+                    "suite_name"],
+                TestSuite.project_id == project_id,
+                TestSuite.is_deleted == False).first()
+            if temp_connection:
+                return api_response(False, APIMessages.
+                                    TEST_SUITE_NAME_ALREADY_PRESENT,
+                                    STATUS_BAD_REQUEST)
             new_test_suite = TestSuite(project_id=project_id,
                                        owner_id=current_user,
                                        excel_name=excel_name,
@@ -327,11 +354,6 @@ class CreateNewTestSuite(Resource):
             for each_test_case_id in test_suite_data["case_id_list"]:
                 test_case = TestCase.query.filter_by(
                     test_case_id=each_test_case_id).first()
-                if not test_case:
-                    return api_response(False,
-                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
-                                            each_test_case_id),
-                                        STATUS_BAD_REQUEST)
                 new_test_case = TestCase(
                     test_suite_id=new_test_suite.test_suite_id,
                     owner_id=current_user,

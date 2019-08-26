@@ -56,6 +56,7 @@ class DbDetails(Resource):
                                            help=APIMessages.PARSER_MESSAGE)
 
         db_detail = post_db_detail_parser.parse_args()
+        project_id = db_detail["project_id"]
         project_obj = Project.query.filter(
             Project.project_id == db_detail["project_id"],
             Project.is_deleted == False).first()
@@ -72,10 +73,13 @@ class DbDetails(Resource):
                                 message=request_data_validation,
                                 http_status_code=STATUS_BAD_REQUEST,
                                 data={})
+        del db_detail["project_id"]
+        for key, value in dict(db_detail).items():
+            db_detail[key] = value.strip()
         # check whether combination of db_type,db_name,db_username,
         # db_hostname,project_id is already present in db or not
         temp_connection = DbConnection.query.filter(
-            DbConnection.project_id == db_detail["project_id"],
+            DbConnection.project_id == project_id,
             DbConnection.db_type == SupportedDBType().get_db_id_by_name(
                 db_detail['db_type_name']),
             DbConnection.db_name == db_detail['db_name'],
@@ -92,7 +96,7 @@ class DbDetails(Resource):
             temp_connection = DbConnection.query.filter(
                 DbConnection.db_connection_name == db_detail[
                     "db_connection_name"],
-                DbConnection.project_id == db_detail["project_id"],
+                DbConnection.project_id == project_id,
                 DbConnection.is_deleted == False).first()
             if temp_connection:
                 return api_response(False, APIMessages.
@@ -106,7 +110,7 @@ class DbDetails(Resource):
                                     NO_SPACES,
                                     STATUS_BAD_REQUEST)
             db_password = encrypt(db_detail["db_password"])
-            new_db = DbConnection(project_id=db_detail["project_id"],
+            new_db = DbConnection(project_id=project_id,
                                   owner_id=session.user_id,
                                   db_connection_name=db_detail[
                                       'db_connection_name'],
@@ -162,7 +166,7 @@ class DbDetails(Resource):
                 Project.project_id == db_obj.project_id,
                 Project.is_deleted == False
             ).first()
-            if project_id_org_id == ():
+            if project_id_org_id == () or project_id_org_id == None:
                 return api_response(False,
                                     APIMessages.NO_DB_ID,
                                     STATUS_BAD_REQUEST)
@@ -256,9 +260,12 @@ class DbDetails(Resource):
         db_details = put_db_detail_parser.parse_args()
         db_connection_id = db_detail["db_connection_id"]
         # Remove keys which contain None values in db_details dictionary
+        del db_detail["db_connection_id"]
         for key, value in dict(db_detail).items():
             if value == None:
                 del db_detail[key]
+        for key, value in dict(db_detail).items():
+            db_detail[key] = value.strip()
         if not db_connection_id:
             return api_response(False, APIMessages.ABSENCE_OF_DBID,
                                 STATUS_BAD_REQUEST)
@@ -280,7 +287,7 @@ class DbDetails(Resource):
             Project.project_id == db_obj.project_id,
             Project.is_deleted == False
         ).first()
-        if project_id_org_id == ():
+        if project_id_org_id == () or project_id_org_id == None:
             return api_response(False,
                                 APIMessages.NO_DB_ID,
                                 STATUS_BAD_REQUEST)
@@ -288,7 +295,6 @@ class DbDetails(Resource):
                          project_id_org_id[0],
                          project_id_org_id[1])
 
-        del db_detail["db_connection_id"]
         # Updating values present in database with user given values
         data_base_dict = db_obj.__dict__
         data_base_dict.update(db_detail)
@@ -316,6 +322,7 @@ class DbDetails(Resource):
             # Check Db connection name already exist in db or not
             if db_details["db_connection_name"] != None:
                 db_obj = DbConnection.query.filter(
+                    DbConnection.db_connection_id != db_connection_id,
                     DbConnection.db_connection_name == db_detail[
                         "db_connection_name"],
                     DbConnection.project_id == project_id,
@@ -404,7 +411,7 @@ class DbDetails(Resource):
             Project.project_id == del_obj.project_id,
             Project.is_deleted == False
         ).first()
-        if project_id_org_id == ():
+        if project_id_org_id == () or project_id_org_id == None:
             return api_response(False,
                                 APIMessages.NO_DB_ID,
                                 STATUS_BAD_REQUEST)
