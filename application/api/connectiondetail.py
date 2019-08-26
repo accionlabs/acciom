@@ -26,28 +26,22 @@ class SelectConnection(Resource):
 
         Returns:will allow user to select connection for particular user
         """
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('connection_reference',
-                                help=APIMessages.PARSER_MESSAGE,
-                                required=True)
-            parser.add_argument('case_id_list',
-                                type=list, location="json",
-                                help=APIMessages.PARSER_MESSAGE)
-            parser.add_argument('db_connection_id',
-                                help=APIMessages.PARSER_MESSAGE,
-                                required=True)
-            data = parser.parse_args()
-            user = session.user_id
-            select_connection(data, user)
+        parser = reqparse.RequestParser()
+        parser.add_argument('connection_reference',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=True)
+        parser.add_argument('case_id_list',
+                            type=list, location="json",
+                            help=APIMessages.PARSER_MESSAGE)
+        parser.add_argument('db_connection_id',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=True)
+        data = parser.parse_args()
+        user = session.user_id
+        select_connection(data, user)
 
-            return api_response(True, APIMessages.RETURN_SUCCESS,
-                                STATUS_CREATED)
-
-        except Exception as e:
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
+        return api_response(True, APIMessages.RETURN_SUCCESS,
+                            STATUS_CREATED)
 
 
 class DbConnection(Resource):
