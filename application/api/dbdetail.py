@@ -37,7 +37,8 @@ class DbDetails(Resource):
                                            type=int,
                                            help=APIMessages.PARSER_MESSAGE)
         post_db_detail_parser.add_argument('db_connection_name',
-                                           required=False, type=str)
+                                           required=False, type=str,
+                                           help=APIMessages.PARSER_MESSAGE)
         post_db_detail_parser.add_argument('db_type_name', required=True,
                                            type=str,
                                            help=APIMessages.PARSER_MESSAGE)
@@ -259,7 +260,6 @@ class DbDetails(Resource):
         db_details = put_db_detail_parser.parse_args()
         db_connection_id = db_detail["db_connection_id"]
         # Remove keys which contain None values in db_details dictionary
-        dbdetail = {}
         del db_detail["db_connection_id"]
         for key, value in dict(db_detail).items():
             if value == None:
