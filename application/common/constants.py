@@ -88,6 +88,8 @@ class APIMessages:
     ONLY_USER_OR_EMAIL = "Pass only User id or Email"
     DB_NOT_EXIST = "Db not exist"
     PROJECT_CONTAIN_SUITE_NOT_EXIST = "Project containing this suite not exist"
+    TEST_CASE_ABSENT = "Test case passed is absent"
+    TEST_SUITE_ABSENT = "Test suite for selected test case is absent"
 
 
 class GenericStrings:
