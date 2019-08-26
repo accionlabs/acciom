@@ -42,49 +42,66 @@ class TestCaseJob(Resource):
 
         Returns: Return api response ,either successful job run or error.
         """
-        try:
-            user_id = session.user_id
-            parser = reqparse.RequestParser()
-            parser.add_argument('suite_id', type=int, required=False,
-                                help=APIMessages.PARSER_MESSAGE)
-            parser.add_argument('case_id_list',
-                                type=list, location="json",
-                                help=APIMessages.PARSER_MESSAGE)
-            execution_data = parser.parse_args()
-            is_external = False
-            if execution_data['suite_id']:
-                test_suite_obj = TestSuite.query.filter_by(
-                    test_suite_id=int(execution_data['suite_id'])).first()
-                if not test_suite_obj:
-                    return api_response(False, APIMessages.SUITE_NOT_EXIST,
-                                        STATUS_SERVER_ERROR)
-                # Create a Job
-                create_job(user_id, test_suite_obj, is_external)
-                return api_response(True, APIMessages.RETURN_SUCCESS,
-                                    STATUS_CREATED)
-
-            elif execution_data['case_id_list']:
-                test_case_obj = TestCase.query.filter_by(
-                    test_case_id=execution_data['case_id_list'][0]).first()
-                if not test_case_obj:
-                    return api_response(False,
-                                        APIMessages.TEST_CASE_NOT_IN_DB,
-                                        STATUS_SERVER_ERROR)
-                test_suite_id = test_case_obj.test_suite_id
-                test_suite_obj = TestSuite.query.filter_by(
-                    test_suite_id=test_suite_id).first()
-                # Create a Job
-                create_job(user_id, test_suite_obj, is_external,
-                           execution_data['case_id_list'])
-                return api_response(True, APIMessages.RETURN_SUCCESS,
-                                    STATUS_CREATED
-                                    )
-            else:
-                return api_response(False, APIMessages.INTERNAL_ERROR,
+        user_id = session.user_id
+        parser = reqparse.RequestParser()
+        parser.add_argument('suite_id', type=int, required=False,
+                            help=APIMessages.PARSER_MESSAGE)
+        parser.add_argument('case_id_list',
+                            type=list, location="json",
+                            help=APIMessages.PARSER_MESSAGE)
+        execution_data = parser.parse_args()
+        is_external = False
+        if execution_data['suite_id']:
+            test_suite_obj = TestSuite.query.filter_by(
+                test_suite_id=int(execution_data['suite_id'])).first()
+            if not test_suite_obj:
+                return api_response(False, APIMessages.SUITE_NOT_EXIST,
                                     STATUS_SERVER_ERROR)
+            project_obj = Project.query.filter_by(
+                project_id=test_suite_obj.project_id,
+                is_deleted=False).first()
+            if not project_obj:
+                raise ResourceNotAvailableException(
+                    APIMessages.PROJECT_NOT_EXIST)
 
-        except Exception as e:
-            app.logger.error(e)
+            user_obj = User.query.filter_by(user_id=user_id,
+                                            is_deleted=False).first()
+            check_permission(user_obj, list_of_permissions=["execute"],
+                             org_id=project_obj.org_id,
+                             project_id=test_suite_obj.project_id)
+            # Create a Job
+            create_job(user_id, test_suite_obj, is_external)
+            return api_response(True, APIMessages.RETURN_SUCCESS,
+                                STATUS_CREATED)
+
+        elif execution_data['case_id_list']:
+            test_case_obj = TestCase.query.filter_by(
+                test_case_id=execution_data['case_id_list'][0]).first()
+            if not test_case_obj:
+                return api_response(False,
+                                    APIMessages.TEST_CASE_NOT_IN_DB,
+                                    STATUS_SERVER_ERROR)
+            test_suite_id = test_case_obj.test_suite_id
+            test_suite_obj = TestSuite.query.filter_by(
+                test_suite_id=test_suite_id).first()
+            project_obj = Project.query.filter_by(
+                project_id=test_suite_obj.project_id,
+                is_deleted=False).first()
+            if not project_obj:
+                raise ResourceNotAvailableException(
+                    APIMessages.PROJECT_NOT_EXIST)
+            user_obj = User.query.filter_by(user_id=user_id,
+                                            is_deleted=False).first()
+            check_permission(user_obj, list_of_permissions=["execute"],
+                             org_id=project_obj.org_id,
+                             project_id=test_suite_obj.project_id)
+            # Create a Job
+            create_job(user_id, test_suite_obj, is_external,
+                       execution_data['case_id_list'])
+            return api_response(True, APIMessages.RETURN_SUCCESS,
+                                STATUS_CREATED
+                                )
+        else:
             return api_response(False, APIMessages.INTERNAL_ERROR,
                                 STATUS_SERVER_ERROR)
 

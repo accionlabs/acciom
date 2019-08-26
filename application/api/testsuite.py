@@ -72,16 +72,26 @@ class TestSuiteAPI(Resource):
             TestSuite.test_suite_name == test_suite_data[
                 "suite_name"],
             TestSuite.project_id == test_suite_data["project_id"]).first()
+        if test_suite_data['suite_name'].strip() == '':
+            return api_response(False, APIMessages.
+                                TEST_SUITE_NAME_CANNOT_BE_BLANK,
+                                STATUS_BAD_REQUEST)
         if temp_connection:
             return api_response(False, APIMessages.
                                 TEST_SUITE_NAME_ALREADY_PRESENT,
                                 STATUS_BAD_REQUEST)
+
         suite_result = save_file_to_db(current_user,
                                        test_suite_data['project_id'],
                                        test_suite_data, file)
         if int(test_suite_data['upload_and_execute']) == 1:
             test_suite_obj = TestSuite.query.filter_by(
                 test_suite_id=int(suite_result['Suite'].test_suite_id)).first()
+            project_obj = Project.query.filter_by(
+                project_id=test_suite_obj.project_id).first()
+            check_permission(user_obj, list_of_permissions=["execute"],
+                             org_id=project_obj.org_id,
+                             project_id=test_suite_obj.project_id)
             create_job(current_user, test_suite_obj, False)
         return api_response(True, APIMessages.ADD_DATA, STATUS_CREATED)
 
@@ -537,23 +547,45 @@ class ExportTestLog(Resource):
         Returns:  Export log to Excel based on the test_case_log_id of the
         executed job
         """
+        user_id = session.user_id
         test_case_log = reqparse.RequestParser()
         test_case_log.add_argument('test_case_log_id',
                                    required=False,
                                    type=int,
                                    location='args')
         test_case_log = test_case_log.parse_args()
-        db_obj = TestCaseLog.query.filter_by(
+        test_case_log_obj = TestCaseLog.query.filter_by(
             test_case_log_id=test_case_log['test_case_log_id']).first()
-        if not db_obj:
+        if not test_case_log_obj:
             raise ResourceNotAvailableException(
                 APIMessages.TESTCASELOGID_NOT_IN_DB.format(
                     test_case_log['test_case_log_id']))
+        user_obj = User.query.filter_by(user_id=user_id).first()
+        project_id_org_id = db.session.query(
+            Organization.org_id,
+            Project.project_id).filter(Organization.is_deleted == False).join(
+            Project,
+            Organization.org_id == Project.org_id).filter(
+            Project.is_deleted == False).join(
+            TestSuite,
+            Project.project_id == TestSuite.project_id).filter(
+            TestSuite.is_deleted == False).join(
+            TestCase,
+            TestSuite.test_suite_id == TestCase.test_suite_id).filter(
+            TestCase.test_case_id == test_case_log_obj.test_case_id,
+            TestCase.is_deleted == False).first()
+        check_permission(user_obj,
+                         list_of_permissions=[
+                             "view_project"],
+                         org_id=project_id_org_id[1],
+                         project_id=project_id_org_id[0])
         return export_test_case_log(test_case_log['test_case_log_id'])
 
 
 class TestCaseLogAPI(Resource):
-    def get(self):
+    @token_required
+    def get(self, session):
+        user_id = session.user_id
         test_case_detail = reqparse.RequestParser()
         test_case_detail.add_argument('test_case_id',
                                       required=False,
@@ -566,4 +598,14 @@ class TestCaseLogAPI(Resource):
             raise ResourceNotAvailableException(
                 APIMessages.TEST_CASE_NOT_IN_DB.format(
                     test_case_detail['test_case_id']))
+        user_obj = User.query.filter_by(user_id=user_id).first()
+        suite_obj = TestSuite.query.filter_by(
+            test_suite_id=case_obj.test_suite_id).first()
+        project_obj = Project.query.filter_by(
+            project_id=suite_obj.project_id).first()
+        check_permission(user_obj,
+                         list_of_permissions=[
+                             "view_project"],
+                         org_id=project_obj.org_id,
+                         project_id=project_obj.project_id)
         return test_case_details(test_case_detail['test_case_id'])
