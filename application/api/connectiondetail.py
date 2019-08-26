@@ -9,7 +9,8 @@ from application.helper.connectiondetails import (select_connection,
                                                   get_db_connection,
                                                   get_case_detail)
 from application.helper.permission_check import check_permission
-from application.model.models import (Project, TestSuite)
+from application.model.models import (Project, TestSuite, DbConnection,
+                                      TestCase, User)
 
 
 class SelectConnection(Resource):
@@ -26,28 +27,32 @@ class SelectConnection(Resource):
 
         Returns:will allow user to select connection for particular user
         """
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('connection_reference',
-                                help=APIMessages.PARSER_MESSAGE,
-                                required=True)
-            parser.add_argument('case_id_list',
-                                type=list, location="json",
-                                help=APIMessages.PARSER_MESSAGE)
-            parser.add_argument('db_connection_id',
-                                help=APIMessages.PARSER_MESSAGE,
-                                required=True)
-            data = parser.parse_args()
-            user = session.user_id
-            select_connection(data, user)
+        parser = reqparse.RequestParser()
+        parser.add_argument('connection_reference',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=True)
+        parser.add_argument('case_id_list',
+                            type=list, location="json",
+                            help=APIMessages.PARSER_MESSAGE)
+        parser.add_argument('db_connection_id',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=True)
+        data = parser.parse_args()
+        user = session.user_id
+        case_obj = TestCase.query.filter_by(
+            test_case_id=data['case_id_list'][0]).first()
+        suite_obj = TestSuite.query.filter_by(
+            test_suite_id=case_obj.test_suite_id).first()
+        project_obj = Project.query.filter_by(
+            project_id=suite_obj.project_id).first()
+        user_obj = User.query.filter_by(user_id=user).first()
+        print(project_obj.org_id, project_obj.project_id)
+        check_permission(user_obj, ['edit_project'], org_id=project_obj.org_id,
+                         project_id=project_obj.project_id)
+        select_connection(data, user)
 
-            return api_response(True, APIMessages.RETURN_SUCCESS,
-                                STATUS_CREATED)
-
-        except Exception as e:
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
+        return api_response(True, APIMessages.RETURN_SUCCESS,
+                            STATUS_CREATED)
 
 
 class DbConnection(Resource):
@@ -123,7 +128,7 @@ class CaseDetails(Resource):
                 return api_response(False,
                                     APIMessages.PROJECT_CONTAIN_SUITE_NOT_EXIST,
                                     STATUS_BAD_REQUEST)
-            check_permission(session.user, ["view_suite"],
+            check_permission(session.user, ["view_suite", 'view_project'],
                              project_obj.org_id, suite_obj.project_id)
             payload = get_case_detail(suite_data['suite_id'])
             return api_response(True, APIMessages.SUCCESS,

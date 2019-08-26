@@ -24,7 +24,8 @@ def create_dbconnection(current_user, db_type, db_name, hostname,
                                                    get_db_id_by_name(db_type),
                                                    db_name=db_name,
                                                    db_hostname=hostname,
-                                                   db_username=username).first()
+                                                   db_username=username,
+                                                   is_deleted=False).first()
     if temp_connection:
         return temp_connection.db_connection_id
     else:

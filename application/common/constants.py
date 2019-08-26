@@ -88,6 +88,7 @@ class APIMessages:
     ONLY_USER_OR_EMAIL = "Pass only User id or Email"
     DB_NOT_EXIST = "Db not exist"
     PROJECT_CONTAIN_SUITE_NOT_EXIST = "Project containing this suite not exist"
+    TEST_SUITE_NAME_CANNOT_BE_BLANK = "TestSuite name cannot be Blank"
 
 
 class GenericStrings:
