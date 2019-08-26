@@ -90,6 +90,7 @@ class APIMessages:
     PROJECT_CONTAIN_SUITE_NOT_EXIST = "Project containing this suite not exist"
     TEST_CASE_ABSENT = "Test case passed is absent"
     TEST_SUITE_ABSENT = "Test suite for selected test case is absent"
+    TEST_SUITE_NAME_CANNOT_BE_BLANK = "TestSuite name cannot be Blank"
 
 
 class GenericStrings:
