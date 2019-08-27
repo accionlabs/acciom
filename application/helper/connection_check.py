@@ -28,12 +28,12 @@ def connection_check(db_type_id, db_hostname, db_username, db_password,
             cnxn = pymysql.connect(host=db_hostname, user=db_username,
                                    password=db_password, db=db_name)
         except pymysql.err.InternalError as e:
-            if APIMessages.UNKNOWN_DATABASE_MYSQL in e.args[1]:
+            if GenericStrings.UNKNOWN_DATABASE_MYSQL in e.args[1]:
                 return APIMessages.UNKNOWN_DATABASE.format(db_name)
         except pymysql.err.OperationalError as e:
-            if APIMessages.AUTHENTICATION_FAILED_MYSQL in e.args[1]:
+            if GenericStrings.AUTHENTICATION_FAILED_MYSQL in e.args[1]:
                 return APIMessages.AUTHENTICATION_FAILED.format(db_username)
-            elif APIMessages.CANNOT_CONNECT_TO_SERVER_MYSQL in e.args[1]:
+            elif GenericStrings.CANNOT_CONNECT_TO_SERVER_MYSQL in e.args[1]:
                 return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
                     SupportedDBType().get_db_name_by_id(db_type_id),
                     db_hostname)
@@ -72,11 +72,11 @@ def connection_check(db_type_id, db_hostname, db_username, db_password,
                                     user=db_username,
                                     password=db_password)
         except psycopg2.OperationalError as e:
-            if APIMessages.UNKNOWN_DATABASE_POSTGRES in str(e):
+            if GenericStrings.UNKNOWN_DATABASE_POSTGRES in str(e):
                 return APIMessages.UNKNOWN_DATABASE.format(db_name)
-            elif APIMessages.AUTHENTICATION_FAILED_POSTGRES in str(e):
+            elif GenericStrings.AUTHENTICATION_FAILED_POSTGRES in str(e):
                 return APIMessages.AUTHENTICATION_FAILED.format(db_username)
-            elif APIMessages.CANNOT_CONNECT_TO_SERVER_POSTGRES in str(e):
+            elif GenericStrings.CANNOT_CONNECT_TO_SERVER_POSTGRES in str(e):
                 return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
                     SupportedDBType().get_db_name_by_id(db_type_id),
                     db_hostname)
@@ -90,10 +90,11 @@ def connection_check(db_type_id, db_hostname, db_username, db_password,
                 "{0}/{1}@{2}/{3}".format(db_username, db_password, db_hostname,
                                          db_name))
         except cx_Oracle.DatabaseError as e:
-            if APIMessages.UNKNOWN_DB_AUTHENTICATION_FAILED_ORACLE in str(e):
+            if GenericStrings.UNKNOWN_DB_AUTHENTICATION_FAILED_ORACLE in str(
+                    e):
                 return APIMessages.UNKNOWN_DB_AUTHENTICATION_FAILED.format(
                     db_name, db_username)
-            elif APIMessages.CANNOT_CONNECT_TO_SERVER_ORACLE in str(
+            elif GenericStrings.CANNOT_CONNECT_TO_SERVER_ORACLE in str(
                     e):
                 return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
                     SupportedDBType().get_db_name_by_id(db_type_id),

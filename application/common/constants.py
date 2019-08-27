@@ -96,6 +96,12 @@ class APIMessages:
     AUTHENTICATION_FAILED = "Authentication failed for user '{}'"
     CANNOT_CONNECT_TO_SERVER = "Can't connect to {} server on '{}' (Name or service not known)"
     UNKNOWN_DB_AUTHENTICATION_FAILED = "Unknown database '{}' or Authentication failed for user '{}'"
+
+
+class GenericStrings:
+    """Class to store generic strings that are referenced in code."""
+
+    ORACLE_DRIVER = "{ODBC Driver 17 for SQL Server}"
     UNKNOWN_DATABASE_MYSQL = "Unknown database"
     AUTHENTICATION_FAILED_MYSQL = "Access denied for user"
     CANNOT_CONNECT_TO_SERVER_MYSQL = "Can't connect to"
@@ -104,12 +110,6 @@ class APIMessages:
     CANNOT_CONNECT_TO_SERVER_POSTGRES = "could not translate"
     UNKNOWN_DB_AUTHENTICATION_FAILED_ORACLE = "listener does not currently know of service"
     CANNOT_CONNECT_TO_SERVER_ORACLE = "could not resolve the connect identifier specified"
-
-
-class GenericStrings:
-    """Class to store generic strings that are referenced in code."""
-
-    ORACLE_DRIVER = "{ODBC Driver 17 for SQL Server}"
 
 
 class TimeOuts:
