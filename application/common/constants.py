@@ -36,7 +36,7 @@ class APIMessages:
     DB_DETAILS_UPDATED = "DB details updated for connection id {} successfully"
     ABSENCE_OF_DBID = "Please pass DB Connection ID"
     CONNECTION_CREATE = "Connection can be created"
-    CONNECTION_CANNOT_CREATE = "Connection could not be created"
+    CONNECTION_CANNOT_CREATE = "Connection could not be created, {}"
     NO_DB_UNDER_PROJECT = "No db details exist under this project id"
     PASS_DBID_or_PROJECTID = "Please pass db id or project id"
     TEST_CASE_DELETED = "Test case with test case id {} deleted successfully"
@@ -91,6 +91,19 @@ class APIMessages:
     TEST_CASE_ABSENT = "Test case passed is absent"
     TEST_SUITE_ABSENT = "Test suite for selected test case is absent"
     TEST_SUITE_NAME_CANNOT_BE_BLANK = "TestSuite name cannot be Blank"
+    CONNECTION = "Connection "
+    UNKNOWN_DATABASE = "Unknown database '{}'"
+    AUTHENTICATION_FAILED = "Authentication failed for user '{}'"
+    CANNOT_CONNECT_TO_SERVER = "Can't connect to {} server on '{}' (Name or service not known)"
+    UNKNOWN_DB_AUTHENTICATION_FAILED = "Unknown database '{}' or Authentication failed for user '{}'"
+    UNKNOWN_DATABASE_MYSQL = "Unknown database"
+    AUTHENTICATION_FAILED_MYSQL = "Access denied for user"
+    CANNOT_CONNECT_TO_SERVER_MYSQL = "Can't connect to"
+    UNKNOWN_DATABASE_POSTGRES = "database"
+    AUTHENTICATION_FAILED_POSTGRES = "password authentication failed for"
+    CANNOT_CONNECT_TO_SERVER_POSTGRES = "could not translate"
+    UNKNOWN_DB_AUTHENTICATION_FAILED_ORACLE = "listener does not currently know of service"
+    CANNOT_CONNECT_TO_SERVER_ORACLE = "could not resolve the connect identifier specified"
 
 
 class GenericStrings:
@@ -110,8 +123,8 @@ class TimeOuts:
 class SupportedDBType:
     """Class to return Name and Id of the DataBase."""
 
-    supported_db_type = {1: "postgresql", 2: "mysql", 3: "mssql", 4: "oracle",
-                         5: "sqlite"}
+    supported_db_type = {1: "PostgreSQL", 2: "MySQL", 3: "MsSQL", 4: "Oracle",
+                         5: "SQLite"}
 
     def get_db_name_by_id(self, db_id):
         """
@@ -135,7 +148,7 @@ class SupportedDBType:
         """
         for key, value in self.supported_db_type.items():
             # Name will be converted to lower case and compared
-            if value == name.lower():
+            if value.lower() == name.lower():
                 return key
             # Returns None if Name does not exist
 

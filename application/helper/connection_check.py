@@ -2,11 +2,9 @@ import cx_Oracle
 import psycopg2
 import pymysql
 import pyodbc
-from sqlalchemy import exc
 
 from application.common.constants import APIMessages, SupportedDBType, \
     GenericStrings
-from application.common.response import api_response, STATUS_SERVER_ERROR
 
 
 def connection_check(db_type_id, db_hostname, db_username, db_password,
@@ -24,50 +22,83 @@ def connection_check(db_type_id, db_hostname, db_username, db_password,
     Returns(str):
         Returns success only if connection can be establish
     """
-    try:
-        # cnxn is a connection object
-        if db_type_id == SupportedDBType().get_db_id_by_name("mysql"):
+    # cnxn is a connection object
+    if db_type_id == SupportedDBType().get_db_id_by_name("mysql"):
+        try:
             cnxn = pymysql.connect(host=db_hostname, user=db_username,
                                    password=db_password, db=db_name)
-            cursor = cnxn.cursor()
-            if cursor:
-                return APIMessages.RETURN_SUCCESS
-        elif db_type_id == SupportedDBType().get_db_id_by_name("mssql"):
-            server = db_hostname
-            database = db_name
-            username = db_username
-            password = db_password
-            # This code can handle Oracle Driver 17
-            # If other version 13 is given, code will fail
-            # TODO: Need to implement an approach that takes driver version
-            #  based on user input
+        except pymysql.err.InternalError as e:
+            if APIMessages.UNKNOWN_DATABASE_MYSQL in e.args[1]:
+                return APIMessages.UNKNOWN_DATABASE.format(db_name)
+        except pymysql.err.OperationalError as e:
+            if APIMessages.AUTHENTICATION_FAILED_MYSQL in e.args[1]:
+                return APIMessages.AUTHENTICATION_FAILED.format(db_username)
+            elif APIMessages.CANNOT_CONNECT_TO_SERVER_MYSQL in e.args[1]:
+                return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
+                    SupportedDBType().get_db_name_by_id(db_type_id),
+                    db_hostname)
+        cursor = cnxn.cursor()
+        if cursor:
+            return APIMessages.RETURN_SUCCESS
+    elif db_type_id == SupportedDBType().get_db_id_by_name("mssql"):
+        server = db_hostname
+        database = db_name
+        username = db_username
+        password = db_password
+        # This code can handle Oracle Driver 17
+        # If other version 13 is given, code will fail
+        # TODO: Need to implement an approach that takes driver version
+        #  based on user input
+        try:
             cnxn = pyodbc.connect(
                 'DRIVER={0}'.format(GenericStrings.ORACLE_DRIVER) +
                 ';SERVER=' + server +
                 ';DATABASE=' + database +
                 ';UID=' + username + ';PWD=' + password)
-            cursor = cnxn.cursor()
-            if cursor:
-                return APIMessages.RETURN_SUCCESS
-        elif db_type_id == SupportedDBType().get_db_id_by_name("postgresql"):
+        except pyodbc.ProgrammingError as e:
+            return APIMessages.UNKNOWN_DATABASE.format(db_name)
+        except pyodbc.InterfaceError as e:
+            return APIMessages.AUTHENTICATION_FAILED.format(db_username)
+        except pyodbc.OperationalError as e:
+            return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
+                SupportedDBType().get_db_name_by_id(db_type_id),
+                db_hostname)
+        cursor = cnxn.cursor()
+        if cursor:
+            return APIMessages.RETURN_SUCCESS
+    elif db_type_id == SupportedDBType().get_db_id_by_name("postgresql"):
+        try:
             cnxn = psycopg2.connect(host=db_hostname, database=db_name,
                                     user=db_username,
                                     password=db_password)
-            cursor = cnxn.cursor()
-            if cursor:
-                return APIMessages.RETURN_SUCCESS
-        elif db_type_id == SupportedDBType().get_db_id_by_name("oracle"):
+        except psycopg2.OperationalError as e:
+            if APIMessages.UNKNOWN_DATABASE_POSTGRES in str(e):
+                return APIMessages.UNKNOWN_DATABASE.format(db_name)
+            elif APIMessages.AUTHENTICATION_FAILED_POSTGRES in str(e):
+                return APIMessages.AUTHENTICATION_FAILED.format(db_username)
+            elif APIMessages.CANNOT_CONNECT_TO_SERVER_POSTGRES in str(e):
+                return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
+                    SupportedDBType().get_db_name_by_id(db_type_id),
+                    db_hostname)
+
+        cursor = cnxn.cursor()
+        if cursor:
+            return APIMessages.RETURN_SUCCESS
+    elif db_type_id == SupportedDBType().get_db_id_by_name("oracle"):
+        try:
             cnxn = cx_Oracle.connect(
                 "{0}/{1}@{2}/{3}".format(db_username, db_password, db_hostname,
                                          db_name))
-            cursor = cnxn.cursor()
-            if cursor:
-                return APIMessages.RETURN_SUCCESS
-    except exc.DatabaseError as e:
-        return api_response(False, APIMessages.INTERNAL_ERROR,
-                            STATUS_SERVER_ERROR,
-                            {'error_log': str(e)})
-    except Exception as e:
-        return api_response(False, APIMessages.INTERNAL_ERROR,
-                            STATUS_SERVER_ERROR,
-                            {'error_log': str(e)})
+        except cx_Oracle.DatabaseError as e:
+            if APIMessages.UNKNOWN_DB_AUTHENTICATION_FAILED_ORACLE in str(e):
+                return APIMessages.UNKNOWN_DB_AUTHENTICATION_FAILED.format(
+                    db_name, db_username)
+            elif APIMessages.CANNOT_CONNECT_TO_SERVER_ORACLE in str(
+                    e):
+                return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
+                    SupportedDBType().get_db_name_by_id(db_type_id),
+                    db_hostname)
+
+        cursor = cnxn.cursor()
+        if cursor:
+            return APIMessages.RETURN_SUCCESS
