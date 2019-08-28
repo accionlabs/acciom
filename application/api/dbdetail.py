@@ -77,7 +77,6 @@ class DbDetails(Resource):
         del db_detail["project_id"]
         for key, value in dict(db_detail).items():
             db_detail[key] = value.strip()
-
         # check whether combination of db_type,db_name,db_username,
         # db_hostname,project_id is already present in db or not
         temp_connection = DbConnection.query.filter(
@@ -123,7 +122,7 @@ class DbDetails(Resource):
                                   db_hostname=db_detail["db_hostname"],
                                   db_username=db_detail["db_username"],
                                   db_encrypted_password=db_password, )
-            # new_db.save_to_db()
+            new_db.save_to_db()
             return api_response(True, APIMessages.DB_DETAILS_ADDED,
                                 STATUS_CREATED)
 

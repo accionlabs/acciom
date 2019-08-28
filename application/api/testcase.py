@@ -280,7 +280,7 @@ class EditTestCase(Resource):
                 column = columnreplacecomma.replace("'", "")
             elif ":" in strcolumnstrip2:
                 column = strcolumnstrip2.replace("'", "")
-           
+
         test_case_class = SupportedTestClass(). \
             get_test_class_name_by_id(
             test_case_obj.test_case_class)
@@ -424,7 +424,6 @@ class EditTestCase(Resource):
                     "target_qry"]
                 test_case_obj.save_to_db()
             if key == "column" and value != None:
-
                 column = testcasedetail["column"]
                 user_test_case_detail["column"] = user_test_case_detail[
                     "column"].replace(" ", "")
