@@ -1,5 +1,7 @@
 """File to handle Database connection operations."""
 
+from datetime import datetime
+
 from flask_restful import Resource, reqparse
 
 from application.common.constants import APIMessages, SupportedDBType
@@ -39,7 +41,7 @@ class DbDetails(Resource):
         post_db_detail_parser.add_argument('db_connection_name',
                                            required=False, type=str,
                                            help=APIMessages.PARSER_MESSAGE)
-        post_db_detail_parser.add_argument('db_type_name', required=True,
+        post_db_detail_parser.add_argument('db_type', required=True,
                                            type=str,
                                            help=APIMessages.PARSER_MESSAGE)
         post_db_detail_parser.add_argument('db_name', required=True,
@@ -81,7 +83,7 @@ class DbDetails(Resource):
         temp_connection = DbConnection.query.filter(
             DbConnection.project_id == project_id,
             DbConnection.db_type == SupportedDBType().get_db_id_by_name(
-                db_detail['db_type_name']),
+                db_detail['db_type']),
             DbConnection.db_name == db_detail['db_name'],
             DbConnection.db_hostname.ilike(
                 db_detail['db_hostname']),
@@ -116,7 +118,7 @@ class DbDetails(Resource):
                                       'db_connection_name'],
                                   db_type=SupportedDBType().
                                   get_db_id_by_name(
-                                      db_detail['db_type_name']),
+                                      db_detail['db_type']),
                                   db_name=db_detail['db_name'],
                                   db_hostname=db_detail["db_hostname"],
                                   db_username=db_detail["db_username"],
@@ -251,7 +253,7 @@ class DbDetails(Resource):
         put_db_detail_parser.add_argument('db_connection_id', required=True,
                                           type=int)
         put_db_detail_parser.add_argument('db_connection_name', type=str)
-        put_db_detail_parser.add_argument('db_type_name', type=str)
+        put_db_detail_parser.add_argument('db_type', type=str)
         put_db_detail_parser.add_argument('db_name', type=str)
         put_db_detail_parser.add_argument('db_hostname', type=str)
         put_db_detail_parser.add_argument('db_username', type=str)
@@ -300,13 +302,13 @@ class DbDetails(Resource):
         data_base_dict.update(db_detail)
         # check whether combination of db_type,db_name,db_username,
         # db_hostname,project_id is already present in db or not
-        if db_details["db_type_name"] != None:
+        if db_details["db_type"] != None:
             data_base_dict[
-                'db_type_name'] = SupportedDBType().get_db_id_by_name(
-                data_base_dict['db_type_name'])
+                'db_type'] = SupportedDBType().get_db_id_by_name(
+                data_base_dict['db_type'])
         db_obj = DbConnection.query.filter(
             DbConnection.db_connection_id != db_connection_id,
-            DbConnection.db_type == data_base_dict['db_type_name'],
+            DbConnection.db_type == data_base_dict['db_type'],
             DbConnection.db_name == data_base_dict['db_name'],
             DbConnection.db_username == data_base_dict[
                 'db_username'],
@@ -349,24 +351,25 @@ class DbDetails(Resource):
                 DbConnection.db_connection_id == db_connection_id,
                 DbConnection.is_deleted == False).first()
             for key, value in db_detail.items():
-                if value and value.strip():
-                    # checking if value provided by user is
-                    # neither None nor Null
-                    if key == 'db_password':
-                        db_password = encrypt(value)
-                        db_obj.db_encrypted_password = db_password
-                    elif key == 'db_connection_name':
-                        db_obj.db_connection_name = value
-                        db_obj.save_to_db()
-                    elif key == 'db_type_name':
-                        db_obj.db_type = SupportedDBType(). \
-                            get_db_id_by_name(value)
-                    elif key == 'db_name':
-                        db_obj.db_name = value
-                    elif key == 'db_hostname':
-                        db_obj.db_hostname = value
-                    elif key == 'db_username':
-                        db_obj.db_username = value
+                if key == 'db_password':
+                    db_password = encrypt(value)
+                    db_obj.db_encrypted_password = db_password
+                elif key == 'db_connection_name':
+                    if value == "":
+                        now = datetime.now()
+                        date_time_now = now.strftime("%d-%m-%Y %H:%M:%S")
+                        value = APIMessages.CONNECTION + date_time_now
+                    db_obj.db_connection_name = value
+                    db_obj.save_to_db()
+                elif key == 'db_type':
+                    db_obj.db_type = SupportedDBType(). \
+                        get_db_id_by_name(value)
+                elif key == 'db_name':
+                    db_obj.db_name = value
+                elif key == 'db_hostname':
+                    db_obj.db_hostname = value
+                elif key == 'db_username':
+                    db_obj.db_username = value
             db_obj.save_to_db()
             return api_response(
                 True, APIMessages.DB_DETAILS_UPDATED.format(
