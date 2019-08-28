@@ -33,7 +33,7 @@ def create_app():
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-static_folder = basedir + '/acciom_ui/acciom_portal/build/'
+static_folder = basedir + '/acciom_ui/build/'
 app = create_app()
 CORS(app)
 app.url_map.strict_slashes = False
