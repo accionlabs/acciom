@@ -23,7 +23,7 @@ class APIMessages:
     NEW_TOKEN = "Access Token is generated"
     INVALID_EMAIL_PASSWORD = "Email or Password Password."
     DELETED_USER = "Please contact Admin, your account is not active."
-    ADD_DATA = "Data Added"
+    ADD_DATA = "Test suite uploaded successfully"
     RETURN_SUCCESS = "success"
     PARSER_MESSAGE = "field is required"
     CREATE_RESOURCE = "{} is successfully created"

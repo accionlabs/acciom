@@ -424,3 +424,20 @@ class DbDetails(Resource):
                             APIMessages.DB_DELETED.format(
                                 data_base_id),
                             STATUS_BAD_REQUEST)
+
+
+class SupportedDBTypes(Resource):
+    @token_required
+    def get(self, session):
+        supported_db_type_list = []
+        supported_db_type_dict = {}
+        x = SupportedDBType()
+        for i in x.supported_db_type:
+            supported_db_type_dict = {}
+            supported_db_type_dict[i] = x.supported_db_type[i]
+            print(supported_db_type_dict)
+            supported_db_type_list.append(supported_db_type_dict)
+        payload = {"data": supported_db_type_list}
+
+        return api_response(True, APIMessages.RETURN_SUCCESS,
+                            STATUS_CREATED, payload)
