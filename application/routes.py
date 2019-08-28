@@ -43,7 +43,7 @@ def serve(path):
     Serve HTML/React Static content i.e. HTML, CSS, JS, image, font files.
 
     Args:
-        path(str): path for static folder or resource in case of backend api
+        path(str): path for acciom_ui folder or resource in case of backend api
 
     Returns: return HTML/React Static content i.e. HTML, CSS, JS file
 
