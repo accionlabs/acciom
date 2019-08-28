@@ -53,7 +53,8 @@ class TestCaseJob(Resource):
         is_external = False
         if execution_data['suite_id']:
             test_suite_obj = TestSuite.query.filter_by(
-                test_suite_id=int(execution_data['suite_id'])).first()
+                test_suite_id=int(execution_data['suite_id']),
+                is_deleted=False).first()
             if not test_suite_obj:
                 return api_response(False, APIMessages.SUITE_NOT_EXIST,
                                     STATUS_SERVER_ERROR)
@@ -83,7 +84,7 @@ class TestCaseJob(Resource):
                                     STATUS_SERVER_ERROR)
             test_suite_id = test_case_obj.test_suite_id
             test_suite_obj = TestSuite.query.filter_by(
-                test_suite_id=test_suite_id).first()
+                test_suite_id=test_suite_id, is_deleted=False).first()
             project_obj = Project.query.filter_by(
                 project_id=test_suite_obj.project_id,
                 is_deleted=False).first()

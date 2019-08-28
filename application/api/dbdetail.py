@@ -435,3 +435,31 @@ class DbDetails(Resource):
                             APIMessages.DB_DELETED.format(
                                 data_base_id),
                             STATUS_BAD_REQUEST)
+
+
+class SupportedDBTypes(Resource):
+    """Class to get available database types"""
+
+    @token_required
+    def get(self, session):
+        """
+        this method returns list of all the available database types supported
+        in the Acciom
+        Args:
+            session: to get the User Id
+
+        Returns: list of all the available database types supported
+        in the Acciom
+
+        """
+        supported_db_type_list = []
+        supported_db_type_dict = {}
+        x = SupportedDBType()
+        for i in x.supported_db_type:
+            supported_db_type_dict = {}
+            supported_db_type_dict[i] = x.supported_db_type[i]
+            supported_db_type_list.append(supported_db_type_dict)
+        payload = {"data": supported_db_type_list}
+
+        return api_response(True, APIMessages.RETURN_SUCCESS,
+                            STATUS_CREATED, payload)

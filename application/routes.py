@@ -1,6 +1,5 @@
 """File to handle API routes."""
 import os
-
 from flask import send_from_directory
 
 from application.api.checkconnection import CheckConnection
@@ -9,7 +8,7 @@ from application.api.connectiondetail import (SelectConnection, DbConnection,
 from application.api.dashboard import SideBarMenu
 from application.api.data_quality_index import (ProjectDQI, OrganizationDQI,
                                                 ProjectDQIHistory)
-from application.api.dbdetail import DbDetails
+from application.api.dbdetail import DbDetails, SupportedDBTypes
 from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
                                    ForgotPasswordVerifyToken, ResetPassword,
                                    GetToken, ChangePassword)
@@ -44,7 +43,7 @@ def serve(path):
     Serve HTML/React Static content i.e. HTML, CSS, JS, image, font files.
 
     Args:
-        path(str): path for static folder or resource in case of backend api
+        path(str): path for acciom_ui folder or resource in case of backend api
 
     Returns: return HTML/React Static content i.e. HTML, CSS, JS file
 
@@ -123,3 +122,4 @@ api.add_resource(ProjectDQIHistory, '/api/project-dqi-history')
 api.add_resource(MenuAPI, '/api/menu')
 api.add_resource(AddTestSuiteManually, '/api/add-test-suite-manually')
 api.add_resource(CreateNewTestSuite, '/api/create-new-test-suite')
+api.add_resource(SupportedDBTypes, '/api/supported-database-type')
