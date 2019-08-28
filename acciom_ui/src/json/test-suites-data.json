@@ -1,0 +1,901 @@
+{
+		"suites": {
+				"test_suite_details": [
+						{
+								"test_suite_id": 153,
+								"excel_name": "Positive Test Cases (1).xlsx",
+								"test_suite_name": "NRD Test Scenarios",
+								"created": "2019-07-09 14:19:46",
+								"test_case_list": [
+										{
+												"test_suite_id": 153,
+												"test_case_id": 783,
+												"test_name": "CountCheck",
+												"test_id": "Count Verification",
+												"src_db_id": [
+														{
+																"db_id": 23,
+																"db_type": "mysql"
+														}
+												],
+												"target_db_id": 23,
+												"target_db_idd": 23,
+												"test_status": 2,
+												"table_src": "test1",
+												"table_target": "dest_inventory",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1187,
+																"test_case_id": 783,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 14:29:24"
+														},
+														{
+																"test_case_log_id": 1255,
+																"test_case_id": 783,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 12:26:55"
+														},
+														{
+																"test_case_log_id": 1275,
+																"test_case_id": 783,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 13:12:25"
+														},
+														{
+																"test_case_log_id": 1276,
+																"test_case_id": 783,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 13:13:00"
+														}
+												]
+										},
+										{
+												"test_suite_id": 153,
+												"test_case_id": 784,
+												"test_name": "CountCheck",
+												"test_id": "Count Verification with Custom Query",
+												"src_db_id": [
+														{
+																"db_id": 28,
+																"db_type": "sqlserver"
+														}
+												],
+												"target_db_id": 29,
+												"target_db_idd": 28,
+												"test_status": 2,
+												"table_src": "test1",
+												"table_target": "dest_inventory",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1188,
+																"test_case_id": 784,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:31:16"
+														},
+														{
+																"test_case_log_id": 1189,
+																"test_case_id": 784,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:31:45"
+														},
+														{
+																"test_case_log_id": 1190,
+																"test_case_id": 784,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 14:32:13"
+														},
+														{
+																"test_case_log_id": 1256,
+																"test_case_id": 784,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 12:26:55"
+														}
+												]
+										},
+										{
+												"test_suite_id": 153,
+												"test_case_id": 785,
+												"test_name": "DuplicateCheck",
+												"test_id": "Duplicate Check for Given Columns",
+												"src_db_id": [
+														{
+																"db_id": 28,
+																"db_type": "sqlserver"
+														}
+												],
+												"target_db_id": 29,
+												"target_db_idd": 28,
+												"test_status": 1,
+												"table_src": "src_inventory",
+												"table_target": "dest_inventory",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1191,
+																"test_case_id": 785,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:32:27"
+														},
+														{
+																"test_case_log_id": 1192,
+																"test_case_id": 785,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-09 14:33:30"
+														},
+														{
+																"test_case_log_id": 1257,
+																"test_case_id": 785,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-10 12:26:56"
+														}
+												]
+										},
+										{
+												"test_suite_id": 153,
+												"test_case_id": 786,
+												"test_name": "DuplicateCheck",
+												"test_id": "Duplicate Check with Custom Query",
+												"src_db_id": [
+														{
+																"db_id": 28,
+																"db_type": "sqlserver"
+														}
+												],
+												"target_db_id": 29,
+												"target_db_idd": 28,
+												"test_status": 1,
+												"table_src": "src_inventory",
+												"table_target": "dest_inventory",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1193,
+																"test_case_id": 786,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:33:33"
+														},
+														{
+																"test_case_log_id": 1194,
+																"test_case_id": 786,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-09 14:33:58"
+														},
+														{
+																"test_case_log_id": 1258,
+																"test_case_id": 786,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-10 12:26:56"
+														}
+												]
+										},
+										{
+												"test_suite_id": 153,
+												"test_case_id": 787,
+												"test_name": "NullCheck",
+												"test_id": "Null Check for Given Columns",
+												"src_db_id": [
+														{
+																"db_id": 28,
+																"db_type": "sqlserver"
+														}
+												],
+												"target_db_id": 29,
+												"target_db_idd": 28,
+												"test_status": 1,
+												"table_src": "src_inventory",
+												"table_target": "dest_inventory",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1195,
+																"test_case_id": 787,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:34:01"
+														},
+														{
+																"test_case_log_id": 1196,
+																"test_case_id": 787,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-09 14:34:11"
+														},
+														{
+																"test_case_log_id": 1259,
+																"test_case_id": 787,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-10 12:26:56"
+														}
+												]
+										},
+										{
+												"test_suite_id": 153,
+												"test_case_id": 788,
+												"test_name": "NullCheck",
+												"test_id": "Null Check for Custom Query",
+												"src_db_id": [
+														{
+																"db_id": 28,
+																"db_type": "sqlserver"
+														}
+												],
+												"target_db_id": 29,
+												"target_db_idd": 28,
+												"test_status": 1,
+												"table_src": "src_inventory",
+												"table_target": "dest_inventory",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1197,
+																"test_case_id": 788,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:34:15"
+														},
+														{
+																"test_case_log_id": 1198,
+																"test_case_id": 788,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-09 14:34:34"
+														},
+														{
+																"test_case_log_id": 1260,
+																"test_case_id": 788,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-10 12:26:56"
+														}
+												]
+										},
+										{
+												"test_suite_id": 153,
+												"test_case_id": 789,
+												"test_name": "Datavalidation",
+												"test_id": "Data Validation",
+												"src_db_id": [
+														{
+																"db_id": 23,
+																"db_type": "mysql"
+														}
+												],
+												"target_db_id": 24,
+												"target_db_idd": 23,
+												"test_status": 2,
+												"table_src": "src_inventory",
+												"table_target": "dest_inventory1",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1254,
+																"test_case_id": 789,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 17:44:31"
+														},
+														{
+																"test_case_log_id": 1261,
+																"test_case_id": 789,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 12:26:57"
+														},
+														{
+																"test_case_log_id": 1271,
+																"test_case_id": 789,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 12:58:38"
+														},
+														{
+																"test_case_log_id": 1272,
+																"test_case_id": 789,
+																"test_execution_status": 3,
+																"executed_at": "2019-07-10 13:05:29"
+														},
+														{
+																"test_case_log_id": 1273,
+																"test_case_id": 789,
+																"test_execution_status": 3,
+																"executed_at": "2019-07-10 13:08:33"
+														},
+														{
+																"test_case_log_id": 1274,
+																"test_case_id": 789,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 13:12:22"
+														},
+														{
+																"test_case_log_id": 1277,
+																"test_case_id": 789,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 13:22:28"
+														},
+														{
+																"test_case_log_id": 1278,
+																"test_case_id": 789,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 13:28:56"
+														}
+												]
+										},
+										{
+												"test_suite_id": 153,
+												"test_case_id": 790,
+												"test_name": "DDLCheck",
+												"test_id": "Compare Table Schema",
+												"src_db_id": [
+														{
+																"db_id": 23,
+																"db_type": "mysql"
+														}
+												],
+												"target_db_id": 24,
+												"target_db_idd": 23,
+												"test_status": 2,
+												"table_src": "test1",
+												"table_target": "dest_inventory",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1199,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:34:37"
+														},
+														{
+																"test_case_log_id": 1200,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:34:54"
+														},
+														{
+																"test_case_log_id": 1201,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:36:52"
+														},
+														{
+																"test_case_log_id": 1202,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:38:00"
+														},
+														{
+																"test_case_log_id": 1203,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:38:15"
+														},
+														{
+																"test_case_log_id": 1204,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:38:31"
+														},
+														{
+																"test_case_log_id": 1205,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 14:38:54"
+														},
+														{
+																"test_case_log_id": 1206,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:46:49"
+														},
+														{
+																"test_case_log_id": 1207,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:47:08"
+														},
+														{
+																"test_case_log_id": 1208,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:47:43"
+														},
+														{
+																"test_case_log_id": 1209,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:48:56"
+														},
+														{
+																"test_case_log_id": 1210,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 14:55:51"
+														},
+														{
+																"test_case_log_id": 1211,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:58:26"
+														},
+														{
+																"test_case_log_id": 1212,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 14:59:51"
+														},
+														{
+																"test_case_log_id": 1213,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 15:00:23"
+														},
+														{
+																"test_case_log_id": 1214,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:00:52"
+														},
+														{
+																"test_case_log_id": 1215,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:01:41"
+														},
+														{
+																"test_case_log_id": 1216,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:03:24"
+														},
+														{
+																"test_case_log_id": 1217,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:06:18"
+														},
+														{
+																"test_case_log_id": 1218,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 15:26:19"
+														},
+														{
+																"test_case_log_id": 1219,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:26:32"
+														},
+														{
+																"test_case_log_id": 1220,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:27:04"
+														},
+														{
+																"test_case_log_id": 1221,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:27:56"
+														},
+														{
+																"test_case_log_id": 1222,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:28:12"
+														},
+														{
+																"test_case_log_id": 1223,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:28:45"
+														},
+														{
+																"test_case_log_id": 1224,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 15:29:46"
+														},
+														{
+																"test_case_log_id": 1225,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 15:30:23"
+														},
+														{
+																"test_case_log_id": 1226,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 15:31:01"
+														},
+														{
+																"test_case_log_id": 1227,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 15:32:15"
+														},
+														{
+																"test_case_log_id": 1228,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:33:10"
+														},
+														{
+																"test_case_log_id": 1229,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:33:51"
+														},
+														{
+																"test_case_log_id": 1230,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 15:35:47"
+														},
+														{
+																"test_case_log_id": 1231,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 15:36:03"
+														},
+														{
+																"test_case_log_id": 1232,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 16:25:47"
+														},
+														{
+																"test_case_log_id": 1233,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 16:26:36"
+														},
+														{
+																"test_case_log_id": 1234,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 16:28:05"
+														},
+														{
+																"test_case_log_id": 1235,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 16:29:24"
+														},
+														{
+																"test_case_log_id": 1236,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 16:31:54"
+														},
+														{
+																"test_case_log_id": 1237,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 16:32:15"
+														},
+														{
+																"test_case_log_id": 1238,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 16:33:28"
+														},
+														{
+																"test_case_log_id": 1239,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 16:38:31"
+														},
+														{
+																"test_case_log_id": 1240,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 16:41:39"
+														},
+														{
+																"test_case_log_id": 1241,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 16:42:10"
+														},
+														{
+																"test_case_log_id": 1242,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-09 17:10:24"
+														},
+														{
+																"test_case_log_id": 1243,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 17:10:57"
+														},
+														{
+																"test_case_log_id": 1244,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 17:16:44"
+														},
+														{
+																"test_case_log_id": 1245,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 17:21:07"
+														},
+														{
+																"test_case_log_id": 1246,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 17:25:14"
+														},
+														{
+																"test_case_log_id": 1247,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 17:27:40"
+														},
+														{
+																"test_case_log_id": 1248,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 17:28:43"
+														},
+														{
+																"test_case_log_id": 1249,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 17:29:08"
+														},
+														{
+																"test_case_log_id": 1250,
+																"test_case_id": 790,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-09 17:30:06"
+														},
+														{
+																"test_case_log_id": 1251,
+																"test_case_id": 790,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-09 17:30:31"
+														},
+														{
+																"test_case_log_id": 1252,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 17:31:01"
+														},
+														{
+																"test_case_log_id": 1253,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-09 17:31:35"
+														},
+														{
+																"test_case_log_id": 1262,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-10 12:26:57"
+														},
+														{
+																"test_case_log_id": 1263,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-10 12:30:25"
+														},
+														{
+																"test_case_log_id": 1264,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-10 12:32:09"
+														},
+														{
+																"test_case_log_id": 1265,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-10 12:33:04"
+														},
+														{
+																"test_case_log_id": 1266,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 12:33:35"
+														},
+														{
+																"test_case_log_id": 1267,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-10 12:36:15"
+														},
+														{
+																"test_case_log_id": 1268,
+																"test_case_id": 790,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-10 12:38:36"
+														},
+														{
+																"test_case_log_id": 1269,
+																"test_case_id": 790,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-10 12:39:21"
+														},
+														{
+																"test_case_log_id": 1270,
+																"test_case_id": 790,
+																"test_execution_status": 2,
+																"executed_at": "2019-07-10 12:39:42"
+														}
+												]
+										}
+								]
+						},
+						{
+								"test_suite_id": 154,
+								"excel_name": "SFDC Active Cutomers.xlsx",
+								"test_suite_name": "SFDC_ActiveCutomers",
+								"created": "2019-07-11 14:21:09",
+								"test_case_list": [
+										{
+												"test_suite_id": 154,
+												"test_case_id": 791,
+												"test_name": "DuplicateCheck",
+												"test_id": "Duplicate Check for given columns",
+												"src_db_id": [
+														{
+																"db_id": 30,
+																"db_type": "sqlserver"
+														}
+												],
+												"target_db_id": 30,
+												"target_db_idd": 30,
+												"test_status": 0,
+												"table_src": "src_inventory",
+												"table_target": "SFDC_Active_Customer",
+												"test_case_log": []
+										},
+										{
+												"test_suite_id": 154,
+												"test_case_id": 792,
+												"test_name": "NullCheck",
+												"test_id": "Null Check for given columns",
+												"src_db_id": [
+														{
+																"db_id": 30,
+																"db_type": "sqlserver"
+														}
+												],
+												"target_db_id": 30,
+												"target_db_idd": 30,
+												"test_status": 0,
+												"table_src": "src_inventory",
+												"table_target": "SFDC_Active_Customer",
+												"test_case_log": []
+										}
+								]
+						},
+						{
+								"test_suite_id": 155,
+								"excel_name": "MarketingAccountData.xlsx",
+								"test_suite_name": "MarketingAccountData",
+								"created": "2019-07-11 14:22:27",
+								"test_case_list": [
+										{
+												"test_suite_id": 155,
+												"test_case_id": 793,
+												"test_name": "DuplicateCheck",
+												"test_id": "Duplicate Check for given columns",
+												"src_db_id": [
+														{
+																"db_id": 30,
+																"db_type": "sqlserver"
+														}
+												],
+												"target_db_id": 30,
+												"target_db_idd": 30,
+												"test_status": 0,
+												"table_src": "src_inventory",
+												"table_target": "Marketing_data",
+												"test_case_log": []
+										},
+										{
+												"test_suite_id": 155,
+												"test_case_id": 794,
+												"test_name": "NullCheck",
+												"test_id": "Null Check for given columns",
+												"src_db_id": [
+														{
+																"db_id": 30,
+																"db_type": "sqlserver"
+														}
+												],
+												"target_db_id": 30,
+												"target_db_idd": 30,
+												"test_status": 0,
+												"table_src": "src_inventory",
+												"table_target": "Marketing_data",
+												"test_case_log": []
+										}
+								]
+						},
+						{
+								"test_suite_id": 156,
+								"excel_name": "SFDC Active Cutomers.xlsx",
+								"test_suite_name": "SFDC_ActiveCutomers",
+								"created": "2019-07-11 15:23:40",
+								"test_case_list": [
+										{
+												"test_suite_id": 156,
+												"test_case_id": 795,
+												"test_name": "DuplicateCheck",
+												"test_id": "Duplicate Check for given columns",
+												"src_db_id": [
+														{
+																"db_id": 23,
+																"db_type": "mysql"
+														}
+												],
+												"target_db_id": 24,
+												"target_db_idd": 23,
+												"test_status": 1,
+												"table_src": "src_inventory",
+												"table_target": "dest_inventory",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1279,
+																"test_case_id": 795,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-11 15:24:26"
+														},
+														{
+																"test_case_log_id": 1281,
+																"test_case_id": 795,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-11 15:25:09"
+														},
+														{
+																"test_case_log_id": 1283,
+																"test_case_id": 795,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-11 15:25:38"
+														},
+														{
+																"test_case_log_id": 1294,
+																"test_case_id": 795,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-11 17:11:07"
+														}
+												]
+										},
+										{
+												"test_suite_id": 156,
+												"test_case_id": 796,
+												"test_name": "NullCheck",
+												"test_id": "Null Check for given columns",
+												"src_db_id": [
+														{
+																"db_id": 23,
+																"db_type": "mysql"
+														}
+												],
+												"target_db_id": 24,
+												"target_db_idd": 23,
+												"test_status": 1,
+												"table_src": "src_inventory",
+												"table_target": "dest_inventory",
+												"test_case_log": [
+														{
+																"test_case_log_id": 1280,
+																"test_case_id": 796,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-11 15:24:26"
+														},
+														{
+																"test_case_log_id": 1282,
+																"test_case_id": 796,
+																"test_execution_status": 4,
+																"executed_at": "2019-07-11 15:25:09"
+														},
+														{
+																"test_case_log_id": 1284,
+																"test_case_id": 796,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-11 15:25:38"
+														},
+														{
+																"test_case_log_id": 1295,
+																"test_case_id": 796,
+																"test_execution_status": 1,
+																"executed_at": "2019-07-11 17:11:07"
+														}
+												]
+										}
+								]
+						}
+				]
+		},
+		"success": true
+}

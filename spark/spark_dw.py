@@ -1,13 +1,12 @@
 #! /bin/bash
 import os
-import sys
-from threading import Thread
-
 import requests
+import sys
 from pyspark import SparkConf
 from pyspark import SparkContext
 from pyspark.sql import SQLContext
 from pyspark.sql.types import LongType
+from threading import Thread
 
 thread_count = int(sys.argv[17])
 conf = SparkConf()
@@ -49,19 +48,20 @@ def get_db_details(db_type, hostname, db_name, username, password, table_name,
 def get_connection_detail(db_detail):
     try:
 
-        if db_detail["db_type"] == "mssql":
+        if (db_detail["db_type"]).lower() == "mssql":
             url = "jdbc:sqlserver://{0};databaseName={1}".format(
                 db_detail["hostname"], db_detail["db_name"])
             driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-        elif db_detail["db_type"] == "mysql":
-            url = "jdbc:mysql://{0}/{1}".format(db_detail["hostname"],
-                                                db_detail["db_name"])
+        elif (db_detail["db_type"]).lower() == "mysql":
+            url = "jdbc:mysql://{0}/{1}?characterEncoding=latin1".format(
+                db_detail["hostname"],
+                db_detail["db_name"])
             driver = "com.mysql.jdbc.Driver"
-        elif db_detail["db_type"] == "postgres":
+        elif (db_detail["db_type"]).lower() == "postgresql":
             url = "jdbc:postgresql://{0}/{1}".format(db_detail["hostname"],
                                                      db_detail["db_name"])
             driver = "org.postgresql.Driver"
-        elif db_detail["db_type"] == "oracle":
+        elif (db_detail["db_type"]).lower() == "oracle":
             # "url"------>"jdbc:oracle:thin:username/password@//hostname:
             # portnumber/SID"
             url = "jdbc:oracle:thin:{0}/{1}@//{2}/{3}".format(
@@ -81,14 +81,14 @@ def get_count(db_detail):
         # Count of 1 might return incorrect count, in case the first column
         # has null value
         if not db_detail["custom_query"]:
-            if db_detail["db_type"] == "oracle":
+            if (db_detail["db_type"]).lower() == "oracle":
                 query = "(SELECT count(1) as count FROM {}) t".format(
                     db_detail["table_name"])
             else:
                 query = " (SELECT count(1) as count FROM {}) as t".format(
                     db_detail["table_name"])
         else:
-            if db_detail["db_type"] == "oracle":
+            if (db_detail["db_type"]).lower() == "oracle":
                 query = " (SELECT count(1) as count FROM ({}) t2) t".format(
                     db_detail["custom_query"])
             else:
@@ -103,10 +103,11 @@ def get_count(db_detail):
         print(query)
         # For Oracle DB, COUNT(1) Type is Decimal and returning count in CAPS,
         # so type casting it to Integer and changing key to count
-        if db_detail["db_type"] == "oracle":
+        if (db_detail["db_type"]).lower == "oracle":
             changedtypedf = df.withColumn("count",
                                           df["COUNT"].cast(LongType()))
-        count = changedtypedf.collect() if db_detail["db_type"] == "oracle" \
+        count = changedtypedf.collect() if (db_detail[
+            "db_type"]).lower() == "oracle" \
             else df.collect()
         print("COUNT   -----", count)
         return count[0] if count else None
@@ -121,22 +122,22 @@ def get_df_select(db_detail, start, end):
         url, driver = get_connection_detail(db_detail)
         query = ""
         if not db_detail["custom_query"]:
-            if db_detail["db_type"] == "mssql":
+            if (db_detail["db_type"]).lower() == "mssql":
                 query = "(SELECT * FROM {} " \
                         "ORDER BY 1 OFFSET {} " \
                         "ROWS FETCH NEXT  {} " \
                         "ROWS ONLY ) as t ".format(db_detail["table_name"],
                                                    start,
                                                    end)
-            elif db_detail["db_type"] == "mysql":
+            elif (db_detail["db_type"]).lower() == "mysql":
                 query = "(SELECT * FROM {0} ORDER BY 1 LIMIT {1}, {2}) AS t". \
                     format(db_detail["table_name"], start, end)
-            elif db_detail["db_type"] == "postgres":
+            elif (db_detail["db_type"]).lower() == "postgresql":
                 query = "(SELECT * FROM  {0} ORDER BY 1 OFFSET {1} " \
                         "LIMIT {2} ) AS t".format(db_detail["table_name"],
                                                   start,
                                                   end)
-            elif db_detail["db_type"] == "oracle":
+            elif (db_detail["db_type"]).lower() == "oracle":
                 query = "(SELECT * FROM {} " \
                         "ORDER BY 1 OFFSET {} " \
                         "ROWS FETCH NEXT  {} " \
@@ -144,21 +145,21 @@ def get_df_select(db_detail, start, end):
                                                 end)
 
         else:
-            if db_detail["db_type"] == "mssql":
+            if (db_detail["db_type"]).lower() == "mssql":
                 query = "(SELECT * FROM ({}) as tt " \
                         "ORDER BY 1 OFFSET {} " \
                         "ROWS FETCH NEXT  {} " \
                         "ROWS ONLY ) as t ".format(db_detail["custom_query"],
                                                    start, end)
-            elif db_detail["db_type"] == "mysql":
+            elif (db_detail["db_type"]).lower() == "mysql":
                 query = "(SELECT * FROM ({0}) as tt ORDER BY 1 LIMIT {1}, {2})" \
                         " AS t".format(db_detail["custom_query"], start, end)
-            elif db_detail["db_type"] == "postgres":
+            elif (db_detail["db_type"]).lower() == "postgresql":
                 query = "(SELECT * FROM  ({0}) as tt ORDER BY 1 OFFSET {1} " \
                         "LIMIT {2} ) AS t".format(db_detail["custom_query"],
                                                   start,
                                                   end)
-            elif db_detail["db_type"] == "oracle":
+            elif (db_detail["db_type"]).lower() == "oracle":
                 query = "(SELECT * FROM ({}) tt " \
                         "ORDER BY 1 OFFSET {} " \
                         "ROWS FETCH NEXT  {} " \
