@@ -100,6 +100,8 @@ class APIMessages:
     DB_NAME_CANNOT_EMPTY = "Data base name cannot be empty"
     HOSTNAME_CANNOT_EMPTY = "Hostname cannot be empty"
     USERNAME_CANNOT_EMPTY = "Usename cannot be empty"
+    TEST_CLASS_NAME = "Test Class Name is not valid. Supported Testclass are" \
+                      " are CountCheck, NullCheck, DuplicateCheck, DDLCheck, Datavalidation"
 
 
 class GenericStrings:
