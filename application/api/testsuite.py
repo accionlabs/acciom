@@ -2,7 +2,6 @@ from datetime import datetime
 
 from flask import request
 from flask_restful import reqparse, Resource
-from sqlalchemy.exc import SQLAlchemyError
 
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import (APIMessages, SupportedTestClass)
@@ -140,111 +139,138 @@ class TestSuiteAPI(Resource):
                                          type=list, location='json')
         dict_test_case_details = put_testcase_parser.parse_args()
         test_case_detail = dict_test_case_details["test_case_detail"]
-        try:
-            for each_test_case in test_case_detail:
-                keys = []
-                for key in each_test_case:
-                    keys.append(key)
-                if not "test_case_id" in keys:
-                    return api_response(False, APIMessages.PASS_TESTCASEID,
-                                        STATUS_BAD_REQUEST)
-                test_case_id = each_test_case["test_case_id"]
-                db_obj = TestCase.query.filter_by(
-                    test_case_id=test_case_id).first()
-                if not db_obj:
-                    return api_response(False,
-                                        APIMessages.TEST_CASE_NOT_IN_DB.format(
-                                            test_case_id),
-                                        STATUS_BAD_REQUEST)
-                testcasedetail = db_obj.test_case_detail
-                if "src_db_id" in keys:
-                    testcasedetail["src_db_id"] = \
-                        each_test_case["src_db_id"]
-                    db_obj.save_to_db()
-                if "target_db_id" in keys:
-                    testcasedetail["target_db_id"] = \
-                        each_test_case["target_db_id"]
-                    db_obj.save_to_db()
-                if "test_class" in keys:
-                    db_obj.test_case_class = SupportedTestClass(). \
+        for each_test_case in test_case_detail:
+            keys = []
+            for key in each_test_case:
+                keys.append(key)
+            if not "test_case_id" in keys:
+                return api_response(False, APIMessages.PASS_TESTCASEID,
+                                    STATUS_BAD_REQUEST)
+            test_case_id = each_test_case["test_case_id"]
+            del each_test_case["test_case_id"]
+            test_case_obj = TestCase.query.filter_by(
+                test_case_id=test_case_id).first()
+            if not test_case_obj:
+                return api_response(False,
+                                    APIMessages.TEST_CASE_NOT_IN_DB.format(
+                                        test_case_id),
+                                    STATUS_BAD_REQUEST)
+            project_id_org_id = db.session.query(
+                Organization.org_id,
+                Project.project_id).filter(
+                Organization.is_deleted == False).join(
+                Project,
+                Organization.org_id == Project.org_id).filter(
+                Project.is_deleted == False).join(
+                TestSuite,
+                Project.project_id == TestSuite.project_id).filter(
+                TestSuite.test_suite_id == test_case_obj.test_suite_id,
+                TestSuite.is_deleted == False
+            ).first()
+            if project_id_org_id == () or project_id_org_id == None:
+                return api_response(False,
+                                    APIMessages.NO_TEST_CASE,
+                                    STATUS_BAD_REQUEST)
+            check_permission(session.user, ["edit_suite"],
+                             project_id_org_id[0],
+                             project_id_org_id[1])
+            testcasedetail = test_case_obj.test_case_detail
+            if "src_db_id" in keys:
+                src_db_id = each_test_case["src_db_id"]
+                del each_test_case["src_db_id"]
+            if "target_db_id" in keys:
+                target_db_id = each_test_case["target_db_id"]
+                del each_test_case["target_db_id"]
+            for key, value in dict(each_test_case).items():
+                each_test_case[key] = value.strip()
+            if "src_db_id" in keys:
+                testcasedetail["src_db_id"] = src_db_id
+                test_case_obj.save_to_db()
+            if "target_db_id" in keys:
+                testcasedetail["target_db_id"] = target_db_id
+                test_case_obj.save_to_db()
+            if "test_class" in keys:
+                if SupportedTestClass(). \
                         get_test_class_id_by_name \
-                        (each_test_case["test_class"])
-                    db_obj.save_to_db()
-                if "test_description" in keys:
-                    testcasedetail["test_desc"] = \
-                        each_test_case["test_description"]
-                    db_obj.save_to_db()
-                if "src_table" in keys:
-                    table = testcasedetail["table"]
-                    for key in table:
-                        target_table = table[key]
-                    table[each_test_case["src_table"]] = key
-                    del table[key]
-                    table[
-                        each_test_case[
-                            "src_table"]] = target_table
-                    db_obj.save_to_db()
-                if "target_table" in keys:
-                    table = testcasedetail["table"]
-                    for key in table:
-                        table[key] = each_test_case[
-                            "target_table"]
-                    db_obj.save_to_db()
-                if "src_qry" in keys:
-                    queries = testcasedetail["query"]
-                    queries["sourceqry"] = each_test_case[
-                        "src_qry"]
-                    db_obj.save_to_db()
-                if "target_qry" in keys:
-                    queries = testcasedetail["query"]
-                    queries["targetqry"] = each_test_case[
-                        "target_qry"]
-                    db_obj.save_to_db()
-                if "column" in keys:
-                    column = testcasedetail["column"]
-                    if ";" and ":" in each_test_case[
-                        "column"]:
-                        column = {}
-                        user_columns = each_test_case[
-                            "column"].split(
-                            ";")
-                        for columnpair in user_columns:
-                            if ":" in columnpair:
-                                singlecolumn = columnpair.split(
-                                    ":")
-                                column[singlecolumn[0]] = \
-                                    singlecolumn[1]
-                            else:
-                                column[columnpair] = columnpair
-                        testcasedetail["column"] = column
-                    elif ";" in each_test_case["column"]:
-                        column = {}
-                        columns = each_test_case[
-                            "column"].split(";")
-                        for singlecolumn in columns:
-                            column[singlecolumn] = singlecolumn
-                        testcasedetail["column"] = column
-                    else:
-                        column = {}
-                        column[each_test_case["column"]] = \
-                            each_test_case["column"]
-                        testcasedetail["column"] = column
-                    db_obj.save_to_db()
+                            (each_test_case["test_class"]) is None:
+                    return api_response(success=False,
+                                        message=APIMessages.TEST_CLASS_NAME,
+                                        http_status_code=STATUS_BAD_REQUEST,
+                                        data={})
+                test_case_obj.test_case_class = SupportedTestClass(). \
+                    get_test_class_id_by_name \
+                    (each_test_case["test_class"])
+                test_case_obj.save_to_db()
+            if "test_description" in keys:
+                testcasedetail["test_desc"] = \
+                    each_test_case["test_description"]
+                test_case_obj.save_to_db()
+            if "src_table" in keys:
+                table = testcasedetail["table"]
+                for key in table:
+                    target_table = table[key]
+                table[each_test_case["src_table"]] = key
+                del table[key]
+                table[
+                    each_test_case[
+                        "src_table"]] = target_table
+                test_case_obj.save_to_db()
+            if "target_table" in keys:
+                table = testcasedetail["table"]
+                for key in table:
+                    table[key] = each_test_case[
+                        "target_table"]
+                test_case_obj.save_to_db()
+            if "src_qry" in keys:
+                queries = testcasedetail["query"]
+                queries["sourceqry"] = each_test_case[
+                    "src_qry"]
+                test_case_obj.save_to_db()
+            if "target_qry" in keys:
+                queries = testcasedetail["query"]
+                queries["targetqry"] = each_test_case[
+                    "target_qry"]
+                test_case_obj.save_to_db()
+            if "column" in keys:
+                column = testcasedetail["column"]
+                testcasedetail["column"] = column
+                if each_test_case["column"] == "":
+                    column = {}
+                    testcasedetail["column"] = column
+                elif ";" and ":" in each_test_case[
+                    "column"]:
+                    column = {}
+                    user_columns = each_test_case[
+                        "column"].split(
+                        ";")
+                    for columnpair in user_columns:
+                        if ":" in columnpair:
+                            singlecolumn = columnpair.split(
+                                ":")
+                            column[singlecolumn[0]] = \
+                                singlecolumn[1]
+                        else:
+                            column[columnpair] = columnpair
+                    testcasedetail["column"] = column
+                elif ";" in each_test_case["column"]:
+                    column = {}
+                    columns = each_test_case[
+                        "column"].split(";")
+                    for singlecolumn in columns:
+                        column[singlecolumn] = singlecolumn
+                    testcasedetail["column"] = column
+                else:
+                    column = {}
+                    column[each_test_case["column"]] = \
+                        each_test_case["column"]
+                    testcasedetail["column"] = column
+                test_case_obj.save_to_db()
 
-                db_obj.test_case_detail = testcasedetail
-                db_obj.save_to_db()
-            return api_response(
-                True, APIMessages.TEST_SUITE_UPDATED.format(
-                    test_case_id), STATUS_CREATED)
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
-        except Exception as e:
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
+            test_case_obj.test_case_detail = testcasedetail
+            test_case_obj.save_to_db()
+        return api_response(
+            True, APIMessages.TEST_SUITE_UPDATED.format(
+                test_case_id), STATUS_CREATED)
 
 
 class CreateNewTestSuite(Resource):
@@ -421,14 +447,16 @@ class AddTestSuiteManually(Resource):
             keys = []
             for key in each_test_case:
                 keys.append(key)
-            source_db_existing_connection = each_test_case[
-                "source_db_existing_connection"]
-            target_db_existing_connection = each_test_case[
-                "target_db_existing_connection"]
-            del each_test_case[
-                "source_db_existing_connection"]
-            del each_test_case[
-                "target_db_existing_connection"]
+            if "source_db_existing_connection" in keys:
+                source_db_existing_connection = each_test_case[
+                    "source_db_existing_connection"]
+                del each_test_case[
+                    "source_db_existing_connection"]
+            if "target_db_existing_connection" in keys:
+                target_db_existing_connection = each_test_case[
+                    "target_db_existing_connection"]
+                del each_test_case[
+                    "target_db_existing_connection"]
             for key, value in dict(each_test_case).items():
                 each_test_case[key] = value.strip()
             if "source_db_existing_connection" not in keys:
