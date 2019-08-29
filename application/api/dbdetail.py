@@ -56,7 +56,6 @@ class DbDetails(Resource):
         post_db_detail_parser.add_argument('db_password', required=True,
                                            type=str,
                                            help=APIMessages.PARSER_MESSAGE)
-
         db_detail = post_db_detail_parser.parse_args()
         project_id = db_detail["project_id"]
         project_obj = Project.query.filter(
@@ -352,6 +351,8 @@ class DbDetails(Resource):
                 DbConnection.is_deleted == False).first()
             for key, value in db_detail.items():
                 if key == 'db_password':
+                    if value == "":
+                        return APIMessages.PASSWORD_CANNOT_EMPTY
                     db_password = encrypt(value)
                     db_obj.db_encrypted_password = db_password
                 elif key == 'db_connection_name':
@@ -365,10 +366,16 @@ class DbDetails(Resource):
                     db_obj.db_type = SupportedDBType(). \
                         get_db_id_by_name(value)
                 elif key == 'db_name':
+                    if value == "":
+                        return APIMessages.DB_NAME_CANNOT_EMPTY
                     db_obj.db_name = value
                 elif key == 'db_hostname':
+                    if value == "":
+                        return APIMessages.HOSTNAME_CANNOT_EMPTY
                     db_obj.db_hostname = value
                 elif key == 'db_username':
+                    if value == "":
+                        return APIMessages.USERNAME_CANNOT_EMPTY
                     db_obj.db_username = value
             db_obj.save_to_db()
             return api_response(

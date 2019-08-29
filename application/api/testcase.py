@@ -1,5 +1,5 @@
 import ast
-from flask import current_app as app
+
 from flask import request
 from flask_restful import Resource, reqparse
 
@@ -271,7 +271,16 @@ class EditTestCase(Resource):
         if test_case_detail["column"] == {}:
             column = ''
         else:
-            column = test_case_detail["column"]
+            columns = test_case_detail["column"]
+            strcolumn = str(columns)
+            strcolumnstrip1 = strcolumn.strip('{')
+            strcolumnstrip2 = strcolumnstrip1.strip('}')
+            if "," and ":" in strcolumnstrip2:
+                columnreplacecomma = strcolumnstrip2.replace(',', ';')
+                column = columnreplacecomma.replace("'", "")
+            elif ":" in strcolumnstrip2:
+                column = strcolumnstrip2.replace("'", "")
+
         test_case_class = SupportedTestClass(). \
             get_test_class_name_by_id(
             test_case_obj.test_case_class)
@@ -418,10 +427,12 @@ class EditTestCase(Resource):
                 column = testcasedetail["column"]
                 user_test_case_detail["column"] = user_test_case_detail[
                     "column"].replace(" ", "")
-                if ";" and ":" in user_test_case_detail[
+                if user_test_case_detail["column"] == "":
+                    column = {}
+                    testcasedetail["column"] = column
+                elif ";" and ":" in user_test_case_detail[
                     "column"]:
                     column = {}
-
                     user_columns = user_test_case_detail[
                         "column"].split(
                         ";")
@@ -446,6 +457,7 @@ class EditTestCase(Resource):
                     column[user_test_case_detail["column"]] = \
                         user_test_case_detail["column"]
                     testcasedetail["column"] = column
+
                 test_case_obj.save_to_db()
         test_case_obj.test_case_detail = testcasedetail
         test_case_obj.save_to_db()

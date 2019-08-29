@@ -96,6 +96,10 @@ class APIMessages:
     AUTHENTICATION_FAILED = "Authentication failed for user '{}'"
     CANNOT_CONNECT_TO_SERVER = "Can't connect to {} server on '{}' (Name or service not known)"
     UNKNOWN_DB_AUTHENTICATION_FAILED = "Unknown database '{}' or Authentication failed for user '{}'"
+    PASSWORD_CANNOT_EMPTY = "Password cannot be empty"
+    DB_NAME_CANNOT_EMPTY = "Data base name cannot be empty"
+    HOSTNAME_CANNOT_EMPTY = "Hostname cannot be empty"
+    USERNAME_CANNOT_EMPTY = "Usename cannot be empty"
 
 
 class GenericStrings:
