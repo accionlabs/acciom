@@ -1,4 +1,4 @@
-from application.common.constants import SupportedTestClass
+from application.common.constants import SupportedTestClass, TestClass
 from application.common.dbconnect import dbconnection
 from application.helper.runnerclasshelpers import (db_details, split_table)
 from application.model.models import TestCase
@@ -19,7 +19,7 @@ def calculate_dqi(execution_log, test_case_id):
     test_case_obj = TestCase.query.filter_by(
         test_case_id=test_case_id).first()
     if test_case_obj.test_case_class == SupportedTestClass(). \
-            get_test_class_id_by_name("countcheck"):
+            get_test_class_id_by_name(TestClass.COUNT_CHECK):
         src_count = execution_log["source_execution_log"]
         target_count = execution_log["dest_execution_log"]
         dqi = ((min(src_count, target_count)) / (
@@ -27,7 +27,7 @@ def calculate_dqi(execution_log, test_case_id):
         return dqi
 
     if test_case_obj.test_case_class == SupportedTestClass(). \
-            get_test_class_id_by_name("duplicatecheck"):
+            get_test_class_id_by_name(TestClass.DUPLICATE_CHECK):
         target_detail = db_details(
             test_case_obj.test_case_detail['target_db_id'])
         target_cursor = dbconnection(target_detail['db_name'],
@@ -46,7 +46,7 @@ def calculate_dqi(execution_log, test_case_id):
         return dqi
 
     if test_case_obj.test_case_class == SupportedTestClass(). \
-            get_test_class_id_by_name("nullcheck"):
+            get_test_class_id_by_name(TestClass.NULL_CHECK):
         target_detail = db_details(
             test_case_obj.test_case_detail['target_db_id'])
         target_cursor = dbconnection(target_detail['db_name'],
@@ -65,7 +65,7 @@ def calculate_dqi(execution_log, test_case_id):
         return dqi
 
     if test_case_obj.test_case_class == SupportedTestClass(). \
-            get_test_class_id_by_name("ddlcheck"):
+            get_test_class_id_by_name(TestClass.DDL_CHECK):
         execution_log_list_src = execution_log["source_execution_log"]
         execution_log_list_dist = execution_log["dest_execution_log"]
         column_mismatch = len(execution_log_list_src) + len(
@@ -102,7 +102,7 @@ def calculate_dqi(execution_log, test_case_id):
         return dqi
 
     if test_case_obj.test_case_class == SupportedTestClass(). \
-            get_test_class_id_by_name("datavalidation"):
+            get_test_class_id_by_name(TestClass.DATA_VALIDATION):
         total_no_records = execution_log["src_count"] + execution_log[
             "dest_count"]
         total_mismatch_found = execution_log["src_to_dest_count"] + \

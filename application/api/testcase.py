@@ -1,10 +1,10 @@
 import ast
-
 from flask import request
 from flask_restful import Resource, reqparse
 
 from application.common.constants import (APIMessages, ExecutionStatus,
-                                          SupportedTestClass, SupportedDBType)
+                                          SupportedTestClass, SupportedDBType,
+                                          TestClass)
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
@@ -291,8 +291,8 @@ class EditTestCase(Resource):
             target_qry = ''
         else:
             query_list = []
-            if test_case_class == "countcheck" or \
-                    test_case_class == "datavalidation":
+            if test_case_class == TestClass.COUNT_CHECK or \
+                    test_case_class == TestClass.DATA_VALIDATION:
                 src_query = queries["sourceqry"]
                 target_query = queries["targetqry"]
                 query_list.append(src_query)
