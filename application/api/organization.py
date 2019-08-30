@@ -5,13 +5,16 @@ from datetime import timedelta
 from flask_restful import Resource, reqparse
 from sqlalchemy.exc import SQLAlchemyError
 
+from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
                                          STATUS_OK, STATUS_UNAUTHORIZED)
 from application.common.response import api_response
 from application.common.token import token_required
+from application.helper.permission_check import check_permission
 from application.model.models import (Organization, Job, TestSuite,
-                                      Project, UserProjectRole, UserOrgRole)
+                                      Project, UserProjectRole, UserOrgRole,
+                                      User)
 from index import db
 
 
@@ -32,11 +35,13 @@ class OrganizationAPI(Resource):
         user_id = session.user_id
         user_obj = User.query.filter_by(user_id=user_id,
                                         is_deleted=False).first()
+
         create_org_parser = reqparse.RequestParser(bundle_errors=True)
         create_org_parser.add_argument(
             'org_name', help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
         create_org_data = create_org_parser.parse_args()
+        check_permission(user_obj)
         create_organization = Organization(create_org_data['org_name'],
                                            session.user_id)
         create_organization.save_to_db()
@@ -64,9 +69,18 @@ class OrganizationAPI(Resource):
         update_org_parser.add_argument(
             'org_name', help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
+
         update_org_data = update_org_parser.parse_args()
+        user_obj = User.query.filter_by(user_id=session.user_id,
+                                        is_deleted=False).first()
+
         current_org = Organization.query.filter_by(
-            org_id=update_org_data['org_id']).first()
+            org_id=update_org_data['org_id'], is_deleted=False).first()
+        if not current_org:
+            raise ResourceNotAvailableException(
+                "Organization")
+        check_permission(user_obj, list_of_permissions=["edit_org"],
+                         org_id=current_org.org_id)
         current_org.org_name = update_org_data['org_name']
         current_org.save_to_db()
         return api_response(
@@ -87,6 +101,7 @@ class OrganizationAPI(Resource):
         #  organizations which are active
         # TODO: Implement a logic to return organizations that user is part
         # Storing all active projects in a list
+
         list_of_active_orgs = Organization.query.filter_by(
             is_deleted=False).all()
         if not list_of_active_orgs:
