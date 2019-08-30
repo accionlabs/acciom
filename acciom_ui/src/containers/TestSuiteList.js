@@ -104,18 +104,24 @@ const useStyles = makeStyles(theme => ({
 	caseLog: {cursor: 'pointer'},
 }));
 
-function ControlledExpansionPanels({ testSuites, allCases, getAllConnections, getTestCaseDetailBySuiteId, getTestCaseLogById, 
+function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConnections, getTestCaseDetailBySuiteId, getTestCaseLogById, 
 	getTestCaseByTestCaseId, executeTestBySuiteId, executeTestByCaseId, showConnectionsDialog, getEachTestCaseDetailByCaseID,
 	eachTestCaseDetails }) {
-
+	let project_id;
+	// console.log("project id==> ", projectId)
+	if(projectId && projectId.appData && projectId.appData.currentProject) {
+		project_id = projectId.appData.currentProject.project_id ? projectId.appData.currentProject.project_id : 2;
+		console.log("projectId==>", project_id)
+	}
 	const classes = useStyles();
 	const [expanded, setExpanded] = React.useState(false);
 	const [testCaseExpanded, setTestCaseExpanded] = React.useState(false);
 	const [testSuiteIdForManageConnections, setTestSuiteIdForManageConnections] = React.useState(null);
 
 	useEffect(() => {
-		const projectId = 1; // remove this hardcoded assignment
-		getAllConnections(projectId);
+		// const project_Id = projectId.appData.currentProject.project_id; // remove this hardcoded assignment
+		// console.log("project id==> ", projectId)
+		getAllConnections(project_id);
 	}, []);
 
 	const handleChange = panel => (event, isExpanded) => {
@@ -135,6 +141,7 @@ function ControlledExpansionPanels({ testSuites, allCases, getAllConnections, ge
 	const handleManageConnection = (e, suiteID) => {
 		setTestSuiteIdForManageConnections(suiteID);
 		getTestCaseDetailBySuiteId(suiteID, true);
+		getAllConnections(project_id);
 		e.stopPropagation();
 	};
 
@@ -294,6 +301,7 @@ const mapStateToProps = (state) => {
 		showConnectionsDialog: state.testSuites.connectionsList.showConnectionsDialog,
 		allCases: state.testSuites.connectionsList? state.testSuites.connectionsList.allCases: {},
 		eachTestCaseDetails: state.testSuites.eachTestCaseDetails? state.testSuites.eachTestCaseDetails: [],
+		projectId: state  
 	};
 };
 
