@@ -1,12 +1,16 @@
 """File to handle Project API Operations."""
 from flask_restful import Resource, reqparse
 
+from application.common.common_exception import GenericBadRequestException
 from application.common.constants import APIMessages
-from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
-                                         STATUS_OK, STATUS_UNAUTHORIZED)
+from application.common.response import (STATUS_CREATED,
+                                         STATUS_OK, STATUS_UNAUTHORIZED,
+                                         STATUS_BAD_REQUEST)
 from application.common.response import api_response
 from application.common.token import token_required
-from application.model.models import Project, UserOrgRole
+from application.common.utils import validate_empty_fields
+from application.helper.permission_check import check_permission
+from application.model.models import Project, UserOrgRole, Organization
 
 
 class ProjectAPI(Resource):
@@ -21,33 +25,47 @@ class ProjectAPI(Resource):
             session(object): User session
 
         Returns: Standard API Response with HTTP status code
-
         """
         create_project_parser = reqparse.RequestParser(bundle_errors=True)
         create_project_parser.add_argument(
             'project_name',
             help=APIMessages.PARSER_MESSAGE,
-            required=True, type=str)
+            required=True, type=str, location='json')
         create_project_parser.add_argument(
             'org_id',
             help=APIMessages.PARSER_MESSAGE,
-            required=True, type=int)
+            required=True, type=int, location='json')
         create_project_data = create_project_parser.parse_args()
-        try:
-            new_project = Project(create_project_data['project_name'],
-                                  create_project_data['org_id'],
-                                  session.user_id)
-            new_project.save_to_db()
-            project_payload = {'project_name': new_project.project_name,
-                               'project_id': new_project.project_id,
-                               'org_id': new_project.org_id}
-            return api_response(True,
-                                APIMessages.CREATE_RESOURCE.format('Project'),
-                                STATUS_CREATED, project_payload)
-        except Exception as e:
-            return api_response(
-                False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR,
-                {'error_log': str(e)})
+        org_obj = Organization.query.filter_by(
+            org_id=create_project_data['org_id'],
+            is_deleted=False).first()
+        if not org_obj:
+            raise GenericBadRequestException(APIMessages.INVALID_ORG_ID)
+        check_permission(user_object=session.user,
+                         list_of_permissions=["create_project"],
+                         org_id=create_project_data["org_id"])
+        create_project_data['project_name'] = create_project_data[
+            'project_name'].strip()
+        list_of_args = [arg.name for arg in create_project_parser.args]
+        request_data_validation = validate_empty_fields(
+            create_project_data,
+            list_of_args)
+        if request_data_validation:
+            return api_response(success=False,
+                                message=request_data_validation,
+                                http_status_code=STATUS_BAD_REQUEST,
+                                data={})
+
+        new_project = Project(create_project_data['project_name'],
+                              create_project_data['org_id'],
+                              session.user_id)
+        new_project.save_to_db()
+        project_payload = {'project_name': new_project.project_name,
+                           'project_id': new_project.project_id,
+                           'org_id': new_project.org_id}
+        return api_response(True,
+                            APIMessages.CREATE_RESOURCE.format('Project'),
+                            STATUS_CREATED, project_payload)
 
     @token_required
     def put(self, session):
@@ -69,18 +87,32 @@ class ProjectAPI(Resource):
             help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
         update_project_data = update_project_parser.parse_args()
-        try:
-
-            current_project = Project.query.filter_by(
-                project_id=update_project_data['project_id']).first()
-            current_project.project_name = update_project_data['project_name']
-            current_project.save_to_db()
-            return api_response(True,
-                                APIMessages.UPDATE_RESOURCE.format('Project'),
-                                STATUS_OK)
-        except Exception as e:
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR, {'error_log': str(e)})
+        current_project = Project.query.filter_by(
+            project_id=update_project_data['project_id'],
+            is_deleted=False).first()
+        if not current_project:
+            return api_response(False, APIMessages.PROJECT_NOT_EXIST,
+                                STATUS_BAD_REQUEST)
+        check_permission(user_object=session.user,
+                         list_of_permissions=["edit_project"],
+                         project_id=update_project_data["project_id"],
+                         org_id=current_project.org_id)
+        update_project_data['project_name'] = update_project_data[
+            'project_name'].strip()
+        list_of_args = [arg.name for arg in update_project_parser.args]
+        request_data_validation = validate_empty_fields(
+            update_project_data,
+            list_of_args)
+        if request_data_validation:
+            return api_response(success=False,
+                                message=request_data_validation,
+                                http_status_code=STATUS_BAD_REQUEST,
+                                data={})
+        current_project.project_name = update_project_data['project_name']
+        current_project.save_to_db()
+        return api_response(True,
+                            APIMessages.UPDATE_RESOURCE.format('Project'),
+                            STATUS_OK)
 
     @token_required
     def get(self, session):
@@ -98,39 +130,37 @@ class ProjectAPI(Resource):
             'org_id', help=APIMessages.PARSER_MESSAGE,
             required=True, type=int, location='args')
         get_project_data = get_project_parser.parse_args()
-        try:
-            # TODO: Check if organization is active and called has access
-            # Storing all active projects in a list
-            list_of_active_project = Project.query.filter_by(
-                org_id=get_project_data['org_id'], is_deleted=False).all()
-            if not list_of_active_project:
-                return api_response(False,
-                                    APIMessages.NO_RESOURCE.format('Project'),
-                                    STATUS_UNAUTHORIZED)
-            # dict of org and list of projects to be returned in the response
-            projects_to_return = dict()
-            # list of projects to be sent in response
-            project_details_list = list()
-            organization_id_in_database = None
-            # check if user has all org level permissions
-            user_roles = UserOrgRole.query.filter_by(
-                user_id=session.user_id,
-                org_id=get_project_data['org_id']).first()
-            for each_project in list_of_active_project:
-                # Store each project details in a list
-                project_details_list.append(
-                    {'project_id': each_project.project_id,
-                     'project_name': each_project.project_name})
-                # Store Organization Id
-                organization_id_in_database = each_project.org_id
-            projects_to_return.update(
-                {'org_id': organization_id_in_database,
-                 'is_org_user': True if user_roles else False,
-                 'project_details': project_details_list})
-            return api_response(
-                True, APIMessages.SUCCESS, STATUS_OK,
-                {"projects_under_organization": projects_to_return})
-        except Exception as e:
-            return api_response(
-                False, APIMessages.INTERNAL_ERROR,
-                STATUS_SERVER_ERROR, {'error_log': str(e)})
+        # TODO: Check if organization is active and called has access
+        # Storing all active projects in a list
+        list_of_active_project = Project.query.filter_by(
+            org_id=get_project_data['org_id'], is_deleted=False).all()
+        if not list_of_active_project:
+            return api_response(False,
+                                APIMessages.NO_RESOURCE.format('Project'),
+                                STATUS_UNAUTHORIZED)
+        check_permission(user_object=session.user,
+                         list_of_permissions=["view_project"],
+                         org_id=get_project_data["org_id"])
+        # dict of org and list of projects to be returned in the response
+        projects_to_return = dict()
+        # list of projects to be sent in response
+        project_details_list = list()
+        organization_id_in_database = None
+        # check if user has all org level permissions
+        user_roles = UserOrgRole.query.filter_by(
+            user_id=session.user_id,
+            org_id=get_project_data['org_id']).first()
+        for each_project in list_of_active_project:
+            # Store each project details in a list
+            project_details_list.append(
+                {'project_id': each_project.project_id,
+                 'project_name': each_project.project_name})
+            # Store Organization Id
+            organization_id_in_database = each_project.org_id
+        projects_to_return.update(
+            {'org_id': organization_id_in_database,
+             'is_org_user': True if user_roles else False,
+             'project_details': project_details_list})
+        return api_response(
+            True, APIMessages.SUCCESS, STATUS_OK,
+            {"projects_under_organization": projects_to_return})
