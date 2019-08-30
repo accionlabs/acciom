@@ -9,11 +9,11 @@ class DQIDetailsContainer extends Component {
 	render() {
 
 		const colorsArray = [
-			['#99cc00'],
-			['#cc00cc'],
-			['#ff9933'],
-			['#9933ff'],
-			['#cc6600']
+			['#49a9ea'],
+			['#36CAAB'],
+			['#B370CF'],
+			['#FFFFFF'],
+			['#34495E']
 		];
 
 		const getGaugeChart = () => {
