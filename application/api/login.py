@@ -10,6 +10,7 @@ from application.common.response import (api_response, STATUS_BAD_REQUEST,
 from application.common.token import (login_required, token_required,
                                       generate_auth_token)
 from application.common.utils import (send_reset_email, verify_reset_token)
+from application.common.utils import validate_empty_fields
 from application.common.utils import (verify_hash, generate_hash)
 from application.model.models import User, PersonalToken
 from index import db
@@ -269,22 +270,28 @@ class GetToken(Resource):
         Returns: generate a token that will be associated to the user
 
         """
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('message',
-                                help=APIMessages.PARSER_MESSAGE,
-                                required=True)
-            token_generation_data = parser.parse_args()
-            token = secrets.token_hex()
-            message = token_generation_data['message']
-            user_id = session.user_id
-            personal_token_obj = PersonalToken(user_id, token, message)
-            personal_token_obj.save_to_db()
-            payload = {"personal_access_token": token}
-            return api_response(
-                True, APIMessages.CREATE_RESOURCE.format('token'),
-                STATUS_CREATED, payload)
-        except Exception as e:
-            return api_response(
-                False, APIMessages.INTERNAL_ERROR, STATUS_SERVER_ERROR,
-                {'error_log': str(e)})
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('message',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=True, location='json')
+        token_generation_data = parser.parse_args()
+        token = secrets.token_hex()
+        token_generation_data['message'] = token_generation_data[
+            'message'].strip()
+        list_of_args = [arg.name for arg in parser.args]
+        request_data_validation = validate_empty_fields(
+            token_generation_data,
+            list_of_args)
+        if request_data_validation:
+            return api_response(success=False,
+                                message=request_data_validation,
+                                http_status_code=STATUS_BAD_REQUEST,
+                                data={})
+        user_id = session.user_id
+        personal_token_obj = PersonalToken(user_id, token,
+                                           token_generation_data['message'])
+        personal_token_obj.save_to_db()
+        payload = {"personal_access_token": token}
+        return api_response(
+            True, APIMessages.CREATE_RESOURCE.format('token'),
+            STATUS_CREATED, payload)
