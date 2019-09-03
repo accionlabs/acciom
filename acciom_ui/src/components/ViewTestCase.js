@@ -80,7 +80,7 @@ class TestCaseDetails extends React.Component {
 
 					sourceTable: this.props.viewTestCase.src_table,
 					targetTable: this.props.viewTestCase.target_table,
-					column: JSON.stringify(this.props.viewTestCase.column),
+					column: this.props.viewTestCase.column,
 					sourceQuery: this.props.viewTestCase.sourceqry,
 					targetQuery: this.props.viewTestCase.targetqry
 				}
@@ -106,7 +106,7 @@ class TestCaseDetails extends React.Component {
 			target_db_id: this.state.formData.targetConnection,
 			src_qry: this.state.formData.sourceQuery,
 			target_qry: this.state.formData.targetQuery,
-			column: JSON.parse(this.state.formData.column)
+			column: this.state.formData.column
 		}
 		this.props.updateTestCase(payload);
 	};

@@ -6,6 +6,7 @@ import ManageConnectionInputs from './ManageConnectionInputs';
 import ManageConnectionSelect from './ManageConnectionSelect';
 
 import { hideManageConnectionsDialog, updateConnections } from '../actions/testSuiteListActions';
+import { manageConnectionsCaseUpdate } from '../actions/testSuiteListActions';
 
 class ManageConnection extends React.Component {
 	
@@ -13,7 +14,7 @@ class ManageConnection extends React.Component {
 		super(props);
 		this.state = {
 			selectedConnectionType: 'source',
-			selectedConnection: '',
+			selectedConnection: this.props.allConnections && this.props.allConnections.length ? `${this.props.allConnections[0].db_connection_id}` : '',
 			selectedCases: []
 		};
 	};
@@ -28,9 +29,9 @@ class ManageConnection extends React.Component {
 		});
 	};
 	
-	handleConnectionChange = (connection) => {
+	handleConnectionChange = e => {
 		this.setState({
-			selectedConnection: Number(connection)
+			selectedConnection: e.target.value
 		});
 	};
 
@@ -52,7 +53,7 @@ class ManageConnection extends React.Component {
 		});
 	};
 
-	handleManageConnectionSave = (e) => {
+	handleManageConnectionSave = () => {
 		// const payload = new FormData();
 		// payload.append('connection_references', this.state.selectedConnectionType);
 		// payload.append('case_id_list', this.state.selectedCases);
@@ -61,19 +62,28 @@ class ManageConnection extends React.Component {
 		this.props.updateConnections({
 			connection_reference: this.state.selectedConnectionType,
 			case_id_list: this.state.selectedCases,
-			db_connection_id: this.state.selectedConnection
+			db_connection_id: Number(this.state.selectedConnection)
 		});
 	};
 
-	handleResetConnection = (e) => {
-		this.setState({
-			selectedConnectionType: null,
-			selectedConnection: '',
-			selectedCases: []
-		});
-	};
+	// handleResetConnection = (e) => {
+	// 	this.setState({
+	// 		selectedConnectionType: 'source',
+	// 		selectedConnection: this.props.allConnections && this.props.allConnections.length ? `${this.props.allConnections[0].db_connection_id}` : '',
+	// 		selectedCases: []
+	// 	});
+	// };
+
+	formValidation = () => {
+		return [
+			this.state.selectedConnectionType,
+			this.state.selectedConnection,
+			this.state.selectedCases.length,
+		].every(Boolean);
+	}
 	
 	render() {
+		const isValid = !this.formValidation();
 		return (
 			<Modal
 				show={this.props.showConnectionsDialog}
@@ -98,10 +108,10 @@ class ManageConnection extends React.Component {
 					</ManageConnectionSelect>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button className="btn btn-primary" onClick={e => this.handleManageConnectionSave(e)}>
+					<Button className="btn btn-primary" onClick={this.handleManageConnectionSave} disabled={isValid}>
 						Save
 					</Button>
-					<Button className="btn btn-primary" onClick={e => this.handleResetConnection(e)}>Reset</Button>
+					{/* <Button className="btn btn-primary" onClick={e => this.handleResetConnection(e)}>Reset</Button> */}
 				</Modal.Footer>
 			</Modal>
 		);
@@ -110,6 +120,8 @@ class ManageConnection extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
+		allConnections : state.testSuites.connectionsList && 
+			state.testSuites.connectionsList.allConnections? state.testSuites.connectionsList.allConnections : [],
 		showConnectionsDialog: state.testSuites.connectionsList.showConnectionsDialog
 	}
 };
@@ -117,7 +129,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		hideManageConnectionsDialog: () => dispatch(hideManageConnectionsDialog()),
-		updateConnections: (data) => dispatch(updateConnections(data))
+		updateConnections: (data) => dispatch(updateConnections(data)),
+		onManageConnectionsCaseUpdate: data => dispatch(manageConnectionsCaseUpdate(data))
 	}
 };
 
