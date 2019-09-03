@@ -1,15 +1,18 @@
 """File to handle Role API Operations."""
 from flask_restful import Resource, reqparse
 from sqlalchemy import and_
+
+from application.common.common_exception import GenericBadRequestException
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_CREATED,
                                          STATUS_OK, STATUS_BAD_REQUEST)
 from application.common.response import api_response
 from application.common.token import token_required
+from application.common.utils import validate_empty_fields
+from application.helper.permission_check import check_permission
+from application.helper.permission_check import check_valid_id_passed_by_user
 from application.model.models import (Project, Role, Permission,
                                       RolePermission)
-from application.common.common_exception import GenericBadRequestException
-from application.helper.permission_check import check_valid_id_passed_by_user
 
 
 class RoleAPI(Resource):
@@ -37,10 +40,22 @@ class RoleAPI(Resource):
             'permission_id_list', help=APIMessages.PARSER_MESSAGE,
             required=True, type=list, location='json')
         create_role_data = create_role_parser.parse_args()
+        create_role_data["role_name"] = create_role_data["role_name"].strip()
+        list_of_args = [arg.name for arg in create_role_parser.args]
+        request_data_validation = validate_empty_fields(create_role_data,
+                                                        list_of_args)
+        if request_data_validation:
+            return api_response(success=False,
+                                message=request_data_validation,
+                                http_status_code=STATUS_BAD_REQUEST,
+                                data={})
         # check if permission_id_list is not empty
         if not create_role_data['permission_id_list']:
             raise GenericBadRequestException(APIMessages.PERMISSION_LIST)
         # TODO: Check User Management access
+        check_permission(user_object=session.user,
+                         list_of_permissions=["create_project"],
+                         org_id=create_role_data["org_id"])
         permission_id_given_by_user = set(
             create_role_data['permission_id_list'])
         # checking if permissions are valid
@@ -108,10 +123,16 @@ class RoleAPI(Resource):
             # TODO: Returns roles with permission not exceeding the User's
             #  permissions
             check_valid_id_passed_by_user(org_id=get_role_data['org_id'])
+            check_permission(user_object=session.user,
+                             list_of_permissions=["view_org"],
+                             org_id=get_role_data["org_id"])
             payload = retrieve_roles_under_org(get_role_data['org_id'])
         if get_role_data['project_id'] and not get_role_data['org_id']:
             check_valid_id_passed_by_user(
                 project_id=get_role_data['project_id'])
+            check_permission(user_object=session.user,
+                             list_of_permissions=["view_project"],
+                             project_id=get_role_data["project_id"])
             get_project = Project.query.filter_by(
                 project_id=get_role_data['project_id'],
                 is_deleted=False).first()
@@ -158,7 +179,7 @@ def check_permission_exists(permission_id_given_by_user):
         permission_id_given_by_user (set): Set of permission Ids
 
     Returns: list of permission name if provided permission Ids are valid
-    Tuple of invalid peermission and permission name in case on invalid
+    Tuple of invalid permission and permission name in case on invalid
     permission Ids
     """
     # checking if permissions are valid
