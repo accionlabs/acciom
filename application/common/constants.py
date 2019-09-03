@@ -126,6 +126,31 @@ class TimeOuts:
     ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 
+class TestClass:
+    """Test Class Constants"""
+    COUNT_CHECK = "countcheck"
+    NULL_CHECK = "nullcheck"
+    DDL_CHECK = "ddlcheck"
+    DUPLICATE_CHECK = "duplicatecheck"
+    DATA_VALIDATION = "datavalidation"
+
+
+class TestClassDisplay:
+    COUNT_CHECK = 'Count Check'
+    NULL_CHECK = "Null Check"
+    DDL_CHECK = "DDL Check"
+    DUPLICATE_CHECK = "Duplicate Check"
+    DATA_VALIDATION = "Data Validation"
+
+
+class TestTypeDisplay:
+    COMPLETENESS = "Completeness"
+    NULLS = "Nulls"
+    DUPLICATES = "Duplicates"
+    CONSISTENCY = "Consistency"
+    CORRECTNESS = "Correcteness"
+
+
 class SupportedDBType:
     """Class to return Name and Id of the DataBase."""
 
@@ -162,8 +187,15 @@ class SupportedDBType:
 class SupportedTestClass:
     """Class to return Test Class Name and Id."""
 
-    supported_test_class = {1: "countcheck", 2: "nullcheck", 3: "ddlcheck",
-                            4: "duplicatecheck", 5: "datavalidation"}
+    supported_test_class = {1: TestClass.COUNT_CHECK, 2: TestClass.NULL_CHECK,
+                            3: TestClass.DDL_CHECK,
+                            4: TestClass.DUPLICATE_CHECK,
+                            5: TestClass.DATA_VALIDATION}
+    supported_test_class_display_name = {1: TestClassDisplay.COUNT_CHECK,
+                                         2: TestClassDisplay.NULL_CHECK,
+                                         3: TestClassDisplay.DDL_CHECK,
+                                         4: TestClassDisplay.DUPLICATE_CHECK,
+                                         5: TestClassDisplay.DATA_VALIDATION}
 
     def get_test_class_name_by_id(self, test_class_id):
         """
@@ -186,6 +218,15 @@ class SupportedTestClass:
         for key, value in self.supported_test_class.items():
             if value == name.lower():
                 return key
+
+    def get_test_class_display_name_by_id(self, test_class_id):
+        """
+                Method to return test class name by passing Id.
+                Args:
+                    test_class_id: (int) Id of the test class
+                Returns: (str) name of the test class
+        """
+        return self.supported_test_class_display_name.get(test_class_id)
 
 
 class ExecutionStatus:

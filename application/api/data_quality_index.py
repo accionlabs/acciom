@@ -1,5 +1,6 @@
 import datetime
 from collections import OrderedDict
+from collections import OrderedDict
 from datetime import date
 from datetime import datetime as dt
 from flask_restful import Resource, reqparse
@@ -7,19 +8,19 @@ from sqlalchemy import Date
 from statistics import mean
 
 from application.common.constants import (APIMessages, SupportedTestClass)
+from application.common.constants import (APIMessages, SupportedTestClass,
+                                          TestTypeDisplay, TestClass)
 from application.common.response import (api_response, STATUS_OK,
                                          STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST, STATUS_NOT_FOUND)
 from application.common.token import token_required
+from application.helper.permission_check import check_permission
+from application.model.models import (Organization, Project, TestSuite,
+                                      TestCase, TestCaseLog)
 from application.model.models import (Organization, Project, TestSuite,
                                       TestCase, TestCaseLog)
 from index import db
 
-from application.common.constants import (APIMessages, SupportedTestClass)
-from application.model.models import ( Organization, Project, TestSuite,
-                                       TestCase, TestCaseLog)
-from application.helper.permission_check import check_permission
-from collections import OrderedDict
 
 class ProjectDQI(Resource):
     """
@@ -31,11 +32,12 @@ class ProjectDQI(Resource):
             - Returns Data Quality Index for given project id on a test case
             type level.
     """
-    dqi_name_casting = OrderedDict([('completeness', 'countcheck'),
-                                    ('Null', 'nullcheck'),
-                                    ('duplicates', 'duplicatecheck'),
-                                    ('consistency', 'ddlcheck'),
-                                    ('correcteness', 'datavalidation')])
+    dqi_name_casting = OrderedDict(
+        [(TestTypeDisplay.COMPLETENESS, TestClass.COUNT_CHECK),
+         (TestTypeDisplay.NULLS, TestClass.NULL_CHECK),
+         (TestTypeDisplay.DUPLICATES, TestClass.DUPLICATE_CHECK),
+         (TestTypeDisplay.CONSISTENCY, TestClass.DDL_CHECK),
+         (TestTypeDisplay.CORRECTNESS, TestClass.DATA_VALIDATION)])
 
     @token_required
     def get(self, session):
@@ -176,7 +178,7 @@ class ProjectDQIHistory(Resource):
                 False, APIMessages.NO_RESOURCE.format('Project'),
                 STATUS_BAD_REQUEST)
             # checking if user is authorized to make this call
-        check_permission(session.user,list_of_permissions=["view_project"],
+        check_permission(session.user, list_of_permissions=["view_project"],
                          org_id=check_valid_project.org_id,
                          project_id=dqi_history_data['project_id'])
         # Check if both start and end date are passed instead either of them
