@@ -15,6 +15,10 @@ import {
 	resetDataForSheetPage,
 	resetDataForCasePage
 } from '../actions/testSuiteUploadActions';
+import { 
+	getAllTestSuites,
+} from '../actions/testSuiteListActions';
+import { red } from '@material-ui/core/colors';
 
 const TAB_UPLOAD_FILE = 1;
 const TAB_UPLOAD_SHEET = 2;
@@ -32,6 +36,7 @@ class TestSuiteUpload extends React.Component {
 		this.selectedSheet = null;
 		this.workbook = {};
 		this.pages = [];
+		this.isNameAlreadyExist = false;
 	}
 
 	componentDidMount() {
@@ -44,9 +49,16 @@ class TestSuiteUpload extends React.Component {
 		if (nextProps.moveToSelectSheetPage) {
 			newState = { ...prevState, key: TAB_UPLOAD_SHEET };
 			nextProps.resetDataForSheetPage();
+			nextProps.onSheetSelect(
+				nextProps.pages && nextProps.pages.length > 0 
+				?
+				nextProps.pages[0]:[])
 		} else if (nextProps.moveToSelectCasePage) {
 			newState = { ...prevState, key: TAB_UPLOAD_CASES };
 			nextProps.resetDataForCasePage();
+			let project_id = nextProps.currentProject.project_id;
+			nextProps.getAllTestSuites(project_id);
+			
 		} else if (nextProps.redirectToSuiteList) {
 			nextProps.history.push('/startup');
 		}
@@ -174,8 +186,23 @@ class TestSuiteUpload extends React.Component {
 			this.props.testCaseSelectAllToggle();
 		};
 
+		const checkNameAlreadyExist = (testSuites,displayName) => {
+			let isNameAlreadyExist = false;
+			for(let data of testSuites ){
+				if(data.test_suite_name === displayName){
+					isNameAlreadyExist = true;
+					break;
+				}
+			}
+			return isNameAlreadyExist;
+		}
+
 		const handleInputChange = (e, index) => {
 			this.props.onSheetNameChange({sheetIndex:index,  displayName: e.target.value});
+			let testSuites = this.props.testSuites;
+			let displayName = e.target.value;
+			this.isNameAlreadyExist = checkNameAlreadyExist(testSuites,displayName);
+			
 		};
 
 		const getSheetsList = () => {
@@ -264,8 +291,8 @@ class TestSuiteUpload extends React.Component {
 									</tbody>
 								</Table>
 								<div>
-									<Button bsStyle="primary" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD_AND_EXECUTE)}>Upload and Execute</Button>								
-									<Button bsStyle="primary" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD)}>Upload</Button> 
+									<Button bsStyle="primary" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD_AND_EXECUTE)} disabled={this.isNameAlreadyExist || !isValid()}>Upload and Execute</Button>								
+									<Button bsStyle="primary" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD)} disabled={this.isNameAlreadyExist || !isValid()}>Upload</Button> 
 								</div>
 							</Panel.Body>
 						</Panel>
@@ -275,10 +302,11 @@ class TestSuiteUpload extends React.Component {
 		};
 
 		const renderTestSuiteName = () => {
-			let selectedPage;
+			let element = null;
+			let testSuites = this.props.testSuites;
 			let i;
 			let pages = this.props.pages;
-			let element = null;
+			let selectedPage;
 			if(pages.length > 0) {
 				for(i=0; i<=pages.length; i++) {
 					let page = pages[i];
@@ -287,12 +315,15 @@ class TestSuiteUpload extends React.Component {
 						break;
 					}
 				}
+				let displayName = selectedPage ? selectedPage.displayName : '';
+				this.isNameAlreadyExist = checkNameAlreadyExist(testSuites,displayName);
 				element = (
 					<div className="row">
 						<h5 className="suite-name-title">Test Suite Name: </h5>
-						<div className="suite-test-name">{ selectedPage ? selectedPage.name : '' } </div>
-						<h5 className="suite-test-display-title">Test Suite Display Name: </h5>
-						<input type="textbox" className="suite-test-input" onChange={e => handleInputChange(e, i)} value={ selectedPage ? selectedPage.displayName : '' } />
+						<input type="textbox" className="suite-test-input" onChange={e => handleInputChange(e,i)} value={ displayName } />
+						{this.isNameAlreadyExist &&
+							<span style={{color:"red", paddingLeft:"10px"}}>Test suite Name already exist</span>
+						}
 					</div>
 				);
 			}
@@ -306,8 +337,14 @@ class TestSuiteUpload extends React.Component {
 		const handleSwitchProject = () => {
 			this.props.showProjectSwitchPage(true);
 		};
-
+		
+		const isValid = () => {
+			return this.props.allCases.some((data) => {
+				return data.selected === true
+			})
+		}
 		return (
+			
 			<div id="suite-upload">
 				<div>
 					<h4 className='pageTitle'>Update Data Profiling</h4>
@@ -321,7 +358,7 @@ class TestSuiteUpload extends React.Component {
 									onChange={ (e) => handleChange(e)}/>
 							</div>
 							<input className="browse-txt" type="textbox" placeholder="example.xlsx" value={this.props.file} disabled/>
-							<Button className="browse-button" bsStyle="primary" onClick={ (e) => handleTestSuiteUploadClick()}>Browse Test Suite File (.xslx)</Button>							
+							<Button className="browse-button" bsStyle="primary" onClick={ (e) => handleTestSuiteUploadClick()}>Browse File</Button>							
 						</div>
 					</Tab>
 			
@@ -354,7 +391,8 @@ const mapStateToProps = (state) => {
 		isCaseListPageDisabled: state.testSuiteUploadData.isCaseListPageDisabled,
 		moveToSelectSheetPage: state.testSuiteUploadData.moveToSelectSheetPage,
 		moveToSelectCasePage: state.testSuiteUploadData.moveToSelectCasePage,
-		redirectToSuiteList: state.testSuiteUploadData.redirectToSuiteList
+		redirectToSuiteList: state.testSuiteUploadData.redirectToSuiteList,
+		testSuites: state.testSuites.testSuiteList? state.testSuites.testSuiteList: [],
 	};
 };
 
@@ -369,7 +407,8 @@ const mapDispatchToProps = dispatch => ({
 	showProjectSwitchPage: (data) => dispatch(showProjectSwitchPage(data)),
 	onSheetNameChange: (data) => dispatch(onSheetNameChange(data)),
 	resetDataForSheetPage: () => dispatch(resetDataForSheetPage()),
-	resetDataForCasePage: () => dispatch(resetDataForCasePage())
+	resetDataForCasePage: () => dispatch(resetDataForCasePage()),
+	getAllTestSuites  : (data)=> dispatch(getAllTestSuites(data)),
 });
 
 export default connect(

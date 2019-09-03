@@ -41,19 +41,25 @@ const getUpdatedSheetsDataOnSelectionChange = (sheets, selectedSheet) => {
 	});
 };
 
-const getTestCaseDataOnSelectAllToggle = (allCases) => {
+const getTestCaseDataOnSelectAllToggle = (selectedAll,allCases) => {
 	return allCases.map(item => {
 		return {
 			...item,
-			selected: !item.selected
+			selected: selectedAll ? true: false
 		};
 	});
 };
+
+const checkAllCheckBox = (data) => {
+	return data.selected === true;
+}
 
 const testSuiteUploadData = (state = initialState, action) => {
 	let sheets = [];
 	let testCases = [];
 	let index = -1;
+	let selectAll = false;
+	let allCases = [];
 
 	switch (action.type) {
 	case GET_ALL_TEST_SUITES_SUCCESS:
@@ -91,20 +97,20 @@ const testSuiteUploadData = (state = initialState, action) => {
 	
 	case TEST_CASE_SELECTION_CHANGE:
 		index = state.sheetData.allCases.indexOf(action.testCase);
+		allCases = [...state.sheetData.allCases];
+		allCases[index].selected = !allCases[index].selected;
+		selectAll = allCases.every(checkAllCheckBox);
 		return {
 			...state,
+			selectAll: selectAll,
 			sheetData: {
 				...state.sheetData,
-				allCases: [ 
-					...state.sheetData.allCases.slice(0, index), 
-					{ ...action.testCase, selected: !action.testCase.selected },
-					...state.sheetData.allCases.slice(index + 1)
-				]
+				allCases: allCases
 			}
 		};
 		
 	case TEST_CASE_SELECT_ALL_TOGGLE:
-		testCases = getTestCaseDataOnSelectAllToggle(state.sheetData.allCases);
+		testCases = getTestCaseDataOnSelectAllToggle(!state.selectAll,state.sheetData.allCases);
 		return {
 			...state,
 			selectAll: !state.selectAll,
