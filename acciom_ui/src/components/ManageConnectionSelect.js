@@ -84,10 +84,10 @@ function ManageConnectionSelect(props) {
 						<td>
 							<select className="form-control selectconnection"
 								value={props.selectedConnection}
-								onChange={ (e) => props.onConnectionChange(e.target.value)}
+								onChange={props.onConnectionChange}
 								name="selectConnection"
 							>
-								 
+								<option value="" disabled>Select Connection</option>
 								{ props.allConnections.map(connection => (
 									connection ?
 										<option key={connection.db_connection_id} value={connection.db_connection_id}>{connection.db_connection_name}</option> : null

@@ -102,13 +102,25 @@ class AddDbDetails extends Component {
 		}));
 	}
 
+	formValidation = () => {
+		return [
+			this.state.formData.db_connection_name,
+			this.state.formData.db_type_name,
+			this.state.formData.db_name,
+			this.state.formData.db_hostname,
+			this.state.formData.db_username,
+			this.state.formData.db_password,
+		].every(Boolean);
+	};
+
 	render() {
+		const inValid = !this.formValidation();
  		return (
 			<div className="addDbDetailsForm">
 				<Panel>
 					<Panel.Heading>Add DB Details</Panel.Heading>
 					<Panel.Body>
-						<Form onSubmit={this.formSubmit} horizontal>
+						<Form noValidate onSubmit={this.formSubmit} horizontal>
 							<FormGroup controlId="formControlsConnName">
 								<Col sm={4}><ControlLabel>Connection Name</ControlLabel></Col>
 								<Col sm={8}><FormControl value={this.state.formData.db_connection_name} type="text" name="db_connection_name" onChange={this.handleInputChange} /></Col>
@@ -135,8 +147,8 @@ class AddDbDetails extends Component {
 							</FormGroup >
 
 							<FormGroup className="formFooter">
-								<Button type="button" bsStyle="primary" onClick={(e) => {this.checkConnection()}}>Test Connection</Button>
-								<Button type="submit" bsStyle="primary">Submit</Button>
+								<Button type="button" bsStyle="primary" onClick={(e) => {this.checkConnection()}} disabled={inValid} >Test Connection</Button>
+								<Button type="submit" bsStyle="primary" disabled={inValid} >Submit</Button>
 							</FormGroup>
 						</Form>
 					</Panel.Body>
