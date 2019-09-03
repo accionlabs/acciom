@@ -1,6 +1,5 @@
-from io import BytesIO
-
 from flask import current_app
+from io import BytesIO
 from openpyxl import load_workbook
 
 from application.common.constants import SupportedTestClass
@@ -39,8 +38,10 @@ def save_file_to_db(current_user, project_id, data, file):
                     str(worksheet[rows][each_col].value)
                     for rows in range(2,
                                       worksheet.max_row)]})
-
-    test_case_list = list(data['case_id_list'])
+    if not type(data['case_id_list']) is tuple:
+        test_case_list = [data['case_id_list']]
+    else:
+        test_case_list = list(data['case_id_list'])
     for each_row in range(worksheet.max_row - 1):
         if int(temp_data_array[each_row]) in test_case_list:
             test_case_list.remove(int(temp_data_array[each_row]))
