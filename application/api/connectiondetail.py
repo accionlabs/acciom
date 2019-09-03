@@ -90,46 +90,42 @@ class DbConnection(Resource):
                             STATUS_CREATED, payload)
 
 
-class CaseDetails(Resource):
+def get_case_detail(suite_id):
     """
-    To handle GET API to give all the test case details for a particular suite
-    id.
+    To get all the test case details associated with the particular suite id
+    provided in the args.
 
+    Args:
+        suite_id(int):Test suite id
+
+    Returns:
+        Returns a dictionary containing test case details.
     """
+    suite_obj = TestSuite.query.filter_by(test_suite_id=suite_id).first()
+    all_case = [{"case_id": each_case.test_case_id,
 
-    @token_required
-    def get(self, session):
-        """
-        It returns all the test case details associated with the particular
-        suite id provided in the args.
-
-        Args:
-             session (object):By using this object we can get the user_id.
-
-        Returns:
-              Standard API Response with message(returns message saying
-              that success), data and http status code.
-        """
-        suite_detail = reqparse.RequestParser()
-        suite_detail.add_argument('suite_id', required=True,
-                                  type=int,
-                                  location='args')
-        suite_data = suite_detail.parse_args()
-        suite_obj = TestSuite.query.filter(
-            TestSuite.test_suite_id == suite_data['suite_id'],
-            TestSuite.is_deleted == False).first()
-        if not suite_obj:
-            raise ResourceNotAvailableException("test suite")
-        else:
-            project_obj = Project.query.filter(
-                Project.project_id == suite_obj.project_id,
-                Project.is_deleted == False).first()
-            if not project_obj:
-                return api_response(False,
-                                    APIMessages.PROJECT_CONTAIN_SUITE_NOT_EXIST,
-                                    STATUS_BAD_REQUEST)
-            check_permission(session.user, ["view_suite", 'view_project'],
-                             project_obj.org_id, suite_obj.project_id)
-            payload = get_case_detail(suite_data['suite_id'])
-            return api_response(True, APIMessages.SUCCESS,
-                                STATUS_CREATED, payload)
+                 "case_name": each_case.test_case_detail.get('test_desc',
+                                                             APIMessages.NO_NAME_DEFINE),
+                 'test_class_name': SupportedTestClass().get_test_class_display_name_by_id(
+                     each_case.test_case_class),
+                 'test_class_id': each_case.test_case_class,
+                 "source_db_connection_id": check_db_id(
+                     each_case.test_case_detail.get(
+                         'src_db_id')),
+                 "source_db_connection_name": get_connection_name(
+                     each_case.test_case_detail.get('src_db_id')),
+                 'test_status': each_case.latest_execution_status,
+                 'test_status_name': ExecutionStatus().get_execution_status_by_id(
+                     each_case.latest_execution_status),
+                 "target_db_connection_id": check_db_id(
+                     each_case.test_case_detail.get(
+                         'target_db_id')),
+                 "target_db_connection_name": get_connection_name(
+                     each_case.test_case_detail.get('target_db_id')),
+                 }
+                for each_case in suite_obj.test_case if
+                each_case.is_deleted == False]
+    payload = {"suite_id": suite_obj.test_suite_id,
+               "suite_name": suite_obj.test_suite_name,
+               "all_cases": all_case}
+    return payload
