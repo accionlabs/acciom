@@ -140,5 +140,7 @@ def get_case_detail(suite_id):
                  }
                 for each_case in suite_obj.test_case if
                 each_case.is_deleted == False]
-    payload = {"all_cases": all_case}
+    payload = {"suite_id": suite_obj.test_suite_id,
+               "suite_name": suite_obj.test_suite_name,
+               "all_cases": all_case}
     return payload
