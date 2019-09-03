@@ -104,17 +104,21 @@ const useStyles = makeStyles(theme => ({
 	caseLog: {cursor: 'pointer'},
 }));
 
-function ControlledExpansionPanels({ testSuites, allCases, getAllConnections, getTestCaseDetailBySuiteId, getTestCaseLogById, 
+function ControlledExpansionPanels({ testSuites, allCases, projectIdDetail, getAllConnections, getTestCaseDetailBySuiteId, getTestCaseLogById, 
 	getTestCaseByTestCaseId, executeTestBySuiteId, executeTestByCaseId, showConnectionsDialog, getEachTestCaseDetailByCaseID,
 	eachTestCaseDetails }) {
-
+	console.log('project id details==>', projectIdDetail.project_id);
+	let projectId = 1;
+	if(projectIdDetail) {
+		projectId = projectIdDetail.project_id ? projectIdDetail.project_id : 1
+	}
 	const classes = useStyles();
 	const [expanded, setExpanded] = React.useState(false);
 	const [testCaseExpanded, setTestCaseExpanded] = React.useState(false);
 	const [testSuiteIdForManageConnections, setTestSuiteIdForManageConnections] = React.useState(null);
 
 	useEffect(() => {
-		const projectId = 1; // remove this hardcoded assignment
+		// const projectId = 1; // remove this hardcoded assignment
 		getAllConnections(projectId);
 	}, []);
 
@@ -135,6 +139,7 @@ function ControlledExpansionPanels({ testSuites, allCases, getAllConnections, ge
 	const handleManageConnection = (e, suiteID) => {
 		setTestSuiteIdForManageConnections(suiteID);
 		getTestCaseDetailBySuiteId(suiteID, true);
+		getAllConnections(projectId);
 		e.stopPropagation();
 	};
 
@@ -294,6 +299,7 @@ const mapStateToProps = (state) => {
 		showConnectionsDialog: state.testSuites.connectionsList.showConnectionsDialog,
 		allCases: state.testSuites.connectionsList? state.testSuites.connectionsList.allCases: {},
 		eachTestCaseDetails: state.testSuites.eachTestCaseDetails? state.testSuites.eachTestCaseDetails: [],
+		projectIdDetail: state.appData.currentProject ? state.appData.currentProject : []
 	};
 };
 
