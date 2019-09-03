@@ -21,7 +21,7 @@ const styles = theme => ({
 		right: theme.spacing(1),
 		top: theme.spacing(1),
 		color: theme.palette.grey[500],
-	},
+		},
 	textField: {
 		marginLeft: theme.spacing(1),
 		marginRight: theme.spacing(1),
@@ -56,10 +56,12 @@ class TestCaseDetails extends React.Component {
 
 	handleCaseDialogBoxClose = () => {
 		this.props.hideTestCaseDialog();
+		this.props.showTestCaseViewEnabled();
 	};
 
 	handleTestCaseEditMode = () => {
 		this.props.showTestCaseEditEnabled();
+		
 	};
 
 	handleTestCaseViewMode = () => {
@@ -109,7 +111,8 @@ class TestCaseDetails extends React.Component {
 			column: this.state.formData.column
 		}
 		this.props.updateTestCase(payload);
-	};
+	}
+	 handleCloseDialog = ()  => setShow(false)
 
 	render() {
 		return (
@@ -132,6 +135,8 @@ class TestCaseDetails extends React.Component {
 										<i className="fas fa-pencil-alt"></i>
 									</label>
 								}
+								{/* closeButton = {} */}
+								
 							</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
