@@ -6,7 +6,8 @@ import {
 	GET_PROJECT_LIST_BY_ORG_ID_SUCCESS,
 	SWITCH_PROJECT_SUCCESS,
 	REDIRECT_TO_VIEW_DB_PAGE_COMPLETE,
-	DELETE_DB_DETAILS_SUCCESS
+	DELETE_DB_DETAILS_SUCCESS,
+	CLEAR_SELECTED_DB_DETAILS
 } from '../constants/ActionTypes';
 
 const initialState = {
@@ -31,6 +32,12 @@ const dbDetailsData = (state = initialState, action) => {
 			selectedDbDetails: action.response.data
 		};
 	
+	case CLEAR_SELECTED_DB_DETAILS:
+		return {
+			...state,
+			selectedDbDetails: null
+		};
+		
 	case ADD_DB_DETAILS_SUCCESS:
 		return {
 			...state,

@@ -1,13 +1,22 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { FormGroup, ControlLabel, FormControl, Button, Panel, Form, Col} from 'react-bootstrap';
 
-import { addDatabaseDetails, getDBDetailsById, updateDBDetails, checkDbConnection, redirectToViewDbPageComplete} from '../actions/dbDetailsActions';
+import { 
+	clearSelectedDbDetails,
+	addDatabaseDetails, 
+	getDBDetailsById, 
+	updateDBDetails, 
+	checkDbConnection, 
+	redirectToViewDbPageComplete
+} from '../actions/dbDetailsActions';
 
 class AddDbDetails extends Component {
 
 	constructor(props) {
 		super(props);
+		this.props.clearSelectedDbDetails();
 		this.initialiseFormState();
 	}
 
@@ -20,7 +29,7 @@ class AddDbDetails extends Component {
 	}
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
-		if (prevState.loading && !prevState.selectedDbDetails && nextProps.selectedDbDetails) {
+		if (prevState.isEditMode && prevState.loading && !prevState.selectedDbDetails && nextProps.selectedDbDetails) {
 			return {
 				...prevState,
 				formData: {
@@ -135,6 +144,9 @@ class AddDbDetails extends Component {
 							</FormGroup >
 
 							<FormGroup className="formFooter">
+								<Link to={'/view_db_details'} className="formFooterBackbtn">
+									<Button bsStyle="primary">Back</Button>
+								</Link>
 								<Button type="button" bsStyle="primary" onClick={(e) => {this.checkConnection()}}>Test Connection</Button>
 								<Button type="submit" bsStyle="primary">Submit</Button>
 							</FormGroup>
@@ -156,6 +168,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
+	clearSelectedDbDetails: () => dispatch(clearSelectedDbDetails()),
 	addDatabaseDetails: (data) => dispatch(addDatabaseDetails(data)),
 	getDBDetailsById: (data) => dispatch(getDBDetailsById(data)),
 	updateDBDetails: (data) => dispatch(updateDBDetails(data)),
