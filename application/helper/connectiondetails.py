@@ -117,7 +117,6 @@ def get_case_detail(suite_id):
         Returns a dictionary containing test case details.
     """
     suite_obj = TestSuite.query.filter_by(test_suite_id=suite_id).first()
-    print(suite_obj.test_suite_id, suite_obj.test_suite_name)
     all_case = [{"case_id": each_case.test_case_id,
 
                  "case_name": each_case.test_case_detail.get('test_desc',

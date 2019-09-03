@@ -19,7 +19,6 @@ def save_file_to_db(current_user, project_id, data, file):
         file(Excel file object):Excel file
     Returns: Parse Excel and save data to db.
     """
-    print(current_user, project_id, data)
     temp_file = TestSuite(project_id=project_id, owner_id=current_user,
                           excel_name=file.filename,
                           test_suite_name=data['suite_name'])
@@ -29,7 +28,6 @@ def save_file_to_db(current_user, project_id, data, file):
     sheet_index = workbook.sheetnames.index(sheet)
     worksheet = workbook.worksheets[sheet_index]
     temp_data_array = [str(rows - 2) for rows in range(2, worksheet.max_row)]
-    print(temp_data_array)
     temp_data_array.append('-1')
     # row+1 to avoid index out of range error! Need to change.
     temp_test_dict = {}
@@ -40,12 +38,10 @@ def save_file_to_db(current_user, project_id, data, file):
                     str(worksheet[rows][each_col].value)
                     for rows in range(2,
                                       worksheet.max_row)]})
-    print("43", type(data['case_id_list']))
     if not type(data['case_id_list']) is tuple:
         test_case_list = [data['case_id_list']]
     else:
         test_case_list = list(data['case_id_list'])
-    print("45", test_case_list)
     for each_row in range(worksheet.max_row - 1):
         if int(temp_data_array[each_row]) in test_case_list:
             test_case_list.remove(int(temp_data_array[each_row]))

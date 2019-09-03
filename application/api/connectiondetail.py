@@ -46,7 +46,6 @@ class SelectConnection(Resource):
         project_obj = Project.query.filter_by(
             project_id=suite_obj.project_id).first()
         user_obj = User.query.filter_by(user_id=user).first()
-        print(project_obj.org_id, project_obj.project_id)
         check_permission(user_obj, ['edit_project'], org_id=project_obj.org_id,
                          project_id=project_obj.project_id)
         select_connection(data, user)
