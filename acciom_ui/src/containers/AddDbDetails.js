@@ -26,7 +26,7 @@ class AddDbDetails extends Component {
 				formData: {
 					...prevState.formData,
 					'db_connection_name' : nextProps.selectedDbDetails.db_connection_name,
-					'db_type_name' : nextProps.selectedDbDetails.db_type_name,
+					'db_type' : nextProps.selectedDbDetails.db_type,
 					'db_name' : nextProps.selectedDbDetails.db_name,
 					'db_hostname' : nextProps.selectedDbDetails.db_hostname,
 					'db_username' : nextProps.selectedDbDetails.db_username,
@@ -94,7 +94,7 @@ class AddDbDetails extends Component {
 	checkConnection = () => {
 		const dbdata = this.state.formData;
 		this.props.checkDbConnection(JSON.stringify({
-			'db_type_name' : dbdata.db_type_name,
+			'db_type' : dbdata.db_type,
 			'db_name' : dbdata.db_name,
 			'db_hostname' : dbdata.db_hostname,
 			'db_username' : dbdata.db_username,
@@ -105,7 +105,7 @@ class AddDbDetails extends Component {
 	formValidation = () => {
 		return [
 			this.state.formData.db_connection_name,
-			this.state.formData.db_type_name,
+			this.state.formData.db_type,
 			this.state.formData.db_name,
 			this.state.formData.db_hostname,
 			this.state.formData.db_username,
@@ -127,7 +127,7 @@ class AddDbDetails extends Component {
 							</FormGroup >
 							<FormGroup controlId="formControlsDbType">
 								<Col sm={4}><ControlLabel>Database Type</ControlLabel></Col>
-								<Col sm={8}><FormControl value={this.state.formData.db_type_name} type="text" name="db_type_name" onChange={this.handleInputChange} /></Col>
+								<Col sm={8}><FormControl value={this.state.formData.db_type} type="text" name="db_type" onChange={this.handleInputChange} /></Col>
 							</FormGroup >
 							<FormGroup controlId="formControlsDbName">
 								<Col sm={4}><ControlLabel>Database Name</ControlLabel></Col>
