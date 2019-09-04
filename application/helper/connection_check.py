@@ -30,6 +30,11 @@ def connection_check(db_type_id, db_hostname, db_username, db_password,
         except pymysql.err.InternalError as e:
             if GenericStrings.UNKNOWN_DATABASE_MYSQL in e.args[1]:
                 return APIMessages.UNKNOWN_DATABASE.format(db_name)
+            elif GenericStrings.CANNOT_CONNECT_TO_REMOTE_SERVER_MYSQL in \
+                    e.args[1]:
+                return APIMessages.CANNOT_CONNECT_TO_REMOTE_SERVER_MYSQL
+            else:
+                return e.args[1]
         except pymysql.err.OperationalError as e:
             if GenericStrings.AUTHENTICATION_FAILED_MYSQL in e.args[1]:
                 return APIMessages.AUTHENTICATION_FAILED.format(db_username)
@@ -37,6 +42,8 @@ def connection_check(db_type_id, db_hostname, db_username, db_password,
                 return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
                     SupportedDBType().get_db_name_by_id(db_type_id),
                     db_hostname)
+            else:
+                return e.args[1]
         cursor = cnxn.cursor()
         if cursor:
             return APIMessages.RETURN_SUCCESS
@@ -80,7 +87,8 @@ def connection_check(db_type_id, db_hostname, db_username, db_password,
                 return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
                     SupportedDBType().get_db_name_by_id(db_type_id),
                     db_hostname)
-
+            else:
+                return e
         cursor = cnxn.cursor()
         if cursor:
             return APIMessages.RETURN_SUCCESS
@@ -99,7 +107,8 @@ def connection_check(db_type_id, db_hostname, db_username, db_password,
                 return APIMessages.CANNOT_CONNECT_TO_SERVER.format(
                     SupportedDBType().get_db_name_by_id(db_type_id),
                     db_hostname)
-
+            else:
+                return e
         cursor = cnxn.cursor()
         if cursor:
             return APIMessages.RETURN_SUCCESS
