@@ -21,8 +21,8 @@ def count_check(source_cursor, target_cursor, source_table,
                "des_value": None}
     try:
         qry_lst = []
-        app.logger.debug(qry_lst)
-        if test_query == {}:
+        if test_query == {} or test_query['sourceqry'] == "" or test_query[
+            'targetqry'] == "":
             source_cursor.execute(
                 'SELECT COUNT(1) FROM {}'.format(source_table))
             target_cursor.execute(
@@ -55,6 +55,6 @@ def count_check(source_cursor, target_cursor, source_table,
         execution_result = ExecutionStatus(). \
             get_execution_status_id_by_name('error')
         payload = {"res": execution_result,
-                   "Execution_log": {"error_log": e}}
+                   "Execution_log": {"error_log": str(e)}}
 
     return payload
