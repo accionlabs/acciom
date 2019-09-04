@@ -125,7 +125,7 @@ class CaseLogDetails extends React.Component {
 						<tbody>
 							<tr>
 								<td className="testCaseLogLabel">
-									<label className="testViewDataLabel">{this.props.testCaseName} </label>
+									<label className="testViewDataLabel">{this.props.testCaseDisplayName} </label>
 								</td>
 							</tr>
 							<tr>
@@ -181,7 +181,7 @@ class CaseLogDetails extends React.Component {
 							<tbody>
 								<tr>
 									<td className="testCaseLogLabel">
-										<label className="testViewDataLabel">{this.props.testCaseName} </label>
+										<label className="testViewDataLabel">{this.props.testCaseDisplayName} </label>
 									</td>
 								</tr>
 								<tr>
@@ -220,7 +220,7 @@ class CaseLogDetails extends React.Component {
 							<tbody>
 								<tr>
 									<td className="testCaseLogLabel">
-										<label className="testViewDataLabel">{this.props.testCaseName} </label>
+										<label className="testViewDataLabel">{this.props.testCaseDisplayName} </label>
 									</td>
 								</tr>
 								<tr>
@@ -257,7 +257,7 @@ class CaseLogDetails extends React.Component {
 							<tbody>
 								<tr>
 									<td className="testCaseLogLabel">
-										<label className="testViewDataLabel">{this.props.testCaseName} </label>
+										<label className="testViewDataLabel">{this.props.testCaseDisplayName} </label>
 									</td>
 								</tr>
 								<tr>
@@ -284,7 +284,7 @@ class CaseLogDetails extends React.Component {
 							<tbody>
 								<tr>
 									<td className="testCaseLogLabel">
-										<label className="testViewDataLabel">{this.props.testCaseName} </label>
+										<label className="testViewDataLabel">{this.props.testCaseDisplayName} </label>
 									</td>
 								</tr>
 								<tr>
@@ -353,7 +353,8 @@ class CaseLogDetails extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		testCaseName: state.testSuites.testCaseLog.testCaseName,
+		testCaseName: state.testSuites.testCaseLog.logData.test_case_class_name,
+		testCaseDisplayName: state.testSuites.testCaseLog.logData.test_case_class_display_name,
 		TestCaseLogDetails: state.testSuites.testCaseLog.logData 
 	};
 };

@@ -72,7 +72,7 @@ class TestCaseJob(Resource):
                              project_id=test_suite_obj.project_id)
             # Create a Job
             create_job(user_id, test_suite_obj, is_external)
-            return api_response(True, APIMessages.RETURN_SUCCESS,
+            return api_response(True, APIMessages.JOB_SUBMIT,
                                 STATUS_CREATED)
 
         elif execution_data['case_id_list']:
@@ -99,7 +99,7 @@ class TestCaseJob(Resource):
             # Create a Job
             create_job(user_id, test_suite_obj, is_external,
                        execution_data['case_id_list'])
-            return api_response(True, APIMessages.RETURN_SUCCESS,
+            return api_response(True, APIMessages.JOB_SUBMIT,
                                 STATUS_CREATED
                                 )
         else:
