@@ -25,6 +25,7 @@ class APIMessages:
     DELETED_USER = "Please contact Admin, your account is not active."
     ADD_DATA = "Test suite uploaded successfully"
     RETURN_SUCCESS = "success"
+    JOB_SUBMIT = "Job submitted successfully"
     PARSER_MESSAGE = "field is required"
     CREATE_RESOURCE = "{} is successfully created"
     UPDATE_RESOURCE = "{} is updated successfully"
