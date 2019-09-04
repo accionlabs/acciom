@@ -50,7 +50,7 @@ class APIMessages:
     RESOURCE_EXISTS = "{} already exists"
     NO_PERMISSION = "User does not have required permissions"
     SOURCE = "source"
-    DESTINATION = "destination"
+    DESTINATION = "target"
     EMAIL_NOT_CORRECT = "Your Email id is not correct"
     MAIL_SENT = "Mail sent your Email id"
     PAGE_TO_PASSWORD_RESET = "Page to password reset"
