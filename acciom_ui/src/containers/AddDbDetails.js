@@ -28,7 +28,7 @@ class AddDbDetails extends Component {
 				formData: {
 					...prevState.formData,
 					'db_connection_name' : nextProps.selectedDbDetails.db_connection_name,
-					'db_type' : nextProps.selectedDbDetails.db_type_name,
+					'db_type' : nextProps.selectedDbDetails.db_type,
 					'db_name' : nextProps.selectedDbDetails.db_name,
 					'db_hostname' : nextProps.selectedDbDetails.db_hostname,
 					'db_username' : nextProps.selectedDbDetails.db_username,
