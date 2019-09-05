@@ -284,12 +284,6 @@ class DbDetails(Resource):
                                 APIMessages.DBID_NOT_IN_DB.format(
                                     db_connection_id),
                                 STATUS_BAD_REQUEST)
-        if SupportedDBType().get_db_id_by_name(
-                db_detail['db_type']) is None:
-            return api_response(success=False,
-                                message=APIMessages.DB_TYPE_NAME,
-                                http_status_code=STATUS_BAD_REQUEST,
-                                data={})
         project_id = db_obj.project_id
         project_id_org_id = db.session.query(
             Organization.org_id,
@@ -307,10 +301,17 @@ class DbDetails(Resource):
         check_permission(session.user, ["edit_db_details"],
                          project_id_org_id[0],
                          project_id_org_id[1])
-
         # Updating values present in database with user given values
         data_base_dict = db_obj.__dict__
         data_base_dict.update(db_detail)
+        # check passed db type name is valid or not
+        if db_details["db_type"] != None:
+            if SupportedDBType().get_db_id_by_name(
+                    db_detail['db_type']) is None:
+                return api_response(success=False,
+                                    message=APIMessages.DB_TYPE_NAME,
+                                    http_status_code=STATUS_BAD_REQUEST,
+                                    data={})
         # check whether combination of db_type,db_name,db_username,
         # db_hostname,project_id is already present in db or not
         if db_details["db_type"] != None:
