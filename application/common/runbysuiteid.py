@@ -58,8 +58,6 @@ def job_submit(job_id, user_id):
         if (each_case.execution_status == execution_status_new) and (
                 case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
             'datavalidation')):
-            pass
-
             run_by_case_id_dv.delay(each_case.test_case_log_id,
                                     each_case.test_case_id,
                                     user_id)

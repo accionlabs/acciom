@@ -39,6 +39,7 @@ const initialState = {
 	eachTestCaseDetails: {},
 	showTestCaseEditEnabled: false,
 	refreshTestSuites: false,
+	showTestCaseViewEnabled: false
 };
 
 const testSuites = (state = initialState, action) => {
@@ -181,7 +182,7 @@ const testSuites = (state = initialState, action) => {
 			...state
 		};
 
-	case SHOW_TEST_CASE_EDIT_ENABLED:;
+	case SHOW_TEST_CASE_EDIT_ENABLED:
 		state.showTestCaseEditEnabled = true;
 		return {
 			...state
@@ -190,7 +191,9 @@ const testSuites = (state = initialState, action) => {
 	case SHOW_TEST_CASE_VIEW_ENABLED:
 		state.showTestCaseEditEnabled = false;
 		return {
-			...state
+			...state,
+			
+			
 		};
 
 	case GET_PROJECT_LIST_BY_ORG_ID_SUCCESS:

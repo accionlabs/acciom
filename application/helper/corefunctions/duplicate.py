@@ -1,5 +1,4 @@
 import functools
-
 from flask import current_app as app
 
 from application.common.constants import SupportedDBType, ExecutionStatus
@@ -125,4 +124,4 @@ def duplication(target_cursor, target_table, column_name, test_queries,
         app.logger.error(e)
         return ({"res": ExecutionStatus().get_execution_status_id_by_name(
             'error'),
-            "Execution_log": {"error_log": e}})
+            "Execution_log": {"error_log": str(e)}})

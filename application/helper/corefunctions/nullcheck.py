@@ -98,7 +98,8 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
                 all_results.insert(0, col_list)
             elif not flag:
                 all_results.insert(0, col_list_custom)
-
+            app.logger.debug(all_results[:app.config.get(
+                'NULL_CHECK_MAX_RECORDS')])
             return ({"res": ExecutionStatus().get_execution_status_id_by_name(
                 'fail'),
                 "Execution_log": {"Null_count": int(len(all_results) - 1),
@@ -113,4 +114,4 @@ def null_check(target_cursor, target_table, column, test_queries, db_type):
     except Exception as e:
         app.logger.debug(e)
         return {"res": ExecutionStatus().get_execution_status_id_by_name(
-            'error'), "Execution_log": {"error_log": e}}
+            'error'), "Execution_log": {"error_log": str(e)}}

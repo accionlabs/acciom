@@ -2,12 +2,12 @@
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+
 from flask_restful import Resource, reqparse
-from sqlalchemy.exc import SQLAlchemyError
 
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
-from application.common.response import (STATUS_SERVER_ERROR, STATUS_CREATED,
+from application.common.response import (STATUS_CREATED,
                                          STATUS_OK, STATUS_UNAUTHORIZED)
 from application.common.response import api_response
 from application.common.token import token_required
@@ -15,7 +15,6 @@ from application.helper.permission_check import check_permission
 from application.model.models import (Organization, Job, TestSuite,
                                       Project, UserProjectRole, UserOrgRole,
                                       User)
-from index import db
 
 
 class OrganizationAPI(Resource):
@@ -131,105 +130,98 @@ class DashBoardStatus(Resource):
             Standard API Response with message, data(count of active projects,
             users and jobs) and http status code.
         """
-        try:
-            get_org_parser = reqparse.RequestParser()
-            get_org_parser.add_argument('org_id', required=True,
-                                        type=int,
-                                        location='args')
-            get_org_parser.add_argument('start_time', required=False,
-                                        type=str,
-                                        location='args')
-            get_org_parser.add_argument('end_time', required=False,
-                                        type=str,
-                                        location='args')
-            org_detail = get_org_parser.parse_args()
-            result_dic = {}
+        get_org_parser = reqparse.RequestParser()
+        get_org_parser.add_argument('org_id', required=True,
+                                    type=int,
+                                    location='args')
+        get_org_parser.add_argument('start_time', required=False,
+                                    type=str,
+                                    location='args')
+        get_org_parser.add_argument('end_time', required=False,
+                                    type=str,
+                                    location='args')
+        org_detail = get_org_parser.parse_args()
+        result_dic = {}
 
-            org_obj = Organization.query.filter_by(
-                org_id=org_detail["org_id"]).one()
-            result_dic["org_id"] = org_obj.org_id
-            result_dic["org_name"] = org_obj.org_name
+        org_obj = Organization.query.filter_by(
+            org_id=org_detail["org_id"]).first()
+        if not org_obj:
+            raise ResourceNotAvailableException("org_id")
+        check_permission(user_object=session.user,
+                         list_of_permissions=["view_org"],
+                         org_id=org_detail["org_id"])
+        result_dic["org_id"] = org_obj.org_id
+        result_dic["org_name"] = org_obj.org_name
 
-            project_obj = Project.query.filter_by(
-                org_id=org_detail["org_id"]).all()
-            list_project_id = [each_user_grp.project_id for each_user_grp in
-                               project_obj]
-            active_projects = len(project_obj)
-            result_dic["active_projects"] = active_projects
+        project_obj = Project.query.filter_by(
+            org_id=org_detail["org_id"]).all()
+        list_project_id = [each_user_grp.project_id for each_user_grp in
+                           project_obj]
+        active_projects = len(project_obj)
+        result_dic["active_projects"] = active_projects
 
-            user_project_role_object = UserProjectRole.query.filter(
-                UserProjectRole.org_id == org_detail['org_id']).distinct(
-                UserProjectRole.user_id).all()
+        user_project_role_object = UserProjectRole.query.filter(
+            UserProjectRole.org_id == org_detail['org_id']).distinct(
+            UserProjectRole.user_id).all()
 
-            user_org_role_object = UserOrgRole.query.filter(
-                UserOrgRole.org_id == org_detail['org_id']).distinct(
-                UserOrgRole.user_id).all()
+        user_org_role_object = UserOrgRole.query.filter(
+            UserOrgRole.org_id == org_detail['org_id']).distinct(
+            UserOrgRole.user_id).all()
 
-            list_user_id_in_user_project_role_object = [each_user_grp.user_id
-                                                        for each_user_grp in
-                                                        user_project_role_object]
-            list_user_id_in_user_org_role_object = [each_user_grp.user_id
+        list_user_id_in_user_project_role_object = [each_user_grp.user_id
                                                     for each_user_grp in
-                                                    user_org_role_object]
-            user_id_list = [list_user_id_in_user_project_role_object,
-                            list_user_id_in_user_org_role_object]
-            list_user_id = set().union(*user_id_list)
+                                                    user_project_role_object]
+        list_user_id_in_user_org_role_object = [each_user_grp.user_id
+                                                for each_user_grp in
+                                                user_org_role_object]
+        user_id_list = [list_user_id_in_user_project_role_object,
+                        list_user_id_in_user_org_role_object]
+        list_user_id = set().union(*user_id_list)
 
-            result_dic["active_users"] = len(list_user_id)
+        result_dic["active_users"] = len(list_user_id)
 
-            all_project_test_suite_id_list = []
-            for project_id in list_project_id:
-                test_suite_object = TestSuite.query.filter_by(
-                    project_id=project_id).all()
-                list_test_suite_id = [each_user_grp.test_suite_id for
-                                      each_user_grp
-                                      in
-                                      test_suite_object]
+        all_project_test_suite_id_list = []
+        for project_id in list_project_id:
+            test_suite_object = TestSuite.query.filter_by(
+                project_id=project_id).all()
+            list_test_suite_id = [each_user_grp.test_suite_id for
+                                  each_user_grp
+                                  in
+                                  test_suite_object]
 
-                all_project_test_suite_id_list.extend(list_test_suite_id)
+            all_project_test_suite_id_list.extend(list_test_suite_id)
 
-            if (org_detail["start_time"] and org_detail["end_time"]):
-                datetime_object_start = datetime.strptime(
-                    org_detail["start_time"],
-                    "%Y-%m-%d")
-                datetime_object_end = datetime.strptime(
-                    org_detail["end_time"],
-                    "%Y-%m-%d")
+        if (org_detail["start_time"] and org_detail["end_time"]):
+            datetime_object_start = datetime.strptime(
+                org_detail["start_time"],
+                "%Y-%m-%d")
+            datetime_object_end = datetime.strptime(
+                org_detail["end_time"],
+                "%Y-%m-%d")
 
-                all_jobs = Job.query.filter(
-                    Job.test_suite_id.in_(all_project_test_suite_id_list),
-                    Job.modified_at >= datetime_object_start,
-                    Job.modified_at < datetime_object_end).all()
-                result_dic["active_jobs"] = len(all_jobs)
-                result_dic["start_time"] = str(datetime_object_start)
-                result_dic["end_time"] = str(datetime_object_end)
-            else:
-                current_day = date.today()
-                currentday = datetime.strptime(
-                    str(current_day), "%Y-%m-%d")
-                current_month_first_day = date.today().replace(day=1)
-                datetime_object_start = datetime.strptime(
-                    str(current_month_first_day), "%Y-%m-%d")
-                end_date_obj = datetime.now() + timedelta(days=1)
-                all_jobs = Job.query.filter(
-                    Job.test_suite_id.in_(all_project_test_suite_id_list),
-                    Job.modified_at >= datetime_object_start,
-                    Job.modified_at < end_date_obj).all()
-                result_dic["active_jobs"] = len(all_jobs)
-                result_dic["start_time"] = str(datetime_object_start)
-                result_dic["end_time"] = str(currentday)
+            all_jobs = Job.query.filter(
+                Job.test_suite_id.in_(all_project_test_suite_id_list),
+                Job.modified_at >= datetime_object_start,
+                Job.modified_at < datetime_object_end).all()
+            result_dic["active_jobs"] = len(all_jobs)
+            result_dic["start_time"] = str(datetime_object_start)
+            result_dic["end_time"] = str(datetime_object_end)
+        else:
+            current_day = date.today()
+            currentday = datetime.strptime(
+                str(current_day), "%Y-%m-%d")
+            current_month_first_day = date.today().replace(day=1)
+            datetime_object_start = datetime.strptime(
+                str(current_month_first_day), "%Y-%m-%d")
+            end_date_obj = datetime.now() + timedelta(days=1)
+            all_jobs = Job.query.filter(
+                Job.test_suite_id.in_(all_project_test_suite_id_list),
+                Job.modified_at >= datetime_object_start,
+                Job.modified_at < end_date_obj).all()
+            result_dic["active_jobs"] = len(all_jobs)
+            result_dic["start_time"] = str(datetime_object_start)
+            result_dic["end_time"] = str(currentday)
 
-            return api_response(
-                True, APIMessages.DATA_LOADED, STATUS_CREATED,
-                result_dic)
-
-
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
-        except Exception as e:
-            return api_response(False, APIMessages.INTERNAL_ERROR,
-                                STATUS_SERVER_ERROR,
-                                {'error_log': str(e)})
+        return api_response(
+            True, APIMessages.DATA_LOADED, STATUS_CREATED,
+            result_dic)

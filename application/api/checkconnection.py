@@ -26,7 +26,7 @@ class CheckConnection(Resource):
 
         """
         check_connection_parser = reqparse.RequestParser()
-        check_connection_parser.add_argument('db_type_name', required=True,
+        check_connection_parser.add_argument('db_type', required=True,
                                              type=str,
                                              help=APIMessages.PARSER_MESSAGE)
         check_connection_parser.add_argument('db_hostname', required=True,
@@ -54,13 +54,18 @@ class CheckConnection(Resource):
                                 http_status_code=STATUS_BAD_REQUEST,
                                 data={})
         if SupportedDBType().get_db_id_by_name(
-                db_data['db_type_name']) is None:
+                db_data['db_type']) is None:
             return api_response(success=False,
                                 message=APIMessages.DB_TYPE_NAME,
                                 http_status_code=STATUS_BAD_REQUEST,
                                 data={})
+        # Checking spaces in username and hostname
+        if " " in db_data["db_username"] or " " in db_data["db_hostname"]:
+            return api_response(False, APIMessages.
+                                NO_SPACES,
+                                STATUS_BAD_REQUEST)
         result = connection_check(
-            SupportedDBType().get_db_id_by_name(db_data['db_type_name']),
+            SupportedDBType().get_db_id_by_name(db_data['db_type']),
             db_data['db_hostname'],
             db_data['db_username'],
             db_data['db_password'],
