@@ -284,6 +284,12 @@ class DbDetails(Resource):
                                 APIMessages.DBID_NOT_IN_DB.format(
                                     db_connection_id),
                                 STATUS_BAD_REQUEST)
+        if SupportedDBType().get_db_id_by_name(
+                db_detail['db_type']) is None:
+            return api_response(success=False,
+                                message=APIMessages.DB_TYPE_NAME,
+                                http_status_code=STATUS_BAD_REQUEST,
+                                data={})
         project_id = db_obj.project_id
         project_id_org_id = db.session.query(
             Organization.org_id,
