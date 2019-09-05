@@ -1,15 +1,17 @@
 """File to handle User Management related APIs."""
 from flask_restful import reqparse, Resource
+
+from application.common.common_exception import (ResourceNotAvailableException,
+                                                 GenericBadRequestException)
 from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_OK,
                                          STATUS_CREATED, STATUS_BAD_REQUEST)
 from application.common.token import (token_required)
+from application.common.utils import generate_hash
+from application.helper.permission_check import (check_valid_id_passed_by_user,
+                                                 check_permission)
 from application.model.models import (UserOrgRole, UserProjectRole, User,
                                       Project, Role)
-from application.common.utils import generate_hash
-from application.common.common_exception import (ResourceNotAvailableException,
-                                                 GenericBadRequestException)
-from application.helper.permission_check import check_valid_id_passed_by_user
 
 
 class UserAPI(Resource):
@@ -24,7 +26,6 @@ class UserAPI(Resource):
             session (object): Session Object
 
         Returns: API response with Users in org
-
         """
         parser = reqparse.RequestParser()
         parser.add_argument('org_id',
@@ -33,6 +34,9 @@ class UserAPI(Resource):
         user_api_parser = parser.parse_args()
         check_valid_id_passed_by_user(org_id=user_api_parser['org_id'])
         # TODO: Add a check to verify user management permission
+        check_permission(user_object=session.user,
+                         list_of_permissions=["user_management"],
+                         org_id=user_api_parser["org_id"])
         user_project_role = UserProjectRole.query.filter(
             UserProjectRole.org_id == user_api_parser['org_id']).distinct(
             UserProjectRole.user_id).all()
@@ -115,9 +119,15 @@ class UserRoleAPI(Resource):
             raise GenericBadRequestException(APIMessages.PROJECT_NOT_UNDER_ORG)
         # check if role Ids passed are related to passed org
         passed_roles_list = list()
-        for each_project_and_role in create_role_api_parser['project_role_list']:
-            passed_roles_list.extend(each_project_and_role['allowed_role_list'])
-        passed_roles_list.extend(create_role_api_parser['org_allowed_role_list'])
+        for each_project_and_role in create_role_api_parser[
+            'project_role_list']:
+            passed_roles_list.extend(
+                each_project_and_role['allowed_role_list'])
+        passed_roles_list.extend(
+            create_role_api_parser['org_allowed_role_list'])
+        check_permission(user_object=session.user,
+                         list_of_permissions=["user_management"],
+                         org_id=create_role_api_parser["org_id"])
         # get all roles under the given org
         valid_roles_under_org = Role.query.filter_by(
             org_id=create_role_api_parser['org_id']).all()
@@ -132,7 +142,7 @@ class UserRoleAPI(Resource):
             get_user_record = User.query.filter(
                 User.email.ilike(
                     create_role_api_parser['email_id']),
-                User.is_deleted==False).first()
+                User.is_deleted == False).first()
             if get_user_record:
                 # User record is present with given email id
                 user_id = get_user_record.user_id
@@ -216,13 +226,16 @@ class UserRoleAPI(Resource):
             check_valid_id_passed_by_user(
                 org_id=get_role_api_parser['org_id'],
                 user_id=get_role_api_parser['user_id'])
+        check_permission(user_object=session.user,
+                         list_of_permissions=["user_management"],
+                         org_id=get_role_api_parser["org_id"])
         # Get user Id based on email Id passed
         if get_role_api_parser['email_id'] and \
                 not get_role_api_parser['user_id']:
             check_valid_id_passed_by_user(org_id=get_role_api_parser['org_id'])
             user_record = User.query.filter(
                 User.email.ilike(get_role_api_parser['email_id']),
-                User.is_deleted==False).first()
+                User.is_deleted == False).first()
             if not user_record:
                 raise ResourceNotAvailableException("User")
             user_id = user_record.user_id

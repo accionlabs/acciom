@@ -166,7 +166,7 @@ class TestCaseExecution():
             result = ddl_check(source_db_connector, target_db_connector,
                                table_name['src_table'],
                                table_name['target_table'],
-                               query, src_detail['db_type'],
+                               src_detail['db_type'],
                                target_detail['db_type'])
             return result
         except Exception as e:

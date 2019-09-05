@@ -27,7 +27,6 @@ class RoleAPI(Resource):
             session (object): User session
 
         Returns: Standard API Response with HTTP status code
-
         """
         create_role_parser = reqparse.RequestParser()
         create_role_parser.add_argument(
@@ -53,9 +52,6 @@ class RoleAPI(Resource):
         if not create_role_data['permission_id_list']:
             raise GenericBadRequestException(APIMessages.PERMISSION_LIST)
         # TODO: Check User Management access
-        check_permission(user_object=session.user,
-                         list_of_permissions=["create_project"],
-                         org_id=create_role_data["org_id"])
         permission_id_given_by_user = set(
             create_role_data['permission_id_list'])
         # checking if permissions are valid
@@ -74,6 +70,9 @@ class RoleAPI(Resource):
         if get_role_details:
             raise GenericBadRequestException(
                 APIMessages.RESOURCE_EXISTS.format('Role'))
+        check_permission(user_object=session.user,
+                         list_of_permissions=["user_management"],
+                         org_id=create_role_data["org_id"])
         new_role = Role(
             role_name=create_role_data['role_name'],
             org_id=create_role_data['org_id'],
@@ -102,7 +101,6 @@ class RoleAPI(Resource):
             session (object): User session
 
         Returns: Standard API Response with HTTP status code
-
         """
         get_role_parser = reqparse.RequestParser()
         get_role_parser.add_argument(
@@ -124,14 +122,14 @@ class RoleAPI(Resource):
             #  permissions
             check_valid_id_passed_by_user(org_id=get_role_data['org_id'])
             check_permission(user_object=session.user,
-                             list_of_permissions=["view_org"],
+                             list_of_permissions=["user_management"],
                              org_id=get_role_data["org_id"])
             payload = retrieve_roles_under_org(get_role_data['org_id'])
         if get_role_data['project_id'] and not get_role_data['org_id']:
             check_valid_id_passed_by_user(
                 project_id=get_role_data['project_id'])
             check_permission(user_object=session.user,
-                             list_of_permissions=["view_project"],
+                             list_of_permissions=["user_management"],
                              project_id=get_role_data["project_id"])
             get_project = Project.query.filter_by(
                 project_id=get_role_data['project_id'],
@@ -151,7 +149,6 @@ def retrieve_roles_under_org(org_id):
         org_id (int): Id of the organization
 
     Returns: list of roles with Id, Name and permission names
-
     """
     roles_to_send = []
     get_role = Role.query.filter_by(org_id=org_id).all()

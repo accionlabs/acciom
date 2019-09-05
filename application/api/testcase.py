@@ -1,7 +1,9 @@
 import ast
+
 from flask import request
 from flask_restful import Resource, reqparse
 
+from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import (APIMessages, ExecutionStatus,
                                           SupportedTestClass, SupportedDBType,
                                           TestClass)

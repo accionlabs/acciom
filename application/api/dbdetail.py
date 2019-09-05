@@ -110,6 +110,12 @@ class DbDetails(Resource):
                 return api_response(False, APIMessages.
                                     NO_SPACES,
                                     STATUS_BAD_REQUEST)
+            if SupportedDBType().get_db_id_by_name(
+                    db_detail['db_type']) is None:
+                return api_response(success=False,
+                                    message=APIMessages.DB_TYPE_NAME,
+                                    http_status_code=STATUS_BAD_REQUEST,
+                                    data={})
             db_password = encrypt(db_detail["db_password"])
             new_db = DbConnection(project_id=project_id,
                                   owner_id=session.user_id,
@@ -179,7 +185,7 @@ class DbDetails(Resource):
                 {'project_id': db_obj.project_id,
                  'db_connection_name': db_obj.db_connection_name,
                  'db_connection_id': db_obj.db_connection_id,
-                 'db_type_name': SupportedDBType().get_db_name_by_id(
+                 'db_type': SupportedDBType().get_db_name_by_id(
                      db_obj.db_type),
                  'db_type_id': db_obj.db_type,
                  "db_name": db_obj.db_name,
@@ -208,7 +214,7 @@ class DbDetails(Resource):
                     'project_name': project_name_obj.project_name,
                     'db_connection_name': projectid.db_connection_name,
                     'db_connection_id': projectid.db_connection_id,
-                    'db_type_name':
+                    'db_type':
                         SupportedDBType().get_db_name_by_id(
                             projectid.db_type),
                     'db_type_id': projectid.db_type,
@@ -295,10 +301,17 @@ class DbDetails(Resource):
         check_permission(session.user, ["edit_db_details"],
                          project_id_org_id[0],
                          project_id_org_id[1])
-
         # Updating values present in database with user given values
         data_base_dict = db_obj.__dict__
         data_base_dict.update(db_detail)
+        # check passed db type name is valid or not
+        if db_details["db_type"] != None:
+            if SupportedDBType().get_db_id_by_name(
+                    db_detail['db_type']) is None:
+                return api_response(success=False,
+                                    message=APIMessages.DB_TYPE_NAME,
+                                    http_status_code=STATUS_BAD_REQUEST,
+                                    data={})
         # check whether combination of db_type,db_name,db_username,
         # db_hostname,project_id is already present in db or not
         if db_details["db_type"] != None:
@@ -433,7 +446,7 @@ class DbDetails(Resource):
         return api_response(True,
                             APIMessages.DB_DELETED.format(
                                 data_base_id),
-                            STATUS_BAD_REQUEST)
+                            STATUS_CREATED)
 
 
 class SupportedDBTypes(Resource):
