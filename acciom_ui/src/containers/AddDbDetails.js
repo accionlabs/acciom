@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { FormGroup, ControlLabel, FormControl, Button, Panel, Form, Col} from 'react-bootstrap';
 
 import { addDatabaseDetails, getDBDetailsById, updateDBDetails, checkDbConnection, redirectToViewDbPageComplete} from '../actions/dbDetailsActions';
@@ -16,17 +17,18 @@ class AddDbDetails extends Component {
 		if (dbTypeId)  {
 			this.setState({isEditMode:true});
 			this.props.getDBDetailsById(dbTypeId);
+		
 		}
 	}
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
-		if (prevState.loading && !prevState.selectedDbDetails && nextProps.selectedDbDetails) {
+		if (prevState.isEditMode && prevState.loading && !prevState.selectedDbDetails && nextProps.selectedDbDetails) {
 			return {
 				...prevState,
 				formData: {
 					...prevState.formData,
 					'db_connection_name' : nextProps.selectedDbDetails.db_connection_name,
-					'db_type' : nextProps.selectedDbDetails.db_type,
+					'db_type' : nextProps.selectedDbDetails.db_type_name,
 					'db_name' : nextProps.selectedDbDetails.db_name,
 					'db_hostname' : nextProps.selectedDbDetails.db_hostname,
 					'db_username' : nextProps.selectedDbDetails.db_username,
@@ -147,6 +149,9 @@ class AddDbDetails extends Component {
 							</FormGroup >
 
 							<FormGroup className="formFooter">
+								<Link to={'/view_db_details'} className="formFooterBackbtn">
+									<Button bsStyle="primary">Back</Button>
+								</Link>
 								<Button type="button" bsStyle="primary" onClick={(e) => {this.checkConnection()}} disabled={inValid} >Test Connection</Button>
 								<Button type="submit" bsStyle="primary" disabled={inValid} >Submit</Button>
 							</FormGroup>

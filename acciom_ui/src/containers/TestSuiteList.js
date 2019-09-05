@@ -148,6 +148,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 
 	const viewTestCase = (e, caseID) => {
 		getTestCaseByTestCaseId(caseID);
+		getAllConnections(project_id);
 		e.stopPropagation();
 	};
 
