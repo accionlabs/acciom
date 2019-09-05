@@ -104,6 +104,8 @@ const useStyles = makeStyles(theme => ({
 	caseLog: {cursor: 'pointer'},
 }));
 
+let refreshTimer;
+
 function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConnections, getTestCaseDetailBySuiteId, getTestCaseLogById, 
 	getTestCaseByTestCaseId, executeTestBySuiteId, executeTestByCaseId, showConnectionsDialog, getEachTestCaseDetailByCaseID,
 	eachTestCaseDetails }) {
@@ -122,12 +124,17 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 		// const project_Id = projectId.appData.currentProject.project_id; // remove this hardcoded assignment
 		// console.log("project id==> ", projectId)
 		getAllConnections(project_id);
+		return function cleanup() {
+			clearInterval(refreshTimer);
+		};
 	}, []);
 
 	const handleChange = panel => (event, isExpanded) => {
 		setExpanded(isExpanded ? panel : false);
+		clearInterval(refreshTimer);
 		if (isExpanded) {
 			getTestCaseDetailBySuiteId(panel);
+			refreshTimer = setInterval(() => { getTestCaseDetailBySuiteId(panel) }, 5000);
 		}
 	};
 	const handleTestCaseChange = (suiteID, caseID) => (e, isExpanded) => {
