@@ -60,9 +60,7 @@ class CheckConnection(Resource):
                                 http_status_code=STATUS_BAD_REQUEST,
                                 data={})
         # Checking spaces in username and hostname
-        spacecount_dbusername = db_data["db_username"].find(" ")
-        spacecount_dbhostanme = db_data["db_hostname"].find(" ")
-        if spacecount_dbusername > -1 or spacecount_dbhostanme > -1:
+        if " " in db_data["db_username"] or " " in db_data["db_hostname"]:
             return api_response(False, APIMessages.
                                 NO_SPACES,
                                 STATUS_BAD_REQUEST)
