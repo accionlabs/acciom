@@ -179,7 +179,7 @@ class DbDetails(Resource):
                 {'project_id': db_obj.project_id,
                  'db_connection_name': db_obj.db_connection_name,
                  'db_connection_id': db_obj.db_connection_id,
-                 'db_type_name': SupportedDBType().get_db_name_by_id(
+                 'db_type': SupportedDBType().get_db_name_by_id(
                      db_obj.db_type),
                  'db_type_id': db_obj.db_type,
                  "db_name": db_obj.db_name,
@@ -208,7 +208,7 @@ class DbDetails(Resource):
                     'project_name': project_name_obj.project_name,
                     'db_connection_name': projectid.db_connection_name,
                     'db_connection_id': projectid.db_connection_id,
-                    'db_type_name':
+                    'db_type':
                         SupportedDBType().get_db_name_by_id(
                             projectid.db_type),
                     'db_type_id': projectid.db_type,
