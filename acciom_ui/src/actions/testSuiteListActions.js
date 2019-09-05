@@ -65,7 +65,7 @@ export const showTestCaseEditEnabled = () => ({
 });
 
 export const showTestCaseViewEnabled = () => ({		
-	type: SHOW_TEST_CASE_VIEW_ENABLED		
+	type: SHOW_TEST_CASE_VIEW_ENABLED	
 });
 
 export const saveManageConnectionDetails = data => ({

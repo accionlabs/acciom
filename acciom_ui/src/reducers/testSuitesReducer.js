@@ -193,6 +193,7 @@ const testSuites = (state = initialState, action) => {
 		return {
 			...state,
 			
+			
 		};
 
 	case GET_PROJECT_LIST_BY_ORG_ID_SUCCESS:
