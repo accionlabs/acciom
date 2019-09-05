@@ -110,6 +110,12 @@ class DbDetails(Resource):
                 return api_response(False, APIMessages.
                                     NO_SPACES,
                                     STATUS_BAD_REQUEST)
+            if SupportedDBType().get_db_id_by_name(
+                    db_detail['db_type']) is None:
+                return api_response(success=False,
+                                    message=APIMessages.DB_TYPE_NAME,
+                                    http_status_code=STATUS_BAD_REQUEST,
+                                    data={})
             db_password = encrypt(db_detail["db_password"])
             new_db = DbConnection(project_id=project_id,
                                   owner_id=session.user_id,
