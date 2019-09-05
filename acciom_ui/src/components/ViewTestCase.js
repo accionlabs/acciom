@@ -66,6 +66,7 @@ class TestCaseDetails extends React.Component {
 
 	handleTestCaseViewMode = () => {
 		this.props.showTestCaseViewEnabled();
+	
 	};
 
 	getSnapshotBeforeUpdate = (prevProps, prevState) => {
