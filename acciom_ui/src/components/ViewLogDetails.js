@@ -240,7 +240,7 @@ class CaseLogDetails extends React.Component {
 										<tr>
 											{log.map(details => (
 												<td className="testCaseLogLabel" nowrap>
-													<label className="testViewDataLabel">{details}</label>
+													<label className="testViewDataLabel">{details === null ? 'null' : details}</label>
 												</td>
 											))}	
 										</tr>
