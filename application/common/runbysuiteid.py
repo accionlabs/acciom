@@ -1,13 +1,7 @@
 from application.common.constants import ExecutionStatus
-from application.common.constants import SupportedTestClass
-from application.helper.runnerclass import (save_job_status, save_case_log,
-                                            run_by_case_id_other,
-                                            run_by_case_id_dv)
-from application.model.models import TestCase, TestCaseLog
-from flask_celery import make_celery
-from index import app
-
-celery = make_celery(app)
+from application.helper.runnerclass import (save_job_status, save_case_log)
+from application.model.models import TestCase
+from flask_celery import job_submit
 
 
 def create_job(user_id, suite_obj, is_external, case_id_list=None):
@@ -33,38 +27,6 @@ def create_job(user_id, suite_obj, is_external, case_id_list=None):
         save_case_log(case_obj.test_case_id, execution_status_new, job_id)
     job_submit.delay(job_id, user_id)  # submit the job
     return True
-
-
-@celery.task(name='job_submit', queue="master_Q")
-def job_submit(job_id, user_id):
-    """
-    Method will submit each case associated with the job id in the celery queue
-    parralely.
-    Args:
-        job_id (Int): Job id of the job passed
-        user_id (int): User id associated with the executor
-
-    Returns: Status of the jobs
-
-    """
-
-    execution_status_new = ExecutionStatus().get_execution_status_id_by_name(
-        'new')
-    test_case_log_obj = TestCaseLog.query.filter_by(job_id=job_id).all()
-    # # change job status ->
-    for each_case in test_case_log_obj:
-        case_obj = each_case.test_case_id
-        case = TestCase.query.filter_by(test_case_id=case_obj).first()
-        if (each_case.execution_status == execution_status_new) and (
-                case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
-            'datavalidation')):
-            run_by_case_id_dv.delay(each_case.test_case_log_id,
-                                    each_case.test_case_id,
-                                    user_id)
-        else:
-            run_by_case_id_other.delay(each_case.test_case_log_id,
-                                       each_case.test_case_id,
-                                       user_id)
 
     # Wait for all sub-jobs to be completed
     # change job status -> pass/failed
