@@ -147,6 +147,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 	};
 
 	const handleManageConnection = (e, suiteID) => {
+		clearInterval(refreshTimer);
 		setTestSuiteIdForManageConnections(suiteID);
 		getTestCaseDetailBySuiteId(suiteID, true);
 		getAllConnections(project_id);
