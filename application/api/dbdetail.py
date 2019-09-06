@@ -64,8 +64,8 @@ class DbDetails(Resource):
         if not project_obj:
             return api_response(False, APIMessages.PROJECT_NOT_EXIST,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["add_db_details"],
-                         project_obj.org_id, db_detail["project_id"])
+        for key, value in dict(db_detail).items():
+            db_detail[key] = str(value).strip()
         list_of_args = [arg.name for arg in post_db_detail_parser.args]
         request_data_validation = validate_empty_fields(db_detail,
                                                         list_of_args)
@@ -74,9 +74,8 @@ class DbDetails(Resource):
                                 message=request_data_validation,
                                 http_status_code=STATUS_BAD_REQUEST,
                                 data={})
-        del db_detail["project_id"]
-        for key, value in dict(db_detail).items():
-            db_detail[key] = value.strip()
+        check_permission(session.user, ["add_db_details"],
+                         project_obj.org_id, db_detail["project_id"])
         # check whether combination of db_type,db_name,db_username,
         # db_hostname,project_id is already present in db or not
         temp_connection = DbConnection.query.filter(
