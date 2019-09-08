@@ -1,6 +1,57 @@
 import React, { Component } from 'react';
 import Chart from 'react-apexcharts';
 
+
+
+class AreaChart extends Component {
+     
+	constructor(props) {
+	  super(props);
+
+	  this.state = {
+		options: {
+		  dataLabels: {
+			enabled: false
+		  },
+		  stroke: {
+			curve: 'smooth'
+		  },
+		colors: ['#49a9ea','#36CAAB','#B370CF','#E95E4F','#34495E'],
+
+		  xaxis: {
+			type: 'datetime',
+			categories: ["2018-09-19T00:00:00", "2018-09-19T01:30:00", "2018-09-19T02:30:00",
+			  "2018-09-19T03:30:00", "2018-09-19T04:30:00", "2018-09-19T05:30:00",
+			  "2018-09-19T06:30:00"
+			],
+		  },
+		  tooltip: {
+			x: {
+			  format: 'dd/MM/yy HH:mm'
+			},
+		  }
+		},
+		series: [{
+		  name: 'series1',
+		  data: [31, 40, 28, 51, 42, 109, 100]
+		}, {
+		  name: 'series2',
+		  data: [11, 32, 45, 32, 34, 52, 41]
+		}],
+	  }
+	}
+
+	render() {
+	  return (
+		
+
+		<div id="chart">
+		  <Chart options={this.state.options} series={this.state.series} type="area" height="350" />
+		</div>
+);
+	}
+  }
+
 function BarChart() {
 
 	const options = {
@@ -19,7 +70,7 @@ function BarChart() {
 				show: false
 			}
 		},
-		colors: ['#77B6EA', '#545454'],
+		colors: ['#49a9ea','#36CAAB','#B370CF','#FFFFFF','#34495E'],
 		dataLabels: {
 			enabled: true,
 		},
@@ -55,9 +106,9 @@ function BarChart() {
 
 	return (
 		<div className="bar">
-			<Chart options={options} series={options.series}  width="1000" height="200px"/>
+			<Chart options={options} series={options.series} height="200px"/>
 		</div>
 	);
 }
 
-export default BarChart;
+export default AreaChart;
