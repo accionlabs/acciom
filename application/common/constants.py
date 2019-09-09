@@ -104,7 +104,8 @@ class APIMessages:
     USERNAME_CANNOT_EMPTY = "Usename cannot be empty"
     TEST_CLASS_NAME = "Test Class Name is not valid. Supported Testclass are" \
                       " are CountCheck, NullCheck, DuplicateCheck, DDLCheck, Datavalidation"
-
+    WRONG_DB_CONNECTION = "the given DB conncetion does not belong to the project"
+    WRONG_QUERY_ID = "the given query id does not exist in the Database"
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
