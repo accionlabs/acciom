@@ -104,6 +104,8 @@ const useStyles = makeStyles(theme => ({
 	caseLog: {cursor: 'pointer'},
 }));
 
+let refreshTimer;
+
 function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConnections, getTestCaseDetailBySuiteId, getTestCaseLogById, 
 	getTestCaseByTestCaseId, executeTestBySuiteId, executeTestByCaseId, showConnectionsDialog, getEachTestCaseDetailByCaseID,
 	eachTestCaseDetails }) {
@@ -122,23 +124,30 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 		// const project_Id = projectId.appData.currentProject.project_id; // remove this hardcoded assignment
 		// console.log("project id==> ", projectId)
 		getAllConnections(project_id);
+		return function cleanup() {
+			clearInterval(refreshTimer);
+		};
 	}, []);
 
 	const handleChange = panel => (event, isExpanded) => {
 		setExpanded(isExpanded ? panel : false);
+		clearInterval(refreshTimer);
 		if (isExpanded) {
 			getTestCaseDetailBySuiteId(panel);
+			refreshTimer = setInterval(() => { getTestCaseDetailBySuiteId(panel) }, 5000);
 		}
 	};
-	const handleTestCaseChange = caseID => (e, isExpanded) => {
+	const handleTestCaseChange = (suiteID, caseID) => (e, isExpanded) => {
 		setTestCaseExpanded(isExpanded ? caseID : false);
 		if (isExpanded) {
+			getTestCaseDetailBySuiteId(suiteID);
 			getEachTestCaseDetailByCaseID(caseID);
 		}
 		e.stopPropagation();
 	};
 
 	const handleManageConnection = (e, suiteID) => {
+		clearInterval(refreshTimer);
 		setTestSuiteIdForManageConnections(suiteID);
 		getTestCaseDetailBySuiteId(suiteID, true);
 		getAllConnections(project_id);
@@ -147,6 +156,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 
 	const viewTestCase = (e, caseID) => {
 		getTestCaseByTestCaseId(caseID);
+		getAllConnections(project_id);
 		e.stopPropagation();
 	};
 
@@ -182,9 +192,10 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 		getTestCaseDetailBySuiteId(suiteID);
 	};
 
-	const runTestCase = (e, caseID) => {
+	const runTestCase = (e, suiteID,caseID) => {
 		e.stopPropagation();
 		executeTestByCaseId([caseID]);
+		getTestCaseDetailBySuiteId(suiteID);
 		getEachTestCaseDetailByCaseID(caseID);
 	};
 
@@ -200,13 +211,13 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 		if (!allCases[testSuite.test_suite_id]) return null;
 
 		return allCases[testSuite.test_suite_id].map(testCaseList => (
-			<ExpansionPanel key={testCaseList.case_id} expanded={testCaseExpanded === testCaseList.case_id} onChange={handleTestCaseChange(testCaseList.case_id)}>
+			<ExpansionPanel key={testCaseList.case_id} expanded={testCaseExpanded === testCaseList.case_id} onChange={handleTestCaseChange(testSuite.test_suite_id, testCaseList.case_id)}>
 				<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
 					<Typography className={classes.subHeading}>{testCaseList.case_name}</Typography>
 					<Typography className={classes.viewConnection}><span  onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={e => viewTestCase(e, testCaseList.case_id)}>View</span></Typography>
 					<Typography className={classes.status}>Status&nbsp;&nbsp;&nbsp;{renderStatusIcon(testCaseList.test_status)}</Typography>
 					<Typography className={renderTestName(testCaseList.test_status)}>{testCaseList.test_class_name}</Typography>
-					<Typography><i className="far fa-play-circle statusPlayIcon" onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={(e) => runTestCase(e, testCaseList.case_id)} aria-hidden="true"></i></Typography>
+					<Typography><i className="far fa-play-circle statusPlayIcon" onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={(e) => runTestCase(e, testSuite.test_suite_id, testCaseList.case_id)} aria-hidden="true"></i></Typography>
 				</ExpansionPanelSummary>
 
 				<ExpansionPanelDetails>

@@ -65,7 +65,7 @@ export const showTestCaseEditEnabled = () => ({
 });
 
 export const showTestCaseViewEnabled = () => ({		
-	type: SHOW_TEST_CASE_VIEW_ENABLED		
+	type: SHOW_TEST_CASE_VIEW_ENABLED	
 });
 
 export const saveManageConnectionDetails = data => ({
@@ -100,7 +100,7 @@ export const executeTestBySuiteId = (suiteID) => {
 			body: JSON.stringify({'suite_id': suiteID})
 		})
 	};
-	getTestCaseDetailBySuiteId(suiteID);
+	//getTestCaseDetailBySuiteId(suiteID);
 };
 
 export const executeTestByCaseId = (caseIdList) => {
@@ -116,7 +116,8 @@ export const executeTestByCaseId = (caseIdList) => {
 			body: JSON.stringify({'case_id_list': caseIdList})
 		})
 	};
-     getEachTestCaseDetailByCaseID(caseIdList);
+	 
+    // getEachTestCaseDetailByCaseID(caseIdList);
 };
 
 export const getAllConnections = (projectId) => {

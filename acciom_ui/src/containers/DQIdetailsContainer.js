@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import GaugeChart from '../components/GaugeChart';
-import BarChart from '../components/BarChart';
+import AreaChart from '../components/BarChart';
 import { getDQIprojectDetails } from '../actions/dashboardActions'; 
 
 class DQIDetailsContainer extends Component {
@@ -12,7 +12,7 @@ class DQIDetailsContainer extends Component {
 			['#49a9ea'],
 			['#36CAAB'],
 			['#B370CF'],
-			['#FFFFFF'],
+			['#E95E4F'],
 			['#34495E']
 		];
 
@@ -33,14 +33,17 @@ class DQIDetailsContainer extends Component {
 		}
 
 		return (
-			<div className="donut DQIprojectChartContainer">
+			<>
+			<div className="donut DQIprojectChartContainer" style={{marginBottom:"80px"}}>
 				<div className="row detailsChart">
 					{getDPIdetailsChart()}
 				</div>
-				<div className="row">
-					<BarChart />
-				</div>
+				{/* <div className="row"> */}
+					
+				{/* </div> */}
 			</div>
+			<AreaChart />
+			</>
 		);
 	}
 }

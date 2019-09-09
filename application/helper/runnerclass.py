@@ -3,10 +3,6 @@ from application.common.constants import ExecutionStatus, SupportedTestClass, \
 from application.common.dqi_calculation import calculate_dqi
 from application.helper.runnerclasshelpers import (TestCaseExecution)
 from application.model.models import (TestCaseLog, TestCase, Job)
-from flask_celery import make_celery
-from index import app
-
-celery = make_celery(app)
 
 
 def save_test_status(test_case_id, status):
@@ -51,17 +47,6 @@ def save_case_log(test_case_id, execution_status,
     temp_log.execution_log = None
     temp_log.save_to_db()
     return temp_log
-
-
-@celery.task(name='runnerclass.run_by_case_id_dv', queue="Dv_Q")
-def run_by_case_id_dv(case_log_id, test_case_id, user_id):
-    run_by_case_id(case_log_id, test_case_id, user_id)
-
-
-@celery.task(name='run_by_case_id_other', queue="other_Q")
-def run_by_case_id_other(case_log_id, test_case_id, user_id):
-    run_by_case_id(case_log_id, test_case_id, user_id)
-    return "others"
 
 
 def run_by_case_id(case_log_id, test_case_id, user_id):

@@ -70,7 +70,7 @@ class ViewDbDetails extends Component {
 				<tr key={index}>
 					<td>{item.project_name}</td>
 					<td>{item.db_connection_name}</td>
-					<td>{item.db_type_name}</td>
+					<td>{item.db_type}</td>
 					<td>{item.db_name}</td>
 					<td>{item.db_hostname}</td>
 					<td>{item.db_username}</td>
