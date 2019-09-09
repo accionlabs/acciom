@@ -18,6 +18,8 @@ class AddDbDetails extends Component {
 			this.setState({isEditMode:true});
 			this.props.getDBDetailsById(dbTypeId);
 		
+		}else{
+			this.setState({isEditMode:false});			
 		}
 	}
 
@@ -34,7 +36,7 @@ class AddDbDetails extends Component {
 					'db_username' : nextProps.selectedDbDetails.db_username,
 					'db_password' : nextProps.selectedDbDetails.db_password
 				},
-				loading : false
+				loading : true
 			};
 		} else if (nextProps.redirectToViewDBPage) {
 			nextProps.redirectToViewDbPageComplete();
