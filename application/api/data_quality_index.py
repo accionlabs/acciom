@@ -8,7 +8,8 @@ from sqlalchemy import Date
 from statistics import mean
 
 from application.common.constants import (APIMessages, SupportedTestClass,
-                                          TestTypeDisplay, TestClass)
+                                          TestTypeDisplay, TestClass,
+                                          DQIClassNameMapping)
 from application.common.response import (api_response, STATUS_OK)
 from application.common.token import token_required
 from application.helper.permission_check import check_permission
@@ -379,18 +380,12 @@ def get_project_dqi(project_id, start_date=None, end_date=None):
     if not isinstance(start_date, str) and not isinstance(end_date, str):
         start_date = start_date.strftime("%Y-%m-%d")
         end_date = end_date.strftime("%Y-%m-%d")
-    dqi_class_name_mapping = \
-        {TestClass.COUNT_CHECK: TestTypeDisplay.COMPLETENESS,
-         TestClass.NULL_CHECK: TestTypeDisplay.NULLS,
-         TestClass.DUPLICATE_CHECK: TestTypeDisplay.DUPLICATES,
-         TestClass.DDL_CHECK: TestTypeDisplay.CONSISTENCY,
-         TestClass.DATA_VALIDATION: TestTypeDisplay.CORRECTNESS
-                        }
+
     project_dql_average = None
     dqi_dict = dict()
     for class_key, class_values in list_of_dqi_values_for_each_class.items():
-        dqi_dict[dqi_class_name_mapping[class_key]] = round(mean(class_values),
-                                                            4)
+        dqi_dict[DQIClassNameMapping.dqi_class_name_mapping[class_key]] = \
+            round(mean(class_values), 4)
     if dqi_dict:
         project_dql_average = round(mean(dqi_dict.values()), 4)
     return dqi_dict, project_dql_average, start_date, end_date
