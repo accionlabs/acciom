@@ -11,7 +11,8 @@ from application.common.token import token_required
 from application.common.utils import validate_empty_fields
 from application.helper.encrypt import encrypt
 from application.helper.permission_check import check_permission
-from application.model.models import (DbConnection, Project, Organization)
+from application.model.models import (DbConnection, Project, Organization,
+                                      TestCase)
 from index import db
 
 
@@ -440,6 +441,18 @@ class DbDetails(Resource):
         check_permission(session.user, ["delete_db_details"],
                          project_id_org_id[0],
                          project_id_org_id[1])
+        # check whether passed db conection id is associated with any testcases
+        data_base_ids = db.session.query(
+            TestCase.test_case_detail["src_db_id"],
+            TestCase.test_case_detail["target_db_id"]).filter(
+            TestCase.is_deleted == False).all()
+        idset = set()
+        for tupleid in data_base_ids:
+            for id in tupleid:
+                idset.add(id)
+        if data_base_id in idset:
+            return api_response(True, APIMessages.DELETE_DB_WARNING,
+                                STATUS_CREATED)
         del_obj.is_deleted = True
         del_obj.save_to_db()
         return api_response(True,

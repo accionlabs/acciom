@@ -104,6 +104,7 @@ class APIMessages:
     USERNAME_CANNOT_EMPTY = "Usename cannot be empty"
     TEST_CLASS_NAME = "Test Class Name is not valid. Supported Testclass are" \
                       " are CountCheck, NullCheck, DuplicateCheck, DDLCheck, Datavalidation"
+    DELETE_DB_WARNING = "DB connection id is associate with existing test case,Are you sure you want to delete?"
 
 
 class GenericStrings:
