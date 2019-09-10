@@ -155,6 +155,18 @@ class TestTypeDisplay:
     CORRECTNESS = "Correcteness"
 
 
+class DQIClassNameMapping:
+    """Class to map display value and db value of jobs."""
+
+    dqi_class_name_mapping = \
+        {TestClass.COUNT_CHECK: TestTypeDisplay.COMPLETENESS,
+         TestClass.NULL_CHECK: TestTypeDisplay.NULLS,
+         TestClass.DUPLICATE_CHECK: TestTypeDisplay.DUPLICATES,
+         TestClass.DDL_CHECK: TestTypeDisplay.CONSISTENCY,
+         TestClass.DATA_VALIDATION: TestTypeDisplay.CORRECTNESS
+         }
+
+
 class SupportedDBType:
     """Class to return Name and Id of the DataBase."""
 
