@@ -105,6 +105,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 let refreshTimer;
+let refreshTimerLogs;
 
 function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConnections, getTestCaseDetailBySuiteId, getTestCaseLogById, 
 	getTestCaseByTestCaseId, executeTestBySuiteId, executeTestByCaseId, showConnectionsDialog, getEachTestCaseDetailByCaseID,
@@ -126,12 +127,14 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 		getAllConnections(project_id);
 		return function cleanup() {
 			clearInterval(refreshTimer);
+			clearInterval(refreshTimerLogs);
 		};
 	}, []);
 
 	const handleChange = panel => (event, isExpanded) => {
 		setExpanded(isExpanded ? panel : false);
 		clearInterval(refreshTimer);
+		clearInterval(refreshTimerLogs);
 		if (isExpanded) {
 			getTestCaseDetailBySuiteId(panel);
 			refreshTimer = setInterval(() => { getTestCaseDetailBySuiteId(panel) }, 5000);
@@ -139,9 +142,12 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 	};
 	const handleTestCaseChange = (suiteID, caseID) => (e, isExpanded) => {
 		setTestCaseExpanded(isExpanded ? caseID : false);
+		clearInterval(refreshTimerLogs);
 		if (isExpanded) {
+			console.log('Innn');
 			getTestCaseDetailBySuiteId(suiteID);
 			getEachTestCaseDetailByCaseID(caseID);
+			refreshTimerLogs = setInterval(() => { getEachTestCaseDetailByCaseID(caseID) }, 5000);
 		}
 		e.stopPropagation();
 	};
