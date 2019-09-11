@@ -365,4 +365,25 @@ def execute_query(query_obj, export):
         query_obj.query_result = result
         query_obj.save_to_db()
 
+def datavalidation_result_format_change(log):
+    """
+    Change the format of result log ex:[{"id":1,"name":"hj","quantity":2}]
+
+    Args:
+        log: log of datavalidation
+
+    Returns:
+        Changed format of log ex:[["id","name","quantity"],[1,"hj",2]]
+    """
+    result = []
+    keys = []
+    for key, value in log[0].items():
+        keys.append(key)
+    result.append(keys)
+    for dic in log:
+        values = []
+        for key, value in dic.items():
+            values.append(value)
+        result.append(values)
+    return result
 
