@@ -121,7 +121,7 @@ class AddDbDetails extends Component {
  		return (
 			<div className="addDbDetailsForm">
 				<Panel>
-					<Panel.Heading>Add DB Details</Panel.Heading>
+					<Panel.Heading className="editpanelhead">Add DB Details</Panel.Heading>
 					<Panel.Body>
 						<Form noValidate onSubmit={this.formSubmit} horizontal>
 							<FormGroup controlId="formControlsConnName">

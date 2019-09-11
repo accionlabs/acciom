@@ -177,6 +177,11 @@ body,html{
     font-weight: bold;
 }
 
+.editpanelhead{
+    background-color: #BD4951 !important;
+    color: #fff !important;
+}
+
 .popboxheader{
     border-bottom: none;
 }
