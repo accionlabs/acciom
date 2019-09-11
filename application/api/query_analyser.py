@@ -2,14 +2,13 @@ from flask import current_app as app
 
 from flask_restful import Resource, reqparse
 
-from application.common.constants import (APIMessages, ExecutionStatus,
-                                          SupportedTestClass, SupportedDBType)
+from application.common.constants import (APIMessages, ExecutionStatus)
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
-                                         STATUS_BAD_REQUEST,STATUS_OK)
+                                         STATUS_OK)
 from application.common.response import api_response
 
 from application.common.token import (token_required)
-from application.common.runbysuiteid import create_job
+from flask_celery import run_quer_analyser_by_id
 
 from application.model.models import (DbConnection, User, Project, Query)
 from application.helper.permission_check import check_permission
@@ -44,10 +43,8 @@ class QueryAnalyser(Resource):
             query_parser.add_argument('query', type=str, required=True,
                                 help=APIMessages.PARSER_MESSAGE,)
             query_data = query_parser.parse_args()
-            print("########")
             project_obj = Project.query.filter_by(
                 project_id=query_data['project_id']).first()
-            print(project_obj.project_id)
             if not project_obj:
                 raise ResourceNotAvailableException(
                     APIMessages.PROJECT_NOT_EXIST)
@@ -57,20 +54,19 @@ class QueryAnalyser(Resource):
             if db_connection:
                 user_obj = User.query.filter_by(user_id=1,
                                                 is_deleted=False).first()
-                check_permission(user_obj, list_of_permissions=["execute"],
-                                 org_id=project_obj.org_id,
-                                 project_id=project_obj.project_id)
+
+                # check_permission(user_obj, list_of_permissions=["execute"],
+                #                  org_id=project_obj.org_id,
+                #                  project_id=project_obj.project_id)
+
                 query_obj = Query(project_id=project_obj.project_id,
                                   query_string=query_data['query'],
                                   db_connection_id=query_data['connection_id'],
                                   owner_id=user_id,
                                   execution_status=ExecutionStatus().
                                   get_execution_status_id_by_name('new'))
-                print(query_obj)
                 query_obj.save_to_db()
-                print(query_obj.query_id)
-                # Create a Job
-                # create_job(user_id, test_suite_obj, is_external)
+                run_quer_analyser_by_id.delay(query_obj.query_id, user_id)
                 return api_response(True, APIMessages.JOB_SUBMIT,
                                     STATUS_CREATED)
             else:
@@ -108,13 +104,15 @@ class QueryAnalyser(Resource):
                  'query_result' : query_obj.query_result,
                  'is_deleted' : query_obj.is_deleted
                  })
-            return api_response(True, APIMessages.SUCCESS, STATUS_OK)
+        return api_response(True, APIMessages.SUCCESS, STATUS_OK,
+                            {'queries':query_list} )
+
 
 class QueryExporter(Resource):
     """
-
+    Exports the data for the given Query
     """
-    token_required()
+    @token_required
     def post(self, session):
         try:
             user_id = session.user_id

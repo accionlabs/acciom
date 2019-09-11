@@ -1,6 +1,7 @@
 from application.common.constants import (ExecutionStatus, SupportedTestClass)
 from application.helper.runnerclass import run_by_case_id
 from application.model.models import (TestCase, TestCaseLog, Query)
+from application.helper.runnerclasshelpers import execute_query
 from index import celery
 
 
@@ -47,10 +48,10 @@ def job_submit(job_id, user_id):
                                        user_id)
 
 @celery.task(name='run_query_analyser', queue="query_analyser")
-def run_quer_analyser_by_id(query_id,user_id):
-    run_quer_analyser(query_id, user_id)
+def run_quer_analyser_by_id(query_id,user_id, export=False):
+    run_quer_analyser(query_id, user_id, export)
 
-def run_quer_analyser(query_id,user_id):
+def run_quer_analyser(query_id,user_id, export):
     """
     This runs the Query for the given query_id
 
@@ -66,5 +67,6 @@ def run_quer_analyser(query_id,user_id):
         'inprogress')
     query_obj.execution_status=inprogress
     query_obj.save_to_db()
+    execute_query(query_obj,export)
 
     return {"status":True }

@@ -9,6 +9,7 @@ def query_exectuion(query, db_cursor, export=False):
     Args:
         query (str)
         db_cursor (db_connection)
+        export (boolean): export or not
     Returns:
         payload (dict): execution status and result
     """

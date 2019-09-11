@@ -342,7 +342,7 @@ def args_as_list(list_args):
     return list_arg
 
 
-def execute_query(query_obj):
+def execute_query(query_obj, export):
     """
     Args:
         query_obj (object) : query object of the query to be executed
@@ -351,10 +351,10 @@ def execute_query(query_obj):
     try:
         db_detail = db_details(query_obj.db_connection_id)
         db_connector = TestCaseExecution.create_connector(db_detail)
-        result = query_exectuion(query_obj.query_string, db_connector)
+        result = query_exectuion(query_obj.query_string, db_connector, export)
         query_obj.execution_status = result['res']
         query_obj.query_result = result['query_result']
-
+        query_obj.save_to_db()
 
 
     except Exception as e:
@@ -362,4 +362,7 @@ def execute_query(query_obj):
             get_execution_status_id_by_name('error')
         result = {"res": execution_result,
                   "Execution_log": {"error_log": str(e)}}
-        return result
+        query_obj.query_result = result
+        query_obj.save_to_db()
+
+
