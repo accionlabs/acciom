@@ -203,7 +203,7 @@ body,html{
 }
 
 .editbox{
-    margin-left: -57px;
+    margin-left: -30px;
     width: 109%;
 }
 
@@ -216,12 +216,48 @@ body,html{
 
 .savebtn{
     margin-left: 0px;
-    margin-right: 43px;
+    margin-right: 16px;
     margin-top: 4px;
     color: #fff;
 }
 
 .savebtn:hover{
+    color: #fff;
+}
+
+.passw_chng_panel_margin{
+    margin-left: 45px;
+    margin-right: -20px;
+    margin-top: -53px;
+}
+
+.chgpasswtable{
+    background-color: #BD4951 !important;
+    color: #fff !important;
+}
+
+.chngpasswbtn{
+    float: right;
+}
+
+.chnageordlabel{
+    font-size: 14px;
+    margin-left: -2px;
+    margin-top: 6px;
+    font-weight: none !important;
+}
+
+.chngorgeditbox{
+    width: 104%;
+    margin-left: -13px;
+}
+
+.chngorgsavebtn{
+    margin-right: 12px;
+}
+
+.chngorgsavebtn:hover,
+.chngorgsavebtn:active{
     color: #fff;
 }
 
