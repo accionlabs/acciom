@@ -62,7 +62,7 @@ class ChangeOrganisation extends React.Component {
 				<Modal.Body>
 					<form onSubmit={(e) => onChangeOrgSubmit(e)}> 
 						<FormGroup controlId="organisation">
-							<Col sm={6}><ControlLabel className="chnageordlabel">Select the organisation to be changed</ControlLabel></Col>
+							<Col sm={6}><ControlLabel className="chnageorglabel label2">Select the organisation to be changed</ControlLabel></Col>
 							<Col sm={6}>
 								<FormControl componentClass="select" className="chngorgeditbox" placeholder="select" value={this.state.selectedOrgId} onChange = {(e) => handleOrgChange(e)}>
 									{ renderOrgListOptions() }

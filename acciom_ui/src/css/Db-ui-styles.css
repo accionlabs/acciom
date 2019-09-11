@@ -2,18 +2,28 @@ body,html{
     font-family: Open sans !important;
 }
 .main_titles{
-    font-family: Open Sans;
     color: #69717D;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
 }
+
+.sub_title{
+    color: #69717D;
+    font-size: 15px;
+}
+
+.other-titles{
+    color: #69717D;
+    font-size: 12px;
+}
+
 .db_page_title{
     padding-left: 8px;
     padding-bottom: 10px;
 }
 #db_icon{
     color: #69717D;
-    font-size: 20px;
+    font-size: 21px;
     margin-top:-8px;
     margin-bottom: 10px; 
 }
@@ -40,6 +50,15 @@ body,html{
     flex-wrap: wrap;
 
 }
+
+#dashbcolor:hover{
+    color: #fff !important;
+}
+
+#dashbcolor{
+    color: #fff !important;
+}
+
 .leftbar_closebtn{
     float: right;
 }
@@ -51,7 +70,6 @@ body,html{
 .table_head{
     vertical-align: middle;
     background-color: #BD4951;
-    font-family: Open sans;
     color: #fff;
 }
 
@@ -131,7 +149,6 @@ body,html{
     background-color: #69717D;
     border-color: #69717D;
     color: #fff;
-    font-family: Open sans !important;
     font-size: 13px;
     border-radius: 3px;
     text-align: center;
@@ -172,7 +189,6 @@ body,html{
     background-color: #69717D;
     color: #fff;
     border: #69717D;
-    font-family: Open sans !important;
     font-size: 13px;
     border-radius: 3px;
     text-align: center;
@@ -240,11 +256,11 @@ body,html{
     float: right;
 }
 
-.chnageordlabel{
+.chnageorglabel{
     font-size: 14px;
     margin-left: -2px;
     margin-top: 6px;
-    font-weight: none !important;
+    font-weight: 100px !important;
 }
 
 .chngorgeditbox{
@@ -261,11 +277,74 @@ body,html{
     color: #fff;
 }
 
+.accesstknheader{
+    background-color: #69717D !important;
+    color: #fff !important;
+}
+
+.panelheight{
+    margin-bottom: 10px !important;
+    margin-top: -13px !important;
+}
+
+.needTokeneditbox{
+    width: 40%;
+    color: #000;
+    margin-left: 18px; 
+}    
+
+.msginline{
+    display: inline;
+}
+
+.usermanagelogo{
+    color: #69717D;
+}
+
+.usermanagetitle{
+    color: #69717D;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 1px;
+    margin-left: 16px;
+}
+
+.userbackbtn{
+    background-color: #69717D !important;
+    border-color: #69717D;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height: 31px;
+    margin-right: 8px !important;
+    padding: 0;
+}
+
+.userbackbtn:hover,
+.userbackbtn:active{
+    border-color: #69717D;
+    background-color: #69717D;
+}
+
+.submailtitle{
+    margin-bottom: 12px;
+    margin-left: 16px;
+}
+
+.minuscirclecolor{
+    color: #69717D !important;
+}
+
+.plusCircle{
+    margin-top: 16px;
+}
+
 .button-colors{
     background-color: #BD4951 !important;
     border-color: #BD4951 !important;
     color: #fff;
-    font-family: Open sans !important;
     font-size: 13px;
     border-radius: 3px;
     text-align: center;

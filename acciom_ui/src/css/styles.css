@@ -56,13 +56,8 @@ html
     padding: 0px 16px;
 }
 .clipboardOnhover:hover {
-    color:  blue;
+    /* color:  blue; */
     cursor: pointer 
-}
-.needToken {
-    width: 40%;
-    /* font-size: 1rem */
-    
 }
 .tokenField {
     border: none;
@@ -734,7 +729,7 @@ html
    }
    .nav.child_menu li:hover,
    .nav.child_menu li.active {
-       background-color: rgba(255, 255, 255, 0.06)
+       background-color: rgba(255, 255, 255, 0.06);
    }
    .nav.child_menu li {
        padding-left: 36px
@@ -1841,7 +1836,7 @@ html
        width: 26px;
        opacity: .99;
        display: inline-block;
-       font-family: FontAwesome;
+       /* font-family: FontAwesome; */
        font-style: normal;
        font-weight: normal;
        font-size: 18px;
@@ -4154,13 +4149,13 @@ html
     font-weight: bold; 
 }
 
-.sideNavBar a:hover {
+/* .sideNavBar a:hover {
     color: #b0daff !important;
 }
 
 .sideNavBar a:active {
    color: #0085fb !important
-}
+} */
 
 .DQIprojectGauge {
     padding-top: 0px !important;
@@ -4426,7 +4421,7 @@ textarea {width:280px;}
   .singleSelect, .multiSelect {
       display: inline-block;
       width: 40%;
-      padding-left: 15px;
+      margin-left: 15px;
   }
 
   .plusCircle, .minusCircle {
@@ -4471,7 +4466,7 @@ textarea {width:280px;}
 
 #userManagement .list-group-item .fName {
     display: block;
-    font-size: 17px;
+    font-size: 16px;
 }
 #userManagement .list-group-item .email {
     display: block;
@@ -4484,15 +4479,16 @@ textarea {width:280px;}
 }
 
 .user_name, .Description {
-    width: 79%;
-    margin-left: 15px;
+    width: calc(80% + 15px);
+    margin-left: 16px;
     height: 35px;
-    border-radius: 3px;
-    margin-bottom: 20px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #fff;
 }
 
 .userNameHeader, .DescriptionHeader, .editableHeader {
-    margin-left: 15px;
+    margin-left: 14px;
 }
 
 .chartLabel {
