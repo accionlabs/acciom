@@ -3,10 +3,13 @@ import datetime
 from collections import OrderedDict
 from datetime import date
 from datetime import datetime as dt
-from flask_restful import Resource, reqparse
-from sqlalchemy import Date
 from statistics import mean
 
+from flask_restful import Resource, reqparse
+from sqlalchemy import Date
+
+from application.common.common_exception import (ResourceNotAvailableException,
+                                                 GenericBadRequestException)
 from application.common.constants import (APIMessages, SupportedTestClass,
                                           TestTypeDisplay, TestClass,
                                           DQIClassNameMapping)
@@ -16,8 +19,6 @@ from application.helper.permission_check import check_permission
 from application.model.models import (Organization, Project, TestSuite,
                                       TestCase, TestCaseLog)
 from index import db
-from application.common.common_exception import (ResourceNotAvailableException,
-                                                 GenericBadRequestException)
 
 
 class ProjectDQI(Resource):
@@ -30,6 +31,7 @@ class ProjectDQI(Resource):
             - Returns Data Quality Index for given project id on a test case
             type level.
     """
+
     @token_required
     def get(self, session):
         project_dql_parser = reqparse.RequestParser()
@@ -203,7 +205,8 @@ class ProjectDQIHistory(Resource):
         dqi_history_data = dqi_history_parser.parse_args()
         # check if project Id exists
         check_valid_project = Project.query.filter_by(
-            project_id=dqi_history_data['project_id'], is_deleted=False).first()
+            project_id=dqi_history_data['project_id'],
+            is_deleted=False).first()
         if not check_valid_project:
             raise ResourceNotAvailableException("Project")
             # checking if user is authorized to make this call
@@ -352,9 +355,10 @@ def get_project_dqi(project_id, start_date=None, end_date=None):
     # Query that returns distinct rows with Date, dqi, test case class, test
     # suite id, and test case id order by last modified date
     dqi_for_each_day = db.session.query(TestCaseLog.modified_at.cast(Date),
-        TestCaseLog.dqi_percentage,
-        TestCase.test_case_class, TestSuite.test_suite_id,
-        TestCase.test_case_id).distinct(
+                                        TestCaseLog.dqi_percentage,
+                                        TestCase.test_case_class,
+                                        TestSuite.test_suite_id,
+                                        TestCase.test_case_id).distinct(
         TestCase.test_case_id,
         TestSuite.test_suite_id).order_by(
         TestCase.test_case_id,
@@ -381,7 +385,7 @@ def get_project_dqi(project_id, start_date=None, end_date=None):
         start_date = start_date.strftime("%Y-%m-%d")
         end_date = end_date.strftime("%Y-%m-%d")
 
-    project_dql_average = None
+    project_dql_average = 0  # TODO: Need change it to Null and send flag in UI.
     dqi_dict = dict()
     for class_key, class_values in list_of_dqi_values_for_each_class.items():
         dqi_dict[DQIClassNameMapping.dqi_class_name_mapping[class_key]] = \
