@@ -3058,7 +3058,7 @@ html
        right: -3px
    }
    .ui-ribbon-container.ui-ribbon-primary .ui-ribbon {
-       background-color: #5b90bf
+       background-color: blue;
    }
    .ui-ribbon-container .ui-ribbon {
        position: relative;
@@ -4203,9 +4203,6 @@ textarea {
     width:160px;
 }
 
-.selectconnection {width:70% !important;}
-
-
  #editMode>tbody>tr>td, .manageConnection>tbody>tr>td, #viewLogDetails>tbody>tr>td { 
     border-top: 0px !important;
     padding: 4px !important;
@@ -4336,7 +4333,7 @@ textarea {width:280px;}
    
 
   .MuiIconButton-label .MuiSvgIcon-root {
-      color: aliceblue;
+      color:#69717D;
   }
 
   .DQIprojectGaugeDetail {
@@ -4460,7 +4457,7 @@ textarea {width:280px;}
     padding-top: 5px;
 }
 #userManagement .list-group-item .fa-user-circle{
-    font-size: 30px;
+    font-size: 23px;
     padding-top: 5px;
 }
 

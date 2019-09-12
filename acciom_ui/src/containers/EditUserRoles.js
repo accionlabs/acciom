@@ -212,8 +212,8 @@ class EditUserRoles extends Component {
 	render() {
 		return (
 			<div id="editUserRoles">
-				<h3 className="usermanagetitle">Manage Role</h3>
-				<div className = "DescriptionHeader submailtitle">Email</div>
+				<h3 className="usermanagetitle main_titles">Manage Role</h3>
+				<div className = "DescriptionHeader sub_title submailtitle">Email</div>
 				<input type="text" value={this.props.selectedUser? this.props.selectedUser.email_id: ''} className="Description" disabled/>
 
 				{ this.renderUserRoles() }

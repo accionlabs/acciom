@@ -85,7 +85,7 @@ class RoleListItemContainer extends Component {
 			<div>
 				<Select 
 					className='singleSelect'
-					theme={theme => ({ ...theme, borderRadius: 5, colors: { ...theme.colors, primary25: '#d38d92', primary: '#b7c0ce', primary50: '#b7c0ce' }, })}
+					theme={theme => ({ ...theme, borderRadius: 5, colors: { ...theme.colors, primary25: '#f4cdd0', primary: '#e3e5e8', primary50: '#e3e5e8' }, })}
 					value={this.props.selectedOrgProject}
 					onChange={ (item) => this.handleOrgProjectChange(item) }
 					options= { this.props.orgProjectList }
@@ -94,7 +94,7 @@ class RoleListItemContainer extends Component {
 				<Select
 					className='multiSelect'
 					isMulti='true'
-					theme={theme => ({ ...theme, borderRadius: 5, colors: { ...theme.colors, primary25: '#d38d92', primary: '#b7c0ce', primary50: '#b7c0ce' }, })}
+					theme={theme => ({ ...theme, borderRadius: 5, colors: { ...theme.colors, primary25: '#f4cdd0', primary: '#e3e5e8', primary50: '#e3e5e8' }, })}
 					value={this.state.selectedRoles}
 					onChange={ (item) => this.handleRoleChange(item) }
 					options={ this.state.rolesList }

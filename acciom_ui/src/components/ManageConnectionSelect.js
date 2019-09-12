@@ -79,7 +79,7 @@ function ManageConnectionSelect(props) {
 				<tbody>
 					<tr>
 						<td className="manageConnectionLabel">
-							<label className="manageConnectionHeading manageConnectionsLabel">Select Connection:</label>
+							<label className="manageConnectionHeading sub_title selectcaselabel">Select Connection</label>
 						</td>
 						<td>
 							<select className="form-control selectconnection"
@@ -98,7 +98,7 @@ function ManageConnectionSelect(props) {
 					</tr> 
 					<tr>
 						<td className="manageConnectionLabel">
-							<label className="manageConnectionHeading manageConnectionsLabel">Select Cases:</label>
+							<label className="manageConnectionHeading sub_title selectcaselabel2">Select Cases</label>
 						</td>
 						<td>
 							{
