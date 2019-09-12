@@ -51,7 +51,7 @@ class ViewDbDetails extends Component {
 		return (
 			<Modal show={true} className="deleteconfirmpopupbox" bsSize="small">
 				<Modal.Header className="popboxheader">
-					<Modal.Title className="deleteconfirmpopupfieldtitle">Confirmation</Modal.Title>
+					<Modal.Title className="sub_title">Confirmation</Modal.Title>
 				</Modal.Header>
 
 				<Modal.Body >

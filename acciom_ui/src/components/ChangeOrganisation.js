@@ -54,7 +54,7 @@ class ChangeOrganisation extends React.Component {
 				aria-labelledby="contained-modal-title" bsSize="medium" className="switchprojectpopbox">
 
 				<Modal.Header closeButton className="switchprojectpopboxheader">
-					<Modal.Title id="contained-modal-title" className="switchprojectpoptitle">
+					<Modal.Title id="contained-modal-title" className="sub_title">
 						Change Organisation
 					</Modal.Title>
 				</Modal.Header>
