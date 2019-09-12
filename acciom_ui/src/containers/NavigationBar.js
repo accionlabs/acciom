@@ -253,7 +253,7 @@ function NavigationBar(props) {
 									<Icon className={clsx(classes.icon, 'fas fa-business-time fa-2x')} color="primary" />	
 								</Link>
 							</ListItemIcon>
-							<Link to={`/dashboard`} className = {classes.dashboard}> Dashboard </Link> <br />
+							<Link to={`/dashboard`} id="dashbcolor" className = {classes.dashboard} className = {classes.hovercolor} > Dashboard </Link> <br />
 						</MenuItem>
 						<MenuItem>
 							<ListItemIcon>
@@ -261,7 +261,7 @@ function NavigationBar(props) {
 									<Icon className={clsx(classes.icon, 'fas fa-upload fa-2x')} color="primary" />  
 								</Link> 
 							</ListItemIcon>
-							<Link to={`/test_suite_upload`} className = {classes.home}> Upload Data Profiling </Link> <br />
+							<Link to={`/test_suite_upload`} id="dashbcolor"  className = {classes.home}> Upload Data Profiling </Link> <br />
 						</MenuItem>
 						<MenuItem>
 							<ListItemIcon>
@@ -269,7 +269,7 @@ function NavigationBar(props) {
 									<Icon className={clsx(classes.icon, 'fas fa-list-alt fa-2x')} color="primary" />
 								</Link>
 							</ListItemIcon>
-							<Link to={`/startup`} className = {classes.startup}>Data Profiling</Link>
+							<Link to={`/startup`} id="dashbcolor"  className = {classes.startup}>Data Profiling</Link>
 						</MenuItem>
 						<MenuItem>
 							<ListItemIcon>
@@ -277,7 +277,7 @@ function NavigationBar(props) {
 									<Icon className={clsx(classes.icon, 'fas fa-database fa-2x')} color="primary" />
 								</Link>
 							</ListItemIcon>
-							<Link to={`/view_db_details`} className = {classes.startup}>View DB Details</Link>
+							<Link to={`/view_db_details`} id="dashbcolor"  className = {classes.startup}>View DB Details</Link>
 						</MenuItem>
 						
 					</MenuList>

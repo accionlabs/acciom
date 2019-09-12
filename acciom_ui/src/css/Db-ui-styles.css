@@ -2,18 +2,29 @@ body,html{
     font-family: Open sans !important;
 }
 .main_titles{
-    font-family: Open Sans;
     color: #69717D;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
 }
+
+.sub_title{
+    color: #69717D;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.other-titles{
+    color: #69717D;
+    font-size: 12px;
+}
+
 .db_page_title{
     padding-left: 8px;
     padding-bottom: 10px;
 }
 #db_icon{
     color: #69717D;
-    font-size: 20px;
+    font-size: 21px;
     margin-top:-8px;
     margin-bottom: 10px; 
 }
@@ -40,6 +51,15 @@ body,html{
     flex-wrap: wrap;
 
 }
+
+#dashbcolor:hover{
+    color: #fff !important;
+}
+
+#dashbcolor{
+    color: #fff !important;
+}
+
 .leftbar_closebtn{
     float: right;
 }
@@ -51,7 +71,6 @@ body,html{
 .table_head{
     vertical-align: middle;
     background-color: #BD4951;
-    font-family: Open sans;
     color: #fff;
 }
 
@@ -131,7 +150,6 @@ body,html{
     background-color: #69717D;
     border-color: #69717D;
     color: #fff;
-    font-family: Open sans !important;
     font-size: 13px;
     border-radius: 3px;
     text-align: center;
@@ -155,9 +173,9 @@ body,html{
     padding: 5px 16px;
 }
 
-.deleteconfirmpopupfieldtitle{
-    color: #69717D;
-    font-weight: bold;
+.editpanelhead{
+    background-color: #BD4951 !important;
+    color: #fff !important;
 }
 
 .popboxheader{
@@ -172,7 +190,6 @@ body,html{
     background-color: #69717D;
     color: #fff;
     border: #69717D;
-    font-family: Open sans !important;
     font-size: 13px;
     border-radius: 3px;
     text-align: center;
@@ -197,13 +214,8 @@ body,html{
     border-bottom-width: 0px;
 }
 
-.switchprojectpoptitle{
-    color: #69717D;
-    font-weight: bold;
-}
-
 .editbox{
-    margin-left: -57px;
+    margin-left: -30px;
     width: 109%;
 }
 
@@ -216,23 +228,176 @@ body,html{
 
 .savebtn{
     margin-left: 0px;
-    margin-right: 43px;
+    margin-right: 16px;
     margin-top: 4px;
     color: #fff;
 }
 
-.savebtn:hover{
+.savebtn:hover,
+.savebtn:active{
+    color: #fff !important;
+}
+
+.passw_chng_panel_margin{
+    margin-left: 45px;
+    margin-right: -20px;
+    margin-top: -53px;
+}
+
+.chgpasswtable{
+    background-color: #BD4951 !important;
+    color: #fff !important;
+}
+
+.chngpasswbtn{
+    float: right;
+}
+
+.chnageorglabel{
+    font-size: 14px;
+    margin-left: -2px;
+    margin-top: 6px;
+    font-weight: 100px !important;
+}
+
+.chngorgeditbox{
+    width: 104%;
+    margin-left: -13px;
+}
+
+.chngorgsavebtn{
+    margin-right: 12px;
+}
+
+.chngorgsavebtn:hover,
+.chngorgsavebtn:active{
+    color: #fff !important;
+}
+
+.accesstknheader{
+    background-color: #69717D !important;
+    color: #fff !important;
+}
+
+.panelheight{
+    margin-bottom: 10px !important;
+    margin-top: -13px !important;
+}
+
+.needTokeneditbox{
+    width: 40%;
+    color: #000;
+    margin-left: 18px; 
+}    
+
+.msginline{
+    display: inline;
+}
+
+.usermanagelogo{
+    color: #69717D;
+}
+
+.usermanagetitle{
+    color: #69717D;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 1px;
+    margin-left: 16px;
+}
+
+.userbackbtn{
+    background-color: #69717D !important;
+    border-color: #69717D;
     color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height: 31px;
+    margin-right: 8px !important;
+    padding: 0;
+}
+
+.userbackbtn:hover,
+.userbackbtn:active{
+    border-color: #69717D;
+    background-color: #69717D;
+}
+
+.submailtitle{
+    margin-bottom: 12px;
+    margin-left: 16px;
+}
+
+.minuscirclecolor{
+    color: #69717D !important;
+}
+
+.plusCircle{
+    margin-top: 16px;
 }
 
 .button-colors{
     background-color: #BD4951 !important;
     border-color: #BD4951 !important;
     color: #fff;
-    font-family: Open sans !important;
     font-size: 13px;
     border-radius: 3px;
     text-align: center;
     width: 121px;
     height: 31px;
+}
+
+
+/* update data profiling */
+
+.update-data-profiling-title{
+    margin-top: 1px;
+}
+
+.browse-txt {
+    height: 29px;
+    width: 301px;
+    margin-right: 10px;
+    margin-top: 2px;
+    margin-left: -50px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.brows-btn{
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
+.updatedataprofilingtab{
+
+}
+
+/* data profiling */
+
+.dataprofilingtitle{
+    margin-top: -7px;
+}
+
+.switchprojectbtn{
+    margin-top: -122px;
+    margin-bottom: -48px;
+}
+
+/* Quality index */
+
+.QLindex-title{
+    margin-left: -71px;
+    margin-top: -3px;
+}
+
+.panelbg{
+    background-color: #fff !important;
+}
+
+.backtablebg{
+    background-color: #BD4951;
 }

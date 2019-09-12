@@ -277,7 +277,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 		<div className={classes.root}>
 			{ 
 				(testSuites) ? testSuites.map(testSuite => (
-					<ExpansionPanel key={testSuite.test_suite_id} expanded={expanded === testSuite.test_suite_id} onChange={handleChange(testSuite.test_suite_id)}>
+					<ExpansionPanel className="panelbg" key={testSuite.test_suite_id} expanded={expanded === testSuite.test_suite_id} onChange={handleChange(testSuite.test_suite_id)}>
 						
 						<ExpansionPanelSummary
 							expandIcon={<ExpandMoreIcon />}
@@ -290,7 +290,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 							<i className="far fa-play-circle statusPlayIcon" onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={(e) => runTestSuite(e, testSuite.test_suite_id)} aria-hidden="true"></i>
 						</ExpansionPanelSummary>
 
-						<ExpansionPanelDetails>
+						<ExpansionPanelDetails className="backtablebg">
 							<div className={classes.innerPanelWidth}>
 
 								{ renderTestCasesPanels(testSuite) }
