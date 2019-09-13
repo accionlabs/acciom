@@ -106,6 +106,7 @@ class APIMessages:
                       " are CountCheck, NullCheck, DuplicateCheck, DDLCheck, Datavalidation"
     DELETE_DB_WARNING = "DB connection is associate with existing test case, you cannot delete it."
     DELETE_DB_VERIFY_DELETE = "Data Base with db id {} can be Deleted."
+    TOKEN_DELETED = "Personal Access Token '{}' is deleted"
 
 
 class GenericStrings:
