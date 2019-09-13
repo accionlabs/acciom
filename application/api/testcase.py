@@ -551,7 +551,7 @@ class TestCaseJobExternal(Resource):
         is_external = True
         token = execution_data['token']
         personal_token_obj = PersonalToken.query.filter_by(
-            encrypted_personal_token=token).first()
+            encrypted_personal_token=token, is_deleted=False).first()
 
         if execution_data['case_id_list']:
             if personal_token_obj.user_id == user_id:
