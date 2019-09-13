@@ -54,16 +54,16 @@ class SwitchProject extends React.Component {
 				onHide={(event) => { hidePopup()}} container={this}
 				aria-labelledby="contained-modal-title" bsSize="medium" className="switchprojectpopbox">
 
-				<Modal.Header closeButton className="switchprojectpopbox switchprojectpopboxheader">
-					<Modal.Title id="contained-modal-title" className="switchprojectpoptitle">
-						Switch Project
+				<Modal.Header closeButton className="switchprojectpopbox main_title switchprojectpopboxheader">
+					<Modal.Title id="contained-modal-title" >
+						<span style={{color: 'red'}}>Switch Project</span>
 					</Modal.Title>
 				</Modal.Header>
 
 				<Modal.Body>
 					<form onSubmit={(e) => onSubmit(e)}> 
 						<FormGroup controlId="project">
-							<Col sm={6}><ControlLabel className="selectlabel">Select the new project: </ControlLabel></Col>
+							<Col sm={6}><ControlLabel className="selectlabel chnageorglabel">Select the new project: </ControlLabel></Col>
 							<Col sm={6}>
 								<FormControl componentClass="select" className="editbox" placeholder="select" value={this.state.selectedProjectId} onChange = {(e) => handleProjectChange(e)}>
 									{ renderProjectListOptions() }

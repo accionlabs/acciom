@@ -49,13 +49,13 @@ class ViewDbDetails extends Component {
 
 	renderDeleteConfirmationPopup = () => {
 		return (
-			<Modal show={true} className="deleteconfirmpopupbox" bsSize="small">
+			<Modal show={true} className="deleteconfirmpopupbox" bsSize="medium">
 				<Modal.Header className="popboxheader">
-					<Modal.Title className="deleteconfirmpopupfieldtitle">Confirmation</Modal.Title>
+					<Modal.Title className="sub_title">Confirmation</Modal.Title>
 				</Modal.Header>
 
 				<Modal.Body >
-					<div className="deleteconfirmpopupfieldtext">Do You Want to Delete this DB ?</div>
+					<div className="deleteconfirmpopupfieldtext">Do you want to delete this DB connection?</div>
 				</Modal.Body>
 
 				<Modal.Footer className="popboxfooter">

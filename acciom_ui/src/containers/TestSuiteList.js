@@ -32,31 +32,36 @@ const useStyles = makeStyles(theme => ({
 	},
 	heading: {
 		fontSize: theme.typography.pxToRem(13),
-		fontWeight: 'bold',
 		flexBasis: '33.33%',
 		flexShrink: 0,
+		fontFamily: 'Open sans',
+		color: '#69717D'
 	},
 	secondaryHeading: {
 		fontSize: theme.typography.pxToRem(13),
 		flexBasis: '33.33%',
-		color: theme.palette.text.secondary,
+		color: '#69717D',
+		fontFamily: 'Open sans',
 	},
 	subHeading: {
 		fontSize: theme.typography.pxToRem(13),
-		fontWeight: 'bold',
 		flexBasis: '40%',
 		flexShrink: 0,
+		color: '#69717D',
+		fontFamily: 'Open sans',
 	},
 	suiteID: {
 		fontSize: theme.typography.pxToRem(13),
-		fontWeight: 'bold',
 		flexBasis: '18.33%',
 		flexShrink: 0,
+		color: '#69717D',
+		fontFamily: 'Open sans',
 	},
 	manageConnection: {
 		fontSize: theme.typography.pxToRem(13),
 		flexBasis: '23.33%',
 		color: 'brown',
+		fontFamily: 'Open sans',
 	},
 	rcorners: {
 		border: '2px solid',
@@ -64,41 +69,48 @@ const useStyles = makeStyles(theme => ({
 		width: '580px',
 		borderRadius: '25px',
 		boxShadow: '4px',
+		fontFamily: 'Open sans',
 	},
 	viewConnection: {
 		fontSize: theme.typography.pxToRem(13),
 		flexBasis: '18.33%',
 		flexShrink: 0,
-		color: 'brown',
+		color: '#69717D',
+		fontFamily: 'Open sans',
 	},
 	status: {
 		fontSize: theme.typography.pxToRem(13),
 		flexBasis: '18.33%',
 		flexShrink: 0,
-		fontWeight: 'bold'
+		color: '#69717D',
+		fontFamily: 'Open sans',
 	},
 	statusImg: {flexBasis: '20%'},
 	noRecord: {color: 'red', textAlign: 'center'},
 	innerPanelWidth: {width:'1080px'},
 	statusBg: {
 		fontSize: theme.typography.pxToRem(13),
-		fontWeight: 'bold',
+		color: '#69717D',
 		flexBasis: '18.33%',
+		fontFamily: 'Open sans',
 	},
 	statusBgBlue: {
 		fontSize: theme.typography.pxToRem(13),
-		fontWeight: 'bold',
+		color: '#69717D',
 		flexBasis: '18.33%',
+		fontFamily: 'Open sans',
 	},
 	statusBgRed: {
 		fontSize: theme.typography.pxToRem(13),
-		fontWeight: 'bold',
+		color: '#69717D',
 		flexBasis: '18.33%',
+		fontFamily: 'Open sans',
 	},
 	statusBgOrange: {
 		fontSize: theme.typography.pxToRem(13),
-		fontWeight: 'bold',
+		color: '#69717D',
 		flexBasis: '18.33%',
+		fontFamily: 'Open sans',
 	},
 	executionWidth: {width: '20%'},
 	caseLog: {cursor: 'pointer'},
@@ -144,7 +156,6 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 		setTestCaseExpanded(isExpanded ? caseID : false);
 		clearInterval(refreshTimerLogs);
 		if (isExpanded) {
-			console.log('Innn');
 			getTestCaseDetailBySuiteId(suiteID);
 			getEachTestCaseDetailByCaseID(caseID);
 			refreshTimerLogs = setInterval(() => { getEachTestCaseDetailByCaseID(caseID) }, 5000);
@@ -249,7 +260,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 			return (
 				<Table striped bordered hover size="sm" id="RoundedTable">
 					<thead>
-						<tr>
+						<tr className="statussmalltable">
 							<th className="testLogHeading">Execution Status</th>
 							<th className="testLogHeading">Execution At</th>
 							<th className="testLogHeading">Logs</th>	
@@ -262,7 +273,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 								<td className="testLogData">{testCaseLog.executed_at}</td>
 								{ (testCaseLog.test_execution_status != NEW_ID && testCaseLog.test_execution_status != INPROGRESS_ID) ?
 									<td className={classes.caseLog} onClick={e => viewTestCaseLogs(testCaseLog.test_case_log_id, testCaseList.test_class_name)}>
-										<i className="far fa-sticky-note logsIcon"></i>
+										<i className="far fa-sticky-note logsIcon farfa-sticky"></i>
 									</td>
 									: <td>---</td> }
 							</tr>
@@ -277,7 +288,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 		<div className={classes.root}>
 			{ 
 				(testSuites) ? testSuites.map(testSuite => (
-					<ExpansionPanel key={testSuite.test_suite_id} expanded={expanded === testSuite.test_suite_id} onChange={handleChange(testSuite.test_suite_id)}>
+					<ExpansionPanel className={expanded === testSuite.test_suite_id ? "panelbg" : ""} key={testSuite.test_suite_id} expanded={expanded === testSuite.test_suite_id} onChange={handleChange(testSuite.test_suite_id)}>
 						
 						<ExpansionPanelSummary
 							expandIcon={<ExpandMoreIcon />}
@@ -287,10 +298,10 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 							<Typography className={classes.manageConnection}><span onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={e => handleManageConnection(e, testSuite.test_suite_id)}>Manage Connections</span></Typography>
 							<Typography className={classes.suiteID}>SuiteID: {testSuite.test_suite_id}</Typography>
 							<Typography className={classes.secondaryHeading}>Uploaded at:  {testSuite.created_at}</Typography>
-							<i className="far fa-play-circle statusPlayIcon" onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={(e) => runTestSuite(e, testSuite.test_suite_id)} aria-hidden="true"></i>
+							<i className="far fa-play-circle statusPlayIcon playicon" onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={(e) => runTestSuite(e, testSuite.test_suite_id)} aria-hidden="true"></i>
 						</ExpansionPanelSummary>
 
-						<ExpansionPanelDetails>
+						<ExpansionPanelDetails className="backtablebg">
 							<div className={classes.innerPanelWidth}>
 
 								{ renderTestCasesPanels(testSuite) }
