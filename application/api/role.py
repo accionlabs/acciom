@@ -2,6 +2,7 @@
 from flask_restful import Resource, reqparse
 from sqlalchemy import and_
 
+from application.common.api_permission import ROLE_API_POST, ROLE_API_GET
 from application.common.common_exception import GenericBadRequestException
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_CREATED,
@@ -71,7 +72,7 @@ class RoleAPI(Resource):
             raise GenericBadRequestException(
                 APIMessages.RESOURCE_EXISTS.format('Role'))
         check_permission(user_object=session.user,
-                         list_of_permissions=["user_management"],
+                         list_of_permissions=ROLE_API_POST,
                          org_id=create_role_data["org_id"])
         new_role = Role(
             role_name=create_role_data['role_name'],
@@ -122,14 +123,14 @@ class RoleAPI(Resource):
             #  permissions
             check_valid_id_passed_by_user(org_id=get_role_data['org_id'])
             check_permission(user_object=session.user,
-                             list_of_permissions=["user_management"],
+                             list_of_permissions=ROLE_API_GET,
                              org_id=get_role_data["org_id"])
             payload = retrieve_roles_under_org(get_role_data['org_id'])
         if get_role_data['project_id'] and not get_role_data['org_id']:
             check_valid_id_passed_by_user(
                 project_id=get_role_data['project_id'])
             check_permission(user_object=session.user,
-                             list_of_permissions=["user_management"],
+                             list_of_permissions=ROLE_API_GET,
                              project_id=get_role_data["project_id"])
             get_project = Project.query.filter_by(
                 project_id=get_role_data['project_id'],

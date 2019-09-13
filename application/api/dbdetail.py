@@ -4,6 +4,8 @@ from datetime import datetime
 
 from flask_restful import Resource, reqparse, inputs
 
+from application.common.api_permission import DB_DETAILS_POST, DB_DETAILS_GET, \
+    DB_DETAILS_PUT, DB_DETAILS_DELETE
 from application.common.constants import APIMessages, SupportedDBType
 from application.common.response import (api_response, STATUS_BAD_REQUEST,
                                          STATUS_CREATED, STATUS_OK,
@@ -76,7 +78,7 @@ class DbDetails(Resource):
                                 message=request_data_validation,
                                 http_status_code=STATUS_BAD_REQUEST,
                                 data={})
-        check_permission(session.user, ["add_db_details"],
+        check_permission(session.user, DB_DETAILS_POST,
                          project_obj.org_id, db_detail["project_id"])
         # check whether combination of db_type,db_name,db_username,
         # db_hostname,project_id is already present in db or not
@@ -178,7 +180,7 @@ class DbDetails(Resource):
                 return api_response(False,
                                     APIMessages.NO_DB_ID,
                                     STATUS_BAD_REQUEST)
-            check_permission(session.user, ["view_db_details"],
+            check_permission(session.user, DB_DETAILS_GET,
                              project_id_org_id[0],
                              project_id_org_id[1])
             return api_response(
@@ -206,7 +208,7 @@ class DbDetails(Resource):
                 return api_response(False,
                                     APIMessages.PROJECT_NOT_EXIST,
                                     STATUS_BAD_REQUEST)
-            check_permission(session.user, ["view_db_details"],
+            check_permission(session.user, DB_DETAILS_GET,
                              project_name_obj.org_id, project_id)
 
             def to_json(projectid):
@@ -299,7 +301,7 @@ class DbDetails(Resource):
             return api_response(False,
                                 APIMessages.NO_DB_ID,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["edit_db_details"],
+        check_permission(session.user, DB_DETAILS_PUT,
                          project_id_org_id[0],
                          project_id_org_id[1])
         # Updating values present in database with user given values
@@ -444,7 +446,7 @@ class DbDetails(Resource):
             return api_response(False,
                                 APIMessages.NO_DB_ID,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["delete_db_details"],
+        check_permission(session.user, DB_DETAILS_DELETE,
                          project_id_org_id[0],
                          project_id_org_id[1])
 
