@@ -32,7 +32,7 @@ class AuthToken extends Component{
 						<input className= "needTokeneditbox" placeholder="Why you need this Token ?"></input>
 					</Panel.Heading >
 					<Panel.Body className="panelheight"><h5>Personal Access Token</h5>
-						<Button title="Click here for Generate Token" bsStyle="primary" className="gentokenButton button-colors" onClick={(e) => {this.onGenerateButtonClick(e)}}>Generate Token</Button>                  
+						<Button title="Click here to Generate Token" bsStyle="primary" className="gentokenButton button-colors" onClick={(e) => {this.onGenerateButtonClick(e)}}>Generate Token</Button>                  
 					</Panel.Body>
 					{this.state.isToken ? (
 						<Panel.Body className="tokenpanelBackground">

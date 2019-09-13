@@ -8,10 +8,10 @@ export default function ManageConnectionInputs(props) {
 		<Table className="manageConnection">
 			<tbody>
 				<tr>
-					<td className="manageConnectionLabel"><label className="manageConnectionHeading manageConnectionsLabel">Select Connection Type:</label></td>
+					<td className="manageConnectionLabel panelheadborder"><label className="manageConnectionHeading sub_title selectconnectiontype">Select Connection Type</label></td>
 					<td>
 						<div >
-							<label className="form-check-label">
+							<label className="form-check-label radiolabel">
 								<input
 									type="radio"
 									value="source"
@@ -20,7 +20,7 @@ export default function ManageConnectionInputs(props) {
 									onChange={ (e) => props.onChange(event.target.value)}
 								/>
 							</label>&nbsp; Source &nbsp;
-							<label className="form-check-label">
+							<label className="form-check-label radiolabel">
 								<input
 									type="radio"
 									value="target"

@@ -54,7 +54,9 @@ class UserManagement extends Component {
 		const { isEditable } = this.state;
 		return (
 			<div id="userManagement">
-				<ListGroup>
+				<i class="fa fa-user-circle usericon" aria-hidden="true"></i>
+				<label className="main_titles usermanagetitle2">Users Mange</label>
+				<ListGroup  className="listposition">
 					{ this.getOrgUserList() }
 				</ListGroup>
 			</div>
