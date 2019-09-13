@@ -5,6 +5,8 @@ from datetime import timedelta
 
 from flask_restful import Resource, reqparse
 
+from application.common.api_permission import ORGANIZATION_API_PUT, \
+    DASH_BOARD_STATUS_GET
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_CREATED,
@@ -78,7 +80,7 @@ class OrganizationAPI(Resource):
         if not current_org:
             raise ResourceNotAvailableException(
                 "Organization")
-        check_permission(user_obj, list_of_permissions=["edit_org"],
+        check_permission(user_obj, list_of_permissions=ORGANIZATION_API_PUT,
                          org_id=current_org.org_id)
         current_org.org_name = update_org_data['org_name']
         current_org.save_to_db()
@@ -148,7 +150,7 @@ class DashBoardStatus(Resource):
         if not org_obj:
             raise ResourceNotAvailableException("org_id")
         check_permission(user_object=session.user,
-                         list_of_permissions=["view_org"],
+                         list_of_permissions=DASH_BOARD_STATUS_GET,
                          org_id=org_detail["org_id"])
         result_dic["org_id"] = org_obj.org_id
         result_dic["org_name"] = org_obj.org_name

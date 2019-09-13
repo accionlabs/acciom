@@ -8,6 +8,8 @@ from statistics import mean
 from flask_restful import Resource, reqparse
 from sqlalchemy import Date
 
+from application.common.api_permission import PROJECT_DQI_GET, \
+    ORGANIZATION_DQI_GET, PROJECT_DQI_HISTORY_GET
 from application.common.common_exception import (ResourceNotAvailableException,
                                                  GenericBadRequestException)
 from application.common.constants import (APIMessages, SupportedTestClass,
@@ -55,7 +57,7 @@ class ProjectDQI(Resource):
         if not check_valid_project:
             raise ResourceNotAvailableException("Project")
         # checking if user is authorized to make this call
-        check_permission(session.user, list_of_permissions=["view_project"],
+        check_permission(session.user, list_of_permissions=PROJECT_DQI_GET,
                          org_id=check_valid_project.org_id,
                          project_id=project_dql_args['project_id'])
         # Check if both start and end date are passed instead either of them
@@ -136,7 +138,7 @@ class OrganizationDQI(Resource):
             raise ResourceNotAvailableException("Organization")
         # checking if user is authorized to make this call
         check_permission(session.user,
-                         list_of_permissions=["view_org"],
+                         list_of_permissions=ORGANIZATION_DQI_GET,
                          org_id=org_dql_args['org_id'])
         # Check if both start and end date are passed instead either of them
         if (org_dql_args['start_date']
@@ -210,7 +212,8 @@ class ProjectDQIHistory(Resource):
         if not check_valid_project:
             raise ResourceNotAvailableException("Project")
             # checking if user is authorized to make this call
-        check_permission(session.user, list_of_permissions=["view_project"],
+        check_permission(session.user,
+                         list_of_permissions=PROJECT_DQI_HISTORY_GET,
                          org_id=check_valid_project.org_id,
                          project_id=dqi_history_data['project_id'])
         # Check if both start and end date are passed instead either of them
