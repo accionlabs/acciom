@@ -435,7 +435,7 @@ class Session(db.Model):
 class Query(db.Model):
     __tablename__ = 'query'
     query_id = db.Column(db.Integer, primary_key=True)
-    query_string = db.Column(db.String(200), nullable=False)
+    query_string = db.Column(db.Text, nullable=False)
     project_id = db.Column(db.ForeignKey('project.project_id'),
                            nullable=False, index=True)
     execution_status = db.Column(db.SMALLINT, nullable=False)

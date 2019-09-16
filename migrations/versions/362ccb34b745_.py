@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 9c7838c02bc5
+Revision ID: 362ccb34b745
 Revises: 
-Create Date: 2019-09-11 17:36:16.831473
+Create Date: 2019-09-16 16:03:28.411531
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '9c7838c02bc5'
+revision = '362ccb34b745'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -57,6 +57,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('encrypted_personal_token', sa.String(length=256), nullable=False),
     sa.Column('note', sa.Text(), nullable=False),
+    sa.Column('is_deleted', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('personal_token_id')
@@ -208,7 +209,7 @@ def upgrade():
     op.create_index(op.f('ix_job_test_suite_id'), 'job', ['test_suite_id'], unique=False)
     op.create_table('query',
     sa.Column('query_id', sa.Integer(), nullable=False),
-    sa.Column('query_string', sa.String(length=200), nullable=False),
+    sa.Column('query_string', sa.Text(), nullable=False),
     sa.Column('project_id', sa.Integer(), nullable=False),
     sa.Column('execution_status', sa.SMALLINT(), nullable=False),
     sa.Column('db_connection_id', sa.Integer(), nullable=False),
