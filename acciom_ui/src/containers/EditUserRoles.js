@@ -212,10 +212,11 @@ class EditUserRoles extends Component {
 	render() {
 		return (
 			<div id="editUserRoles">
-				<h3 className="usermanagetitle main_titles">Manage Role</h3>
+				<h3 className="usermanagetitle main_titles">Manage User Role</h3>
 				<div className = "DescriptionHeader sub_title submailtitle">Email</div>
-				<input type="text" value={this.props.selectedUser? this.props.selectedUser.email_id: ''} className="Description" disabled/>
-
+				{/* <input type="text" value={this.props.selectedUser? this.props.selectedUser.email_id: ''} className="Description" disabled/> */}
+				<label className="maillabel">{this.props.selectedUser? this.props.selectedUser.email_id: ''}</label>
+				<h5 className="userroles">Roles</h5>
 				{ this.renderUserRoles() }
 
 			</div>

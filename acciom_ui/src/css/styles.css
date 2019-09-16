@@ -4333,7 +4333,7 @@ textarea {width:280px;}
    
 
   .MuiIconButton-label .MuiSvgIcon-root {
-      color:#69717D;
+      color:#fff;
   }
 
   .DQIprojectGaugeDetail {
@@ -4419,6 +4419,7 @@ textarea {width:280px;}
       display: inline-block;
       width: 40%;
       margin-left: 15px;
+      color: #000 !important;
   }
 
   .plusCircle, .minusCircle {
