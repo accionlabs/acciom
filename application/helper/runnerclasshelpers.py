@@ -365,9 +365,6 @@ def execute_query(query_obj, export):
         query_obj.query_result = result
         query_obj.save_to_db()
 
-
-
-
 def datavalidation_result_format_change(log):
     """
     Change the format of result log ex:[{"id":1,"name":"hj","quantity":2}]

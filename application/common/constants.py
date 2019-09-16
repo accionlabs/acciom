@@ -110,7 +110,6 @@ class APIMessages:
     DELETE_DB_VERIFY_DELETE = "Data Base with db id {} can be Deleted."
     TOKEN_DELETED = "Personal Access Token '{}' is deleted"
 
-
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
 
