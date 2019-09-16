@@ -83,7 +83,7 @@ class ViewDbDetails extends Component {
 							<EditIcon fontSize="small"  style={{color:"#696969"}} />
 						</Link> &nbsp;
 						{/*<label onClick={ (e) => {this.deleteViewDBDetails(item.db_connection_id)}} className="deleteDBDetails">Delete</label> */}
-						<DeleteIcon fontSize="small" style={{color:"#696969"}} onClick={ (e) => {this.deleteViewDBDetails(item.db_connection_id)}} />
+						<DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} onClick={ (e) => {this.deleteViewDBDetails(item.db_connection_id)}} />
 					</td>
 				</tr>	
 			);
