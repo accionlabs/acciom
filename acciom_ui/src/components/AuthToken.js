@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import{ connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { Row, Button, FormGroup, FormControl, ControlLabel, HelpBlock, Panel } from 'react-bootstrap';
 import { generateToken } from '../actions/loginActions';
@@ -32,7 +33,8 @@ class AuthToken extends Component{
 						<input className= "needTokeneditbox" placeholder="Why you need this Token ?"></input>
 					</Panel.Heading >
 					<Panel.Body className="panelheight"><h5>Personal Access Token</h5>
-						<Button title="Click here to Generate Token" bsStyle="primary" className="gentokenButton button-colors" onClick={(e) => {this.onGenerateButtonClick(e)}}>Generate Token</Button>                  
+					<Link to="/dashboard"><Button className="backbutton_colors generatetokenbackbutton">Back</Button></Link>
+						<Button title="Click here to Generate Token" bsStyle="primary" className="gentokenButton generatetokenbutton button-colors" onClick={(e) => {this.onGenerateButtonClick(e)}}>Generate Token</Button>                  
 					</Panel.Body>
 					{this.state.isToken ? (
 						<Panel.Body className="tokenpanelBackground">

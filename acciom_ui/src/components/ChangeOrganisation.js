@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Modal, Button, FormGroup, ControlLabel, FormControl, Col } from 'react-bootstrap';
 import { showOrgChangePage, updateSelectedOrganization, getProjectListByOrgId } from '../actions/appActions';
@@ -70,6 +71,7 @@ class ChangeOrganisation extends React.Component {
 							</Col>
 						</FormGroup >
 						<FormGroup controlId="submit" className="submitBtn">
+							<Button className="backbutton_colors closebtn">Cancel</Button>
 							<Button type="submit" className="button-colors chngorgsavebtn">Save</Button>
 						</FormGroup>
 					</form>
