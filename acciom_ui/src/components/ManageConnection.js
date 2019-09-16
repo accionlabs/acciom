@@ -92,12 +92,12 @@ class ManageConnection extends React.Component {
 				onHide={this.handleDialogBoxClose}
 				className="ModalMargin"
 			>
-				<Modal.Header closeButton>
+				<Modal.Header closeButton className="panelheadborder sub_title">
 					<Modal.Title id="contained-modal-title-vcenter">
-						<label className="manageConnectionHeading">Manage Connections</label>
+						<label className="manageConnectionHeading sub_title">Manage Connections</label>
 					</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>
+				<Modal.Body className="panelheadborder">
 					<ManageConnectionInputs selectedConnectionType={this.state.selectedConnectionType}  onChange={this.handleConnectionTypeChange}></ManageConnectionInputs>
 					<ManageConnectionSelect 
 						selectedConnection={this.state.selectedConnection} 
@@ -108,7 +108,7 @@ class ManageConnection extends React.Component {
 					</ManageConnectionSelect>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button className="btn btn-primary" onClick={this.handleManageConnectionSave} disabled={isValid}>
+					<Button className="btn btn-primary button-colors" onClick={this.handleManageConnectionSave} disabled={isValid}>
 						Save
 					</Button>
 					{/* <Button className="btn btn-primary" onClick={e => this.handleResetConnection(e)}>Reset</Button> */}

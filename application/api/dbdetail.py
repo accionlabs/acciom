@@ -2,16 +2,20 @@
 
 from datetime import datetime
 
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, inputs
 
+from application.common.api_permission import DB_DETAILS_POST, DB_DETAILS_GET, \
+    DB_DETAILS_PUT, DB_DETAILS_DELETE
 from application.common.constants import APIMessages, SupportedDBType
 from application.common.response import (api_response, STATUS_BAD_REQUEST,
-                                         STATUS_CREATED)
+                                         STATUS_CREATED, STATUS_OK,
+                                         STATUS_CONFLICT)
 from application.common.token import token_required
 from application.common.utils import validate_empty_fields
 from application.helper.encrypt import encrypt
 from application.helper.permission_check import check_permission
-from application.model.models import (DbConnection, Project, Organization)
+from application.model.models import (DbConnection, Project, Organization,
+                                      TestCase)
 from index import db
 
 
@@ -74,7 +78,7 @@ class DbDetails(Resource):
                                 message=request_data_validation,
                                 http_status_code=STATUS_BAD_REQUEST,
                                 data={})
-        check_permission(session.user, ["add_db_details"],
+        check_permission(session.user, DB_DETAILS_POST,
                          project_obj.org_id, db_detail["project_id"])
         # check whether combination of db_type,db_name,db_username,
         # db_hostname,project_id is already present in db or not
@@ -176,7 +180,7 @@ class DbDetails(Resource):
                 return api_response(False,
                                     APIMessages.NO_DB_ID,
                                     STATUS_BAD_REQUEST)
-            check_permission(session.user, ["view_db_details"],
+            check_permission(session.user, DB_DETAILS_GET,
                              project_id_org_id[0],
                              project_id_org_id[1])
             return api_response(
@@ -204,7 +208,7 @@ class DbDetails(Resource):
                 return api_response(False,
                                     APIMessages.PROJECT_NOT_EXIST,
                                     STATUS_BAD_REQUEST)
-            check_permission(session.user, ["view_db_details"],
+            check_permission(session.user, DB_DETAILS_GET,
                              project_name_obj.org_id, project_id)
 
             def to_json(projectid):
@@ -297,7 +301,7 @@ class DbDetails(Resource):
             return api_response(False,
                                 APIMessages.NO_DB_ID,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["edit_db_details"],
+        check_permission(session.user, DB_DETAILS_PUT,
                          project_id_org_id[0],
                          project_id_org_id[1])
         # Updating values present in database with user given values
@@ -399,7 +403,7 @@ class DbDetails(Resource):
         """
         To delete the data base for the user provided data base id.
 
-       Args:
+        Args:
             session (object):By using this object we can get the user_id.
 
         Returns:
@@ -411,8 +415,13 @@ class DbDetails(Resource):
                                              required=True,
                                              type=int,
                                              location='args')
-        databaseid = delete_db_detail_parser.parse_args()
-        data_base_id = databaseid.get("db_connection_id")
+        delete_db_detail_parser.add_argument('verify_delete',
+                                             required=False,
+                                             type=inputs.boolean,
+                                             location='args',
+                                             default=False)
+        deletedata = delete_db_detail_parser.parse_args()
+        data_base_id = deletedata.get("db_connection_id")
         if not data_base_id:
             return api_response(False,
                                 APIMessages.PASS_DB_ID,
@@ -437,15 +446,33 @@ class DbDetails(Resource):
             return api_response(False,
                                 APIMessages.NO_DB_ID,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["delete_db_details"],
+        check_permission(session.user, DB_DETAILS_DELETE,
                          project_id_org_id[0],
                          project_id_org_id[1])
-        del_obj.is_deleted = True
-        del_obj.save_to_db()
-        return api_response(True,
-                            APIMessages.DB_DELETED.format(
-                                data_base_id),
-                            STATUS_CREATED)
+
+        # check whether passed db conection id is associated with any testcases
+        data_base_ids = db.session.query(
+            TestCase.test_case_detail["src_db_id"],
+            TestCase.test_case_detail["target_db_id"]).filter(
+            TestCase.is_deleted == False).all()
+        idset = set()
+        for tupleid in data_base_ids:
+            for id in tupleid:
+                idset.add(id)
+        if data_base_id in idset:
+            return api_response(False, APIMessages.DELETE_DB_WARNING,
+                                STATUS_CONFLICT)
+        if deletedata["verify_delete"] is True:
+            del_obj.is_deleted = True
+            del_obj.save_to_db()
+            return api_response(True,
+                                APIMessages.DB_DELETED.format(
+                                    data_base_id),
+                                STATUS_CREATED)
+        else:
+            return api_response(True,
+                                APIMessages.DELETE_DB_VERIFY_DELETE.format(
+                                    data_base_id), STATUS_OK)
 
 
 class SupportedDBTypes(Resource):

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect }from 'react-redux'
 import { Row, Button, FormGroup, FormControl, ControlLabel, HelpBlock, Panel } from 'react-bootstrap';
 import { changePassword } from '../actions/loginActions';
@@ -54,8 +55,8 @@ class ChangePasswordComponent extends Component {
 
 		return(
 			<div className="loginForm">
-				<Panel>
-					<Panel.Heading>Change Password</Panel.Heading>
+				<Panel className="passw_chng_panel_margin">
+					<Panel.Heading className="chgpasswtable">Change Password</Panel.Heading>
 					<Panel.Body>
 						<form onSubmit={this.submitNewPassWord}>
 							<FormGroup controlId="email" >
@@ -77,7 +78,8 @@ class ChangePasswordComponent extends Component {
 									<HelpBlock>{errors.password}</HelpBlock> 
 								}
 							</FormGroup>
-							<Button type="submit" bsStyle="primary">Submit</Button>
+							<Link to="/dashboard"><Button className="backbutton_colors changepasswbackbutton">Back</Button></Link>
+							<Button type="submit" className="button-colors chngpasswbtn" bsStyle="primary">Submit</Button>
 						</form>
 					</Panel.Body>
 				</Panel>

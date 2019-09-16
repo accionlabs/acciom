@@ -3,6 +3,10 @@ from datetime import datetime
 from flask import request
 from flask_restful import reqparse, Resource
 
+from application.common.api_permission import TEST_SUITE_POST, \
+    TEST_SUITE_POST_EXECUTE, TEST_SUITE_PUT, CREATE_NEW_TEST_SUITE_POST, \
+    ADD_TEST_SUITE_MANUALLY_POST, TEST_CASE_LOG_DETAIL_GET, \
+    EXPORT_TEST_LOG_GET, TEST_CASE_LOG_API_GET
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import (APIMessages, SupportedTestClass)
 from application.common.createdbdetail import create_dbconnection
@@ -63,7 +67,7 @@ class TestSuiteAPI(Resource):
             project_id=test_suite_data['project_id'], is_deleted=False).first()
         # check_permission
         check_permission(user_obj,
-                         list_of_permissions=["upload_suite"],
+                         list_of_permissions=TEST_SUITE_POST,
                          org_id=project_obj.org_id,
                          project_id=project_obj.project_id)
         # Check Test Suite name already exist in db or not
@@ -88,7 +92,8 @@ class TestSuiteAPI(Resource):
                 test_suite_id=int(suite_result['Suite'].test_suite_id)).first()
             project_obj = Project.query.filter_by(
                 project_id=test_suite_obj.project_id).first()
-            check_permission(user_obj, list_of_permissions=["execute"],
+            check_permission(user_obj,
+                             list_of_permissions=TEST_SUITE_POST_EXECUTE,
                              org_id=project_obj.org_id,
                              project_id=test_suite_obj.project_id)
             create_job(current_user, test_suite_obj, False)
@@ -171,7 +176,7 @@ class TestSuiteAPI(Resource):
                 return api_response(False,
                                     APIMessages.NO_TEST_CASE,
                                     STATUS_BAD_REQUEST)
-            check_permission(session.user, ["edit_suite"],
+            check_permission(session.user, TEST_SUITE_PUT,
                              project_id_org_id[0],
                              project_id_org_id[1])
             testcasedetail = test_case_obj.test_case_detail
@@ -320,7 +325,8 @@ class CreateNewTestSuite(Resource):
             return api_response(False,
                                 APIMessages.NO_TEST_CASE,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["upload_suite"], project_id_org_id[0],
+        check_permission(session.user, CREATE_NEW_TEST_SUITE_POST,
+                         project_id_org_id[0],
                          project_id_org_id[1])
         get_excel_name_and_project_id = return_excel_name_and_project_id(
             test_suite_data["case_id_list"][0])
@@ -423,7 +429,7 @@ class AddTestSuiteManually(Resource):
         if not project_obj:
             return api_response(False, APIMessages.PROJECT_NOT_EXIST,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["upload_suite"],
+        check_permission(session.user, ADD_TEST_SUITE_MANUALLY_POST,
                          project_obj.org_id, test_suite_data["project_id"])
         # Check Test Suite name already exist in db or not
         test_suite_data["suite_name"] = test_suite_data[
@@ -582,8 +588,7 @@ class TestCaseLogDetail(Resource):
             TestCase.test_case_id == test_case_log_obj.test_case_id,
             TestCase.is_deleted == False).first()
         check_permission(user_obj,
-                         list_of_permissions=[
-                             "view_project"],
+                         list_of_permissions=TEST_CASE_LOG_DETAIL_GET,
                          org_id=project_id_org_id[1],
                          project_id=project_id_org_id[0])
         test_case_log = test_case_log.parse_args()
@@ -636,8 +641,7 @@ class ExportTestLog(Resource):
             TestCase.test_case_id == test_case_log_obj.test_case_id,
             TestCase.is_deleted == False).first()
         check_permission(user_obj,
-                         list_of_permissions=[
-                             "view_project"],
+                         list_of_permissions=EXPORT_TEST_LOG_GET,
                          org_id=project_id_org_id[1],
                          project_id=project_id_org_id[0])
         return export_test_case_log(test_case_log['test_case_log_id'])
@@ -665,8 +669,7 @@ class TestCaseLogAPI(Resource):
         project_obj = Project.query.filter_by(
             project_id=suite_obj.project_id).first()
         check_permission(user_obj,
-                         list_of_permissions=[
-                             "view_project"],
+                         list_of_permissions=TEST_CASE_LOG_API_GET,
                          org_id=project_obj.org_id,
                          project_id=project_obj.project_id)
         return test_case_details(test_case_detail['test_case_id'])

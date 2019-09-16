@@ -106,6 +106,10 @@ class APIMessages:
                       " are CountCheck, NullCheck, DuplicateCheck, DDLCheck, Datavalidation"
     WRONG_DB_CONNECTION = "the given DB conncetion does not belong to the project"
     WRONG_QUERY_ID = "the given query id does not exist in the Database"
+    DELETE_DB_WARNING = "DB connection is associate with existing test case, you cannot delete it."
+    DELETE_DB_VERIFY_DELETE = "Data Base with db id {} can be Deleted."
+    TOKEN_DELETED = "Personal Access Token '{}' is deleted"
+
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
@@ -153,6 +157,18 @@ class TestTypeDisplay:
     DUPLICATES = "Duplicates"
     CONSISTENCY = "Consistency"
     CORRECTNESS = "Correcteness"
+
+
+class DQIClassNameMapping:
+    """Class to map display value and db value of jobs."""
+
+    dqi_class_name_mapping = \
+        {TestClass.COUNT_CHECK: TestTypeDisplay.COMPLETENESS,
+         TestClass.NULL_CHECK: TestTypeDisplay.NULLS,
+         TestClass.DUPLICATE_CHECK: TestTypeDisplay.DUPLICATES,
+         TestClass.DDL_CHECK: TestTypeDisplay.CONSISTENCY,
+         TestClass.DATA_VALIDATION: TestTypeDisplay.CORRECTNESS
+         }
 
 
 class SupportedDBType:

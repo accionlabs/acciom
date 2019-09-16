@@ -1,6 +1,8 @@
 """File to handle Project API Operations."""
 from flask_restful import Resource, reqparse
 
+from application.common.api_permission import PROJECT_GET, PROJECT_POST, \
+    PROJECT_PUT
 from application.common.common_exception import GenericBadRequestException
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_CREATED,
@@ -42,7 +44,7 @@ class ProjectAPI(Resource):
         if not org_obj:
             raise GenericBadRequestException(APIMessages.INVALID_ORG_ID)
         check_permission(user_object=session.user,
-                         list_of_permissions=["create_project"],
+                         list_of_permissions=PROJECT_POST,
                          org_id=create_project_data["org_id"])
         create_project_data['project_name'] = create_project_data[
             'project_name'].strip()
@@ -94,7 +96,7 @@ class ProjectAPI(Resource):
             return api_response(False, APIMessages.PROJECT_NOT_EXIST,
                                 STATUS_BAD_REQUEST)
         check_permission(user_object=session.user,
-                         list_of_permissions=["edit_project"],
+                         list_of_permissions=PROJECT_PUT,
                          project_id=update_project_data["project_id"],
                          org_id=current_project.org_id)
         update_project_data['project_name'] = update_project_data[
@@ -139,7 +141,7 @@ class ProjectAPI(Resource):
                                 APIMessages.NO_RESOURCE.format('Project'),
                                 STATUS_UNAUTHORIZED)
         check_permission(user_object=session.user,
-                         list_of_permissions=["view_project"],
+                         list_of_permissions=PROJECT_GET,
                          org_id=get_project_data["org_id"])
         # dict of org and list of projects to be returned in the response
         projects_to_return = dict()

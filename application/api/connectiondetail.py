@@ -1,16 +1,17 @@
 from flask_restful import Resource, reqparse
 
+from application.common.api_permission import SELECT_CONNECTION_POST, \
+    DB_CONNECTION_GET, CASE_DETAILS_GET
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
-from application.common.response import (api_response, STATUS_SERVER_ERROR,
-                                         STATUS_CREATED, STATUS_BAD_REQUEST)
+from application.common.response import (api_response, STATUS_CREATED,
+                                         STATUS_BAD_REQUEST)
 from application.common.token import (token_required)
 from application.helper.connectiondetails import (select_connection,
                                                   get_db_connection,
                                                   get_case_detail)
 from application.helper.permission_check import check_permission
-from application.model.models import (Project, TestSuite, DbConnection,
-                                      TestCase, User)
+from application.model.models import (Project, TestSuite, TestCase, User)
 
 
 class SelectConnection(Resource):
@@ -47,7 +48,8 @@ class SelectConnection(Resource):
             project_id=suite_obj.project_id).first()
         user_obj = User.query.filter_by(user_id=user).first()
         print(project_obj.org_id, project_obj.project_id)
-        check_permission(user_obj, ['edit_project'], org_id=project_obj.org_id,
+        check_permission(user_obj, SELECT_CONNECTION_POST,
+                         org_id=project_obj.org_id,
                          project_id=project_obj.project_id)
         select_connection(data, user)
 
@@ -83,7 +85,7 @@ class DbConnection(Resource):
             Project.is_deleted == False).first()
         if not project_obj:
             raise ResourceNotAvailableException("Project")
-        check_permission(session.user, ["view_db_details"],
+        check_permission(session.user, DB_CONNECTION_GET,
                          project_obj.org_id, project_data["project_id"])
         payload = get_db_connection(project_data['project_id'])
         return api_response(True, APIMessages.SUCCESS,
@@ -128,7 +130,7 @@ class CaseDetails(Resource):
                 return api_response(False,
                                     APIMessages.PROJECT_CONTAIN_SUITE_NOT_EXIST,
                                     STATUS_BAD_REQUEST)
-            check_permission(session.user, ["view_suite", 'view_project'],
+            check_permission(session.user, CASE_DETAILS_GET,
                              project_obj.org_id, suite_obj.project_id)
             payload = get_case_detail(suite_data['suite_id'])
             return api_response(True, APIMessages.SUCCESS,
