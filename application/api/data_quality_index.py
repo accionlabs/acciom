@@ -234,6 +234,14 @@ class ProjectDQIHistory(Resource):
                     "%Y-%m-%d %H:%M:%S")
         except ValueError:
             raise GenericBadRequestException(APIMessages.DATE_FORMAT)
+
+        if not start_date and not end_date:
+            # If start and end date are not given, take current month range
+            current_day = dt.today()
+            current_month_first_day = date.today().replace(day=1)
+            start_date = current_month_first_day
+            end_date = current_day
+
         # calling get_project_dqi_history to get day wise data
         daily_dqi = get_project_dqi_history(
             dqi_history_data['project_id'], start_date=start_date,
