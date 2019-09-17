@@ -18,7 +18,6 @@ class ChangeOrganisation extends React.Component {
 	}
 
 	render () {
-		
 		const renderOrgListOptions = () => {
 			let options = null;
 			options = this.props.orgList.map((org) => {
@@ -71,7 +70,7 @@ class ChangeOrganisation extends React.Component {
 							</Col>
 						</FormGroup >
 						<FormGroup controlId="submit" className="submitBtn">
-							<Button className="backbutton_colors closebtn">Cancel</Button>
+							<Button className="backbutton_colors closebtn" onClick={(event) => { handleShowOrg(false);}}>Cancel</Button>
 							<Button type="submit" className="button-colors chngorgsavebtn">Save</Button>
 						</FormGroup>
 					</form>
