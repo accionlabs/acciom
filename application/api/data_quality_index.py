@@ -242,6 +242,8 @@ class ProjectDQIHistory(Resource):
         dqi_response['project_id'] = dqi_history_data['project_id']
         dqi_response['project_name'] = check_valid_project.project_name
         dqi_response['dqi_history'] = daily_dqi
+        dqi_response['start_date'] = str(start_date)
+        dqi_response['end_date'] = str(end_date)
         return api_response(True, APIMessages.SUCCESS, STATUS_OK, dqi_response)
 
 
