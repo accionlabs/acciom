@@ -151,8 +151,8 @@ class TestClassDisplay:
 
 class TestTypeDisplay:
     COMPLETENESS = "Completeness"
-    NULLS = "Nulls"
-    DUPLICATES = "Duplicates"
+    NULLS = "Valid"
+    DUPLICATES = "Uniqueness"
     CONSISTENCY = "Consistency"
     CORRECTNESS = "Correcteness"
 
