@@ -5,12 +5,12 @@ export default function ManageConnectionInputs(props) {
 	console.log('FormControlLabelPosition ', props);
 
 	return (
-		<Table className="manageConnection">
+		<Table className="manageConnection manageConnectiontable">
 			<tbody>
 				<tr>
-					<td className="manageConnectionLabel panelheadborder"><label className="manageConnectionHeading sub_title selectconnectiontype">Select Connection Type</label></td>
+					<td className="panelheadborder"><label className="manageConnectionHeading sub_title selectconnectiontype">Select Connection Type</label></td>
 					<td>
-						<div >
+						<div className="radiobtnmargin" >
 							<label className="form-check-label radiolabel">
 								<input
 									type="radio"
