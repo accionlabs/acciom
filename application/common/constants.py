@@ -24,7 +24,6 @@ class APIMessages:
     INVALID_EMAIL_PASSWORD = "Email or Password Password."
     DELETED_USER = "Please contact Admin, your account is not active."
     ADD_DATA = "Test suite uploaded successfully"
-    RETURN_SUCCESS = "success"
     JOB_SUBMIT = "Job submitted successfully"
     PARSER_MESSAGE = "field is required"
     CREATE_RESOURCE = "{} is successfully created"
@@ -107,6 +106,7 @@ class APIMessages:
     DELETE_DB_WARNING = "DB connection is associate with existing test case, you cannot delete it."
     DELETE_DB_VERIFY_DELETE = "Data Base with db id {} can be Deleted."
     TOKEN_DELETED = "Personal Access Token '{}' is deleted"
+    CONNECTION_SETUP = "Connection setup successfully"
 
 
 class GenericStrings:
