@@ -3,6 +3,9 @@ import ast
 from flask import request
 from flask_restful import Resource, reqparse
 
+from application.common.api_permission import TEST_CASE_JOB_POST, \
+    EDIT_TEST_CASE_GET, EDIT_TEST_CASE_PUT, EDIT_TEST_CASE_DELETE, \
+    TEST_CASE_JOB_EXTERNAL_POST
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import (APIMessages, ExecutionStatus,
                                           SupportedTestClass, SupportedDBType,
@@ -69,7 +72,7 @@ class TestCaseJob(Resource):
 
             user_obj = User.query.filter_by(user_id=user_id,
                                             is_deleted=False).first()
-            check_permission(user_obj, list_of_permissions=["execute"],
+            check_permission(user_obj, list_of_permissions=TEST_CASE_JOB_POST,
                              org_id=project_obj.org_id,
                              project_id=test_suite_obj.project_id)
             # Create a Job
@@ -95,7 +98,7 @@ class TestCaseJob(Resource):
                     APIMessages.PROJECT_NOT_EXIST)
             user_obj = User.query.filter_by(user_id=user_id,
                                             is_deleted=False).first()
-            check_permission(user_obj, list_of_permissions=["execute"],
+            check_permission(user_obj, list_of_permissions=TEST_CASE_JOB_POST,
                              org_id=project_obj.org_id,
                              project_id=test_suite_obj.project_id)
             # Create a Job
@@ -230,7 +233,8 @@ class EditTestCase(Resource):
             return api_response(False,
                                 APIMessages.NO_TEST_CASE,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["view_suite"], project_id_org_id[0],
+        check_permission(session.user, EDIT_TEST_CASE_GET,
+                         project_id_org_id[0],
                          project_id_org_id[1])
         test_case_detail = test_case_obj.test_case_detail
         source_db_id = test_case_detail["src_db_id"]
@@ -379,7 +383,8 @@ class EditTestCase(Resource):
             return api_response(False,
                                 APIMessages.NO_TEST_CASE,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["edit_suite"], project_id_org_id[0],
+        check_permission(session.user, EDIT_TEST_CASE_PUT,
+                         project_id_org_id[0],
                          project_id_org_id[1])
         testcasedetail = test_case_obj.test_case_detail
         for key, value in user_test_case_detail.items():
@@ -508,7 +513,8 @@ class EditTestCase(Resource):
             return api_response(False,
                                 APIMessages.NO_TEST_CASE,
                                 STATUS_BAD_REQUEST)
-        check_permission(session.user, ["delete_suite"], project_id_org_id[0],
+        check_permission(session.user, EDIT_TEST_CASE_DELETE,
+                         project_id_org_id[0],
                          project_id_org_id[1])
         test_case_obj.is_deleted = True
         test_case_obj.save_to_db()
@@ -551,7 +557,7 @@ class TestCaseJobExternal(Resource):
         is_external = True
         token = execution_data['token']
         personal_token_obj = PersonalToken.query.filter_by(
-            encrypted_personal_token=token).first()
+            encrypted_personal_token=token, is_deleted=False).first()
 
         if execution_data['case_id_list']:
             if personal_token_obj.user_id == user_id:
@@ -572,7 +578,8 @@ class TestCaseJobExternal(Resource):
                         APIMessages.PROJECT_NOT_EXIST)
                 user_obj = User.query.filter_by(user_id=user_id,
                                                 is_deleted=False).first()
-                check_permission(user_obj, list_of_permissions=["execute"],
+                check_permission(user_obj,
+                                 list_of_permissions=TEST_CASE_JOB_EXTERNAL_POST,
                                  org_id=project_obj.org_id,
                                  project_id=test_suite_obj.project_id)
 
@@ -603,7 +610,8 @@ class TestCaseJobExternal(Resource):
 
                 user_obj = User.query.filter_by(user_id=user_id,
                                                 is_deleted=False).first()
-                check_permission(user_obj, list_of_permissions=["execute"],
+                check_permission(user_obj,
+                                 list_of_permissions=TEST_CASE_JOB_EXTERNAL_POST,
                                  org_id=project_obj.org_id,
                                  project_id=test_suite_obj.project_id)
                 create_job(user_id, test_suite_obj, is_external)

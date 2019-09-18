@@ -1,6 +1,8 @@
 """File to handle User Management related APIs."""
 from flask_restful import reqparse, Resource
 
+from application.common.api_permission import USER_API_GET, USER_ROLE_API_POST, \
+    USER_ROLE_API_GET
 from application.common.common_exception import (ResourceNotAvailableException,
                                                  GenericBadRequestException)
 from application.common.constants import APIMessages
@@ -35,7 +37,7 @@ class UserAPI(Resource):
         check_valid_id_passed_by_user(org_id=user_api_parser['org_id'])
         # TODO: Add a check to verify user management permission
         check_permission(user_object=session.user,
-                         list_of_permissions=["user_management"],
+                         list_of_permissions=USER_API_GET,
                          org_id=user_api_parser["org_id"])
         user_project_role = UserProjectRole.query.filter(
             UserProjectRole.org_id == user_api_parser['org_id']).distinct(
@@ -126,7 +128,7 @@ class UserRoleAPI(Resource):
         passed_roles_list.extend(
             create_role_api_parser['org_allowed_role_list'])
         check_permission(user_object=session.user,
-                         list_of_permissions=["user_management"],
+                         list_of_permissions=USER_ROLE_API_POST,
                          org_id=create_role_api_parser["org_id"])
         # get all roles under the given org
         valid_roles_under_org = Role.query.filter_by(
@@ -227,7 +229,7 @@ class UserRoleAPI(Resource):
                 org_id=get_role_api_parser['org_id'],
                 user_id=get_role_api_parser['user_id'])
         check_permission(user_object=session.user,
-                         list_of_permissions=["user_management"],
+                         list_of_permissions=USER_ROLE_API_GET,
                          org_id=get_role_api_parser["org_id"])
         # Get user Id based on email Id passed
         if get_role_api_parser['email_id'] and \

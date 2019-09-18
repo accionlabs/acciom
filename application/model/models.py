@@ -356,6 +356,7 @@ class PersonalToken(db.Model):
     encrypted_personal_token = db.Column(db.String(256), unique=True,
                                          index=True, nullable=False)
     note = db.Column(db.Text, nullable=False)
+    is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
     def __init__(self, user_id, encrypted_personal_token, note):

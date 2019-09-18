@@ -7,7 +7,9 @@ import {
 	SWITCH_PROJECT_SUCCESS,
 	REDIRECT_TO_VIEW_DB_PAGE_COMPLETE,
 	DELETE_DB_DETAILS_SUCCESS,
-	UPLOAD_TESTCASES_SUCCESS
+	UPLOAD_TESTCASES_SUCCESS,
+	RESET_SELECTED_DB_DETAILS
+
 } from '../constants/ActionTypes';
 
 const initialState = {
@@ -60,7 +62,12 @@ const dbDetailsData = (state = initialState, action) => {
 			...state,
 			redirectToViewDBPage:false
 		};
-
+	case RESET_SELECTED_DB_DETAILS:
+		return {
+			...state,
+			selectedDbDetails: null
+		}
+	
 	default:
 		return state;
 	}

@@ -27,9 +27,10 @@ class Startup extends React.Component {
 		return (
 			<div className='testSuiteList'>
 				<div className='page-title'>
-					<h2 className="activityHeading main_titles">Data Profiling</h2>
+				<i class="fa fa-list-alt fa-2x profileicon" aria-hidden="true"></i>
+					<h2 className="main_titles dataprofilingtitle">Data Profiling</h2>
 					<div className='project-switch'>
-						<Button className="button-colors" bsStyle="primary" onClick={ (e) => this.props.showProjectSwitchPage(true)}>Switch Project</Button> 
+						<Button className="button-colors switchprojectbtn" bsStyle="primary" onClick={ (e) => this.props.showProjectSwitchPage(true)}>Switch Project</Button> 
 					</div>
 				</div>
 				<TestSuiteList />

@@ -171,9 +171,9 @@ class EditUserRoles extends Component {
 				element.push(
 					(<div class='footer'>
 						<Link to={`/user_management`}>
-							<Button type="button" bsStyle="primary">Back To User List</Button>
+							<Button type="button" className="userbackbtn" bsStyle="primary">Back To User List</Button>
 						</Link>
-						<Button type="button" bsStyle="primary" onClick={(e) => {this.onSaveUserRoles()}}>Save</Button>
+						<Button type="button" className="button-colors" bsStyle="primary" onClick={(e) => {this.onSaveUserRoles()}}>Save</Button>
 					</div>)
 				);
 			}
@@ -201,7 +201,7 @@ class EditUserRoles extends Component {
 		});
 		const payload = {
 			'org_id': this.props.currentOrg.org_id,
-			// 'user_id': this.props.selectedUser.user_id,
+			//'user_id': this.props.selectedUser.user_id,
 			'email_id': this.props.selectedUser.email_id,
 			'project_role_list': projectRoleList,
 			'org_allowed_role_list': orgAllowedRoleList
@@ -212,10 +212,12 @@ class EditUserRoles extends Component {
 	render() {
 		return (
 			<div id="editUserRoles">
-				<h3 className="editableHeader">Manage Role</h3>
-				<div className = "DescriptionHeader">Email</div>
-				<input type="text" value={this.props.selectedUser? this.props.selectedUser.email_id: ''} className="Description" disabled/>
-
+				<h3 className="usermanagetitle main_titles">Manage User Role</h3>
+				<div className = "DescriptionHeader sub_title submailtitle" className="maillabel sub_title">Email:</div>
+				<div className="maillabel1 other-titles">{this.props.selectedUser? this.props.selectedUser.email_id: ''}</div>
+				<div className="sub_title usernamelabel">Username:</div>
+				<div className="maillabel1 other-titles">{this.props.selectedUser? this.props.selectedUser.first_name: ''}</div>
+				<h5 className="userroles sub_title">Roles</h5>
 				{ this.renderUserRoles() }
 
 			</div>

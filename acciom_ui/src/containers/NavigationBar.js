@@ -143,7 +143,7 @@ const getLoginOptions = (props, classes) => {
 	const getLoginElements = () => {
 		if (props.loginData && props.loginData.token) {
 			return ( <div>
-				<DropdownButton id="account_button" className="button-colors"  title="Account" bsStyle="primary" bsSize="small" pullRight noCaret
+				<DropdownButton className="button-colors account_button"  title="Account" bsStyle="primary" bsSize="small" pullRight noCaret
 					onClick={(event) => { event.preventDefault();}}>
 					<MenuItemBS eventKey="1" className={classes.width}>
 						<Link to="/access_token"  className={classes.width}>Access Token</Link>
@@ -156,9 +156,6 @@ const getLoginOptions = (props, classes) => {
 						{/* <Link to="/change_password">Change Password</Link> */}
 						<span id="change_organisation" onClick={(event) => { handleShowOrg(props, true);}}>Change Organisation</span>
 					</MenuItemBS>
-					<MenuItemBS eventKey="5">
-						<Link to="/user_management">User Management</Link>
-					</MenuItemBS>
 					<MenuItemBS eventKey="6">
 						<Link id="logoutLink" className={classes.loginbtn} onClick={(event) => { event.preventDefault(); props.logoutFromPortal() }}>Logout</Link>
 					</MenuItemBS>
@@ -168,7 +165,7 @@ const getLoginOptions = (props, classes) => {
 		} else {
 			return (
 				<div>
-					<DropdownButton  title="Account" bsStyle="primary" bsSize="small" id="dropdown-no-caret loginLink" pullRight noCaret
+					<DropdownButton  title="Account" bsStyle="primary" className="button-colors account_button" bsSize="small" id="dropdown-no-caret loginLink" pullRight noCaret
 						onClick={(event) => { event.preventDefault();}}>
 						<MenuItemBS eventKey="3">
 							<Link to="/forgot_password">Forgot Password</Link>
@@ -253,7 +250,7 @@ function NavigationBar(props) {
 									<Icon className={clsx(classes.icon, 'fas fa-business-time fa-2x')} color="primary" />	
 								</Link>
 							</ListItemIcon>
-							<Link to={`/dashboard`} className = {classes.dashboard}> Dashboard </Link> <br />
+							<Link to={`/dashboard`} id="dashbcolor" className = {classes.dashboard} className = {classes.hovercolor} > Dashboard </Link> <br />
 						</MenuItem>
 						<MenuItem>
 							<ListItemIcon>
@@ -261,7 +258,7 @@ function NavigationBar(props) {
 									<Icon className={clsx(classes.icon, 'fas fa-upload fa-2x')} color="primary" />  
 								</Link> 
 							</ListItemIcon>
-							<Link to={`/test_suite_upload`} className = {classes.home}> Upload Data Profiling </Link> <br />
+							<Link to={`/test_suite_upload`} id="dashbcolor"  className = {classes.home}> Upload Data Profiling </Link> <br />
 						</MenuItem>
 						<MenuItem>
 							<ListItemIcon>
@@ -269,7 +266,7 @@ function NavigationBar(props) {
 									<Icon className={clsx(classes.icon, 'fas fa-list-alt fa-2x')} color="primary" />
 								</Link>
 							</ListItemIcon>
-							<Link to={`/startup`} className = {classes.startup}>Data Profiling</Link>
+							<Link to={`/startup`} id="dashbcolor"  className = {classes.startup}>Data Profiling</Link>
 						</MenuItem>
 						<MenuItem>
 							<ListItemIcon>
@@ -277,7 +274,15 @@ function NavigationBar(props) {
 									<Icon className={clsx(classes.icon, 'fas fa-database fa-2x')} color="primary" />
 								</Link>
 							</ListItemIcon>
-							<Link to={`/view_db_details`} className = {classes.startup}>View DB Details</Link>
+							<Link to={`/view_db_details`} id="dashbcolor"  className = {classes.startup}>View DB Details</Link>
+						</MenuItem>
+						<MenuItem>
+						<ListItemIcon>
+							<Link to={'/user_management'}>
+								<Icon className="fa fa-users usericon" color="primary"></Icon>
+							</Link>
+						</ListItemIcon>
+						<Link to={'/user_management'} id="dashbcolor"  className = {classes.startup}>Manage User Roles</Link>
 						</MenuItem>
 						
 					</MenuList>

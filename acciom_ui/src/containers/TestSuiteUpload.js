@@ -240,7 +240,7 @@ class TestSuiteUpload extends React.Component {
 						<h5 className="margin-title">Please select the sheet to be loaded</h5>
 						<div>{ sheetList } </div>
 						<div className="margin-button">
-							<Button bsStyle="primary" onClick={ (e) => onContinueClick()}>Load Test Cases</Button> 
+							<Button bsStyle="primary" className="button-colors" onClick={ (e) => onContinueClick()}>Load Test Cases</Button> 
 						</div>
 					</div>
 				);
@@ -276,7 +276,7 @@ class TestSuiteUpload extends React.Component {
 						<Panel className='testCaseListPanel'>
 							<Panel.Body>
 								<Table responsive>
-									<thead>
+									<thead className="sub_title">
 										<tr>
 											<th>Test Case Description</th>
 											<th>Test Class</th>
@@ -297,8 +297,8 @@ class TestSuiteUpload extends React.Component {
 									</tbody>
 								</Table>
 								<div>
-									<Button bsStyle="primary" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD_AND_EXECUTE)} disabled={this.isNameAlreadyExist || !isValid()}>Upload and Execute</Button>								
-									<Button bsStyle="primary" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD)} disabled={this.isNameAlreadyExist || !isValid()}>Upload</Button> 
+									<Button bsStyle="primary" className="button-colors updateandexcbtn" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD_AND_EXECUTE)} disabled={this.isNameAlreadyExist || !isValid()}>Upload and Execute</Button>								
+									<Button bsStyle="primary" className="button-colors uploadbtn" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD)} disabled={this.isNameAlreadyExist || !isValid()}>Upload</Button> 
 								</div>
 							</Panel.Body>
 						</Panel>
@@ -325,8 +325,8 @@ class TestSuiteUpload extends React.Component {
 				this.isNameAlreadyExist = checkNameAlreadyExist(testSuites,displayName);
 				element = (
 					<div className="row">
-						<h5 className="suite-name-title">Test Suite Name: </h5>
-						<input type="textbox" className="suite-test-input" onChange={e => handleInputChange(e,i)} value={ displayName } />
+						<h5 className="suite-name-title sub_title">Test Suite Name: </h5>
+						<input type="textbox" className="suite-test-input suiteditbox" onChange={e => handleInputChange(e,i)} value={ displayName } />
 						{this.isNameAlreadyExist &&
 							<span style={{color:"red", paddingLeft:"10px"}}>Test suite Name already exist</span>
 						}
@@ -353,18 +353,19 @@ class TestSuiteUpload extends React.Component {
 			
 			<div id="suite-upload">
 				<div>
-					<h4 className='pageTitle'>Update Data Profiling</h4>
-					<div className='project-switch'><Button bsStyle="primary" onClick={ (e) => handleSwitchProject()}>Switch Project</Button> </div>
+					<i class="fa fa-upload upprofileicon" aria-hidden="true"></i>
+					<h4 className='pageTitle update-data-profiling-title main_titles'>Update Data Profiling</h4>
+					<div className='project-switch brows-btn'><Button className="button-colors" bsStyle="primary" onClick={ (e) => handleSwitchProject()}>Switch Project</Button> </div>
 				</div>
 				<Tabs activeKey={this.state.key} onSelect={handleSelect} id="controlled-tab-example" >
-					<Tab eventKey={TAB_UPLOAD_FILE} title="Upload Data Profiling">
+					<Tab className="updatedataprofilingtab" eventKey={TAB_UPLOAD_FILE} title="Upload Data Profiling">
 						<div className='testSuiteUploadOptions'>
 							<div className="hideElement">
 								<input  id="testSuiteUploadFile" type="file" className="file" placeholder="Upload file" accept=".xlsx" 
 									onChange={ (e) => handleChange(e)}/>
 							</div>
-							<input className="browse-txt" type="textbox" placeholder="example.xlsx" value={this.props.file} disabled/>
-							<Button className="browse-button" bsStyle="primary" onClick={ (e) => handleTestSuiteUploadClick()}>Browse File</Button>							
+							<input className="browse-txt" type="textbox" placeholder="&nbsp; example.xlsx" value={this.props.file} disabled/>
+							<Button className="button-colors" bsStyle="primary" onClick={ (e) => handleTestSuiteUploadClick()}>Browse File</Button>							
 						</div>
 					</Tab>
 			

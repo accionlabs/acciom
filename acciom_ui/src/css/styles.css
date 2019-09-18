@@ -56,13 +56,8 @@ html
     padding: 0px 16px;
 }
 .clipboardOnhover:hover {
-    color:  blue;
+    /* color:  blue; */
     cursor: pointer 
-}
-.needToken {
-    width: 40%;
-    /* font-size: 1rem */
-    
 }
 .tokenField {
     border: none;
@@ -734,7 +729,7 @@ html
    }
    .nav.child_menu li:hover,
    .nav.child_menu li.active {
-       background-color: rgba(255, 255, 255, 0.06)
+       background-color: rgba(255, 255, 255, 0.06);
    }
    .nav.child_menu li {
        padding-left: 36px
@@ -1841,7 +1836,7 @@ html
        width: 26px;
        opacity: .99;
        display: inline-block;
-       font-family: FontAwesome;
+       /* font-family: FontAwesome; */
        font-style: normal;
        font-weight: normal;
        font-size: 18px;
@@ -2490,7 +2485,7 @@ html
        margin-right: 5px;
        font-weight: 500;
        margin-bottom: 5px;
-       font-family: helvetica
+       font-family: Open sans;
    }
    span.tag a {
        color: #F1F6F7 !important
@@ -2504,7 +2499,7 @@ html
    .tagsinput input {
        width: 80px;
        margin: 0px;
-       font-family: helvetica;
+       font-family: Open sans;
        font-size: 13px;
        border: 1px solid transparent;
        padding: 3px;
@@ -3063,7 +3058,7 @@ html
        right: -3px
    }
    .ui-ribbon-container.ui-ribbon-primary .ui-ribbon {
-       background-color: #5b90bf
+       background-color: blue;
    }
    .ui-ribbon-container .ui-ribbon {
        position: relative;
@@ -3156,7 +3151,7 @@ html
        padding: 0 4px
    }
    .view p {
-       font-family: Georgia, serif;
+       font-family: Open sans;
        font-style: italic;
        font-size: 12px;
        position: relative;
@@ -3315,7 +3310,7 @@ html
        color: #666;
        background: rgba(243, 242, 243, 0.8);
        border: solid 2px rgba(195, 194, 196, 0.8);
-       font-family: sans-serif;
+       font-family: Open sans;
        font-size: 12px;
        text-align: center
    }
@@ -4154,13 +4149,13 @@ html
     font-weight: bold; 
 }
 
-.sideNavBar a:hover {
+/* .sideNavBar a:hover {
     color: #b0daff !important;
 }
 
 .sideNavBar a:active {
    color: #0085fb !important
-}
+} */
 
 .DQIprojectGauge {
     padding-top: 0px !important;
@@ -4207,9 +4202,6 @@ textarea {
 .manageSelectConnection .MuiSelect-root {
     width:160px;
 }
-
-.selectconnection {width:70% !important;}
-
 
  #editMode>tbody>tr>td, .manageConnection>tbody>tr>td, #viewLogDetails>tbody>tr>td { 
     border-top: 0px !important;
@@ -4341,7 +4333,7 @@ textarea {width:280px;}
    
 
   .MuiIconButton-label .MuiSvgIcon-root {
-      color: aliceblue;
+      color:#fff;
   }
 
   .DQIprojectGaugeDetail {
@@ -4426,7 +4418,8 @@ textarea {width:280px;}
   .singleSelect, .multiSelect {
       display: inline-block;
       width: 40%;
-      padding-left: 15px;
+      margin-left: 15px;
+      color: #000 !important;
   }
 
   .plusCircle, .minusCircle {
@@ -4465,13 +4458,13 @@ textarea {width:280px;}
     padding-top: 5px;
 }
 #userManagement .list-group-item .fa-user-circle{
-    font-size: 30px;
+    font-size: 23px;
     padding-top: 5px;
 }
 
 #userManagement .list-group-item .fName {
     display: block;
-    font-size: 17px;
+    font-size: 16px;
 }
 #userManagement .list-group-item .email {
     display: block;
@@ -4484,15 +4477,16 @@ textarea {width:280px;}
 }
 
 .user_name, .Description {
-    width: 79%;
-    margin-left: 15px;
+    width: calc(80% + 15px);
+    margin-left: 16px;
     height: 35px;
-    border-radius: 3px;
-    margin-bottom: 20px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #fff;
 }
 
 .userNameHeader, .DescriptionHeader, .editableHeader {
-    margin-left: 15px;
+    margin-left: 14px;
 }
 
 .chartLabel {
@@ -4595,12 +4589,6 @@ textarea {width:280px;}
 
 .browse-button {
     height: 35px;
-}
-
-.browse-txt {
-    height: 35px;
-    width: 300px;
-    margin-right: 10px;
 }
 
 .deleteconfirmpopupfield{
