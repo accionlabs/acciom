@@ -31,31 +31,26 @@ class AreaChart extends Component {
 			},
 		}
 
-		let series =  [{name:"countcheck",data:[]},
-					   {name:"datavalidation",data:[]},
-					   {name:"nullcheck",data:[]},
-					   {name:"duplicatecheck",data:[]},
-					   {name:"ddlcheck",data:[]},
+		let series =  [{name:"Completeness",data:[]},
+					   {name:"Valid",data:[]},
+					   {name:"Uniqueness",data:[]},
+					   {name:"Correcteness",data:[]},
+					   {name:"Consistency",data:[]},
 					   {name:"average_dqi",data:[]}
 					];
 
 		options.xaxis.categories = [];
 		if (this.props.projectDataHistory !== undefined) {
 			options.xaxis.categories = Object.keys(this.props.projectDataHistory);
-			console.log("options.xaxis.categories ========>",options.xaxis.categories );
 			for(let prop in this.props.projectDataHistory){
 				var date_object=this.props.projectDataHistory[prop];
-				series[0].data.push(date_object.hasOwnProperty('countcheck') ? date_object.countcheck : 0);
-				series[1].data.push(date_object.hasOwnProperty('datavalidation') ? date_object.datavalidation : 0);
-				series[2].data.push(date_object.hasOwnProperty('nullcheck') ? date_object.nullcheck : 0);
-				series[3].data.push(date_object.hasOwnProperty('duplicatecheck') ? date_object.duplicatecheck : 0);
-				series[4].data.push(date_object.hasOwnProperty('ddlcheck') ? date_object.ddlcheck : 0);
+				series[0].data.push(date_object.hasOwnProperty('Completeness') ? date_object.Completeness : 0);
+				series[1].data.push(date_object.hasOwnProperty('Valid') ? date_object.Valid : 0);
+				series[2].data.push(date_object.hasOwnProperty('Uniqueness') ? date_object.Uniqueness : 0);
+				series[3].data.push(date_object.hasOwnProperty('Correcteness') ? date_object.Correcteness : 0);
+				series[4].data.push(date_object.hasOwnProperty('Consistency') ? date_object.Consistency : 0);
 				series[5].data.push(date_object.hasOwnProperty('average_dqi') ? date_object.average_dqi : 0);
-				console.log("series=========>",series);
-				console.log("date_object=========>",date_object.countcheck);
-				console.log("prop=======", prop)
 			}
-			console.log(series);
 		}
 		return (
 		<div id="chart">
