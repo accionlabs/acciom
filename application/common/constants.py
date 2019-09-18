@@ -214,6 +214,12 @@ class SupportedTestClass:
                                          3: TestClassDisplay.DDL_CHECK,
                                          4: TestClassDisplay.DUPLICATE_CHECK,
                                          5: TestClassDisplay.DATA_VALIDATION}
+    supported_test_class_test_type_display_name = {
+        1: TestTypeDisplay.COMPLETENESS,
+        2: TestTypeDisplay.NULLS,
+        3: TestTypeDisplay.CONSISTENCY,
+        4: TestTypeDisplay.DUPLICATES,
+        5: TestTypeDisplay.CORRECTNESS}
 
     def get_test_class_name_by_id(self, test_class_id):
         """
@@ -224,6 +230,18 @@ class SupportedTestClass:
         Returns: (str) name of the test class
         """
         return self.supported_test_class.get(test_class_id)
+
+    def get_test_type_display_name_by_id(self, test_class_id):
+        """
+        Method to return test type display name by passing id.
+
+        Args:
+            test_class_id(int): Id of the test class.
+
+        Returns(str):test type display name of the test class.
+        """
+        return self.supported_test_class_test_type_display_name.get(
+            test_class_id)
 
     def get_test_class_id_by_name(self, name):
         """

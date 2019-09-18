@@ -246,7 +246,7 @@ class ProjectDQIHistory(Resource):
             current_month_first_day = date.today().replace(day=1)
             start_date = current_month_first_day.strftime("%Y-%m-%d")
             end_date = current_day.strftime("%Y-%m-%d")
-            
+
         dqi_response = OrderedDict()
         dqi_response['project_id'] = dqi_history_data['project_id']
         dqi_response['project_name'] = check_valid_project.project_name
@@ -311,8 +311,7 @@ def get_project_dqi_history(project_id, start_date=None, end_date=None):
         temp_dict[each_tuple[3]][each_tuple[2]][each_tuple[4]][each_tuple[0].
             strftime(
             "%Y-%m-%d")][SupportedTestClass(
-        ).get_test_class_name_by_id(each_tuple[2])] = each_tuple[1]
-
+        ).get_test_type_display_name_by_id(each_tuple[2])] = each_tuple[1]
     # dict_dqi_for_each_class is used to store
     # list of dqi for each class for each day
     dict_dqi_for_each_class = dict()
