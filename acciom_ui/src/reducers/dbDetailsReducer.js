@@ -6,7 +6,8 @@ import {
 	GET_PROJECT_LIST_BY_ORG_ID_SUCCESS,
 	SWITCH_PROJECT_SUCCESS,
 	REDIRECT_TO_VIEW_DB_PAGE_COMPLETE,
-	DELETE_DB_DETAILS_SUCCESS
+	DELETE_DB_DETAILS_SUCCESS,
+	UPLOAD_TESTCASES_SUCCESS
 } from '../constants/ActionTypes';
 
 const initialState = {
@@ -47,6 +48,8 @@ const dbDetailsData = (state = initialState, action) => {
 	
 	case GET_PROJECT_LIST_BY_ORG_ID_SUCCESS:
 	case SWITCH_PROJECT_SUCCESS:
+	case DELETE_DB_DETAILS_SUCCESS:
+	case UPLOAD_TESTCASES_SUCCESS:
 		return {
 			...state,
 			refreshDBDetails: true
@@ -57,12 +60,7 @@ const dbDetailsData = (state = initialState, action) => {
 			...state,
 			redirectToViewDBPage:false
 		};
-	
-	case DELETE_DB_DETAILS_SUCCESS:
-		return {
-			...state,
-			refreshDBDetails: true
-		}
+
 	default:
 		return state;
 	}

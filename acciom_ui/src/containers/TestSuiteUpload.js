@@ -18,6 +18,7 @@ import {
 import { 
 	getAllTestSuites,
 } from '../actions/testSuiteListActions';
+import { getAllDBDetails } from '../actions/dbDetailsActions';
 import { red } from '@material-ui/core/colors';
 
 const TAB_UPLOAD_FILE = 1;
@@ -45,6 +46,7 @@ class TestSuiteUpload extends React.Component {
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		let newState = prevState;
+		console.log("derivedstatefromprops------>");
 
 		if (nextProps.moveToSelectSheetPage) {
 			newState = { ...prevState, key: TAB_UPLOAD_SHEET };
@@ -61,7 +63,7 @@ class TestSuiteUpload extends React.Component {
 			
 		} else if (nextProps.redirectToSuiteList) {
 			nextProps.history.push('/startup');
-		}
+		} 
 		return newState;
 	}
 
@@ -132,6 +134,8 @@ class TestSuiteUpload extends React.Component {
 	onUploadBtnClick = (mode) => {
 		let suiteName = '';
 		const selectedTestCases = [];
+		// this.props.getAllDBDetails(this.props.project_id);
+		// console.log("this.props.getalldbdetails=============>",this.props.getAllDBDetails);
 
 		this.props.allCases.forEach((item) => {
 			if (item.selected) {
@@ -149,6 +153,8 @@ class TestSuiteUpload extends React.Component {
 		const body = this.getPostFilePayloadData(this.testSuiteFile, this.selectedSheet, selectedTestCases, suiteName, mode, projectId);
 		
 		this.props.uploadTestCases(body);
+		// this.props.getAllDBDetails(projectId);
+		// console.log("this.props.getalldbdetails=============>",this.props.getAllDBDetails);
 	};
 
 	render() {
@@ -409,6 +415,7 @@ const mapDispatchToProps = dispatch => ({
 	resetDataForSheetPage: () => dispatch(resetDataForSheetPage()),
 	resetDataForCasePage: () => dispatch(resetDataForCasePage()),
 	getAllTestSuites  : (data)=> dispatch(getAllTestSuites(data)),
+	getAllDBDetails: (data)=> dispatch(getAllDBDetails(data))
 });
 
 export default connect(
