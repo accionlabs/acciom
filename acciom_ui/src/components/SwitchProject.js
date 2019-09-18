@@ -28,15 +28,6 @@ class SwitchProject extends React.Component {
 		return options;
 	};
 	render () {
-		console.log('this.props.projectList.', this.props.projectList)
-		// const renderProjectListOptions = () => {
-		// 	let options = null;
-		// 	options = this.props.projectList.map((project) => {
-		// 		return (<option value={project.project_id}>{project.project_name}</option>);
-		// 	});
-		// 	return options;
-		// };
-
 		const hidePopup  = () => {
 			this.props.showProjectSwitchPage(false);
 		};
@@ -47,11 +38,6 @@ class SwitchProject extends React.Component {
 			})
 		};
 		
-		// const handleProjectChange = (e) => {
-		// 	this.setState({selectedProjectId: e.target.value});
-		// };
-
-
 		const onSubmit = (e) => {
 			e.preventDefault();
 			// 
