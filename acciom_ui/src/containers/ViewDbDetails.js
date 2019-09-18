@@ -20,7 +20,8 @@ class ViewDbDetails extends Component {
 	}
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
-		if (nextProps.refreshDBDetails) {
+		// if (nextProps.refreshDBDetails !=true) {
+		if (nextProps.refreshDBDetails){
 			nextProps.getAllDBDetails(nextProps.currentProject.project_id);
 		}
 		return prevState;
