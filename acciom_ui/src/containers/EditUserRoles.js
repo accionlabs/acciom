@@ -218,7 +218,9 @@ class EditUserRoles extends Component {
 				<div className="sub_title usernamelabel">Username:</div>
 				<div className="maillabel1 other-titles">{this.props.selectedUser? this.props.selectedUser.first_name: ''}</div>
 				<h5 className="userroles sub_title">Roles</h5>
+				<div className="rolesborder">
 				{ this.renderUserRoles() }
+				</div>
 
 			</div>
 		);

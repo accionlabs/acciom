@@ -353,7 +353,7 @@ class TestSuiteUpload extends React.Component {
 			
 			<div id="suite-upload">
 				<div>
-					<i class="fa fa-upload upprofileicon" aria-hidden="true"></i>
+					<i class="fa fa-upload upprofileicon uploadicon" aria-hidden="true"></i>
 					<h4 className='pageTitle update-data-profiling-title main_titles'>Update Data Profiling</h4>
 					<div className='project-switch brows-btn'><Button className="button-colors" bsStyle="primary" onClick={ (e) => handleSwitchProject()}>Switch Project</Button> </div>
 				</div>

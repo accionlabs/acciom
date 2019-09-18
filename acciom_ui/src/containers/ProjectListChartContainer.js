@@ -62,6 +62,7 @@ class ProjectChartList extends Component {
 
 		return (
 			<div className="row projectList">
+				<i class="fas fa-business-time QLicon"></i>
 				<div className="main_titles QLindex-title">Quality Index</div>
 				{ this.getDonutCharts() }
 			</div>

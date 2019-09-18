@@ -30,7 +30,6 @@ class UserManagement extends Component {
 		let userList = '';
 		if (this.props.orgUserList.length > 0) {
 			userList = this.props.orgUserList.map((user, index) =>{
-				console.log('user here', user)
 				return (
 					<tr>
 						<td key={index}>

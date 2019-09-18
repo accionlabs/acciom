@@ -29,13 +29,22 @@ import { NEW, PASS, FAIL, ERROR, INPROGRESS, INPROGRESS_ID, PASS_ID, FAIL_ID, ER
 const useStyles = makeStyles(theme => ({
 	root: {
 		width: '100%',
+		marginTop: '-22px',
 	},
-	heading: {
+	headingInactive: {
 		fontSize: theme.typography.pxToRem(13),
 		flexBasis: '33.33%',
 		flexShrink: 0,
 		fontFamily: 'Open sans',
 		color: '#69717D'
+	},
+	headingActive: {
+		fontSize: theme.typography.pxToRem(13),
+		flexBasis: '33.33%',
+		flexShrink: 0,
+		fontFamily: 'Open sans',
+		color: '#69717D',
+		fontWeight:'bold',
 	},
 	secondaryHeading: {
 		fontSize: theme.typography.pxToRem(13),
@@ -123,7 +132,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 	getTestCaseByTestCaseId, executeTestBySuiteId, executeTestByCaseId, showConnectionsDialog, getEachTestCaseDetailByCaseID,
 	eachTestCaseDetails }) {
 	let project_id;
-	// console.log("project id==> ", projectId)
+
 	if(projectId && projectId.appData && projectId.appData.currentProject) {
 		project_id = projectId.appData.currentProject.project_id ? projectId.appData.currentProject.project_id : 2;
 		console.log("projectId==>", project_id)
@@ -134,8 +143,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 	const [testSuiteIdForManageConnections, setTestSuiteIdForManageConnections] = React.useState(null);
 
 	useEffect(() => {
-		// const project_Id = projectId.appData.currentProject.project_id; // remove this hardcoded assignment
-		// console.log("project id==> ", projectId)
+
 		getAllConnections(project_id);
 		return function cleanup() {
 			clearInterval(refreshTimer);
@@ -285,7 +293,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 	};
 	
 	return (
-		<div className={classes.root}>
+		<div className="paneltopmargin">
 			{ 
 				(testSuites) ? testSuites.map(testSuite => (
 					<ExpansionPanel className={expanded === testSuite.test_suite_id ? "panelbg" : ""} key={testSuite.test_suite_id} expanded={expanded === testSuite.test_suite_id} onChange={handleChange(testSuite.test_suite_id)}>
@@ -294,8 +302,8 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 							expandIcon={<ExpandMoreIcon />}
 							aria-controls="panel1bh-content"
 							id="panel1bh-header">
-							<Typography className={classes.heading}>{testSuite.test_suite_name}</Typography>
-							<Typography className={classes.manageConnection}><span onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={e => handleManageConnection(e, testSuite.test_suite_id)}>Manage Connections</span></Typography>
+							<Typography className={(expanded === testSuite.test_suite_id ? (classes.headingActive) : classes.headingInactive)}>{testSuite.test_suite_name}</Typography>
+							<Typography className={(classes.manageConnection)}><span onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={e => handleManageConnection(e, testSuite.test_suite_id)}>Manage Connections</span></Typography>
 							<Typography className={classes.suiteID}>SuiteID: {testSuite.test_suite_id}</Typography>
 							<Typography className={classes.secondaryHeading}>Uploaded at:  {testSuite.created_at}</Typography>
 							<i className="far fa-play-circle statusPlayIcon playicon" onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={(e) => runTestSuite(e, testSuite.test_suite_id)} aria-hidden="true"></i>
