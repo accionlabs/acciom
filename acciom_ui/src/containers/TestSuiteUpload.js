@@ -46,7 +46,6 @@ class TestSuiteUpload extends React.Component {
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		let newState = prevState;
-		console.log("derivedstatefromprops------>");
 
 		if (nextProps.moveToSelectSheetPage) {
 			newState = { ...prevState, key: TAB_UPLOAD_SHEET };

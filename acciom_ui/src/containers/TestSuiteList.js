@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 		flexBasis: '33.33%',
 		flexShrink: 0,
 		fontFamily: 'Open sans',
-		color: '#69717D',
+		color: '#51565e',
 		fontWeight:'bold',
 	},
 	secondaryHeading: {
@@ -71,7 +71,36 @@ const useStyles = makeStyles(theme => ({
 		flexBasis: '23.33%',
 		color: 'brown',
 		fontFamily: 'Open sans',
+		
+		
 	},
+
+
+	headingActive2:{
+		fontSize: theme.typography.pxToRem(13),
+		fontWeight: 'bold',
+		flexBasis: '23.33%',
+		color: 'brown',
+	},
+
+	headingActive3:{
+		fontWeight: 'bold',
+		fontSize: theme.typography.pxToRem(13),
+		flexBasis: '18.33%',
+		flexShrink: 0,
+		color: '#51565e',
+		fontFamily: 'Open sans',
+	},
+
+	headingActive4:{
+		fontWeight: 'bold',
+		fontSize: theme.typography.pxToRem(13),
+		flexBasis: '33.33%',
+		color: '#51565e',
+		fontFamily: 'Open sans',
+
+	},
+
 	rcorners: {
 		border: '2px solid',
 		padding: '20px',
@@ -135,7 +164,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 
 	if(projectId && projectId.appData && projectId.appData.currentProject) {
 		project_id = projectId.appData.currentProject.project_id ? projectId.appData.currentProject.project_id : 2;
-		console.log("projectId==>", project_id)
+	
 	}
 	const classes = useStyles();
 	const [expanded, setExpanded] = React.useState(false);
@@ -303,9 +332,9 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 							aria-controls="panel1bh-content"
 							id="panel1bh-header">
 							<Typography className={(expanded === testSuite.test_suite_id ? (classes.headingActive) : classes.headingInactive)}>{testSuite.test_suite_name}</Typography>
-							<Typography className={(classes.manageConnection)}><span onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={e => handleManageConnection(e, testSuite.test_suite_id)}>Manage Connections</span></Typography>
-							<Typography className={classes.suiteID}>SuiteID: {testSuite.test_suite_id}</Typography>
-							<Typography className={classes.secondaryHeading}>Uploaded at:  {testSuite.created_at}</Typography>
+							<Typography className={(expanded === testSuite.test_suite_id ? (classes.headingActive2) : classes.manageConnection)}><span onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={e => handleManageConnection(e, testSuite.test_suite_id)}>Manage Connections</span></Typography>
+							<Typography className={(expanded === testSuite.test_suite_id ? (classes.headingActive3) : classes.suiteID)}>SuiteID: {testSuite.test_suite_id}</Typography>
+							<Typography className={(expanded === testSuite.test_suite_id ? (classes.headingActive4) : classes.secondaryHeading)}>Uploaded at:  {testSuite.created_at}</Typography>
 							<i className="far fa-play-circle statusPlayIcon playicon" onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={(e) => runTestSuite(e, testSuite.test_suite_id)} aria-hidden="true"></i>
 						</ExpansionPanelSummary>
 

@@ -44,7 +44,7 @@ class SwitchProject extends React.Component {
 			let selectedProject = null;
 			const list = this.props.projectList;
 			for(let i = 0; i < list.length; i += 1) {
-				if(Number(list[i]['project_id']) === Number(this.state.selectedProjectId)) {
+				if(Number(list[i]['project_id']) === Number(this.state.selectedProjectId.value)) {
 					selectedProject = list[i];
 					break;
 				}

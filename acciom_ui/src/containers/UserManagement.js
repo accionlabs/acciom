@@ -31,11 +31,12 @@ class UserManagement extends Component {
 		if (this.props.orgUserList.length > 0) {
 			userList = this.props.orgUserList.map((user, index) =>{
 				return (
-					<tr>
-						<td key={index}>
-						<i className="fa fa-user-circle usermanagelogo"></i>
+					<tr key={index}>
+						<td>
+						{/* <i className="fa fa-user-circle usermanagelogo"></i> */}
 						
 							<span className="fName" >{user.first_name}</span></td>
+							<span className="lname">{user.last_name}</span>
 							<td><span className="email" >{user.email}</span></td>
 						
 						
@@ -54,6 +55,7 @@ class UserManagement extends Component {
 
 	render() {
 		const { isEditable } = this.state;
+		console.log("this.props.orgUserList", this.props.orgUserList)
 		return (
 			<div id="userManagement">
 				<i class="fa fa-users usericon2" aria-hidden="true"></i>
@@ -61,7 +63,8 @@ class UserManagement extends Component {
 				<Table  className="manageuserrolestable">
 					<thead>
 						<tr className="manageuserrolestablehead">
-							<th>Username</th>
+							<th>Firstname</th>
+							<th>Lastname</th>
 							<th>Email</th>
 							<th>Action</th>
 						</tr>

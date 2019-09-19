@@ -77,12 +77,12 @@ function ManageConnectionSelect(props) {
 		<form className={classes.root} autoComplete="off">
 			<Table className="manageSelectConnection">
 				<tbody>
-					<tr className="manageConnectionLabel">
+					<tr className="	">
 						<td className="manageConnectionLabel changeconnpanelheadborder">
 							<label className="manageConnectionHeading sub_title selectcaselabel">Select Connection</label>
 						</td>
 						<td className="changeconnpanelheadborder">
-							<select className="form-control selectconnection"
+							<select className="form-control selecteditbox"
 								value={props.selectedConnection}
 								onChange={props.onConnectionChange}
 								name="selectConnection"

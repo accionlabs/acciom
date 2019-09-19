@@ -36,7 +36,7 @@ class AreaChart extends Component {
 					   {name:"Uniqueness",data:[]},
 					   {name:"Correcteness",data:[]},
 					   {name:"Consistency",data:[]},
-					   {name:"average_dqi",data:[]}
+					   {name:"AverageDQI",data:[]}
 					];
 
 		options.xaxis.categories = [];
@@ -49,7 +49,7 @@ class AreaChart extends Component {
 				series[2].data.push(date_object.hasOwnProperty('Uniqueness') ? date_object.Uniqueness : 0);
 				series[3].data.push(date_object.hasOwnProperty('Correcteness') ? date_object.Correcteness : 0);
 				series[4].data.push(date_object.hasOwnProperty('Consistency') ? date_object.Consistency : 0);
-				series[5].data.push(date_object.hasOwnProperty('average_dqi') ? date_object.average_dqi : 0);
+				series[5].data.push(date_object.hasOwnProperty('AverageDQI') ? date_object.AverageDQI : 0);
 			}
 		}
 		return (
