@@ -337,7 +337,7 @@ def get_project_dqi_history(project_id, start_date=None, end_date=None):
             result_dict[key_date][dqi_class] = round(mean(list_dqi_values), 4)
     # Calculating average of all dqi for different classes
     for each_date, percentage in result_dict.items():
-        result_dict[each_date]['Average DQI'] = round(mean(
+        result_dict[each_date][APIMessages.AVERAGE_DQI] = round(mean(
             percentage.values()), 4)
     sorted_result_dict = OrderedDict()
     for each_sorted_key in sorted(result_dict.keys()):
