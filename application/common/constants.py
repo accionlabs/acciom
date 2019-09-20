@@ -114,15 +114,15 @@ class GenericStrings:
     """Class to store generic strings that are referenced in code."""
 
     ORACLE_DRIVER = "{ODBC Driver 17 for SQL Server}"
-    UNKNOWN_DATABASE_MYSQL = "Unknown Database"
-    AUTHENTICATION_FAILED_MYSQL = "Access Denied"
-    CANNOT_CONNECT_TO_SERVER_MYSQL = "Can't Connect to Database"
+    UNKNOWN_DATABASE_MYSQL = "Unknown database"
+    AUTHENTICATION_FAILED_MYSQL = "Access denied for user"
+    CANNOT_CONNECT_TO_SERVER_MYSQL = "Can't connect to"
     CANNOT_CONNECT_TO_REMOTE_SERVER_MYSQL = "is not allowed to connect to this"
-    UNKNOWN_DATABASE_POSTGRES = "Database"
-    AUTHENTICATION_FAILED_POSTGRES = "Password Authentication failed for"
-    CANNOT_CONNECT_TO_SERVER_POSTGRES = "Could not Translate"
-    UNKNOWN_DB_AUTHENTICATION_FAILED_ORACLE = "Listener does not currently know of service"
-    CANNOT_CONNECT_TO_SERVER_ORACLE = "Could not resolve the connect identifier specified"
+    UNKNOWN_DATABASE_POSTGRES = "database"
+    AUTHENTICATION_FAILED_POSTGRES = "password authentication failed for"
+    CANNOT_CONNECT_TO_SERVER_POSTGRES = "could not translate"
+    UNKNOWN_DB_AUTHENTICATION_FAILED_ORACLE = "listener does not currently know of service"
+    CANNOT_CONNECT_TO_SERVER_ORACLE = "could not resolve the connect identifier specified"
 
 
 class TimeOuts:
