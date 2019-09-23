@@ -119,6 +119,7 @@ class UserRoleAPI(Resource):
 
         # TODO: Check if user management permission exists
         # check if project ids passed are related to org
+        list_of_projects_passed = []
         if create_role_api_parser['project_role_list']:
             list_of_projects_passed = \
                 [each_project['project_id'] for each_project in
