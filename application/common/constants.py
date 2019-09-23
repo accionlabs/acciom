@@ -111,6 +111,8 @@ class APIMessages:
     USER_ROLE_DELETED = "User Role for org id {} is Deleted"
     FIRST_LAST_NAME = "First Name and Last Name are Compulosry"
     VALID_EMAIL = "Please pass Valid Email ID"
+    NULL_CHECK_RESULT = "Total {} Records with Null value(s)"
+    DUPLICATE_CHECK_RESULT = "{} Duplicates Found"
 
 
 class GenericStrings:
