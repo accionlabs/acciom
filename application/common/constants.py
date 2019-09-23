@@ -126,7 +126,7 @@ class GenericStrings:
     CANNOT_CONNECT_TO_SERVER_POSTGRES = "could not translate"
     UNKNOWN_DB_AUTHENTICATION_FAILED_ORACLE = "listener does not currently know of service"
     CANNOT_CONNECT_TO_SERVER_ORACLE = "could not resolve the connect identifier specified"
-    REGEX = "(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+    EMAIL_FORMAT_REGEX = "(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
 
 
 class TimeOuts:
