@@ -1,5 +1,7 @@
 """File to handle User Management related APIs."""
 
+import re
+
 from flask_restful import reqparse, Resource
 
 from application.common.api_permission import USER_API_GET, USER_ROLE_API_POST, \
@@ -7,6 +9,7 @@ from application.common.api_permission import USER_API_GET, USER_ROLE_API_POST, 
 from application.common.common_exception import (ResourceNotAvailableException,
                                                  GenericBadRequestException)
 from application.common.constants import APIMessages
+from application.common.constants import GenericStrings
 from application.common.response import (api_response, STATUS_OK,
                                          STATUS_CREATED, STATUS_BAD_REQUEST)
 from application.common.token import (token_required)
@@ -97,6 +100,12 @@ class UserRoleAPI(Resource):
         parser.add_argument('org_allowed_role_list',
                             help=APIMessages.PARSER_MESSAGE,
                             required=True, type=list, location='json')
+        parser.add_argument('first_name',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=False, type=str, location='json')
+        parser.add_argument('last_name',
+                            help=APIMessages.PARSER_MESSAGE,
+                            required=False, type=str, location='json')
         create_role_api_parser = parser.parse_args()
         # check if user and org id is valid if user id is passed
         if create_role_api_parser['user_id']:
@@ -153,9 +162,18 @@ class UserRoleAPI(Resource):
             else:
                 # User record is not present for given email id.
                 # Create a new user
+                if not (re.search(GenericStrings.REGEX,
+                                  create_role_api_parser['email_id'])):
+                    raise GenericBadRequestException(
+                        APIMessages.VALID_EMAIL)
+                # First name and last name should not be None for New User.
+                if create_role_api_parser['first_name'] is None or \
+                        create_role_api_parser['last_name'] is None:
+                    raise GenericBadRequestException(
+                        APIMessages.FIRST_LAST_NAME)
                 create_user_args = \
-                    {'first_name': create_role_api_parser['email_id'],
-                     'last_name': create_role_api_parser['email_id'],
+                    {'first_name': create_role_api_parser['first_name'],
+                     'last_name': create_role_api_parser['last_name'],
                      'password': create_role_api_parser['email_id'],
                      'is_verified': True}
                 user_id = create_new_user(
