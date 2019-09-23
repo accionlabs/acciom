@@ -109,7 +109,8 @@ class APIMessages:
     CONNECTION_SETUP = "Connection Setup Successful"
     AVERAGE_DQI = "Average DQI"
     USER_ROLE_DELETED = "User Role for org id {} is Deleted"
-
+    NULL_CHECK_RESULT = "Total {} Records with Null value(s)"
+    DUPLICATE_CHECK_RESULT = "{} Duplicates Found"
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
