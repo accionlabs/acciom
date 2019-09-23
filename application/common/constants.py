@@ -109,8 +109,11 @@ class APIMessages:
     CONNECTION_SETUP = "Connection Setup Successful"
     AVERAGE_DQI = "Average DQI"
     USER_ROLE_DELETED = "User Role for org id {} is Deleted"
+    FIRST_LAST_NAME = "First Name and Last Name are Compulosry"
+    VALID_EMAIL = "Please pass Valid Email ID"
     NULL_CHECK_RESULT = "Total {} Records with Null value(s)"
     DUPLICATE_CHECK_RESULT = "{} Duplicates Found"
+
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
@@ -125,6 +128,7 @@ class GenericStrings:
     CANNOT_CONNECT_TO_SERVER_POSTGRES = "could not translate"
     UNKNOWN_DB_AUTHENTICATION_FAILED_ORACLE = "listener does not currently know of service"
     CANNOT_CONNECT_TO_SERVER_ORACLE = "could not resolve the connect identifier specified"
+    EMAIL_FORMAT_REGEX = "(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
 
 
 class TimeOuts:
