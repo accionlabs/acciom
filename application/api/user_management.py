@@ -4,8 +4,8 @@ import re
 
 from flask_restful import reqparse, Resource
 
-from application.common.api_permission import USER_API_GET, USER_ROLE_API_POST, \
-    USER_ROLE_API_GET, USER_ROLE_API_DELETE
+from application.common.api_permission import USER_API_GET, USER_ROLE_API_GET, \
+    USER_ROLE_API_DELETE
 from application.common.common_exception import (ResourceNotAvailableException,
                                                  GenericBadRequestException)
 from application.common.constants import APIMessages
@@ -116,6 +116,7 @@ class UserRoleAPI(Resource):
         if not create_role_api_parser['user_id']:
             check_valid_id_passed_by_user(
                 org_id=create_role_api_parser['org_id'])
+
         # TODO: Check if user management permission exists
         # check if project ids passed are related to org
         if create_role_api_parser['project_role_list']:
@@ -138,9 +139,12 @@ class UserRoleAPI(Resource):
                 each_project_and_role['allowed_role_list'])
         passed_roles_list.extend(
             create_role_api_parser['org_allowed_role_list'])
-        check_permission(user_object=session.user,
-                         list_of_permissions=USER_ROLE_API_POST,
-                         org_id=create_role_api_parser["org_id"])
+
+        # TODO: Need to enable & optimise check_permission
+        # check_permission(user_object=session.user,
+        #                  list_of_permissions=USER_ROLE_API_POST,
+        #                  org_id=create_role_api_parser["org_id"])
+
         # get all roles under the given org
         valid_roles_under_org = Role.query.filter_by(
             org_id=create_role_api_parser['org_id']).all()
@@ -148,6 +152,7 @@ class UserRoleAPI(Resource):
             [each_role.role_id for each_role in valid_roles_under_org]
         if not set(passed_roles_list).issubset(valid_role_ids_under_org):
             raise GenericBadRequestException(APIMessages.ROLE_NOT_UNDER_ORG)
+
         # check if email is passed in request
         if create_role_api_parser['email_id'] and \
                 not create_role_api_parser['user_id']:
@@ -181,6 +186,7 @@ class UserRoleAPI(Resource):
         if create_role_api_parser['user_id'] and \
                 not create_role_api_parser['email_id']:
             user_id = create_role_api_parser['user_id']
+
         # Deleting all UserProjectRole records with given User and Org Id
         UserProjectRole.query.filter_by(
             org_id=create_role_api_parser['org_id'],
@@ -188,6 +194,7 @@ class UserRoleAPI(Resource):
         UserOrgRole.query.filter_by(
             org_id=create_role_api_parser['org_id'],
             user_id=user_id).delete()
+
         # add project roles
         if create_role_api_parser['project_role_list']:
             for each_project_role in \
@@ -200,6 +207,7 @@ class UserRoleAPI(Resource):
                         project_id=each_project_role['project_id'],
                         role_id=each_roles_given, owner_id=session.user_id)
                     add_user_project_role.save_to_db()
+
         # Add Org Roles
         if create_role_api_parser['org_allowed_role_list']:
             for each_org_role in \
