@@ -12,7 +12,7 @@ from application.common.response import api_response
 from application.common.token import token_required
 from application.common.utils import validate_empty_fields
 from application.helper.permission_check import check_permission
-from application.model.models import (Project, UserOrgRole, Organization, User,
+from application.model.models import (Project, UserOrgRole, Organization,
                                       UserProjectRole)
 
 
@@ -134,8 +134,7 @@ class ProjectAPI(Resource):
             required=True, type=int, location='args')
         get_project_data = get_project_parser.parse_args()
         # TODO: Check if organization is active and called has access
-        user_obj = User.query.filter(
-            User.user_id == session.user_id).first()
+        user_obj = session.user
         # TODO:Add Check permission
         # check_permission(user_object=session.user,
         #                  list_of_permissions=PROJECT_GET,
