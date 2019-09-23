@@ -108,6 +108,7 @@ class APIMessages:
     TOKEN_DELETED = "Personal Access Token '{}' is Deleted"
     CONNECTION_SETUP = "Connection Setup Successful"
     AVERAGE_DQI = "Average DQI"
+    USER_ROLE_DELETED = "User Role for org id {} is Deleted"
 
 
 class GenericStrings:
