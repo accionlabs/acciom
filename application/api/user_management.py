@@ -162,7 +162,7 @@ class UserRoleAPI(Resource):
             else:
                 # User record is not present for given email id.
                 # Create a new user
-                if not (re.search(GenericStrings.REGEX,
+                if not (re.search(GenericStrings.EMAIL_FORMAT_REGEX,
                                   create_role_api_parser['email_id'])):
                     raise GenericBadRequestException(
                         APIMessages.VALID_EMAIL)
