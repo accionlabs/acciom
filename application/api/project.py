@@ -141,19 +141,19 @@ class ProjectAPI(Resource):
         #                  list_of_permissions=PROJECT_GET,
         #                  org_id=get_project_data["org_id"])
         # check if user has all org level permissions
-        user_roles = UserOrgRole.query.filter_by(
+        user_org_role = UserOrgRole.query.filter_by(
             user_id=session.user_id,
             org_id=get_project_data['org_id']).first()
-        if user_obj.is_super_admin == True or user_roles:
+        if user_obj.is_super_admin == True or user_org_role:
             # Storing all active projects in a list
-            list_of_active_project = Project.query.filter_by(
+            list_of_active_project_obj = Project.query.filter_by(
                 org_id=get_project_data['org_id'], is_deleted=False).all()
-            if not list_of_active_project:
+            if not list_of_active_project_obj:
                 return api_response(False,
                                     APIMessages.NO_RESOURCE.format('Project'),
                                     STATUS_UNAUTHORIZED)
-            projects_to_return = project_detail(list_of_active_project,
-                                                user_roles)
+            projects_to_return = project_detail(list_of_active_project_obj,
+                                                user_org_role)
             return api_response(
                 True, APIMessages.SUCCESS, STATUS_OK,
                 {"projects_under_organization": projects_to_return})
@@ -165,15 +165,15 @@ class ProjectAPI(Resource):
                 return api_response(False,
                                     APIMessages.NO_RESOURCE.format('Project'),
                                     STATUS_UNAUTHORIZED)
-            active_project = []
+            active_project = set()
             for each_project in project_obj:
-                active_project.append(
+                active_project.add(
                     each_project.project_id)
-            for project_id in active_project:
-                list_of_active_project = Project.query.filter_by(
-                    project_id=project_id, is_deleted=False).all()
-            projects_to_return = project_detail(list_of_active_project,
-                                                user_roles)
+            list_of_active_project_obj = Project.query.filter(
+                Project.project_id.in_(active_project),
+                Project.is_deleted == False).all()
+            projects_to_return = project_detail(list_of_active_project_obj,
+                                                user_org_role)
             return api_response(
                 True, APIMessages.SUCCESS, STATUS_OK,
                 {"projects_under_organization": projects_to_return})
