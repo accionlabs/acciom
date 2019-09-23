@@ -12,6 +12,7 @@ from application.common.response import api_response
 from application.common.token import token_required
 from application.common.utils import validate_empty_fields
 from application.helper.permission_check import check_permission
+from application.helper.runnerclasshelpers import project_detail
 from application.model.models import (Project, UserOrgRole, Organization,
                                       UserProjectRole)
 
@@ -139,11 +140,6 @@ class ProjectAPI(Resource):
         # check_permission(user_object=session.user,
         #                  list_of_permissions=PROJECT_GET,
         #                  org_id=get_project_data["org_id"])
-        # dict of org and list of projects to be returned in the response
-        projects_to_return = dict()
-        # list of projects to be sent in response
-        project_details_list = list()
-        organization_id_in_database = None
         # check if user has all org level permissions
         user_roles = UserOrgRole.query.filter_by(
             user_id=session.user_id,
@@ -156,17 +152,8 @@ class ProjectAPI(Resource):
                 return api_response(False,
                                     APIMessages.NO_RESOURCE.format('Project'),
                                     STATUS_UNAUTHORIZED)
-            for each_project in list_of_active_project:
-                # Store each project details in a list
-                project_details_list.append(
-                    {'project_id': each_project.project_id,
-                     'project_name': each_project.project_name})
-                # Store Organization Id
-                organization_id_in_database = each_project.org_id
-            projects_to_return.update(
-                {'org_id': organization_id_in_database,
-                 'is_org_user': True if user_roles else False,
-                 'project_details': project_details_list})
+            projects_to_return = project_detail(list_of_active_project,
+                                                user_roles)
             return api_response(
                 True, APIMessages.SUCCESS, STATUS_OK,
                 {"projects_under_organization": projects_to_return})
@@ -174,7 +161,7 @@ class ProjectAPI(Resource):
             project_obj = UserProjectRole.query.filter(
                 UserProjectRole.user_id == session.user_id,
                 UserProjectRole.org_id == get_project_data['org_id']).all()
-            if project_obj == []:
+            if not project_obj:
                 return api_response(False,
                                     APIMessages.NO_RESOURCE.format('Project'),
                                     STATUS_UNAUTHORIZED)
@@ -185,17 +172,8 @@ class ProjectAPI(Resource):
             for project_id in active_project:
                 list_of_active_project = Project.query.filter_by(
                     project_id=project_id, is_deleted=False).all()
-                for each_project in list_of_active_project:
-                    # Store each project details in a list
-                    project_details_list.append(
-                        {'project_id': each_project.project_id,
-                         'project_name': each_project.project_name})
-                    # Store Organization Id
-                    organization_id_in_database = each_project.org_id
-                projects_to_return.update(
-                    {'org_id': organization_id_in_database,
-                     'is_org_user': True if user_roles else False,
-                     'project_details': project_details_list})
+            projects_to_return = project_detail(list_of_active_project,
+                                                user_roles)
             return api_response(
                 True, APIMessages.SUCCESS, STATUS_OK,
                 {"projects_under_organization": projects_to_return})
