@@ -66,8 +66,8 @@ class ProjectChartList extends Component {
 				<i class="fas fa-business-time QLicon"></i>
 				<table width="100%"><tr>
 					<td width="50%"><div className="main_titles QLindex-title">Quality Index</div></td>
-					<td width="50%" align="right"><button className="button-colors dashboard_switch_btn">Switch Project</button>
-				</td></tr></table>
+					{/* <button className="button-colors dashboard_switch_btn">Switch Project</button> */}
+				</tr></table>
 				{ this.getDonutCharts() }
 			</div>
 		);
