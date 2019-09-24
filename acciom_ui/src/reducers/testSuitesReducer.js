@@ -47,7 +47,6 @@ const testSuites = (state = initialState, action) => {
 	case GET_ALL_TEST_SUITES_REQUEST:
 		return {
 			...state,
-			// refreshTestSuites: false,
 			connectionsList:{
 				...state.connectionsList,
 				showConnectionsDialog: false
