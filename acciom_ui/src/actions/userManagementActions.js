@@ -11,10 +11,16 @@ import {
 	GET_ROLES_BY_PROJECT_ID_SUCCESS,
 	GET_ROLES_BY_PROJECT_ID_ERROR,
 	RETRIVE_USER_ROLE_SUCCESS,
-	RETRIVE_USER_ROLE_ERROR
+	RETRIVE_USER_ROLE_ERROR,
+	GET_ORGANIZATION_USER_LIST_ADD,
+	DELETE_USERS_FROM_TABLE,
+	ADD_USER_ROLES_SUCCESS,
+	ADD_USER_ROLES_ERROR
+		
 } from "../constants/ActionTypes";
 
 export const getOrganizationUsersList = (orgId) => {
+
 	return {
 		types: [
 			'',
@@ -27,6 +33,27 @@ export const getOrganizationUsersList = (orgId) => {
 		})
 	};	
 };	
+// export const addOrganizationUsersList = (id) => {
+	
+// 	return {
+// 		type: GET_ORGANIZATION_USER_LIST_ADD,
+// 		value:id	
+		
+// 	}
+	
+// };
+
+export const deleteUsersFromTable=(id)=>{
+	
+
+	return{
+		type:DELETE_USERS_FROM_TABLE,
+		value:id,
+		
+	}
+};
+
+
 export const getRolesByOrgId = (orgId, key) => {
 	return {
 		types: [
@@ -83,5 +110,22 @@ export const updateUserRoles = (body) => {
 			headers,
 			body
 		})
+	};		
+};
+
+export const addUsersRole = (body) => {
+
+	return {
+		types: [
+			'',
+			ADD_USER_ROLES_SUCCESS,
+			ADD_USER_ROLES_ERROR
+		],
+		callAPI: () => fetch(`${BASE_URL}/user-role`, {
+			method: 'post',
+			headers,
+			body
+		})
+	
 	};		
 };
