@@ -1,9 +1,13 @@
 import { 
-	GET_ORGANIZATION_USER_LIST_SUCCESS, 
+	GET_ORGANIZATION_USER_LIST_SUCCESS,
+	GET_ORGANIZATION_USER_LIST_ADD, 
 	GET_ROLES_BY_ORG_ID_SUCCESS, 
 	GET_ROLES_BY_PROJECT_ID_SUCCESS,
 	RETRIVE_USER_ROLE_SUCCESS,
-	UPDATE_USER_ROLES_SUCCESS
+	UPDATE_USER_ROLES_SUCCESS,
+	DELETE_USERS_FROM_TABLE,
+	ADD_USER_ROLES_SUCCESS
+
 } from '../constants/ActionTypes';
 
 export const roleTypes = {
@@ -25,6 +29,7 @@ const initialState = {
 const userManagementData = (state = initialState, action) => {
 	switch (action.type) {
 	case GET_ORGANIZATION_USER_LIST_SUCCESS:
+	
 		return {
 			...state,
 			orgUserList: action.response.data.users,
@@ -34,6 +39,25 @@ const userManagementData = (state = initialState, action) => {
 			selectedUser: null,
 			redirectToUserMgmtHome: false
 		};
+		case DELETE_USERS_FROM_TABLE:
+				
+			const upDatedArray = state.orgUserList.filter(result=>result.user_id !==action.value);
+			
+			return{
+				...state,
+				orgUserList:upDatedArray
+			}
+			case ADD_USER_ROLES_SUCCESS:
+				
+
+				
+				
+				return{
+					...state,
+					orgUserList:state.orgUserList
+				}
+
+
 		
 	case GET_ROLES_BY_ORG_ID_SUCCESS:
 	case GET_ROLES_BY_PROJECT_ID_SUCCESS:
@@ -65,4 +89,3 @@ const userManagementData = (state = initialState, action) => {
 };
 
 export default userManagementData;
-
