@@ -9,7 +9,7 @@ from application.helper.corefunctions.duplicate import duplication
 from application.helper.corefunctions.nullcheck import null_check
 from application.helper.encrypt import decrypt
 from application.model.models import DbConnection, TestCase, Job
-
+from application.helper.corefunctions.queryexecution import query_exectuion
 
 class TestCaseExecution():
     """
@@ -341,6 +341,29 @@ def args_as_list(list_args):
         pass
     return list_arg
 
+
+def execute_query(query_obj, export):
+    """
+    Args:
+        query_obj (object) : query object of the query to be executed
+
+    """
+    try:
+        db_detail = db_details(query_obj.db_connection_id)
+        db_connector = TestCaseExecution.create_connector(db_detail)
+        result = query_exectuion(query_obj.query_string, db_connector, export)
+        query_obj.execution_status = result['res']
+        query_obj.query_result = result['query_result']
+        query_obj.save_to_db()
+
+
+    except Exception as e:
+        execution_result = ExecutionStatus(). \
+            get_execution_status_id_by_name('error')
+        result = {"res": execution_result,
+                  "Execution_log": {"error_log": str(e)}}
+        query_obj.query_result = result
+        query_obj.save_to_db()
 
 def datavalidation_result_format_change(log):
     """
