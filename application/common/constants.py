@@ -62,7 +62,7 @@ class APIMessages:
     EMAIL_USER = "Either User ID or Email ID is mandatory"
     DATE_FORMAT = "Date should be passed in YYYY-MM-DD format"
     START_END_DATE = "Both Start and End Date are required"
-    NO_NAME_DDEFINE = "Description Not Available"
+    NO_NAME_DEFINE = "Description Not Available"
     DEFAULT_DB_CONNECTION_PREFIX = "Connection"
     TESTSUITE_NOT_IN_DB = "Test Suite {} not present in Database"
     DB_DETAILS_ALREADY_PRESENT = "Database Details already exist"
