@@ -104,14 +104,14 @@ export const checkDbConnection = (body) => {
 	};			
 };
 
-export const deleteDBDetails = (connectionID) => {
+export const deleteDBDetails = (data) => {
 	return {
 		types: [
 			'',
 			DELETE_DB_DETAILS_SUCCESS,
 			DELETE_DB_DETAILS_ERROR
 		],
-		callAPI: () => fetch(`${BASE_URL}/db-detail?db_connection_id=${connectionID}`, {
+		callAPI: () => fetch(`${BASE_URL}/db-detail?db_connection_id=${data.connectionID}&verify_delete=True`, {
 			method: 'delete',
 			headers
 		})
