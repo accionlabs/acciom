@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 50af0a95126f
+Revision ID: 362ccb34b745
 Revises: 
-Create Date: 2019-08-11 15:16:55.091796
+Create Date: 2019-09-16 16:03:28.411531
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '50af0a95126f'
+revision = '362ccb34b745'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -57,6 +57,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('encrypted_personal_token', sa.String(length=256), nullable=False),
     sa.Column('note', sa.Text(), nullable=False),
+    sa.Column('is_deleted', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('personal_token_id')
@@ -148,7 +149,7 @@ def upgrade():
     sa.Column('test_suite_id', sa.Integer(), nullable=False),
     sa.Column('project_id', sa.Integer(), nullable=False),
     sa.Column('owner_id', sa.Integer(), nullable=False),
-    sa.Column('excel_name', sa.Text(), nullable=False),
+    sa.Column('excel_name', sa.Text(), nullable=True),
     sa.Column('test_suite_name', sa.Text(), nullable=False),
     sa.Column('is_deleted', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
@@ -206,6 +207,24 @@ def upgrade():
     sa.PrimaryKeyConstraint('job_id')
     )
     op.create_index(op.f('ix_job_test_suite_id'), 'job', ['test_suite_id'], unique=False)
+    op.create_table('query',
+    sa.Column('query_id', sa.Integer(), nullable=False),
+    sa.Column('query_string', sa.Text(), nullable=False),
+    sa.Column('project_id', sa.Integer(), nullable=False),
+    sa.Column('execution_status', sa.SMALLINT(), nullable=False),
+    sa.Column('db_connection_id', sa.Integer(), nullable=False),
+    sa.Column('owner_id', sa.Integer(), nullable=False),
+    sa.Column('query_result', postgresql.JSON(astext_type=sa.Text()), nullable=True),
+    sa.Column('is_deleted', sa.Boolean(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('modified_at', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['db_connection_id'], ['db_connection.db_connection_id'], ),
+    sa.ForeignKeyConstraint(['owner_id'], ['user.user_id'], ),
+    sa.ForeignKeyConstraint(['project_id'], ['project.project_id'], ),
+    sa.PrimaryKeyConstraint('query_id')
+    )
+    op.create_index(op.f('ix_query_db_connection_id'), 'query', ['db_connection_id'], unique=False)
+    op.create_index(op.f('ix_query_project_id'), 'query', ['project_id'], unique=False)
     op.create_table('test_case',
     sa.Column('test_case_id', sa.Integer(), nullable=False),
     sa.Column('test_suite_id', sa.Integer(), nullable=False),
@@ -248,6 +267,9 @@ def downgrade():
     op.drop_table('test_case_log')
     op.drop_index(op.f('ix_test_case_test_suite_id'), table_name='test_case')
     op.drop_table('test_case')
+    op.drop_index(op.f('ix_query_project_id'), table_name='query')
+    op.drop_index(op.f('ix_query_db_connection_id'), table_name='query')
+    op.drop_table('query')
     op.drop_index(op.f('ix_job_test_suite_id'), table_name='job')
     op.drop_table('job')
     op.drop_index(op.f('ix_user_project_role_user_id'), table_name='user_project_role')
