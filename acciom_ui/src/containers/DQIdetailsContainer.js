@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import GaugeChart from '../components/GaugeChart';
 import AreaChart from '../components/BarChart';
-import { getDQIprojectDetails } from '../actions/dashboardActions'; 
+import { getDQIprojectDetails } from '../actions/dashboardActions';
+// import { getHistoryGraphdata } from '../actions/dashboardActions'; 
 
 class DQIDetailsContainer extends Component {
 
@@ -10,10 +11,11 @@ class DQIDetailsContainer extends Component {
 
 		const colorsArray = [
 			['#49a9ea'],
-			['#36CAAB'],
+			['#E74B56'],
 			['#B370CF'],
 			['#E95E4F'],
-			['#34495E']
+			['#34495E'],
+			['#36CAAB']
 		];
 
 		const getGaugeChart = () => {
@@ -26,7 +28,7 @@ class DQIDetailsContainer extends Component {
 			let chartList = [];
 			if (this.props.projectDataQuality && this.props.projectDataQuality.project_name) {
 				chartList =  this.props.projectDataQuality.project_dqi_detail.map((item, index) => {
-					return (<li key={ index }><GaugeChart name={item.name} class={'DQIprojectGaugeDetail'} percentage={item.value} width={220} color={colorsArray[index]}/></li>);
+					return (<li key={ index }><GaugeChart name={item.name} class={'DQIprojectGaugeDetail'} percentage={item.value} width={215} color={colorsArray[index]}/></li>);
 				})
 				return chartList; 
 			}
@@ -34,7 +36,7 @@ class DQIDetailsContainer extends Component {
 
 		return (
 			<>
-			<div className="donut DQIprojectChartContainer" style={{marginBottom:"80px"}}>
+			<div className="DQIprojectChartContainer projectList">
 				<div className="row detailsChart">
 					{getDPIdetailsChart()}
 				</div>
@@ -42,7 +44,7 @@ class DQIDetailsContainer extends Component {
 					
 				{/* </div> */}
 			</div>
-			<AreaChart />
+			{/* <AreaChart /> */}
 			</>
 		);
 	}
@@ -56,7 +58,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-	getDQIprojectDetails: (data) => dispatch(getDQIprojectDetails(data))
+	getDQIprojectDetails: (data) => dispatch(getDQIprojectDetails(data)),
+	// getHistoryGraphdata: (data) => dispatch(getHistoryGraphdata(data)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DQIDetailsContainer);

@@ -30,6 +30,11 @@ html
     margin-bottom: 10px;
 }
 
+.logheaderborder{
+    border: none;
+    margin-top: -10px;
+}
+
 .addDbDetailsForm {
     position: absolute;
     top: 200px;
@@ -126,6 +131,7 @@ html
 .testSuiteSheetListPanel .sheetListItem {
     display: inline-block;
     margin-right: 20px; 
+    color: #69717D;
 }
 
 .testSuiteSheetListPanel Button {
@@ -2391,15 +2397,6 @@ html
        font-size: 10px;
        font-weight: 400
    }
-   textarea {
-       padding: 10px;
-       vertical-align: top;
-       width: 200px
-   }
-   textarea:focus {
-       outline-style: solid;
-       outline-width: 2px
-   }
    .btn_ {
        display: inline-block;
        padding: 3px 9px;
@@ -4046,6 +4043,7 @@ html
 
    .manageconnectionTestCase .MuiButtonBase-root {
        padding: 2px !important;
+       margin-left: 62px !important;
    }
 
    
@@ -4112,8 +4110,8 @@ html
     font-weight: bold;
     margin: 0;
     position: absolute;
-    top: 85%;
-    left: 60%;
+    top: 73%;
+    left: 45%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
     margin-top: 15px;
@@ -4134,14 +4132,15 @@ html
 
 .detailsChart {
     display: flex;
-    height: 145px;
-    width: 75%;
-    padding-top: 20px;
-    width: 100px !important;
+    height: 100%;
+    width: 96%;
+    position: absolute;
+    top: -20px;
 }
 
 .wTAoZ {
     left: 20px !important;
+    top: 85px !important;
 }
 
 .DQIprojectdetailsHeading {
@@ -4159,6 +4158,7 @@ html
 
 .DQIprojectGauge {
     padding-top: 0px !important;
+    font-weight: normal !important;
 }
 .viewEditLabel {
     font-size: 12px; 
@@ -4171,9 +4171,6 @@ html
     padding: 10px 6px 6px 10px !important;
 }
 
-textarea {
-    padding: 0px !important;
-}
 .viewUpdateBtn {
     margin-left: 85px;
 }
@@ -4193,7 +4190,7 @@ textarea {
     font-weight: bold;
 }
 
-.manageConnectionLabel, .testCaseLogLabel {width:190px;}
+.manageConnectionLabel, .testCaseLogLabel {width:0px;}
 .testCaseLogMessage {width:300px;}
 .viewLogData {   
     padding-left:50px;
@@ -4207,7 +4204,10 @@ textarea {
     border-top: 0px !important;
     padding: 4px !important;
 }
-.testViewExecution {padding-left:20px;}
+.testViewExecution {
+    padding-left:20px;
+    color: #69717D;
+}
 
 .manageConnectionHeading, .testLogHeading, .testViewHeading {
     font-size: 0.8125rem;
@@ -4215,13 +4215,10 @@ textarea {
     flex-shrink: 0;
     font-weight: bold;
 }
-
-#viewLogDetails .executionLog td, th {
-   /* border: 1px solid #ddd; */
-}
-
 .caseLogMargin .modal-content {
     width: 750px;
+    margin-top: 70px;
+    margin-left: -24px;
     overflow-x: scroll;
 }
 
@@ -4243,12 +4240,13 @@ textarea {
 
 .testViewDataLabel, .manageConnectionsLabel {
     padding-left:8px;
+    font-weight: 200;
+    margin-left: 5px;
 }
 
-textarea {width:280px;}
 
 #testEditMode .form-control {
-    width:70%;
+    width:100%;
 }
 .manageConnection {margin-bottom:0px !important;}
 
@@ -4268,6 +4266,8 @@ textarea {width:280px;}
 
 .DQIprojectChartContainer {
     padding-top: 0px !important;
+    position: relative !important;
+    min-height: 110px !important;
 }
 
 .bar {
@@ -4333,12 +4333,18 @@ textarea {width:280px;}
    
 
   .MuiIconButton-label .MuiSvgIcon-root {
-      color:#fff;
+      color:#69717D;
   }
 
   .DQIprojectGaugeDetail {
     font-weight: bold;
     padding-left: 4px;
+    margin: 0;
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
   }
 
   .DQIprojectGauge {
@@ -4370,7 +4376,7 @@ textarea {width:280px;}
     .projectList .slick-list {
         min-height: 140px;
         padding-left: 10px;
-        padding-bottom: 32px;
+        /* padding-bottom: 32px; */
     }
 
     .slick-next:before, .slick-prev:before {
@@ -4435,7 +4441,7 @@ textarea {width:280px;}
     position: absolute;
     display: flex;
     z-index: 99;
-    height: 270px;
+    height: 165px;
     align-items: center;
     margin-left: -61px;
     cursor: pointer;
@@ -4444,7 +4450,7 @@ textarea {width:280px;}
   .nextArrow {
     position: absolute;
     display: inline-flex;
-    height: 270px;
+    height: 165px;
     align-items: center;
     margin-left: 20px;
     cursor: pointer;

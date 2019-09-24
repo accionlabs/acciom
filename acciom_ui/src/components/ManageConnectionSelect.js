@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
@@ -58,18 +58,33 @@ function ManageConnectionSelect(props) {
 
 	const renderTestCases = (allCases) => {
 		if (allCases) {
-			return allCases.map(testCase => (
-				<div key={testCase.case_id} className="manageconnectionTestCase">
+			return ( 
+			<Fragment> 
+				<div className="manageconnectionTestCase">
 					<label className="form-check-label">
 						<input
 							type="checkbox"
-							value={testCase.case_id}
-							name={testCase.case_name}
+							checked={true}
 							onChange={(e) => props.onCaseSelectionChange(e.target)}
 						/>
-					</label> {testCase.case_name}
+					</label> Select All
 				</div>
-			));
+				{
+				allCases.map(testCase => (
+					<div key={testCase.case_id} className="manageconnectionTestCase">
+						<label className="form-check-label">
+							<input
+								type="checkbox"
+								value={testCase.case_id}
+								name={testCase.case_name}
+								onChange={(e) => props.onCaseSelectionChange(e.target)}
+							/>
+						</label> {testCase.case_name}
+					</div>
+				))
+				}
+			</Fragment>
+			)
 		}
 	    return null;
 	};
@@ -77,12 +92,12 @@ function ManageConnectionSelect(props) {
 		<form className={classes.root} autoComplete="off">
 			<Table className="manageSelectConnection">
 				<tbody>
-					<tr>
-						<td className="manageConnectionLabel">
+					<tr className="	">
+						<td className="manageConnectionLabel changeconnpanelheadborder">
 							<label className="manageConnectionHeading sub_title selectcaselabel">Select Connection</label>
 						</td>
-						<td>
-							<select className="form-control selectconnection"
+						<td className="changeconnpanelheadborder">
+							<select className="form-control selecteditbox"
 								value={props.selectedConnection}
 								onChange={props.onConnectionChange}
 								name="selectConnection"
@@ -100,7 +115,7 @@ function ManageConnectionSelect(props) {
 						<td className="manageConnectionLabel">
 							<label className="manageConnectionHeading sub_title selectcaselabel2">Select Cases</label>
 						</td>
-						<td>
+						<td className="manageConnectionLabel">
 							{
 							    renderTestCases(props.allCases[props.testSuiteId])
 							}

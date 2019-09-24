@@ -290,6 +290,8 @@ class EditTestCase(Resource):
         test_case_class = SupportedTestClass(). \
             get_test_class_name_by_id(
             test_case_obj.test_case_class)
+        display_name_test_case_class = SupportedTestClass().get_test_class_display_name_by_id(
+            test_case_obj.test_case_class)
         queries = test_case_detail["query"]
 
         if test_case_detail["query"] == {}:
@@ -310,6 +312,7 @@ class EditTestCase(Resource):
                 target_qry = queries["targetqry"]
         payload = {"test_case_id": test_case_obj.test_case_id,
                    "test_case_class": test_case_class,
+                   "display_test_case_class": display_name_test_case_class,
                    "test_status": ExecutionStatus().
                        get_execution_status_by_id(
                        test_case_obj.latest_execution_status),
@@ -587,7 +590,7 @@ class TestCaseJobExternal(Resource):
                            is_external,
                            execution_data['case_id_list'],
                            )
-                return api_response(True, APIMessages.RETURN_SUCCESS,
+                return api_response(True, APIMessages.JOB_SUBMIT,
                                     STATUS_CREATED)
             else:
                 return api_response(False, APIMessages.TOKEN_MISMATCH,
@@ -615,7 +618,7 @@ class TestCaseJobExternal(Resource):
                                  org_id=project_obj.org_id,
                                  project_id=test_suite_obj.project_id)
                 create_job(user_id, test_suite_obj, is_external)
-            return api_response(True, APIMessages.RETURN_SUCCESS,
+            return api_response(True, APIMessages.JOB_SUBMIT,
                                 STATUS_CREATED)
         else:
             return api_response(False, APIMessages.TOKEN_MISMATCH,

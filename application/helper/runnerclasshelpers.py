@@ -386,3 +386,33 @@ def datavalidation_result_format_change(log):
             values.append(value)
         result.append(values)
     return result
+
+
+def project_detail(list_of_active_project, user_roles):
+    """
+      To give project details for a particular project id
+
+    Args:
+        list_of_active_project(list):List of project id's.
+        user_roles(object):UserOrgRole object.
+
+    Returns:
+          Returns project details with org id.
+    """
+    # dict of org and list of projects to be returned in the response
+    projects_to_return = dict()
+    # list of projects to be sent in response
+    project_details_list = list()
+    organization_id_in_database = None
+    for each_project in list_of_active_project:
+        # Store each project details in a list
+        project_details_list.append(
+            {'project_id': each_project.project_id,
+             'project_name': each_project.project_name})
+        # Store Organization Id
+        organization_id_in_database = each_project.org_id
+    projects_to_return.update(
+        {'org_id': organization_id_in_database,
+         'is_org_user': True if user_roles else False,
+         'project_details': project_details_list})
+    return projects_to_return

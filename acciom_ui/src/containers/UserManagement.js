@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import EditIcon from '@material-ui/icons/Edit';
 import { connect } from 'react-redux';
-import { ListGroup, Button, Col } from 'react-bootstrap';
+import { ListGroup,Table, Button, Col } from 'react-bootstrap';
 import { getOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
 import  RoleListItemContainer  from './RoleListItemContainer';
 
@@ -29,20 +30,22 @@ class UserManagement extends Component {
 		let userList = '';
 		if (this.props.orgUserList.length > 0) {
 			userList = this.props.orgUserList.map((user, index) =>{
-				console.log('user here', user)
 				return (
-					<li key={index} className="list-group-item" >
-						<Col sm={1}><i className="fa fa-user-circle usermanagelogo"></i></Col>
-						<Col sm={7}>
-							<span className="fName" >{user.first_name}</span>
-							<span className="email" >{user.email}</span>
-						</Col>
-						<Col sm={4} className="editBtn">
-							<Link to={`/edit_user_role/${user.user_id}`}>
-								<Button type="button" className="button-colors" bsStyle="primary">Edit</Button>
-							</Link>	
-						</Col>
-					</li>
+					<tr key={index}>
+						<td>
+						{/* <i className="fa fa-user-circle usermanagelogo"></i> */}
+						
+							<span className="fName" >{user.first_name}</span></td>
+							<span className="lname">{user.last_name}</span>
+							<td><span className="email" >{user.email}</span></td>
+						
+						
+							<td><Link to={`/edit_user_role/${user.user_id}`}>
+								{/* <Button type="button" className="button-colors" bsStyle="primary">Edit</Button> */}
+								<EditIcon fontSize="small" className="editicon2" style={{color:"#696969"}} />
+							</Link></td>	
+						
+					</tr>
 				);
 			});
 		}
@@ -52,13 +55,24 @@ class UserManagement extends Component {
 
 	render() {
 		const { isEditable } = this.state;
+		console.log("this.props.orgUserList", this.props.orgUserList)
 		return (
 			<div id="userManagement">
-				<i class="fa fa-user-circle usericon" aria-hidden="true"></i>
-				<label className="main_titles usermanagetitle2">Users Mange</label>
-				<ListGroup  className="listposition">
+				<i class="fa fa-users usericon2" aria-hidden="true"></i>
+				<label className="main_titles usermanagetitle2">Manage User Roles</label>
+				<Table  className="manageuserrolestable">
+					<thead>
+						<tr className="manageuserrolestablehead">
+							<th>Firstname</th>
+							<th>Lastname</th>
+							<th>Email</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody className="hovercolor">
 					{ this.getOrgUserList() }
-				</ListGroup>
+					</tbody>
+				</Table>
 			</div>
 		);
 	 }
