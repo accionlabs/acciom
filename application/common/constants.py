@@ -97,7 +97,7 @@ class APIMessages:
     UNKNOWN_DB_AUTHENTICATION_FAILED = "Unknown database '{}' or Authentication failed for User '{}'"
     CANNOT_CONNECT_TO_REMOTE_SERVER_MYSQL = "Host not allowed to connect to MySQL Server"
     WRONG_DB_CONNECTION = "The given DB conncetion does not belong to the project"
-    WRONG_QUERY_ID = "The given query id does not valid"
+    WRONG_QUERY_ID = "The given query id is not valid"
     PASSWORD_CANNOT_EMPTY = "Password cannot be Blank"
     DB_NAME_CANNOT_EMPTY = "Database Name cannot be Blank"
     HOSTNAME_CANNOT_EMPTY = "Host Name cannot be Blank"
