@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from flask_restful import Resource, reqparse, inputs
+from flask_restful import Resource, reqparse
 
 from application.common.api_permission import DB_DETAILS_POST, DB_DETAILS_GET, \
     DB_DETAILS_PUT, DB_DETAILS_DELETE
@@ -417,9 +417,9 @@ class DbDetails(Resource):
                                              location='args')
         delete_db_detail_parser.add_argument('verify_delete',
                                              required=False,
-                                             type=inputs.boolean,
+                                             type=str,
                                              location='args',
-                                             default=False)
+                                             default="false")
         deletedata = delete_db_detail_parser.parse_args()
         data_base_id = deletedata.get("db_connection_id")
         if not data_base_id:
@@ -462,7 +462,7 @@ class DbDetails(Resource):
         if data_base_id in idset:
             return api_response(False, APIMessages.DELETE_DB_WARNING,
                                 STATUS_CONFLICT)
-        if deletedata["verify_delete"] is True:
+        if str(deletedata["verify_delete"]).lower() == "true":
             del_obj.is_deleted = True
             del_obj.save_to_db()
             return api_response(True,
