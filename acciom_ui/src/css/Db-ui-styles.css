@@ -3,7 +3,7 @@ body,html{
 }
 .main_titles{
     color: #69717D !important;
-    font-size: 18px !important;
+    font-size: 17px !important;
     font-weight: bold !important;
 }
 
@@ -11,6 +11,13 @@ body,html{
     color: #69717D !important;
     font-size: 15px;
     font-weight: bold;
+}
+
+.other-titles{
+    color: #69717D;
+    font-size: 13px !important;
+    font-family: Open sans !important;
+    font-weight: 500 !important;
 }
 
 .sign-upbtn{
@@ -61,7 +68,6 @@ body,html{
     margin-top: -21px;
     margin-bottom: 10px;
     margin-left: 16px;
-    /* position: absolute*/
 }
 
 .userroles{
@@ -69,11 +75,6 @@ body,html{
     font-size: 16px;
     margin-left: 16px;
 }
-
-/* .rolesborder{
-    background-color: #fff;
-    padding-top: 10px;
-} */
 
 .usermanagetitle2{
     position: absolute;
@@ -90,12 +91,6 @@ body,html{
 
 .farfa-sticky{
     color: #69717D;
-}
-.other-titles{
-    color: #69717D;
-    font-size: 13px !important;
-    font-family: Open sans !important;
-    font-weight: 500 !important;
 }
 
 .db_page_title{
@@ -142,6 +137,11 @@ body,html{
 
 #dashbcolor:hover{
     color: #fff !important;
+}
+
+.dashboard_switch_btn{
+    float: right;
+    border: none;
 }
 
 #dashbcolor{
@@ -384,10 +384,6 @@ body,html{
     margin-right: 12px;
 }
 
-.changeorgdropdown{
-
-}
-
 .closebtn{
     color: #fff !important;
     margin-right: 9px;
@@ -543,6 +539,10 @@ body,html{
     margin-left: 8px;
 }
 
+.updatedataprofillabel{
+    color: #69717D;
+}
+
 .profileicon2{
     color: #69717D;
     margin-top: -10px;
@@ -555,7 +555,7 @@ body,html{
 
 .editcaselabe{
     margin-left: 21px;
-    padding-top: 29px;
+    padding-top: 0px;
 }
 
 .sublabelmargin{
@@ -565,17 +565,108 @@ body,html{
 
 .editclosebtn{
     float: right;
-    margin-right: -219px;
+    margin-right: -252px;
     border: none;
     color: #fff !important;
+    margin-bottom: 20px;
+    margin-top: 23px;
+}
+
+.caselogbodymargin{
+    width: fit-content;
+    margin-top: 94px !important;
+    overflow-y: auto;
+    height: 500px;
+}
+
+.executiontablelog{
+    border: 1px solid red;
+    margin-right: 16px;
+}
+
+.executiontablebottomborder{
+    border: 1px solid rgb(32, 31, 31,25%);
+}
+
+.nullchecklabel{
+    margin-left: -5px;
+}
+
+.top10label{
+    margin-left: 134px;
+    color: #69717D;
+}
+
+.resultlabel2{
+    margin-left: -3px;
+}
+
+.statuslabel{
+    margin-left: 60px;
+    color: #69717D;
+}
+
+.bgcolor{
+    background-color: #BD4951;
+    color: #fff;
+    line-height: 2;
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+.logbody{
+    margin-top: -15px;
+}
+
+.bgcolorOdd{
+    background-color: #c5d8f5b4;
+    font-size: 12px;
+    line-height: 1 !important;
+    vertical-align: middle;
+}
+
+.bgcolorNull{
+    background-color: yellow;
+    background-clip: content-box;
+}
+
+.loglabel{
+    margin-left: 13px;
+}
+
+.bgcoloreven{
+    font-size: 12px;
+    line-height: 1;
+}
+
+.borderpadding{
+    padding-right: 14px;
+    padding-left: 0px;
+    padding-top: 4px;
+}
+
+.resultlabel{
+    margin-left: 122px;
+}
+
+.tablenamelabel{
+    margin-left: 12px;
+    margin-top: -2px;
+    color: #69717D;
+
 }
 
 .viewclosebtn{
-    position: absolute;
-    margin-left: -13px;
+    margin-left: -128px;
     color: #fff !important;
     border: none;
 }
+
+.casesubtitles{
+    min-width: 350px;
+    max-width: 350px;
+}
+
 
 .viewclosebtn:hover,
 .viewclosebtn:active{
@@ -589,11 +680,13 @@ body,html{
 
 .tablefooterborder{
     border-top: none;
+    /* display: none; */
 }
 
 .viewbackbtn{
-    margin-left: 115px;
+    margin-left: 162px;
     color: #fff !important;
+    /* float: right; */
 }
 
 .viewbackbtn:hover,
@@ -616,13 +709,15 @@ body,html{
 
 .goeditbtn{
     float: right;
-    margin-right: -350px;
+    margin-right: -384px;
     color: #fff !important;
+    margin-top: 23px;
 }
 
-.viewbtnmargin{
+.updatebtnmargin{
     float: right;
-    margin-right: 36px;
+    margin-right: 0px;
+    color: #fff;
 }
 
 .goeditbtn:hover,
@@ -630,8 +725,8 @@ body,html{
     color: #fff !important;
 }
 
-.viewbtnmargin:hover,
-.viewbtnmargin:active{
+.updatebtnmargin:hover,
+.updatebtnmargin:active{
     color: #fff !important;
 }
 
@@ -670,7 +765,6 @@ body,html{
     border-radius: 4px;
     border: 1px solid #ccc;
 }
-/* data profiling */
 
 .dataprofilingtitle{
     position: absolute;
@@ -688,6 +782,20 @@ body,html{
     border-top: none !important;
     color: #69717D;
     font-weight: 200;
+}
+
+.manageconnectionsavebtn{
+    margin-right: 12px;
+}
+
+.manageconnclosebtn{
+    color: #fff !important;
+    margin-right: 5px;
+}
+
+.manageconnclosebtn:hover,
+.manageconnclosebtn:active{
+    color: #fff;
 }
 
 .selectcaselabel2{
@@ -708,13 +816,35 @@ body,html{
     font-weight: 200;
 }
 
+.selectconnectioneditbox{
+    margin-top: -7px;
+    margin-top: 10px;
+}
+
+.selectconnectioneditbox1{
+    margin-top: -9px;
+}
+.textarea1{
+    width: 100%;
+    border-radius: 3px;
+    resize: vertical;
+}
+
 .raidolabel{
     font-size: 12px !important;
     margin-left: 10px;
 }
 
 .radiobtnmargin{
-    margin-right: 62px;
+    margin-right: 180px;
+}
+
+.footertable{
+    border: none;
+}
+
+.selecteditbox{
+    width: 95%;
 }
 
 .selectconnection {
@@ -722,7 +852,7 @@ body,html{
     border: 1px solid #ccc;
     border-radius: 3px;
     font-weight: 200 !important;
-    margin-left: -2px;
+    margin-left: -59px;
 }
 .profileicon{
     position: absolute;
@@ -777,7 +907,7 @@ body,html{
 .backtablebg{
     background-color: #eaebed;
 }
-
-/* .headtextcolor{
-    font-weight: bold;
-} */
+.lname{
+    padding: 10px;
+    vertical-align: -webkit-baseline-middle;
+}

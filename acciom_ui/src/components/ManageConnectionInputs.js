@@ -2,7 +2,6 @@ import React from 'react';
 import { Panel, Button, Table } from 'react-bootstrap';
 
 export default function ManageConnectionInputs(props) {
-	console.log('FormControlLabelPosition ', props);
 
 	return (
 		<Table className="manageConnection manageConnectiontable">

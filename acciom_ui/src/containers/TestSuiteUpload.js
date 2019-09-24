@@ -46,7 +46,6 @@ class TestSuiteUpload extends React.Component {
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		let newState = prevState;
-		console.log("derivedstatefromprops------>");
 
 		if (nextProps.moveToSelectSheetPage) {
 			newState = { ...prevState, key: TAB_UPLOAD_SHEET };
@@ -221,7 +220,7 @@ class TestSuiteUpload extends React.Component {
 					};
 					return (
 						<div key={index} className='sheetListItem'>
-							<label className="form-check-label">
+							<label className="form-check-label updatedataprofillabel">
 								<input
 									type="radio"
 									className="form-check-input"
