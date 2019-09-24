@@ -205,7 +205,7 @@ body,html{
     margin-right: 10px;
     margin-left: 6px;
     float: right;
-    margin-top: -10px;
+    margin-top: -3px;
 }
 
 .deleteconfirmpopup{
@@ -575,8 +575,8 @@ body,html{
 .caselogbodymargin{
     width: fit-content;
     margin-top: 94px !important;
-    overflow-y: auto;
     height: 500px;
+    max-width: 1100px;
 }
 
 .executiontablelog{
@@ -601,9 +601,43 @@ body,html{
     margin-left: -3px;
 }
 
+.table_namelabel{
+    font-weight: 300;
+    color: #69717D;
+}
+
 .statuslabel{
     margin-left: 60px;
     color: #69717D;
+}
+
+.datavalitable1{
+    border: 1px solid rgb(32, 31, 31,25%);
+    margin-left: 18px;
+}
+.datavalitable2{
+    border: 1px solid rgb(32, 31, 31,25%);
+    margin-left: 18px;
+}
+
+.resultlabel3{
+    margin-left: 143px;
+}
+
+.statslabelmargin{
+    margin-left: 145px;
+}
+
+.resultlabel3margin{
+    margin-left: -11px;
+}
+
+.datavalitablefont{
+    font-weight: 300;
+    font-size: 12px;
+    flex-basis: 33.33%;
+    flex-shrink: 0;
+    padding-left: 9px;
 }
 
 .bgcolor{
@@ -616,6 +650,8 @@ body,html{
 
 .logbody{
     margin-top: -15px;
+    overflow-y: auto;
+    max-height: 470px;
 }
 
 .bgcolorOdd{
@@ -647,6 +683,59 @@ body,html{
 
 .resultlabel{
     margin-left: 122px;
+}
+
+.ddlchecklogborder1{
+    padding-left: 21px;
+}
+
+.ddlchecklogborder2{
+    padding-left: 0px;
+}
+
+.ddlresultlabel{
+    margin-left: -144px;
+}
+
+.ddlchecktable{
+    width: 694px !important;
+    
+}
+
+.ddlchecktableborder{
+    border: 1px solid black;
+}
+
+.ddlstatuslabel{
+    margin-left: 40px;
+    color: #69717D;
+}
+
+.resultmargin{
+    margin-left: 4px;
+    color: #69717D;
+    font-weight: 100;
+}
+
+.ddlnamelabel{
+    margin-top: -2px;
+    margin-left: 13px;
+}
+
+.sublabel1{
+    margin-left: 10px;
+}
+
+.sublabel2{
+    margin-left: 140px;
+}
+
+.ddlborder{
+    border-top: none !important;
+}
+
+.datavalidationsql{
+    border: 1px solid rgb(105, 105, 105);
 }
 
 .tablenamelabel{
@@ -742,7 +831,7 @@ body,html{
 }
 
 .brows-btn{
-    margin-top: -10px;
+    margin-top: -3px;
     margin-bottom: 25px;
 }
 
@@ -872,11 +961,10 @@ body,html{
 }
 
 .switchprojectbtn{
-    margin-top: -20px;
+    margin-top: -13px;
     margin-bottom: 10px;
 }
 
-/* Quality index */
 
 .QLindex-title{
     margin-left: -41px;

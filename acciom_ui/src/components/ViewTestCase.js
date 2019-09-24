@@ -116,7 +116,6 @@ class TestCaseDetails extends React.Component {
 	 handleCloseDialog = ()  => setShow(false)
 
 	render() {
-		console.log("this.props.viewTestCase", this.props.viewTestCase)
 		return (
 			<div>
 				{ this.props.viewTestCase ?
@@ -129,7 +128,7 @@ class TestCaseDetails extends React.Component {
 						<Modal.Header closeButton className="tableheaderborder">
 							<Modal.Title id="contained-modal-title-vcenter">
 								<label className="testViewHeading sub_title editcaselabe">Case Details :&nbsp;</label>
-								<label className="testViewData sub_title">{this.props.viewTestCase.test_case_class}</label>
+								<label className="testViewData sub_title">{this.props.viewTestCase.display_test_case_class}</label>
 							</Modal.Title>
 						</Modal.Header>
 						<Modal.Body className="tablecontent">

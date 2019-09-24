@@ -55,7 +55,7 @@ class UserManagement extends Component {
 
 	render() {
 		const { isEditable } = this.state;
-		console.log("this.props.orgUserList", this.props.orgUserList)
+		// console.log("this.props.orgUserList", this.props.orgUserList)
 		return (
 			<div id="userManagement">
 				<i class="fa fa-users usericon2" aria-hidden="true"></i>
