@@ -143,8 +143,9 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 	const [testSuiteIdForManageConnections, setTestSuiteIdForManageConnections] = React.useState(null);
 
 	useEffect(() => {
-
+		// projectId = this.props.currentProject.project_id;
 		getAllConnections(project_id);
+		console.log("getallconnections=========?",project_id);
 		return function cleanup() {
 			clearInterval(refreshTimer);
 			clearInterval(refreshTimerLogs);
@@ -337,10 +338,12 @@ const mapStateToProps = (state) => {
 		showConnectionsDialog: state.testSuites.connectionsList.showConnectionsDialog,
 		allCases: state.testSuites.connectionsList? state.testSuites.connectionsList.allCases: {},
 		eachTestCaseDetails: state.testSuites.eachTestCaseDetails? state.testSuites.eachTestCaseDetails: [],
+		// currentProject: state.appData.currentProject
 		projectId: state  
 	};
 };
 
+ 
 export default connect(mapStateToProps, {
 	getAllConnections, 
 	getTestCaseLogById, 

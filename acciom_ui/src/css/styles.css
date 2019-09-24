@@ -4194,7 +4194,7 @@ textarea {
 }
 
 .manageConnectionLabel, .testCaseLogLabel {width:190px;}
-.testCaseLogMessage {width:300px;}
+.testCaseLogMessage {width:400px;}
 .viewLogData {   
     padding-left:50px;
 }

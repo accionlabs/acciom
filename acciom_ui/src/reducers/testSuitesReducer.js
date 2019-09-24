@@ -47,6 +47,7 @@ const testSuites = (state = initialState, action) => {
 	case GET_ALL_TEST_SUITES_REQUEST:
 		return {
 			...state,
+			// refreshTestSuites: false,
 			connectionsList:{
 				...state.connectionsList,
 				showConnectionsDialog: false
@@ -84,9 +85,9 @@ const testSuites = (state = initialState, action) => {
 		};	
 
 	case GET_ALL_CONNECTIONS_SUCCESS:
-		action.response.data.all_connections.forEach(connection => {
-			connection.checked = false;
-		});
+		// action.response.data.all_connections.forEach(connection => {
+		// 	connection.checked = false;
+		// });
 		return {
 			...state,
 			connectionsList : { 

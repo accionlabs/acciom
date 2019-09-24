@@ -10,15 +10,15 @@ class Startup extends React.Component {
 
 	constructor(props) {
 		super(props);
-		if (this.props.currentProject) {
-			this.props.getAllTestSuites(this.props.currentProject.project_id);
-		}
+		this.state = {};
+		// if (this.props.currentProject) {
+		// 	this.props.getAllTestSuites(this.props.currentProject.project_id);
+			
+		// }
 	}
-	// componentDidMount() {
-	// }
-
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		if (nextProps.refreshTestSuites) {
+			// console.log("refreshTestSuites===>", nextProps.refreshTestSuites)
 			nextProps.getAllTestSuites(nextProps.currentProject.project_id);
 		}
 		return null;
