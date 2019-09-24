@@ -3,8 +3,28 @@ import { Link } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import { connect } from 'react-redux';
 import { ListGroup,Table, Button, Col } from 'react-bootstrap';
-import { getOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
+import { getOrganizationUsersList,addOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
 import  RoleListItemContainer  from './RoleListItemContainer';
+import CustomPaginationActionsTable from '../components/Tables';
+import GroupIcon from '@material-ui/icons/Group';
+
+
+import { withStyles } from '@material-ui/core/styles';
+const styles = theme => ({
+	textField:{
+		float:'right',
+		
+	},
+	label:{
+	
+		top:0,
+		left:0
+	},
+	IconClass:{
+		marginBottom:'-5px',
+		marginLeft:'3px'
+	}
+});
 
 class UserManagement extends Component {
 	
@@ -12,24 +32,37 @@ class UserManagement extends Component {
 		super(props);
 		this.state = {
 			isOrganisationInitialised: false,
-			isEditable : false
+			isEditable : false,
+		
+			 headers : [
+				{ id: 'first_name',  label: 'FirstName' },
+				{ id: 'last_name',  label: 'LastName' },
+				{ id: 'email', label: 'Email' },
+				{ id: 'Action',  label: 'Action' },
+			
+			  ],
 		};
 	}
 
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		if (!prevState.isOrganisationInitialised && 
 			nextProps.isOrganisationInitialised > 0) {
+			
 			nextProps.getOrganizationUsersList(nextProps.currentOrg.org_id);
+			
 		}
 		return ({
+		
 			isOrganisationInitialised: nextProps.isOrganisationInitialised
 		});
 	}
 
 	getOrgUserList = () => {
+		
 		let userList = '';
 		if (this.props.orgUserList.length > 0) {
 			userList = this.props.orgUserList.map((user, index) =>{
+			
 				return (
 					<tr key={index}>
 						<td>
@@ -49,30 +82,41 @@ class UserManagement extends Component {
 				);
 			});
 		}
-
+	
 		return userList;
 	};
+	
 
 	render() {
-		const { isEditable } = this.state;
-		// console.log("this.props.orgUserList", this.props.orgUserList)
+		const { isEditable,headers } = this.state;
+		const{orgUserList,classes}=this.props;
+	
 		return (
 			<div id="userManagement">
-				<i class="fa fa-users usericon2" aria-hidden="true"></i>
-				<label className="main_titles usermanagetitle2">Manage User Roles</label>
-				<Table  className="manageuserrolestable">
-					<thead>
-						<tr className="manageuserrolestablehead">
-							<th>Firstname</th>
-							<th>Lastname</th>
-							<th>Email</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody className="hovercolor">
-					{ this.getOrgUserList() }
-					</tbody>
-				</Table>
+			<div>
+            <GroupIcon className={classes.IconClass}/>
+			&nbsp; &nbsp;
+			<label className="main_titles" >Users Mange</label>
+			
+				
+			</div>
+				
+				
+			
+	
+			
+		
+			  <CustomPaginationActionsTable 
+					headers={headers}
+					userList ={orgUserList}
+					// addBtnFunctionality ={this.addRowsinTable}
+				
+					/>
+					
+			
+				
+			
+			
 			</div>
 		);
 	 }
@@ -88,7 +132,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-	getOrganizationUsersList: (data) => dispatch(getOrganizationUsersList(data))
+	getOrganizationUsersList: (data) => dispatch(getOrganizationUsersList(data)),
+	// addOrganizationUsersList:(data) =>dispatch(addOrganizationUsersList(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserManagement);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserManagement));
