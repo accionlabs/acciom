@@ -570,7 +570,7 @@ name="firstName"
           <EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
           </Link>	
         
-          <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} onClick={ (e) => {this.handleDelete(user.user_id)}} />
+          {/* <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} onClick={ (e) => {this.handleDelete(user.user_id)}} /> */}
           </TableCell>
          </TableRow>
        );
