@@ -106,10 +106,12 @@ class DbDetails(Resource):
                 return api_response(False, APIMessages.
                                     DB_CONNECTION_NAME_ALREADY_PRESENT,
                                     STATUS_BAD_REQUEST)
-            # Checking spaces in username and hostname
+            # Checking spaces in database name,username and hostname
             spacecount_dbusername = db_detail["db_username"].find(" ")
             spacecount_dbhostanme = db_detail["db_hostname"].find(" ")
-            if spacecount_dbusername > -1 or spacecount_dbhostanme > -1:
+            spacecount_dbname = db_detail["db_name"].find(" ")
+            if spacecount_dbusername > -1 or spacecount_dbhostanme > -1 \
+                    or spacecount_dbname > -1:
                 return api_response(False, APIMessages.
                                     NO_SPACES,
                                     STATUS_BAD_REQUEST)
@@ -360,6 +362,12 @@ class DbDetails(Resource):
                 spacecount_dbhostname = db_detail[
                     "db_hostname"].find(" ")
                 if spacecount_dbhostname > -1:
+                    return api_response(False, APIMessages.
+                                        NO_SPACES, STATUS_BAD_REQUEST)
+            if db_details["db_name"] != None:
+                spacecount_dbname = db_detail[
+                    "db_name"].find(" ")
+                if spacecount_dbname > -1:
                     return api_response(False, APIMessages.
                                         NO_SPACES, STATUS_BAD_REQUEST)
             db_obj = DbConnection.query.filter(
