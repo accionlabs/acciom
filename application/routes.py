@@ -87,6 +87,11 @@ def handle_bad_request_exception(e):
     """Handle Generic Bad Request Exception."""
     return api_response(False, str(e), STATUS_BAD_REQUEST)
 
+@app.errorhandler(IllegalArgumentException)
+def handle_bad_request_exception(e):
+    """Handle  Illegal Argument Exception."""
+    return api_response(False, str(e), STATUS_BAD_REQUEST)
+
 
 @app.errorhandler(IllegalArgumentException)
 def handle_bad_request_exception(e):
