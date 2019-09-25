@@ -113,6 +113,8 @@ class APIMessages:
     VALID_EMAIL = "Please pass Valid Email ID"
     NULL_CHECK_RESULT = "Total {} Records with Null value(s)"
     DUPLICATE_CHECK_RESULT = "{} Duplicates Found"
+    WRONG_DB_CONNECTION = "The given DB conncetion does not belong to the project"
+    WRONG_QUERY_ID = "The given query id is not valid"
 
 
 class GenericStrings:
