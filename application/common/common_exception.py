@@ -26,11 +26,12 @@ class GenericBadRequestException(Exception):
 
     pass
 
+
 class IllegalArgumentException(Exception):
     """Illegal Argument"""
+
     def __init__(self, display_message):
         """Display Message to be passed."""
         self.display_message = display_message
 
     pass
-
