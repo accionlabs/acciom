@@ -93,8 +93,12 @@ const toolbarStyles = theme => ({
   textField: {
     marginLeft: '0px',
     marginRight: '10px',
+    
     width: 200,
-    height:'auto'
+    height:'auto !important'
+  },
+  startIcon:{
+   paddingBottom:'10px'
   },
   
   textFieldEdit:{
@@ -126,7 +130,8 @@ let EnhancedTableToolbar = props => {
         value ={props.textValue}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">
+            <InputAdornment position="start"
+             className={classes.startIcon}>
               <Search />
             </InputAdornment>
           ),
@@ -186,20 +191,29 @@ const styles = theme => ({
     paddingLeft:'22px !important',
     fontFamily: 'Open Sans !important',
     paddingRight:'12px !important',
+    fontWeight:'bold',
+   
+  
    
   },
 
    
   toolbarCss:{
+    paddingLeft:'2px !important',
+   
     "&:hover": {
      
       color:'#ffffff!important'
     }
 
   },
+  headerHeight:{
+    height:'10px!important'
+  },
   tableRowStyling:{
     fontFamily: 'Open Sans !important',
-    paddingLeft:'20px !important'
+    paddingLeft:'22px !important',
+    fontWeight:400
   },
   cellStyling:{
     textAlign:'right !important',
@@ -225,7 +239,7 @@ class CustomPaginationActionsTable extends React.Component {
     orderBy: 'Username',
     selected: [],
      page: 0,
-    rowsPerPage: 5,
+    rowsPerPage: 10,
     search:'',
     showDeleteConfirmationDialog:false,
     showEditConfirmationDialog:false,
@@ -505,13 +519,78 @@ name="firstName"
     )
 
   }
+  displayTableBody=(userList)=>{
+  
+    const {  order, orderBy, selected, rowsPerPage, page,showEditConfirmationDialog } = this.state;
+    const {classes}=this.props;
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, userList.length - page * rowsPerPage);
+    let tableData=[];
+    tableData= stableSort(userList, getSorting(order, orderBy))
+          
+      .filter(searchingFor(this.state.search))
+     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+     .map((user) => {
+   
+    
+     
+       const isSelected = this.isSelected(user.user_id);
+      
+  
+       return (
+         <TableRow
+           hover
+           onClick={event => this.handleClick(event, user.user_id)}
+           role="checkbox"
+           aria-checked={isSelected}
+           tabIndex={-1}
+            key={user.user_id}
+           selected={isSelected}
+            
+        
+         >
+         
+           <TableCell component="th" scope="row"  align="left"
+              className={classes.tableRowStyling}>
+             {user.first_name}
+           
+           
+           </TableCell>
+           <TableCell align="left" component="th" scope="row"  
+           className={classes.tableRowStyling}>
+           {user.last_name}
+         
+           </TableCell>
+           <TableCell align="left" component="th" scope="row"  
+           className={classes.tableRowStyling}>
+           {user.email}
+       
+           </TableCell>
+          <TableCell className={classes.cellStyling}>
+          <Link to={`/edit_user_role/${user.user_id}`}>
+          <EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
+          </Link>	
+        
+          <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} onClick={ (e) => {this.handleDelete(user.user_id)}} />
+          </TableCell>
+         </TableRow>
+       );
+     })
+   {emptyRows > 0 && (
+     <TableRow style={{ height: 49 * emptyRows }}>
+       <TableCell colSpan={6} />
+     </TableRow>
+   )}
+ 
+  return tableData;
+
+  }
+  
   render() {
    
     const { classes,headers,userList } = this.props;
     const {  order, orderBy, selected, rowsPerPage, page,showEditConfirmationDialog } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, userList.length - page * rowsPerPage);
   
-   
     return (
       <Paper className={classes.root}>
    
@@ -535,70 +614,19 @@ name="firstName"
               headers={headers}
               headerCss ={classes.headerStyles}
               toolbarCss ={classes.toolbarCss}
+              headerHeight={classes.headerHeight}
               
               />
          
             <TableBody  className="table_body">
-           {stableSort(userList, getSorting(order, orderBy))
-          
-                 .filter(searchingFor(this.state.search))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((user) => {
-              
-               
-                
-                  const isSelected = this.isSelected(user.user_id);
-                 
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => this.handleClick(event, user.user_id)}
-                      role="checkbox"
-                      aria-checked={isSelected}
-                      tabIndex={-1}
-                       key={user.user_id}
-                      selected={isSelected}
-                       
-                   
-                    >
-                    
-                      <TableCell component="th" scope="row"  align="left"
-                         className={classes.tableRowStyling}>
-                        {user.first_name}
-                      
-                      
-                      </TableCell>
-                      <TableCell align="left" component="th" scope="row"  
-                      className={classes.tableRowStyling}>
-                      {user.last_name}
-                    
-                      </TableCell>
-                      <TableCell align="left" component="th" scope="row"  
-                      className={classes.tableRowStyling}>
-                      {user.email}
-                  
-                      </TableCell>
-                     <TableCell className={classes.cellStyling}>
-                     <Link to={`/edit_user_role/${user.user_id}`}>
-                     <EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
-                     </Link>	
-                   
-                     {/* <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} onClick={ (e) => {this.handleDelete(user.user_id)}} /> */}
-                     </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
+         
+       
+              {this.displayTableBody(this.props.userList)}
             </TableBody>
           </Table>
         </div>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10, 20, 50]}
           component="div"
           count={userList.length}
           rowsPerPage={rowsPerPage}
