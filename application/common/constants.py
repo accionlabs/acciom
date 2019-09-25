@@ -68,7 +68,7 @@ class APIMessages:
     DB_DETAILS_ALREADY_PRESENT = "Database Details already exist"
     DB_CONNECTION_NAME_ALREADY_PRESENT = "DB Details with this connection name " \
                                          "already exist"
-    NO_SPACES = "Spaces not allowed in User Name or Host Name"
+    NO_SPACES = "Spaces not allowed in Database Name or User Name or Host Name"
     UNAUTHORIZED = "Unauthorized Access"
     PROJECT_NOT_UNDER_ORG = "Project ID provided is not under given Organization"
     TEST_SUITE_ADDED = "Test Suite added Successfully"
