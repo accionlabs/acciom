@@ -91,7 +91,6 @@ class APIMessages:
     TEST_CASE_ABSENT = "Invalid Test Case(s)"
     TEST_SUITE_ABSENT = "Test Suite Not Exists for a Selected Test Case"
     TEST_SUITE_NAME_CANNOT_BE_BLANK = "Test Suite Name cannot be Blank"
-    CONNECTION = "Connection "
     UNKNOWN_DATABASE = "Unknown Database '{}'"
     AUTHENTICATION_FAILED = "Authentication failed for user '{}'"
     CANNOT_CONNECT_TO_SERVER = "Can't connect to {} Server on '{}' (Name or Service not known)"
