@@ -35,8 +35,8 @@ class UserManagement extends Component {
 			isEditable : false,
 		
 			 headers : [
-				{ id: 'first_name',  label: 'FirstName' },
-				{ id: 'last_name',  label: 'LastName' },
+				{ id: 'first_name',  label: 'First Name' },
+				{ id: 'last_name',  label: 'Last Name' },
 				{ id: 'email', label: 'Email' },
 				{ id: 'Action',  label: 'Action' },
 			
@@ -57,34 +57,7 @@ class UserManagement extends Component {
 		});
 	}
 
-	getOrgUserList = () => {
-		
-		let userList = '';
-		if (this.props.orgUserList.length > 0) {
-			userList = this.props.orgUserList.map((user, index) =>{
-			
-				return (
-					<tr key={index}>
-						<td>
-						{/* <i className="fa fa-user-circle usermanagelogo"></i> */}
-						
-							<span className="fName" >{user.first_name}</span></td>
-							<span className="lname">{user.last_name}</span>
-							<td><span className="email" >{user.email}</span></td>
-						
-						
-							<td><Link to={`/edit_user_role/${user.user_id}`}>
-								{/* <Button type="button" className="button-colors" bsStyle="primary">Edit</Button> */}
-								<EditIcon fontSize="small" className="editicon2" style={{color:"#696969"}} />
-							</Link></td>	
-						
-					</tr>
-				);
-			});
-		}
-	
-		return userList;
-	};
+
 	
 
 	render() {
@@ -96,7 +69,7 @@ class UserManagement extends Component {
 			<div>
             <GroupIcon className={classes.IconClass}/>
 			&nbsp; &nbsp;
-			<label className="main_titles" >Users Mange</label>
+			<label className="main_titles" > Manage Users</label>
 			
 				
 			</div>
