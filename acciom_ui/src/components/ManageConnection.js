@@ -43,15 +43,32 @@ class ManageConnection extends React.Component {
 		} else {
 			cases.splice(cases.indexOf(value), 1);
 		}
-
-		// this.setState({
-		// 	selectedConnectionType: 'source'
-		// });
-
 		this.setState({
 			selectedCases: cases
 		});
 	};
+
+	getTestCaseDataOnSelectAllToggle = (allCases) =>{
+		var temp_arr=[]
+		allCases.map(item => {
+			temp_arr.push(item.case_id)
+		});
+		return temp_arr
+	}
+
+	handletestCaseSelectAllToggle = (allCases) => {
+		let testCases = [];
+		testCases = this.getTestCaseDataOnSelectAllToggle(allCases);
+		if(this.state.selectedCases.length === 0){
+			this.setState({
+				selectedCases: testCases
+			});
+		}else{
+			this.setState({
+				selectedCases: []
+			});
+		}		
+	}
 
 	handleManageConnectionSave = () => {
 		// const payload = new FormData();
@@ -104,6 +121,7 @@ class ManageConnection extends React.Component {
 						selectedCases={this.state.selectedCases}
 						onConnectionChange={this.handleConnectionChange}
 						onCaseSelectionChange={this.handleCasesChange}
+						testCaseSelectAllToggle= {this.handletestCaseSelectAllToggle}
 						testSuiteId={this.props.testSuiteId}>
 					</ManageConnectionSelect>
 				</Modal.Body>
