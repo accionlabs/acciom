@@ -25,7 +25,8 @@ from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
 from application.api.user_management import UserAPI, UserRoleAPI
 from application.common.common_exception import (UnauthorizedException,
                                                  ResourceNotAvailableException,
-                                                 GenericBadRequestException)
+                                                 GenericBadRequestException,
+                                                 IllegalArgumentException)
 from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_UNAUTHORIZED,
                                          STATUS_SERVER_ERROR,
@@ -83,6 +84,11 @@ def handle_resource_not_available_exception(e):
 @app.errorhandler(GenericBadRequestException)
 def handle_bad_request_exception(e):
     """Handle Generic Bad Request Exception."""
+    return api_response(False, str(e), STATUS_BAD_REQUEST)
+
+@app.errorhandler(IllegalArgumentException)
+def handle_bad_request_exception(e):
+    """Handle  Illegal Argument Exception."""
     return api_response(False, str(e), STATUS_BAD_REQUEST)
 
 

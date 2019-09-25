@@ -3,11 +3,12 @@ from datetime import datetime
 from flask import request
 from flask_restful import reqparse, Resource
 
-from application.common.api_permission import TEST_SUITE_POST, \
-    TEST_SUITE_POST_EXECUTE, TEST_SUITE_PUT, CREATE_NEW_TEST_SUITE_POST, \
-    ADD_TEST_SUITE_MANUALLY_POST, TEST_CASE_LOG_DETAIL_GET, \
-    EXPORT_TEST_LOG_GET, TEST_CASE_LOG_API_GET
-from application.common.common_exception import ResourceNotAvailableException
+from application.common.api_permission import (TEST_SUITE_POST, 
+    TEST_SUITE_POST_EXECUTE, TEST_SUITE_PUT, CREATE_NEW_TEST_SUITE_POST, 
+    ADD_TEST_SUITE_MANUALLY_POST, TEST_CASE_LOG_DETAIL_GET, 
+    EXPORT_TEST_LOG_GET, TEST_CASE_LOG_API_GET)
+from application.common.common_exception import (ResourceNotAvailableException,
+                                    IllegalArgumentException)
 from application.common.constants import (APIMessages, SupportedTestClass)
 from application.common.createdbdetail import create_dbconnection
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
@@ -27,6 +28,10 @@ from application.model.models import (Project, TestCaseLog, TestCase,
                                       TestSuite, User, Organization)
 from index import db
 
+def check_string_length(str, type):
+    if len(str) >= 10:
+        return str
+    raise ResourceNotAvailableException("length should be less ")
 
 class TestSuiteAPI(Resource):
     """
@@ -79,6 +84,9 @@ class TestSuiteAPI(Resource):
             return api_response(False, APIMessages.
                                 TEST_SUITE_NAME_CANNOT_BE_BLANK,
                                 STATUS_BAD_REQUEST)
+        if len(test_suite_data['suite_name']) >=50:
+            raise IllegalArgumentException(APIMessages.INVALID_LENGTH.format("50"))
+        
         if temp_connection:
             return api_response(False, APIMessages.
                                 TEST_SUITE_NAME_ALREADY_PRESENT,
@@ -97,6 +105,7 @@ class TestSuiteAPI(Resource):
                              org_id=project_obj.org_id,
                              project_id=test_suite_obj.project_id)
             create_job(current_user, test_suite_obj, False)
+            
         return api_response(True, APIMessages.ADD_DATA, STATUS_CREATED)
 
     @token_required

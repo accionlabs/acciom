@@ -114,6 +114,7 @@ class APIMessages:
     VALID_EMAIL = "Please pass Valid Email ID"
     NULL_CHECK_RESULT = "Total {} Records with Null value(s)"
     DUPLICATE_CHECK_RESULT = "{} Duplicates Found"
+    INVALID_LENGTH = "Max field Length is {} Characters"
 
 
 class GenericStrings:
