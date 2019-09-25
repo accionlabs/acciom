@@ -96,15 +96,13 @@ class APIMessages:
     CANNOT_CONNECT_TO_SERVER = "Can't connect to {} Server on '{}' (Name or Service not known)"
     UNKNOWN_DB_AUTHENTICATION_FAILED = "Unknown database '{}' or Authentication failed for User '{}'"
     CANNOT_CONNECT_TO_REMOTE_SERVER_MYSQL = "Host not allowed to connect to MySQL Server"
-    WRONG_DB_CONNECTION = "The given DB conncetion does not belong to the project"
-    WRONG_QUERY_ID = "The given query id is not valid"
     PASSWORD_CANNOT_EMPTY = "Password cannot be Blank"
     DB_NAME_CANNOT_EMPTY = "Database Name cannot be Blank"
     HOSTNAME_CANNOT_EMPTY = "Host Name cannot be Blank"
     USERNAME_CANNOT_EMPTY = "User Name cannot be Blank"
     TEST_CLASS_NAME = "Test Class Name is not valid. Supported Test Class Names are" \
                       " CountCheck, NullCheck, DuplicateCheck, DDLCheck, DataValidation"
-    DELETE_DB_WARNING = "Database Connection is associated with existing Test Case, hence you cannot Delete it"
+    DELETE_DB_WARNING = "Database Connection is associated with existing Test Case, hence cannot be Deleted"
     DELETE_DB_VERIFY_DELETE = "Database with DB ID {} can be Deleted"
     TOKEN_DELETED = "Personal Access Token '{}' is Deleted"
     CONNECTION_SETUP = "Connection Setup Successful"
@@ -114,6 +112,8 @@ class APIMessages:
     VALID_EMAIL = "Please pass Valid Email ID"
     NULL_CHECK_RESULT = "Total {} Records with Null value(s)"
     DUPLICATE_CHECK_RESULT = "{} Duplicates Found"
+    WRONG_DB_CONNECTION = "The given DB conncetion does not belong to the project"
+    WRONG_QUERY_ID = "The given query id is not valid"
 
 
 class GenericStrings:
