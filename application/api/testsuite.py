@@ -28,11 +28,6 @@ from application.model.models import (Project, TestCaseLog, TestCase,
                                       TestSuite, User, Organization)
 from index import db
 
-def check_string_length(str, type):
-    if len(str) >= 10:
-        return str
-    raise ResourceNotAvailableException("length should be less ")
-
 class TestSuiteAPI(Resource):
     """
     AddTestSuite Uploads the suite
