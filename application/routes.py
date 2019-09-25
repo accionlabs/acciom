@@ -1,5 +1,6 @@
 """File to handle API routes."""
 import os
+
 from flask import send_from_directory
 
 from application.api.checkconnection import CheckConnection
@@ -15,6 +16,7 @@ from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
 from application.api.menu import MenuAPI
 from application.api.organization import (OrganizationAPI, DashBoardStatus)
 from application.api.project import ProjectAPI
+from application.api.query_analyser import (QueryAnalyser, QueryExporter)
 from application.api.role import RoleAPI
 from application.api.testcase import (TestCaseJob, TestCaseSparkJob,
                                       EditTestCase, TestCaseJobExternal)
@@ -25,12 +27,12 @@ from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
 from application.api.user_management import UserAPI, UserRoleAPI
 from application.common.common_exception import (UnauthorizedException,
                                                  ResourceNotAvailableException,
-                                                 GenericBadRequestException)
+                                                 GenericBadRequestException,
+                                                 IllegalArgumentException)
 from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_UNAUTHORIZED,
                                          STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
-from application.api.query_analyser import  (QueryAnalyser, QueryExporter)
 from application.model.models import db
 from index import (app, api, static_folder)
 
@@ -83,6 +85,17 @@ def handle_resource_not_available_exception(e):
 @app.errorhandler(GenericBadRequestException)
 def handle_bad_request_exception(e):
     """Handle Generic Bad Request Exception."""
+    return api_response(False, str(e), STATUS_BAD_REQUEST)
+
+@app.errorhandler(IllegalArgumentException)
+def handle_bad_request_exception(e):
+    """Handle  Illegal Argument Exception."""
+    return api_response(False, str(e), STATUS_BAD_REQUEST)
+
+
+@app.errorhandler(IllegalArgumentException)
+def handle_bad_request_exception(e):
+    """Handle  Illegal Argument Exception."""
     return api_response(False, str(e), STATUS_BAD_REQUEST)
 
 

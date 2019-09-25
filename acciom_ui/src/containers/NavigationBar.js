@@ -50,6 +50,12 @@ const useStyles = makeStyles(theme => ({
 			duration: theme.transitions.duration.enteringScreen,
 		}),
 	},
+	labelTitle:{
+		color:"gray"
+	},
+	labelValue:{
+		color:"#BD4951"
+	},
 	menuButton: {
 		marginRight: 36,
 	},
@@ -180,9 +186,25 @@ const getLoginOptions = (props, classes) => {
 	};
 
 	options = (
+		<>
 		<div className={classes.accountbtn}>
 			{ getLoginElements() }
 		</div>
+		<div style={{position:"absolute", left:"90px", bottom: "0px"}}>
+		<Typography variant="body2" display="inline" align="left" className={classes.labelTitle}>
+			Organisation :&nbsp;
+		</Typography>
+		<Typography variant="caption" display="inline" align="left" className={classes.labelValue}>
+			{props.orgName}
+		</Typography>
+		<Typography variant="body2" display="inline" align="left"  className={classes.labelTitle} style={{marginLeft:"10px"}}>
+			Project :&nbsp;
+		</Typography>
+		<Typography variant="caption" display="inline" align="left" className={classes.labelValue}>
+			{props.projectName}
+		</Typography>
+		</div>
+		</>
 	)
 
 	return options;
@@ -201,7 +223,6 @@ function NavigationBar(props) {
 	function handleDrawerClose() {
 		setOpen(false);
 	}
-
 	return (
 		<div className={classes.root}>
 			<CssBaseline />
@@ -309,7 +330,9 @@ function NavigationBar(props) {
 
 const mapStateToProps = (state) => {
 	return {
-		loginData: state.loginData
+		loginData: state.loginData,
+		projectName: state.appData.currentProject.project_name,
+		orgName: state.appData.currentOrg !== null ? state.appData.currentOrg.org_name : "" ,
 	}
 };
 const mapDispatchToProps = (dispatch) => ({

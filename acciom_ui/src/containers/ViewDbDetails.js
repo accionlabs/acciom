@@ -41,7 +41,10 @@ class ViewDbDetails extends Component {
 
 	onYesBtnClickHandler = () => {
 		this.hideConfirmationopup();
-		this.props.deleteDBDetails(this.state.deleteConnectionID);
+		const data = {
+			connectionID:this.state.deleteConnectionID
+		}
+		this.props.deleteDBDetails(data);
 	}
 
 	hideConfirmationopup = () => {

@@ -2,10 +2,11 @@
 
 from datetime import datetime
 
-from flask_restful import Resource, reqparse, inputs
+from flask_restful import Resource, reqparse
 
 from application.common.api_permission import DB_DETAILS_POST, DB_DETAILS_GET, \
     DB_DETAILS_PUT, DB_DETAILS_DELETE
+from application.common.common_exception import IllegalArgumentException
 from application.common.constants import APIMessages, SupportedDBType
 from application.common.response import (api_response, STATUS_BAD_REQUEST,
                                          STATUS_CREATED, STATUS_OK,
@@ -96,6 +97,16 @@ class DbDetails(Resource):
                                 DB_DETAILS_ALREADY_PRESENT,
                                 STATUS_BAD_REQUEST)
         else:
+            # Validating maximum characters
+            if len(db_detail['db_connection_name']) >= 100:
+                raise IllegalArgumentException(
+                    APIMessages.INVALID_LENGTH.format("100"))
+            if len(db_detail['db_name']) >= 50 or \
+                    len(db_detail['db_hostname']) >= 50 or \
+                    len(db_detail['db_username']) >= 50 or \
+                    len(db_detail['db_password']) >= 50:
+                raise IllegalArgumentException(
+                    APIMessages.INVALID_LENGTH.format("50"))
             # Check Db connection name already exist in db or not
             temp_connection = DbConnection.query.filter(
                 DbConnection.db_connection_name == db_detail[
@@ -106,10 +117,12 @@ class DbDetails(Resource):
                 return api_response(False, APIMessages.
                                     DB_CONNECTION_NAME_ALREADY_PRESENT,
                                     STATUS_BAD_REQUEST)
-            # Checking spaces in username and hostname
+            # Checking spaces in database name,username and hostname
             spacecount_dbusername = db_detail["db_username"].find(" ")
             spacecount_dbhostanme = db_detail["db_hostname"].find(" ")
-            if spacecount_dbusername > -1 or spacecount_dbhostanme > -1:
+            spacecount_dbname = db_detail["db_name"].find(" ")
+            if spacecount_dbusername > -1 or spacecount_dbhostanme > -1 \
+                    or spacecount_dbname > -1:
                 return api_response(False, APIMessages.
                                     NO_SPACES,
                                     STATUS_BAD_REQUEST)
@@ -336,6 +349,27 @@ class DbDetails(Resource):
                                 DB_DETAILS_ALREADY_PRESENT,
                                 STATUS_BAD_REQUEST)
         else:
+            # Validating maximum characters
+            if db_details['db_connection_name'] != None:
+                if len(db_details['db_connection_name']) >= 100:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("100"))
+            if db_details['db_name'] != None:
+                if len(db_detail['db_name']) >= 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
+            if db_details['db_hostname'] != None:
+                if len(db_detail['db_hostname']) >= 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
+            if db_details['db_username'] != None:
+                if len(db_detail['db_username']) >= 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
+            if db_details['db_password'] != None:
+                if len(db_detail['db_password']) >= 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
             # Check Db connection name already exist in db or not
             if db_details["db_connection_name"] != None:
                 db_obj = DbConnection.query.filter(
@@ -348,7 +382,7 @@ class DbDetails(Resource):
                     return api_response(False, APIMessages.
                                         DB_CONNECTION_NAME_ALREADY_PRESENT,
                                         STATUS_BAD_REQUEST)
-            # Checking spaces in username and hostname
+            # Checking spaces in database name,username and hostname
             if db_details["db_username"] != None:
                 spacecount_dbusername = db_detail[
                     "db_username"].find(" ")
@@ -360,6 +394,12 @@ class DbDetails(Resource):
                 spacecount_dbhostname = db_detail[
                     "db_hostname"].find(" ")
                 if spacecount_dbhostname > -1:
+                    return api_response(False, APIMessages.
+                                        NO_SPACES, STATUS_BAD_REQUEST)
+            if db_details["db_name"] != None:
+                spacecount_dbname = db_detail[
+                    "db_name"].find(" ")
+                if spacecount_dbname > -1:
                     return api_response(False, APIMessages.
                                         NO_SPACES, STATUS_BAD_REQUEST)
             db_obj = DbConnection.query.filter(
@@ -375,7 +415,7 @@ class DbDetails(Resource):
                     if value == "":
                         now = datetime.now()
                         date_time_now = now.strftime("%d-%m-%Y %H:%M:%S")
-                        value = APIMessages.CONNECTION + date_time_now
+                        value = APIMessages.DEFAULT_DB_CONNECTION_PREFIX + date_time_now
                     db_obj.db_connection_name = value
                     db_obj.save_to_db()
                 elif key == 'db_type':
@@ -417,9 +457,9 @@ class DbDetails(Resource):
                                              location='args')
         delete_db_detail_parser.add_argument('verify_delete',
                                              required=False,
-                                             type=inputs.boolean,
+                                             type=str,
                                              location='args',
-                                             default=False)
+                                             default="false")
         deletedata = delete_db_detail_parser.parse_args()
         data_base_id = deletedata.get("db_connection_id")
         if not data_base_id:
@@ -462,7 +502,7 @@ class DbDetails(Resource):
         if data_base_id in idset:
             return api_response(False, APIMessages.DELETE_DB_WARNING,
                                 STATUS_CONFLICT)
-        if deletedata["verify_delete"] is True:
+        if str(deletedata["verify_delete"]).lower() == "true":
             del_obj.is_deleted = True
             del_obj.save_to_db()
             return api_response(True,
