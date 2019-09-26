@@ -126,27 +126,27 @@ class AddDbDetails extends Component {
 						<Form noValidate onSubmit={this.formSubmit} horizontal>
 							<FormGroup controlId="formControlsConnName">
 								<Col sm={4}><ControlLabel>Connection Name</ControlLabel></Col>
-								<Col sm={8}><FormControl value={this.state.formData.db_connection_name} type="textbox" name="db_connection_name" onChange={this.handleInputChange} /></Col>
+								<Col sm={8}><FormControl value={this.state.formData.db_connection_name} type="textbox" name="db_connection_name" maxlength="50" onChange={this.handleInputChange} /></Col>
 							</FormGroup >
 							<FormGroup controlId="formControlsDbType">
 								<Col sm={4}><ControlLabel>Database Type</ControlLabel></Col>
-								<Col sm={8}><FormControl value={this.state.formData.db_type} type="textbox" name="db_type" onChange={this.handleInputChange} /></Col>
+								<Col sm={8}><FormControl value={this.state.formData.db_type} type="textbox" name="db_type" maxlength="50" onChange={this.handleInputChange} /></Col>
 							</FormGroup >
 							<FormGroup controlId="formControlsDbName">
 								<Col sm={4}><ControlLabel>Database Name</ControlLabel></Col>
-								<Col sm={8}><FormControl value={this.state.formData.db_name} type="textbox" name="db_name" onChange={this.handleInputChange} /></Col>
+								<Col sm={8}><FormControl value={this.state.formData.db_name} type="textbox" name="db_name" maxlength="50" onChange={this.handleInputChange} /></Col>
 							</FormGroup >
 							<FormGroup controlId="formControlsHostName">
 								<Col sm={4}><ControlLabel>Host Name</ControlLabel></Col>
-								<Col sm={8}><FormControl value={this.state.formData.db_hostname} type="textbox" name="db_hostname" onChange={this.handleInputChange} /></Col>
+								<Col sm={8}><FormControl value={this.state.formData.db_hostname} type="textbox" name="db_hostname" maxlength="50"  onChange={this.handleInputChange} /></Col>
 							</FormGroup >
 							<FormGroup controlId="formControlsUsername">
 								<Col sm={4}><ControlLabel>User Name</ControlLabel></Col>
-								<Col sm={8}><FormControl value={this.state.formData.db_username} type="textbox" name="db_username" onChange={this.handleInputChange} /></Col>
+								<Col sm={8}><FormControl value={this.state.formData.db_username} type="textbox" name="db_username" maxlength="50"  onChange={this.handleInputChange} /></Col>
 							</FormGroup >
 							<FormGroup controlId="formControlsPassword">
 								<Col sm={4}><ControlLabel>Password</ControlLabel></Col>
-								<Col sm={8}><FormControl value={this.state.formData.db_password} type="password" name="db_password" onChange={this.handleInputChange} /></Col>
+								<Col sm={8}><FormControl value={this.state.formData.db_password} type="password" name="db_password" maxlength="50" onChange={this.handleInputChange} /></Col>
 							</FormGroup >
 
 							<FormGroup className="formFooter">

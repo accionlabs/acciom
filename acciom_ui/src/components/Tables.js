@@ -178,11 +178,20 @@ const styles = theme => ({
   },
   table: {
     minWidth: 1020,
+  
    
    
   },
   tableWrapper: {
     overflowX: 'auto',
+    height:'100%'
+  },
+  tableHover:{
+    "&:hover": {
+     
+      color:'#eff4fc!important'
+    }
+
   },
   headerStyles:{
    
@@ -213,7 +222,8 @@ const styles = theme => ({
   tableRowStyling:{
     fontFamily: 'Open Sans !important',
     paddingLeft:'22px !important',
-    fontWeight:400
+    fontWeight:400,
+    height:'10%'
   },
   cellStyling:{
     textAlign:'right !important',
@@ -538,34 +548,40 @@ name="firstName"
   
        return (
          <TableRow
-           hover
+        
            onClick={event => this.handleClick(event, user.user_id)}
            role="checkbox"
            aria-checked={isSelected}
            tabIndex={-1}
             key={user.user_id}
            selected={isSelected}
-            
-        
+           className ={classes.tableHover}
+         
          >
          
            <TableCell component="th" scope="row"  align="left"
-              className={classes.tableRowStyling}>
+              className={classes.tableRowStyling}
+              style ={{height:'2px'}}
+              >
              {user.first_name}
            
            
            </TableCell>
            <TableCell align="left" component="th" scope="row"  
-           className={classes.tableRowStyling}>
+           className={classes.tableRowStyling}
+           >
            {user.last_name}
          
            </TableCell>
            <TableCell align="left" component="th" scope="row"  
-           className={classes.tableRowStyling}>
+           className={classes.tableRowStyling}
+           >
            {user.email}
        
            </TableCell>
-          <TableCell className={classes.cellStyling}>
+          <TableCell 
+          className={classes.cellStyling}
+          >
           <Link to={`/edit_user_role/${user.user_id}`}>
           <EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
           </Link>	
@@ -590,7 +606,7 @@ name="firstName"
     const { classes,headers,userList } = this.props;
     const {  order, orderBy, selected, rowsPerPage, page,showEditConfirmationDialog } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, userList.length - page * rowsPerPage);
-  
+     console.log('Render props',this.props);
     return (
       <Paper className={classes.root}>
    
@@ -626,7 +642,7 @@ name="firstName"
           </Table>
         </div>
         <TablePagination
-          rowsPerPageOptions={[10, 20, 50]}
+          rowsPerPageOptions={[10,15,20,25]}
           component="div"
           count={userList.length}
           rowsPerPage={rowsPerPage}
