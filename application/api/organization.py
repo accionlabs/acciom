@@ -120,10 +120,10 @@ class OrganizationAPI(Resource):
                 STATUS_OK, STATUS_UNAUTHORIZED)
         # list of projects to be returned in the response
         org_details_to_return = list()
-        for each_project in list_of_active_orgs:
+        for each_org in list_of_active_orgs:
             org_details_to_return.append(
-                {'org_id': each_project.org_id,
-                 'org_name': each_project.org_name})
+                {'org_id': each_org.org_id,
+                 'org_name': each_org.org_name})
         return api_response(
             True, APIMessages.SUCCESS, STATUS_OK,
             {"organization_details": org_details_to_return})
