@@ -17,6 +17,7 @@ from application.helper.permission_check import check_permission
 from application.model.models import (Organization, Job, TestSuite,
                                       Project, UserProjectRole, UserOrgRole,
                                       User)
+from index import db
 
 
 class OrganizationAPI(Resource):
@@ -102,9 +103,17 @@ class OrganizationAPI(Resource):
         #  organizations which are active
         # TODO: Implement a logic to return organizations that user is part
         # Storing all active projects in a list
-
-        list_of_active_orgs = Organization.query.filter_by(
-            is_deleted=False).all()
+        org_from_org_role = db.session.query(UserOrgRole.org_id).filter(
+            UserOrgRole.user_id == session.user_id).distinct().all()
+        orgorg = [org_id for org_id, in org_from_org_role]
+        org_from_project_role = db.session.query(
+            UserProjectRole.org_id).filter(
+            UserProjectRole.user_id == session.user_id).distinct().all()
+        projectorg = [org_id for org_id, in org_from_project_role]
+        active_org = orgorg + projectorg
+        list_of_active_orgs = Organization.query.filter(
+            Organization.org_id.in_(set(active_org)),
+            Organization.is_deleted == False).all()
         if not list_of_active_orgs:
             return api_response(
                 False, APIMessages.NO_RESOURCE.format('Organization'),
