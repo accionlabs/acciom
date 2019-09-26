@@ -30,7 +30,7 @@ from application.common.common_exception import (UnauthorizedException,
                                                  GenericBadRequestException,
                                                  IllegalArgumentException)
 from application.common.constants import APIMessages
-from application.common.response import (api_response, STATUS_UNAUTHORIZED,
+from application.common.response import (api_response, STATUS_FORBIDDEN,
                                          STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.model.models import db
@@ -72,7 +72,7 @@ def handle_exception(e):
 @app.errorhandler(UnauthorizedException)
 def handle_unauthorized_exception(e):
     """Handle Unauthorized Access Exception."""
-    return api_response(False, APIMessages.UNAUTHORIZED, STATUS_UNAUTHORIZED)
+    return api_response(False, APIMessages.FORBIDDEN, STATUS_FORBIDDEN)
 
 
 @app.errorhandler(ResourceNotAvailableException)
@@ -86,6 +86,7 @@ def handle_resource_not_available_exception(e):
 def handle_bad_request_exception(e):
     """Handle Generic Bad Request Exception."""
     return api_response(False, str(e), STATUS_BAD_REQUEST)
+
 
 @app.errorhandler(IllegalArgumentException)
 def handle_bad_request_exception(e):

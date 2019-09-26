@@ -10,7 +10,7 @@ from application.common.api_permission import ORGANIZATION_API_PUT, \
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_CREATED,
-                                         STATUS_OK, STATUS_UNAUTHORIZED)
+                                         STATUS_OK, STATUS_FORBIDDEN)
 from application.common.response import api_response
 from application.common.token import token_required
 from application.helper.permission_check import check_permission
@@ -103,21 +103,22 @@ class OrganizationAPI(Resource):
         #  organizations which are active
         # TODO: Implement a logic to return organizations that user is part
         # Storing all active projects in a list
-        org_from_org_role = db.session.query(UserOrgRole.org_id).filter(
+        org_id_from_org_role = db.session.query(UserOrgRole.org_id).filter(
             UserOrgRole.user_id == session.user_id).distinct().all()
-        orgorg = [org_id for org_id, in org_from_org_role]
-        org_from_project_role = db.session.query(
+        org_id_in_org_role = [org_id for org_id, in org_id_from_org_role]
+        org_id_from_project_role = db.session.query(
             UserProjectRole.org_id).filter(
             UserProjectRole.user_id == session.user_id).distinct().all()
-        projectorg = [org_id for org_id, in org_from_project_role]
-        active_org = orgorg + projectorg
+        org_id_in_project_role = [org_id for org_id, in
+                                  org_id_from_project_role]
+        active_org = org_id_in_org_role + org_id_in_project_role
         list_of_active_orgs = Organization.query.filter(
             Organization.org_id.in_(set(active_org)),
             Organization.is_deleted == False).all()
         if not list_of_active_orgs:
             return api_response(
                 False, APIMessages.NO_RESOURCE.format('Organization'),
-                STATUS_OK, STATUS_UNAUTHORIZED)
+                STATUS_FORBIDDEN)
         # list of projects to be returned in the response
         org_details_to_return = list()
         for each_org in list_of_active_orgs:
