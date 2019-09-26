@@ -108,7 +108,7 @@ class CaseLogDetails extends React.Component {
 			if (name === COUNT_CHECK) {
 				message = 'Source and Target Records Count do not Match';
 			} else if (name === DUPLICATE_CHECK) {
-				message = 'Duplicates Found.';
+				message = 'Duplicates Found';
 			} else if (name === NULL_CHECK) {
 				message = 'Records found with Null value(s)';
 			} else if (name === DDL_CHECK || name === DATA_VALIDATION) {
@@ -128,18 +128,15 @@ class CaseLogDetails extends React.Component {
 						<tbody>
 							<tr>
 								<td className="testCaseLogLabel">
-									<label className="main_titles countchecklabelfont testViewDataLabel">{this.props.testCaseDisplayName} </label>
-									<label className="sub_title testViewDataLabel">Result: </label>
-									<label className="testViewDataLabel resultlabel2">
-									{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
-									</label>
+									<label className="main_titles countchecklabelfont testViewDataLabel">Log Details- {this.props.testCaseDisplayName} </label>
+									
 									<label className="countcheckstatuslabel">Status: </label>
 									<label className="resultLog">
 									&nbsp;{renderStatusLabel(this.props.TestCaseLogDetails.Execution_status)}
 									</label>&nbsp;
 									{ renderStatusIcon(this.props.TestCaseLogDetails.Execution_status) }
 									{ this.props.TestCaseLogDetails.Execution_status === 'fail' &&
-										<IconButton>
+										<IconButton className="downloaddataicon">
 											<GetAppIcon 
 											
 											/>
@@ -148,6 +145,14 @@ class CaseLogDetails extends React.Component {
 								</td>
 							</tr>
 							<tr>
+									{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span><label className="sub_title checkresultlabel testViewDataLabel">Result: </label>
+									<label className="testViewDataLabel resultlabel2">
+									{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
+									</label></span>
+									}
+									</tr>
+							<tr>
+								{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
 								<Table size="sm" className="executionLog executiontablelog">
 									<tr className="executiontablebottomborder bgcolor borderpadding">
 										<td className="testCaseLogLabel">
@@ -157,7 +162,7 @@ class CaseLogDetails extends React.Component {
 											<label className="testViewDataLabel">Target Table Execution</label>
 										</td>
 									</tr>
-									<tr className="executiontablebottomborder bgcolorOdd">
+									<tr className="executiontablebottomborder bgcolorOdd countchecklineheight">
 										<td className="testCaseLogLabel">
 											{ this.props.TestCaseLogDetails.Execution_log ?
 												<label className="testViewExecution">{this.props.TestCaseLogDetails.Execution_log['source_execution_log']}</label>
@@ -173,7 +178,7 @@ class CaseLogDetails extends React.Component {
 											}
 										</td>
 									</tr>
-								</Table>
+								</Table></span>}
 							</tr>
 						</tbody>
 					</Table>
@@ -184,11 +189,7 @@ class CaseLogDetails extends React.Component {
 							<tbody>
 								<tr>
 									<td className="testCaseLogLabel">
-										<label className="main_titles countchecklabelfont testViewDataLabel">{this.props.testCaseDisplayName} </label>
-										<label className="sub_title testViewDataLabel duplicatecheckstatuslabel">Result: </label>
-										<label className="testViewDataLabel resultvaluelabel">
-										&nbsp;&nbsp;{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
-										</label>
+										<label className="main_titles countchecklabelfont testViewDataLabel">Log Details - {this.props.testCaseDisplayName} </label>
 										<label className="statuslabel ">Status:&nbsp;</label>
 										<label className="resultLog">
 											{renderStatusLabel(this.props.TestCaseLogDetails.Execution_status)}
@@ -199,14 +200,20 @@ class CaseLogDetails extends React.Component {
 											<GetAppIcon />
 										</IconButton>
 										}
-									</td>
+									</td>									
 								</tr>
+								<tr>
+									<label className="sub_title testViewDataLabel duplicatecheckstatuslabel">Result: </label>
+										<label className="testViewDataLabel resultvaluelabel">
+										&nbsp;&nbsp;{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
+										</label>
+									</tr>
 								{ this.props.TestCaseLogDetails.Execution_status !== 'pass' && this.props.TestCaseLogDetails.Execution_log && this.props.TestCaseLogDetails.Execution_log.hasOwnProperty('dest_execution_log') && this.props.TestCaseLogDetails.Execution_log['dest_execution_log'].length > 0 ?
 								<tr>
 									<Table className="executiontablelog executionLog">
 										{
 											this.props.TestCaseLogDetails.Execution_log['dest_execution_log'].map((log, index) => (
-											<tr className={index === 0 ? "testCaseLogLabel bgcolor borderpadding executiontablebottomborder" : (index%2 === 0 ? "bgcoloreven executiontablebottomborder" : "bgcolorOdd executiontablebottomborder")} nowrap>
+											<tr className={index === 0 ? "testCaseLogLabel bgcolor borderpadding executiontablebottomborder" : (index%2 === 0 ? "bgcoloreven Duplicateline executiontablebottomborder" : "bgcolorOdd Duplicateline executiontablebottomborder")} nowrap>
 												{log.map(details => (
 													<td><label className={details === null ? "bgcolorNullmargin": "testViewDataLabel" } >{details === null ? 'NULL' : details}</label></td>
 												))}
@@ -276,26 +283,29 @@ class CaseLogDetails extends React.Component {
 							<tbody>
 								<tr>
 									<td className="testCaseLogLabel ddlborder">
-										<label className="ddlnamelabel main_titles">{this.props.testCaseDisplayName} </label>
+										<label className="ddlnamelabel main_titles">Log Details - {this.props.testCaseDisplayName} </label>
 									</td>
 									<td className="ddlborder">
-									<label className="sub_title ddlresultlabel">Result:</label>
-									<label className="resultmargin">
-											{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
-										</label>
+									
 										<label className="ddlstatuslabel">Status:&nbsp;</label>
 										<label className="resultLog">
 											{renderStatusLabel(this.props.TestCaseLogDetails.Execution_status)}
 										</label>&nbsp;&nbsp;
 										{ renderStatusIcon(this.props.TestCaseLogDetails.Execution_status) }
 										{ this.props.TestCaseLogDetails.Execution_status === 'fail' &&
-										<IconButton>
+										<IconButton className="geticonmargins4">
 											<GetAppIcon 
 											
 											/>
 										</IconButton>
 										}
 									</td>
+								</tr>
+								<tr>
+								<label className="sub_title ddlresultlabel">Result:</label>
+									<label className="resultmargin">
+											{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
+								</label>
 								</tr>
 								{ this.props.TestCaseLogDetails.Execution_status === 'fail' && this.props.TestCaseLogDetails.Execution_log && this.props.TestCaseLogDetails.Execution_log.hasOwnProperty('source_execution_log') && this.props.TestCaseLogDetails.Execution_log['source_execution_log'].length > 0 ?
 								<td className="ddlchecklogborder1">
@@ -339,11 +349,8 @@ class CaseLogDetails extends React.Component {
 							<tbody>
 								<tr>
 									<td className="testCaseLogLabel">
-										<label className="testViewDataLabel main_titles">{this.props.testCaseDisplayName} </label>
-										<label className="testViewDataLabel resultlabel3 sub_title">Result: </label>&nbsp;&nbsp;
-										<label className="testViewDataLabel resultlabel3margin">
-											{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
-										</label>
+										<label className="testViewDataLabel main_titles">Log Details - {this.props.testCaseDisplayName} </label>
+										
 										<label className="sub_title statslabelmargin">Status:&nbsp;</label>
 										<label className="resultLog">
 											{renderStatusLabel(this.props.TestCaseLogDetails.Execution_status)}
@@ -359,39 +366,56 @@ class CaseLogDetails extends React.Component {
 									</td>
 								</tr>
 								<tr>
+								{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
+									<label className="testViewDataLabel resultlabel3 sub_title">Result: </label>&nbsp;&nbsp;
+									<label className="testViewDataLabel resultlabel3margin">
+									{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
+								</label></span>
+								}
+								</tr>
+								<tr>
 									<td className="testCaseLogMessage">
+										{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
 										<label className="testViewDataLabel">
-											Source Count : 
-											{ this.props.TestCaseLogDetails.Execution_log  !== null?
+											Source Count&nbsp;: 
+											&nbsp;{ this.props.TestCaseLogDetails.Execution_log  !== null?
 												<span className="red">{this.props.TestCaseLogDetails.Execution_log['src_count']}</span>
 												: null
 											} 
-										</label>
+										</label></span>
+										}
+										{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
 										<label className="testViewDataLabel targetcountlabel">
-											Target Count : 
-											{ this.props.TestCaseLogDetails.Execution_log  !==null?
+											Target Count&nbsp; : 
+											&nbsp;{ this.props.TestCaseLogDetails.Execution_log  !==null?
 												<span className="red">{this.props.TestCaseLogDetails.Execution_log['dest_count']}</span> 
 												: null
 											}
-										</label>
+										</label></span>
+										}
 										
 									</td>
 								</tr>
 								<tr>
+								{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
 								<label className="testViewDataLabel sublabel1">
-												Number of Mismatch Records found in Source :
-												{ this.props.TestCaseLogDetails.Execution_log  !== null?
+												Number of Mismatch Records found in Source&nbsp; :
+												&nbsp;{ this.props.TestCaseLogDetails.Execution_log  !== null?
 												 <span className="red">{this.props.TestCaseLogDetails.Execution_log['src_to_dest_count']}</span> 
 												 :null
 												}
-										</label>
+										</label></span>
+										}
+										{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
 										<label className="testViewDataLabel sublabel2">
-												Number of Mismatch Records found in Target: 
-												{ this.props.TestCaseLogDetails.Execution_log  !==null?
+												Number of Mismatch Records found in Target&nbsp;: 
+												&nbsp;{ this.props.TestCaseLogDetails.Execution_log  !==null?
 												<span className="red">{this.props.TestCaseLogDetails.Execution_log['dest_to_src_count']}</span> 
 												: null
 											}
-										</label>
+										</label></span>
+										}
+										
 								</tr>
 								{ this.props.TestCaseLogDetails.Execution_status === 'fail' && this.props.TestCaseLogDetails.Execution_log && this.props.TestCaseLogDetails.Execution_log.hasOwnProperty('source_execution_log') && this.props.TestCaseLogDetails.Execution_log['source_execution_log'] !== null && this.props.TestCaseLogDetails.Execution_log['source_execution_log'].length > 0 ?
 								<tr>
