@@ -42,13 +42,18 @@ class OrganizationAPI(Resource):
         create_org_parser.add_argument(
             'org_name', help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
+        create_org_parser.add_argument(
+            'org_description', help=APIMessages.PARSER_MESSAGE,
+            required=True, type=str)
         create_org_data = create_org_parser.parse_args()
         check_permission(user_obj)
         create_organization = Organization(create_org_data['org_name'],
+                                            create_org_data['org_description'],
                                            session.user_id)
         create_organization.save_to_db()
         organization_data = {'org_id': create_organization.org_id,
-                             'org_name': create_organization.org_name}
+                             'org_name': create_organization.org_name,
+                             'org_description':create_organization.org_description}
         return api_response(
             True, APIMessages.CREATE_RESOURCE.format('Organization'),
             STATUS_CREATED, organization_data)
@@ -71,6 +76,9 @@ class OrganizationAPI(Resource):
         update_org_parser.add_argument(
             'org_name', help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
+        update_org_parser.add_argument(
+            'org_description', help=APIMessages.PARSER_MESSAGE,
+            required=True, type=str)
 
         update_org_data = update_org_parser.parse_args()
         user_obj = User.query.filter_by(user_id=session.user_id,
@@ -84,6 +92,7 @@ class OrganizationAPI(Resource):
         check_permission(user_obj, list_of_permissions=ORGANIZATION_API_PUT,
                          org_id=current_org.org_id)
         current_org.org_name = update_org_data['org_name']
+        current_org.org_description = update_org_data['org_description']
         current_org.save_to_db()
         return api_response(
             True, APIMessages.UPDATE_RESOURCE.format('Organization'),
@@ -120,8 +129,9 @@ class OrganizationAPI(Resource):
         org_details_to_return = list()
         for each_org in list_of_active_orgs:
             org_details_to_return.append(
-                {'org_id': each_org.org_id,
-                 'org_name': each_org.org_name})
+                {'org_id': each_project.org_id,
+                 'org_name': each_project.org_name,
+                 'org_description':each_project.org_description})
         return api_response(
             True, APIMessages.SUCCESS, STATUS_OK,
             {"organization_details": org_details_to_return})
