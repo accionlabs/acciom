@@ -606,7 +606,7 @@ name="firstName"
     const { classes,headers,userList } = this.props;
     const {  order, orderBy, selected, rowsPerPage, page,showEditConfirmationDialog } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, userList.length - page * rowsPerPage);
-     console.log('Render props',this.props);
+   
     return (
       <Paper className={classes.root}>
    
