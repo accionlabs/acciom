@@ -99,9 +99,6 @@ class OrganizationAPI(Resource):
 
         Returns: Standard API Response with HTTP status code
         """
-        # TODO: Currently, get call will give all
-        #  organizations which are active
-        # TODO: Implement a logic to return organizations that user is part
         # Storing all active projects in a list
         org_id_from_org_role = db.session.query(UserOrgRole.org_id).filter(
             UserOrgRole.user_id == session.user_id).distinct().all()
