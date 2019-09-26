@@ -64,8 +64,11 @@ function ManageConnectionSelect(props) {
 					<label className="form-check-label">
 						<input
 							type="checkbox"
-							checked={true}
-							onChange={(e) => props.onCaseSelectionChange(e.target)}
+							value="Select All"
+							id="Select All"
+							name="Select All"
+							checked= {allCases.length === props.selectedCases.length}
+							onChange={(e) => props.testCaseSelectAllToggle(allCases)}
 						/>
 					</label> Select All
 				</div>
@@ -77,6 +80,7 @@ function ManageConnectionSelect(props) {
 								type="checkbox"
 								value={testCase.case_id}
 								name={testCase.case_name}
+								checked={props.selectedCases.indexOf(testCase.case_id) > -1}
 								onChange={(e) => props.onCaseSelectionChange(e.target)}
 							/>
 						</label> {testCase.case_name}

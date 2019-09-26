@@ -68,7 +68,7 @@ class APIMessages:
     DB_DETAILS_ALREADY_PRESENT = "Database Details already exist"
     DB_CONNECTION_NAME_ALREADY_PRESENT = "DB Details with this connection name " \
                                          "already exist"
-    NO_SPACES = "Spaces not allowed in User Name or Host Name"
+    NO_SPACES = "Spaces not allowed in Database Name or User Name or Host Name"
     UNAUTHORIZED = "Unauthorized Access"
     PROJECT_NOT_UNDER_ORG = "Project ID provided is not under given Organization"
     TEST_SUITE_ADDED = "Test Suite added Successfully"
@@ -112,9 +112,10 @@ class APIMessages:
     VALID_EMAIL = "Please pass Valid Email ID"
     NULL_CHECK_RESULT = "Total {} Records with Null value(s)"
     DUPLICATE_CHECK_RESULT = "{} Duplicates Found"
+    INVALID_LENGTH = "Max field Length is {} Characters"
     WRONG_DB_CONNECTION = "The given DB conncetion does not belong to the project"
     WRONG_QUERY_ID = "The given query id is not valid"
-
+    INVALID_LENGTH = "Max field Length is {} Characters"
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""

@@ -208,6 +208,10 @@ body,html{
     margin-top: -3px;
 }
 
+.adddblabels{
+    color: #69717D !important;
+}
+
 .deleteconfirmpopup{
     margin: 170px;
 }
@@ -592,6 +596,12 @@ body,html{
     margin-left: -5px;
 }
 
+.getappicon{
+    margin-left: 69px !important;
+    margin-bottom: -8px !important;
+    color: #69717D !important;
+}
+
 .top10label{
     margin-left: 134px;
     color: #69717D;
@@ -599,6 +609,10 @@ body,html{
 
 .resultlabel2{
     margin-left: -3px;
+}
+
+.resultvaluelabel{
+    margin-left: -10px;
 }
 
 .table_namelabel{
@@ -609,6 +623,10 @@ body,html{
 .statuslabel{
     margin-left: 60px;
     color: #69717D;
+}
+
+.duplicatecheckstatuslabel{
+    margin-left: 40px;
 }
 
 .datavalitable1{
@@ -625,7 +643,7 @@ body,html{
 }
 
 .statslabelmargin{
-    margin-left: 145px;
+    margin-left: 100px;
 }
 
 .resultlabel3margin{
@@ -642,16 +660,30 @@ body,html{
 
 .bgcolor{
     background-color: #BD4951;
-    color: #fff;
+    color: #fff !important;
     line-height: 2;
     vertical-align: middle;
     font-size: 12px;
+}
+
+.geticonmargins{
+    margin-left: 155px !important;
+}
+
+.geticonmargins3{
+    margin-left: 88px !important;
+    margin-top: -2px !important;
+}
+
+.geticonmargins2{
+    margin-left: 28px !important;
 }
 
 .logbody{
     margin-top: -15px;
     overflow-y: auto;
     max-height: 470px;
+    /* max-width: fit-content; */
 }
 
 .bgcolorOdd{
@@ -664,6 +696,15 @@ body,html{
 .bgcolorNull{
     background-color: yellow;
     background-clip: content-box;
+}
+
+.bgcolorNullmargin{
+    background-color: yellow;
+    background-clip: content-box;
+    margin-left: 11px;
+}
+.geticonmargin{
+    
 }
 
 .loglabel{
@@ -690,16 +731,22 @@ body,html{
 }
 
 .ddlchecklogborder2{
-    padding-left: 0px;
+    padding-left: 32px;
 }
 
 .ddlresultlabel{
     margin-left: -144px;
+    margin-top: 11px;
 }
 
 .ddlchecktable{
-    width: 694px !important;
+    width: 857px !important;
+    margin-top: -21px;
     
+}
+
+.ddlrighttable{
+    widows: 100px;
 }
 
 .ddlchecktableborder{
@@ -718,7 +765,7 @@ body,html{
 }
 
 .ddlnamelabel{
-    margin-top: -2px;
+    margin-top: 9px;
     margin-left: 13px;
 }
 
@@ -726,8 +773,22 @@ body,html{
     margin-left: 10px;
 }
 
+.countcheckstatuslabel{
+    margin-left: 11px;
+    color: #69717D;
+    font-size: 14px;
+}
+
+.countchecklabelfont{
+    font-size: 16px !important;
+}
+
 .sublabel2{
     margin-left: 140px;
+}
+
+.targetcountlabel{
+    margin-left: 369px;
 }
 
 .ddlborder{

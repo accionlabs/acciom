@@ -123,7 +123,7 @@ class AddDbDetails extends Component {
 				<Panel>
 					<Panel.Heading className="editpanelhead">Add DB Details</Panel.Heading>
 					<Panel.Body>
-						<Form noValidate onSubmit={this.formSubmit} horizontal>
+						<Form className="adddblabels" noValidate onSubmit={this.formSubmit} horizontal>
 							<FormGroup controlId="formControlsConnName">
 								<Col sm={4}><ControlLabel>Connection Name</ControlLabel></Col>
 								<Col sm={8}><FormControl value={this.state.formData.db_connection_name} type="textbox" name="db_connection_name" maxlength="50" onChange={this.handleInputChange} /></Col>
