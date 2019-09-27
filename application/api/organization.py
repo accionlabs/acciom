@@ -48,12 +48,12 @@ class OrganizationAPI(Resource):
         create_org_data = create_org_parser.parse_args()
         check_permission(user_obj)
         create_organization = Organization(create_org_data['org_name'],
-                                            create_org_data['org_description'],
+                                           create_org_data['org_description'],
                                            session.user_id)
         create_organization.save_to_db()
         organization_data = {'org_id': create_organization.org_id,
                              'org_name': create_organization.org_name,
-                             'org_description':create_organization.org_description}
+                             'org_description': create_organization.org_description}
         return api_response(
             True, APIMessages.CREATE_RESOURCE.format('Organization'),
             STATUS_CREATED, organization_data)
@@ -129,9 +129,9 @@ class OrganizationAPI(Resource):
         org_details_to_return = list()
         for each_org in list_of_active_orgs:
             org_details_to_return.append(
-                {'org_id': each_project.org_id,
-                 'org_name': each_project.org_name,
-                 'org_description':each_project.org_description})
+                {'org_id': each_org.org_id,
+                 'org_name': each_org.org_name,
+                 'org_description': each_org.org_description})
         return api_response(
             True, APIMessages.SUCCESS, STATUS_OK,
             {"organization_details": org_details_to_return})
