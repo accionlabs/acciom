@@ -38,7 +38,7 @@ class UserManagement extends Component {
 				{ id: 'first_name',  label: 'First Name' },
 				{ id: 'last_name',  label: 'Last Name' },
 				{ id: 'email', label: 'Email' },
-				{ id: 'Action',  label: 'Action' },
+				{ id: 'Manage Role',  label: 'Manage Role' },
 			
 			  ],
 		};

@@ -408,7 +408,8 @@ def project_detail(list_of_active_project, user_roles):
         # Store each project details in a list
         project_details_list.append(
             {'project_id': each_project.project_id,
-             'project_name': each_project.project_name})
+             'project_name': each_project.project_name,
+             'project_description':each_project.project_description})
         # Store Organization Id
         organization_id_in_database = each_project.org_id
     projects_to_return.update(
