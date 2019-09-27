@@ -116,6 +116,8 @@ class APIMessages:
     WRONG_DB_CONNECTION = "The given DB conncetion does not belong to the project"
     WRONG_QUERY_ID = "The given query id is not valid"
     INVALID_LENGTH = "Max field Length is {} Characters"
+    FORBIDDEN = "Not Authorized to view the data"
+
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""

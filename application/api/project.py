@@ -36,6 +36,10 @@ class ProjectAPI(Resource):
             help=APIMessages.PARSER_MESSAGE,
             required=True, type=str, location='json')
         create_project_parser.add_argument(
+            'project_description',
+            help=APIMessages.PARSER_MESSAGE,
+            required=True, type=str, location='json')
+        create_project_parser.add_argument(
             'org_id',
             help=APIMessages.PARSER_MESSAGE,
             required=True, type=int, location='json')
@@ -59,13 +63,14 @@ class ProjectAPI(Resource):
                                 message=request_data_validation,
                                 http_status_code=STATUS_BAD_REQUEST,
                                 data={})
-
         new_project = Project(create_project_data['project_name'],
+                            create_project_data['project_description'],
                               create_project_data['org_id'],
                               session.user_id)
         new_project.save_to_db()
         project_payload = {'project_name': new_project.project_name,
                            'project_id': new_project.project_id,
+                           'project_description':new_project.project_description,
                            'org_id': new_project.org_id}
         return api_response(True,
                             APIMessages.CREATE_RESOURCE.format('Project'),
@@ -88,6 +93,10 @@ class ProjectAPI(Resource):
             required=True, type=int)
         update_project_parser.add_argument(
             'project_name',
+            help=APIMessages.PARSER_MESSAGE,
+            required=True, type=str)
+        update_project_parser.add_argument(
+            'project_description',
             help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
         update_project_data = update_project_parser.parse_args()

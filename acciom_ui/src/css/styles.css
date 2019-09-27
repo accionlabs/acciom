@@ -360,6 +360,10 @@ html
        border-radius: 0;
        height: 57px
    }
+   
+
+    
+
    @media (max-width: 991px) {
        .nav-md .container.body .right_col,
        .nav-md .container.body .top_nav {
@@ -884,6 +888,8 @@ html
        float: right;
        min-width: 70px
    }
+
+   
    .panel_toolbox>li {
        float: left;
        cursor: pointer
@@ -4252,8 +4258,16 @@ html
 .manageConnection {margin-bottom:0px !important;}
 
 
-.statusDelIcon {font-size:  1.2rem; color:red !important;}
-.statusCheckIcon {font-size:  1.2rem; color:green !important;}
+.statusDelIcon {
+    font-size:  1.2rem; 
+    color:red !important;
+    padding-right: 20px;
+}
+.statusCheckIcon {
+    font-size:  1.2rem; 
+    color:green !important;
+    padding-right: 12px;
+}
 .statusStopIcon {font-size:  1.2rem; color:rgb(245, 124, 76) !important;}
 .statusInProgressIcon {font-size:  1.2rem; color:rgb(245, 124, 76) !important;}
 .statusPlayIcon {font-size:  1.2rem;}
