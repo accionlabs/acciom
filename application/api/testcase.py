@@ -401,7 +401,7 @@ class EditTestCase(Resource):
                     user_test_case_detail["target_db_id"]
                 test_case_obj.save_to_db()
             if key == 'src_table' and value != None:
-                if len(user_test_case_detail['src_table']) >= 50:
+                if len(user_test_case_detail['src_table']) > 50:
                     raise IllegalArgumentException(
                         APIMessages.INVALID_LENGTH.format("50"))
                 user_test_case_detail['src_table'] = user_test_case_detail[
@@ -416,7 +416,7 @@ class EditTestCase(Resource):
                         'src_table']] = target_table
                 test_case_obj.save_to_db()
             if key == "target_table" and value != None:
-                if len(user_test_case_detail['target_table']) >= 50:
+                if len(user_test_case_detail['target_table']) > 50:
                     raise IllegalArgumentException(
                         APIMessages.INVALID_LENGTH.format("50"))
                 user_test_case_detail["target_table"] = user_test_case_detail[
@@ -441,7 +441,7 @@ class EditTestCase(Resource):
                     "target_qry"]
                 test_case_obj.save_to_db()
             if key == "column" and value != None:
-                if len(user_test_case_detail['column']) >= 500:
+                if len(user_test_case_detail['column']) > 500:
                     raise IllegalArgumentException(
                         APIMessages.INVALID_LENGTH.format("500"))
                 column = testcasedetail["column"]
