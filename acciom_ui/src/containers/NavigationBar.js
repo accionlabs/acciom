@@ -22,6 +22,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Icon from '@material-ui/core/Icon';
+import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
 
 import ChangeOrganisation from '../components/ChangeOrganisation'
 import { logoutFromPortal } from '../actions/loginActions';
@@ -305,6 +306,15 @@ function NavigationBar(props) {
 						</ListItemIcon>
 						<Link to={'/user_management'} id="dashbcolor"  className = {classes.startup}>Manage User Roles</Link>
 						</MenuItem>
+						<MenuItem>
+						<ListItemIcon>
+							<Link to={'/projects'}>
+							<SpeakerNotesIcon/>
+							</Link>
+						</ListItemIcon>
+						<Link to={'/projects'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
+						</MenuItem>
+						
 						
 					</MenuList>
 				</List>

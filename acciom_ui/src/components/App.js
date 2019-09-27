@@ -16,6 +16,7 @@ import ForgotPassword from './ForgotPassword';
 import AuthToken from './AuthToken';
 import ChangePasswordComponent from './ChangePassword';
 import EditUserRoles from '../containers/EditUserRoles';
+import ProjectManagement from '../containers/ProjectManagement';
 
 const RootContainer = styled.div`
 	font-size: 0.8rem;	
@@ -64,6 +65,7 @@ const App = (props) => (
 				<PrivateRoute path="/change_password" authTokenExpired={props.authTokenExpired} component={ChangePasswordComponent} />
 				<PrivateRoute path="/access_token" authTokenExpired={props.authTokenExpired} component={AuthToken} />
 				<PrivateRoute path="/user_management" authTokenExpired={props.authTokenExpired} component={UserManagement} />
+				<PrivateRoute path="/projects" authTokenExpired={props.authTokenExpired} component={ProjectManagement} />
 				<PrivateRoute path="/edit_user_role/:id" authTokenExpired={props.authTokenExpired} component={EditUserRoles} />
 
 			</Content>

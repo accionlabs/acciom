@@ -8,7 +8,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 
-class EnhancedTableHead extends React.Component {
+class ProjectTableHead extends React.Component {
     createSortHandler = property => event => {
   
       if(property ==='Manage Role'){
@@ -56,6 +56,11 @@ class EnhancedTableHead extends React.Component {
 
     }
   
+
+   
+
+
+  
     render() {
       const {  order, orderBy, rowCount,headers,headerCss,headerHeight } = this.props;
     
@@ -64,8 +69,8 @@ class EnhancedTableHead extends React.Component {
       
       return (
        
-          // <TableHead  className="table_head">
-          <TableHead >
+        
+          <TableHead  className="table_head">
           <TableRow >
         
          {this.displayTableHead(this.props.headers)}
@@ -75,7 +80,7 @@ class EnhancedTableHead extends React.Component {
       );
     }
   }
-  EnhancedTableHead.propTypes = {
+  ProjectTableHead.propTypes = {
  
     onRequestSort: PropTypes.func.isRequired,
    
@@ -83,4 +88,4 @@ class EnhancedTableHead extends React.Component {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
   };
-  export default EnhancedTableHead;
+  export default ProjectTableHead;

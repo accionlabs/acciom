@@ -1,32 +1,27 @@
 
 import React from 'react';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { Link } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import { TextField } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
 import Clear from '@material-ui/icons/Clear';
 import Search from '@material-ui/icons/Search';
 import EnhancedTableHead from './TableHead';
 import { Modal,Button} from 'react-bootstrap';
 import { connect } from 'react-redux';
-import {deleteUsersFromTable,addUsersRole } from '../actions/userManagementActions';
+import {deleteUsersFromTable,addUsersRole } from '../../actions/userManagementActions';
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {

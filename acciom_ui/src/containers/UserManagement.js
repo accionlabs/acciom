@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import { connect } from 'react-redux';
-import { ListGroup,Table, Button, Col } from 'react-bootstrap';
+
 import { getOrganizationUsersList,addOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
 import  RoleListItemContainer  from './RoleListItemContainer';
-import CustomPaginationActionsTable from '../components/Tables';
+import CustomPaginationActionsTable from '../components/UsrMgrMtable/Tables';
 import GroupIcon from '@material-ui/icons/Group';
 
 
@@ -63,7 +63,10 @@ class UserManagement extends Component {
 	render() {
 		const { isEditable,headers } = this.state;
 		const{orgUserList,classes}=this.props;
-	
+			let modifiedHeaders=null;
+			 modifiedHeaders=headers.map(header=>{
+				return header.label
+			 });
 		return (
 			<div id="userManagement">
 			<div>
@@ -73,18 +76,17 @@ class UserManagement extends Component {
 			
 				
 			</div>
-				
-				
-			
 	
-			
-		
-			  <CustomPaginationActionsTable 
+			  {/* <CustomPaginationActionsTable 
 					headers={headers}
 					userList ={orgUserList}
-					// addBtnFunctionality ={this.addRowsinTable}
+				/> */}
+
 				
-					/>
+              <CustomPaginationActionsTable 
+					headers={modifiedHeaders}
+					userList ={orgUserList}
+				/>
 					
 			
 				
