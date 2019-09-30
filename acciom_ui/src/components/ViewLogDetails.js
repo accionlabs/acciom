@@ -128,7 +128,7 @@ class CaseLogDetails extends React.Component {
 						<tbody>
 							<tr>
 								<td className="testCaseLogLabel">
-									<label className="main_titles countchecklabelfont testViewDataLabel">Log Details- {this.props.testCaseDisplayName} </label>
+									<label className="main_titles countchecklabelfont testViewDataLabel">Log Details - {this.props.testCaseDisplayName} </label>
 									
 									<label className="countcheckstatuslabel">Status: </label>
 									<label className="resultLog">
@@ -165,14 +165,14 @@ class CaseLogDetails extends React.Component {
 									<tr className="executiontablebottomborder bgcolorOdd countchecklineheight">
 										<td className="testCaseLogLabel">
 											{ this.props.TestCaseLogDetails.Execution_log ?
-												<label className="testViewExecution">{this.props.TestCaseLogDetails.Execution_log['source_execution_log']}</label>
+												<label className="testViewExecution countcheckmarginbottom">{this.props.TestCaseLogDetails.Execution_log['source_execution_log']}</label>
 												:
 												null
 											}
 										</td>
 										<td className="testCaseLogLabel">
 											{ this.props.TestCaseLogDetails.Execution_log ?
-												<label className="testViewExecution">{this.props.TestCaseLogDetails.Execution_log['dest_execution_log']}</label>
+												<label className="testViewExecution countcheckmarginbottom">{this.props.TestCaseLogDetails.Execution_log['dest_execution_log']}</label>
 												:
 												null
 											}
@@ -233,11 +233,7 @@ class CaseLogDetails extends React.Component {
 								<tr>
 									<td className="testCaseLogLabel">
 										<label className="main_titles loglabel">Log Details&nbsp;-&nbsp;</label>
-										<label className="testViewDataLabel main_titles nullchecklabel">{this.props.testCaseDisplayName} </label>
-										<label className="testViewDataLabel resultlabel sub_title">Result:</label>
-										<label className="testViewDataLabel resultlabel2">
-										{this.props.TestCaseLogDetails.Execution_log.result} 
-										</label>
+										<label className="testViewDataLabel main_titles nullchecklabel">{this.props.testCaseDisplayName} </label>							
 										<label className="statuslabel">Status:&nbsp; </label>
 										<label className="resultLog">
 											{renderStatusLabel(this.props.TestCaseLogDetails.Execution_status)}
@@ -251,6 +247,12 @@ class CaseLogDetails extends React.Component {
 										</IconButton>
 										}
 									</td>
+								</tr>
+								<tr>
+								<label className="testViewDataLabel resultlabel sub_title">Result:</label>
+										<label className="testViewDataLabel resultlabel2">
+										{this.props.TestCaseLogDetails.Execution_log.result} 
+										</label>
 								</tr>
 								<tr>
 								{this.props.TestCaseLogDetails.Execution_log['dest_log'] && <td className="testCaseLogMessage">
@@ -302,21 +304,25 @@ class CaseLogDetails extends React.Component {
 									</td>
 								</tr>
 								<tr>
+								{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
 								<label className="sub_title ddlresultlabel">Result:</label>
 									<label className="resultmargin">
 											{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
 								</label>
+								</span>
+								}
 								</tr>
 								{ this.props.TestCaseLogDetails.Execution_status === 'fail' && this.props.TestCaseLogDetails.Execution_log && this.props.TestCaseLogDetails.Execution_log.hasOwnProperty('source_execution_log') && this.props.TestCaseLogDetails.Execution_log['source_execution_log'].length > 0 ?
 								<td className="ddlchecklogborder1">
 										{
 											this.props.TestCaseLogDetails.Execution_log['source_execution_log'].map((log, index) => (
-											<tr className={index%2 === 0 ? "testCaseLogLabel bgcoloreven" : "testCaseLogLabel bgcolorOdd"}>
+											<tr className={index%2 === 0 ? "testCaseLogLabel bgcolorevenddl" : "testCaseLogLabel bgcolorOddddl"}>
 												{
 													log.map((value,index) => (
-													<td style={{border:"1px solid #ccc", width:"124px"}}>
+														value !== 'Not Available' ?
+													<td style={{border:'1px solid rgb(32, 31, 31,25%)',width:"124px"}} className="ddlsecoundpadding">
 														{value}
-													</td>
+													</td>: <td className="ddlchecksecoundtable" colspan="3">Not Available</td>
 													))											
 												}
 											</tr>
@@ -328,12 +334,13 @@ class CaseLogDetails extends React.Component {
 								<td className="ddlchecklogborder2">
 										{
 											this.props.TestCaseLogDetails.Execution_log['dest_execution_log'].map((log, index) => (
-											<tr className={index%2 === 0 ? "testCaseLogLabel bgcoloreven" : "testCaseLogLabel bgcolorOdd"}>
+											<tr className={index%2 === 0 ? "testCaseLogLabel bgcolorevenddl" : "testCaseLogLabel bgcolorOddddl"}>
 											{
 												log.map((value, index) => (
-												<td style={{border:"1px solid #ccc", width:"130px"}}>
+													value !== 'Not Available' ?
+												<td style={{border:'1px solid rgb(32, 31, 31,25%)' ,width:"130px"}} className="ddlsecoundpadding">
 													{value}
-												</td>
+												</td>: <td className="ddlchecksecoundtable" colSpan="3">Not Available</td>
 												))											
 											}
 											</tr>
@@ -349,7 +356,7 @@ class CaseLogDetails extends React.Component {
 							<tbody>
 								<tr>
 									<td className="testCaseLogLabel">
-										<label className="testViewDataLabel main_titles">Log Details - {this.props.testCaseDisplayName} </label>
+										<label className="testViewDataLabel main_titles lablemargindv">Log Details - {this.props.testCaseDisplayName} </label>
 										
 										<label className="sub_title statslabelmargin">Status:&nbsp;</label>
 										<label className="resultLog">
@@ -376,7 +383,7 @@ class CaseLogDetails extends React.Component {
 								<tr>
 									<td className="testCaseLogMessage">
 										{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
-										<label className="testViewDataLabel">
+										<label className="testViewDataLabel sourcecountlabel">
 											Source Count&nbsp;: 
 											&nbsp;{ this.props.TestCaseLogDetails.Execution_log  !== null?
 												<span className="red">{this.props.TestCaseLogDetails.Execution_log['src_count']}</span>
