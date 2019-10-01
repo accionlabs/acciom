@@ -35,7 +35,7 @@ class APIMessages:
     DBID_NOT_IN_DB = "Database details for DB ID {}, does not exist"
     DB_DETAILS_UPDATED = "Database details updated Successfully"
     ABSENCE_OF_DBID = "Please Pass Database Connection ID"
-    CONNECTION_CREATE = "Connection can be Created"
+    CONNECTION_CREATE = "Test Connection Successfull"
     CONNECTION_CANNOT_CREATE = "Unable to Establish Connection to Database, {}"
     NO_DB_UNDER_PROJECT = "No Database Connections available for this Project"
     PASS_DBID_or_PROJECTID = "Please pass Database ID or Project ID"
@@ -119,6 +119,11 @@ class APIMessages:
     FORBIDDEN = "Not Authorized to view the data"
     DELETE_PROJECT_TRUE = "Project '{}' is deleted"
     DELETE_PROJECT_FALSE = "Project '{}' can not be deleted"
+    FORBIDDEN = "Not Authorized to View"
+    NOT_AVAILABLE = "Not Available"
+    COLUMN = "Column Name"
+    IS_NULLABLE = "IS Nullable"
+    DATA_TYPE = "Data Type"
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""

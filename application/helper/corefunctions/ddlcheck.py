@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 from flask import current_app as app
 
+from application.common.constants import APIMessages
 from application.common.constants import SupportedDBType, ExecutionStatus
 
 
@@ -75,14 +76,23 @@ def ddl_check(source_cursor, target_cursor, source_table, target_table,
         all_keys = set(source_schema_dict) | set(target_schema_dict)
 
         source_schema_orderdict = OrderedDict(
-            {key: source_schema_dict.get(key, ("missing",)) for key in
+            {key: source_schema_dict.get(key, (APIMessages.NOT_AVAILABLE,)) for
+             key in
              all_keys})
         target_schema_orderdict = OrderedDict(
-            {key: target_schema_dict.get(key, ("missing",)) for key in
+            {key: target_schema_dict.get(key, (APIMessages.NOT_AVAILABLE,)) for
+             key in
              all_keys})
 
         source_schema_values = list(source_schema_orderdict.values())
         target_schema_values = list(target_schema_orderdict.values())
+
+        source_schema_values.insert(0, [APIMessages.COLUMN,
+                                        APIMessages.IS_NULLABLE,
+                                        APIMessages.DATA_TYPE])
+        target_schema_values.insert(0, [APIMessages.COLUMN,
+                                        APIMessages.IS_NULLABLE,
+                                        APIMessages.DATA_TYPE])
 
         source_schema_results = source_schema_values
         target_schema_results = target_schema_values
