@@ -218,7 +218,8 @@ class ProjectAPI(Resource):
         if not test_suite_obj and not db_connection_obj and not user_project_role_obj:
             project_obj.is_deleted=True
             project_obj.save_to_db()
-            delete_message = "Project {} is deleted".format(project_obj.project_id)
+            
+            delete_message = APIMessages.DELETE_PROJECT_TRUE.format(project_obj.project_name)
         else:
             for each_obj in db_connection_obj:
                 db_connections.append({"db_connection_id":each_obj.db_connection_id,
@@ -228,8 +229,7 @@ class ProjectAPI(Resource):
             for each_user in user_project_role_obj:
                 user_obj = User.query.filter_by(user_id=each_user.user_id).first()
                 user_associated.append({"user_id":user_obj.user_id,"email_id":user_obj.email})
-            delete_message = "Project {} can not be deleted".format(project_obj.project_id)
-
+            delete_message = APIMessages.DELETE_PROJECT_FALSE.format(project_obj.project_name)
         user_obj = session.user
         return api_response(
                 True, APIMessages.SUCCESS, STATUS_OK,{"data":{

@@ -117,7 +117,8 @@ class APIMessages:
     WRONG_QUERY_ID = "The given query id is not valid"
     INVALID_LENGTH = "Max field Length is {} Characters"
     FORBIDDEN = "Not Authorized to view the data"
-
+    DELETE_PROJECT_TRUE = "Project {} is deleted"
+    DELETE_PROJECT_FALSE = "Project {} can not be deleted"
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""
