@@ -1,6 +1,5 @@
 """File to handle Project API Operations."""
 from flask_restful import Resource, reqparse
-import pdb
 from application.common.api_permission import PROJECT_POST, \
     PROJECT_PUT
 from application.common.common_exception import GenericBadRequestException
@@ -220,7 +219,6 @@ class ProjectAPI(Resource):
         test_suite_obj=TestSuite.query.filter_by(project_id=project_obj.project_id,is_deleted=False).all()
         db_connection_obj = DbConnection.query.filter_by(project_id = project_obj.project_id,is_deleted=False).all()
         user_project_role_obj = UserProjectRole.query.filter_by(project_id=project_obj.project_id).distinct(UserProjectRole.user_id).with_entities(UserProjectRole.user_id).all()
-        user_obj_list = User.query.filter(User.user_id.in_(user_project_role_obj)).order_by(User.user_id).all()
         if not test_suite_obj and not db_connection_obj and not user_project_role_obj:
             project_obj.is_deleted=True
             project_obj.save_to_db()
@@ -231,6 +229,8 @@ class ProjectAPI(Resource):
                 "db_connection_name":each_obj.db_connection_name})
             for each_suite in test_suite_obj:
                 suites.append({"suite_id":each_suite.test_suite_id, "suite_name":each_suite.test_suite_name})
+    
+            user_obj_list = User.query.filter(User.user_id.in_(user_project_role_obj)).order_by(User.user_id).all()        
             for each_user in user_obj_list:
                 user_associated.append({"user_id":each_user.user_id,"email_id":each_user.email})
             delete_message = APIMessages.DELETE_PROJECT_FALSE.format(project_obj.project_name)
@@ -240,4 +240,4 @@ class ProjectAPI(Resource):
                                                             "message":delete_message,
                                                             "db_connections":db_connections,
                                                             "test_suites":suites,
-                                                                "Asociated_users":user_associated}})
+                                                            "Asociated_users":user_associated}})
