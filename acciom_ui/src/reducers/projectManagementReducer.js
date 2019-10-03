@@ -26,13 +26,7 @@ const projectManagementData = (state = initialState, action) => {
                     ...state,
                     projectUserList: action.response.data.projects_under_organization.project_details,
 				}
-				// case DELETE_PROJECT_LIST_SUCCESS:
-				// 	console.log('Reducer data',action.response.data);
-				// 		// return {
-				// 		// 	...state,
-				// 		// 	projectUserList: action.response.data.projects_under_organization.project_details,
-				// 		// }
-				
+			
 					
                 default:
 		return state;

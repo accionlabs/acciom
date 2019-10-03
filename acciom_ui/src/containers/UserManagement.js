@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { ListGroup,Table, Button, Col } from 'react-bootstrap';
 import { getOrganizationUsersList,addOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
 import  RoleListItemContainer  from './RoleListItemContainer';
-// import CustomPaginationActionsTable from '../components/Tables';
+
 import GroupIcon from '@material-ui/icons/Group';
 
 import CustomTable from '../components/Table/CustomTable'
@@ -104,6 +104,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => ({
 	getOrganizationUsersList: (data) => dispatch(getOrganizationUsersList(data)),
-	// addOrganizationUsersList:(data) =>dispatch(addOrganizationUsersList(data))
+
 });
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserManagement));
