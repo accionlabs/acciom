@@ -202,6 +202,7 @@ class ProjectAPI(Resource):
         db_connections=[]
         suites=[]
         user_associated=[]
+        distinct_user_associated=[]
         get_project_parser = reqparse.RequestParser()
         get_project_parser.add_argument(
             'project_id', help=APIMessages.PARSER_MESSAGE,
@@ -212,8 +213,12 @@ class ProjectAPI(Resource):
             return api_response(False,
                                     APIMessages.NO_RESOURCE.format('Project'),
                                     STATUS_UNAUTHORIZED)
-        test_suite_obj=TestSuite.query.filter_by(project_id=project_obj.project_id).all()
-        db_connection_obj = DbConnection.query.filter_by(project_id = project_obj.project_id).all()
+        check_permission(user_object=session.user,
+                         list_of_permissions=PROJECT_PUT,
+                         project_id=get_project_data["project_id"],
+                         org_id=project_obj.org_id)
+        test_suite_obj=TestSuite.query.filter_by(project_id=project_obj.project_id,is_deleted=False).all()
+        db_connection_obj = DbConnection.query.filter_by(project_id = project_obj.project_id,is_deleted=False).all()
         user_project_role_obj = UserProjectRole.query.filter_by(project_id=project_obj.project_id).all()
         if not test_suite_obj and not db_connection_obj and not user_project_role_obj:
             project_obj.is_deleted=True
@@ -229,6 +234,11 @@ class ProjectAPI(Resource):
             for each_user in user_project_role_obj:
                 user_obj = User.query.filter_by(user_id=each_user.user_id).first()
                 user_associated.append({"user_id":user_obj.user_id,"email_id":user_obj.email})
+            if user_associated == []:
+                print("23777")
+                distinct_user_associated =[]
+            else:
+                distinct_user_associated = unique_users(user_associated)
             delete_message = APIMessages.DELETE_PROJECT_FALSE.format(project_obj.project_name)
         user_obj = session.user
         return api_response(
@@ -236,4 +246,23 @@ class ProjectAPI(Resource):
                                                             "message":delete_message,
                                                             "db_connections":db_connections,
                                                             "test_suites":suites,
-                                                                "Asociated_users":user_associated}})
+                                                                "Asociated_users":distinct_user_associated}})
+
+
+def unique_users(user_associated):
+    """
+    Returns list of key,value pairs with unique users
+
+    Args:
+        user_associated(list): list of users with duplicate copies
+
+    Returns:Returns list of key,value pairs with unique users
+
+    """
+    unique_users=[]
+    uids=[]
+    for each_user in user_associated:
+        if each_user['user_id'] not in uids:
+            uids.append(each_user['user_id'])
+            unique_users.append(each_user)
+    return unique_users
