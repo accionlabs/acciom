@@ -3,7 +3,9 @@ import {
 	GET_DQI_PROJECT_DETAILS_SUCCESS,
 	GET_PROJECT_LIST_BY_ORG_ID_SUCCESS,
 	GET_DQI_HISTORY_DETAILS_SUCCESS,
-	SWITCH_PROJECT_SUCCESS
+	SWITCH_PROJECT_SUCCESS,
+	GET_QUERY_ANALYZER_DETAILS_SUCCESS,
+	GET_QUERY_ANALYZER_DETAILS_ERROR
 } from '../constants/ActionTypes';
 
 
@@ -36,6 +38,25 @@ const dashboardData = (state = initialState, action) => {
 			projectDataQuality: action.response.data,
 			
 		};
+		case GET_QUERY_ANALYZER_DETAILS_SUCCESS:
+		return {
+			...state,
+			projectDataQuality: action.response.data,
+			
+		};
+		case GET_DQI_PROJECT_DETAILS_SUCCESS:
+		return {
+			...state,
+			projectDataQuality: action.response.data,
+			
+		};
+		// case GET_SELECTED_DATABASE_TYPE_SUCCESS,:
+		// return {
+		// 	...state,
+		// 	projectDataQuality: action.response.data,
+			
+		// };
+
 
 	case GET_DQI_HISTORY_DETAILS_SUCCESS:
 		return {

@@ -7,7 +7,9 @@ import {
 	GET_DQI_PROJECT_DETAILS_SUCCESS,
 	GET_DQI_PROJECT_DETAILS_ERROR,
 	GET_DQI_HISTORY_DETAILS_SUCCESS,
-	GET_DQI_HISTORY_DETAILS_ERROR
+	GET_DQI_HISTORY_DETAILS_ERROR,
+	GET_QUERY_ANALYZER_DETAILS_SUCCESS,
+	GET_QUERY_ANALYZER_DETAILS_ERROR
 } from '../constants/ActionTypes';
 
 import { BASE_URL, headers, TIMEOUT } from './appActions';
@@ -41,6 +43,7 @@ export const getDQIprojectDetails = (project_id) => {
 
 };
 
+
 export const getHistoryGraphdata = (project_id) => {
 	return {
 		types: [
@@ -55,3 +58,31 @@ export const getHistoryGraphdata = (project_id) => {
 	};
 
 };
+// export const getQueryAnalyzerDetails = (project_id) => {
+// 	return {
+// 		types: [
+// 			'',
+// 			GET_QUERY_ANALYZER_DETAILS_SUCCESS,
+// 			GET_QUERY_ANALYZER_DETAILS_ERROR
+// 		],
+// 		callAPI: () => fetch(`${BASE_URL}/query-analyser?project_id=${project_id}`, {
+// 			method: 'get',
+// 			headers
+// 		})
+// 	};
+
+// };
+// export const getSelectedDatabase = (project_id) => {
+// 	return {
+// 		types: [
+// 			'',
+// 			GET_SELECTED_DATABASE_TYPE_SUCCESS,
+// 			GET_SELECTED_DATABASE_TYPE_ERROR,
+// 		],
+// 		callAPI: () => fetch(`${BASE_URL}/supported-database-type?project_id=${project_id}`, {
+// 			method: 'get',
+// 			headers
+// 		})
+// 	};
+
+// };
