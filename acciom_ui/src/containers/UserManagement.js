@@ -9,6 +9,7 @@ import CustomPaginationActionsTable from '../components/Tables';
 import GroupIcon from '@material-ui/icons/Group';
 
 
+
 import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
 	textField:{
@@ -70,6 +71,7 @@ class UserManagement extends Component {
             <GroupIcon className={classes.IconClass}/>
 			&nbsp; &nbsp;
 			<label className="main_titles" > Manage Users</label>
+			<Link to="/ManageUserRole"><Button className="backbutton_colors addUserButton">Add User</Button></Link>
 			
 				
 			</div>
