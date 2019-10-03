@@ -40,7 +40,7 @@ class ProjectTableHead extends React.Component {
             key={row.id}
              className={headerCss}
             align={row.label ==='Action'?'right':'left'}
-            // align={'left'}
+         
         
             sortDirection={orderBy === row.id ? order : false}
           >
@@ -85,7 +85,7 @@ class ProjectTableHead extends React.Component {
       
       return (
        <Fragment>
-          {/* {currentHeader} */}
+      
         <TableHead   >
           <TableRow >
         

@@ -22,7 +22,6 @@ const projectManagementData = (state = initialState, action) => {
 		case DELETE_PROJECT_LIST_SUCCESS:
         case GET_PROJECT_LIST_SUCCESS:
 		
-           
                 return {
                     ...state,
                     projectUserList: action.response.data.projects_under_organization.project_details,

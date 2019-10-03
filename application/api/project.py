@@ -1,6 +1,5 @@
 """File to handle Project API Operations."""
 from flask_restful import Resource, reqparse
-
 from application.common.api_permission import PROJECT_POST, \
     PROJECT_PUT
 from application.common.common_exception import GenericBadRequestException, \
@@ -15,7 +14,7 @@ from application.common.utils import validate_empty_fields
 from application.helper.permission_check import check_permission
 from application.helper.runnerclasshelpers import project_detail
 from application.model.models import (Project, UserOrgRole, Organization,
-                                      UserProjectRole)
+                                      UserProjectRole,TestSuite,DbConnection,UserProjectRole,User)
 
 
 class ProjectAPI(Resource):
@@ -186,3 +185,59 @@ class ProjectAPI(Resource):
             return api_response(
                 True, APIMessages.SUCCESS, STATUS_OK,
                 {"projects_under_organization": projects_to_return})
+
+    @token_required
+    def delete(self, session):
+        """
+        DELETE call to delete project details.
+
+        Args:
+            session(object): User session
+            project_id: project_id to be deleted
+
+        Returns: Standard API Response with HTTP status code
+
+        """
+        db_connections=[]
+        suites=[]
+        user_associated=[]
+        distinct_user_associated=[]
+        get_project_parser = reqparse.RequestParser()
+        get_project_parser.add_argument(
+            'project_id', help=APIMessages.PARSER_MESSAGE,
+            required=True, type=int, location='args')
+        get_project_data = get_project_parser.parse_args()
+        project_obj = Project.query.filter_by(project_id =get_project_data['project_id'],is_deleted=False).first()
+        if not project_obj:
+            return api_response(False,
+                                    APIMessages.NO_RESOURCE.format('Project'),
+                                    STATUS_UNAUTHORIZED)
+        check_permission(user_object=session.user,
+                        list_of_permissions=PROJECT_PUT,
+                        project_id=get_project_data["project_id"],
+                        org_id=project_obj.org_id)
+        test_suite_obj=TestSuite.query.filter_by(project_id=project_obj.project_id,is_deleted=False).all()
+        db_connection_obj = DbConnection.query.filter_by(project_id = project_obj.project_id,is_deleted=False).all()
+        user_project_role_obj = UserProjectRole.query.filter_by(project_id=project_obj.project_id).distinct(UserProjectRole.user_id).with_entities(UserProjectRole.user_id).all()
+        if not test_suite_obj and not db_connection_obj and not user_project_role_obj:
+            project_obj.is_deleted=True
+            project_obj.save_to_db()
+            delete_message = APIMessages.DELETE_PROJECT_TRUE.format(project_obj.project_name)
+        else:
+            for each_obj in db_connection_obj:
+                db_connections.append({"db_connection_id":each_obj.db_connection_id,
+                "db_connection_name":each_obj.db_connection_name})
+            for each_suite in test_suite_obj:
+                suites.append({"suite_id":each_suite.test_suite_id, "suite_name":each_suite.test_suite_name})
+    
+            user_obj_list = User.query.filter(User.user_id.in_(user_project_role_obj)).order_by(User.user_id).all()        
+            for each_user in user_obj_list:
+                user_associated.append({"user_id":each_user.user_id,"email_id":each_user.email})
+            delete_message = APIMessages.DELETE_PROJECT_FALSE.format(project_obj.project_name)
+        user_obj = session.user
+        return api_response(
+                True, APIMessages.SUCCESS, STATUS_OK,{"data":{
+                                                            "message":delete_message,
+                                                            "db_connections":db_connections,
+                                                            "test_suites":suites,
+                                                            "Asociated_users":user_associated}})

@@ -5,8 +5,10 @@ import { connect } from 'react-redux';
 import { ListGroup,Table, Button, Col } from 'react-bootstrap';
 import { getOrganizationUsersList,addOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
 import  RoleListItemContainer  from './RoleListItemContainer';
-import CustomPaginationActionsTable from '../components/UsrMgrMtable/Tables';
+// import CustomPaginationActionsTable from '../components/Tables';
 import GroupIcon from '@material-ui/icons/Group';
+
+import CustomTable from '../components/Table/CustomTable'
 
 
 import { withStyles } from '@material-ui/core/styles';
@@ -33,14 +35,6 @@ class UserManagement extends Component {
 		this.state = {
 			isOrganisationInitialised: false,
 			isEditable : false,
-		
-			 headers : [
-				{ id: 'first_name',  label: 'First Name' },
-				{ id: 'last_name',  label: 'Last Name' },
-				{ id: 'email', label: 'Email' },
-				{ id: 'Manage Role',  label: 'Manage Role' },
-			
-			  ],
 		};
 	}
 
@@ -55,41 +49,45 @@ class UserManagement extends Component {
 		
 			isOrganisationInitialised: nextProps.isOrganisationInitialised
 		});
-	}
-
-
-	
+	}	
 
 	render() {
-		const { isEditable,headers } = this.state;
 		const{orgUserList,classes}=this.props;
+
+		const headers = [
+			{ id: 'first_name',  label: 'First Name' },
+			{ id: 'last_name',  label: 'Last Name' },
+			{ id: 'email', label: 'Email' }
+		  ];
+
+		  const userList = [];
+			if (orgUserList) {
+				orgUserList.forEach(user => {
+					userList.push({
+						first_name: user.first_name,
+						last_name: user.last_name,
+						email: user.email,
+						action: (
+							<Link to={`/edit_user_role/${user.user_id}`}>
+								<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
+							</Link>	
+						)
+					})
+				})
+			}
 	
 		return (
 			<div id="userManagement">
-			<div>
-            <GroupIcon className={classes.IconClass}/>
-			&nbsp; &nbsp;
-			<label className="main_titles" > Manage Users</label>
-			
-				
-			</div>
-				
-				
-			
-	
-			
-		
-			  <CustomPaginationActionsTable 
+				<div>
+					<GroupIcon className={classes.IconClass}/>
+					&nbsp; &nbsp;
+					<label className="main_titles" > Manage Users</label>				
+				</div>				
+				<CustomTable 
 					headers={headers}
-					userList ={orgUserList}
-					// addBtnFunctionality ={this.addRowsinTable}
-				
-					/>
-					
-			
-				
-			
-			
+					bodyData={userList}
+					actionLabel="Manage Role"
+				/>
 			</div>
 		);
 	 }
@@ -108,5 +106,4 @@ const mapDispatchToProps = dispatch => ({
 	getOrganizationUsersList: (data) => dispatch(getOrganizationUsersList(data)),
 	// addOrganizationUsersList:(data) =>dispatch(addOrganizationUsersList(data))
 });
-
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserManagement));
