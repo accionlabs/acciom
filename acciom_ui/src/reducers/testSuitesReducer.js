@@ -87,6 +87,7 @@ const testSuites = (state = initialState, action) => {
 		action.response.data.all_connections.forEach(connection => {
 			connection.checked = false;
 		});
+		
 		return {
 			...state,
 			connectionsList : { 
