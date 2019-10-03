@@ -6,6 +6,9 @@ from application.common.constants import SupportedTestClass
 from application.common.createdbdetail import create_dbconnection
 from application.common.splitdbdetails import split_db
 from application.model.models import TestSuite, TestCase
+from application.common.common_exception import (ResourceNotAvailableException,
+                                    IllegalArgumentException)
+from application.common.constants import (APIMessages, SupportedTestClass)
 
 
 def save_file_to_db(current_user, project_id, data, file):
@@ -45,6 +48,11 @@ def save_file_to_db(current_user, project_id, data, file):
     for each_row in range(worksheet.max_row - 1):
         if int(temp_data_array[each_row]) in test_case_list:
             test_case_list.remove(int(temp_data_array[each_row]))
+            if len(temp_test_dict[
+                            current_app.config.get('DESCRIPTION')][
+                            each_row]) >=50:
+                raise IllegalArgumentException(APIMessages.INVALID_LENGTH.format("50"))
+            
             db_list = split_db(
                 temp_test_dict[current_app.config.get('DBDETAILS')][each_row])
             src_db_id = create_dbconnection(current_user,

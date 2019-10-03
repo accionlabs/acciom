@@ -203,9 +203,13 @@ class TestSuiteUpload extends React.Component {
 		}
 
 		const handleInputChange = (e, index) => {
-			this.props.onSheetNameChange({sheetIndex:index,  displayName: e.target.value});
+		
 			let testSuites = this.props.testSuites;
 			let displayName = e.target.value;
+		
+
+			this.props.onSheetNameChange({sheetIndex:index,  displayName: e.target.value});
+		   
 			this.isNameAlreadyExist = checkNameAlreadyExist(testSuites,displayName);
 			
 		};
@@ -325,7 +329,7 @@ class TestSuiteUpload extends React.Component {
 				element = (
 					<div className="row">
 						<h5 className="suite-name-title sub_title">Test Suite Name: </h5>
-						<input type="textbox" className="suite-test-input suiteditbox" onChange={e => handleInputChange(e,i)} value={ displayName } />
+						<input type="textbox" className="suite-test-input suiteditbox" maxlength="50" onChange={e => handleInputChange(e,i)} value={ displayName } />
 						{this.isNameAlreadyExist &&
 							<span style={{color:"red", paddingLeft:"10px"}}>Test suite Name already exist</span>
 						}

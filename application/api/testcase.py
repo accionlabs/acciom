@@ -1,4 +1,5 @@
 import ast
+import copy
 
 from flask import request
 from flask_restful import Resource, reqparse
@@ -6,7 +7,8 @@ from flask_restful import Resource, reqparse
 from application.common.api_permission import TEST_CASE_JOB_POST, \
     EDIT_TEST_CASE_GET, EDIT_TEST_CASE_PUT, EDIT_TEST_CASE_DELETE, \
     TEST_CASE_JOB_EXTERNAL_POST
-from application.common.common_exception import ResourceNotAvailableException
+from application.common.common_exception import ResourceNotAvailableException, \
+    IllegalArgumentException
 from application.common.constants import (APIMessages, ExecutionStatus,
                                           SupportedTestClass, SupportedDBType,
                                           TestClass)
@@ -349,7 +351,6 @@ class EditTestCase(Resource):
              Standard API Response with message(returns message saying
             that test case details updated successfully) and http status code.
         """
-        # TODO: Need to use save to db only at the last(after all the fileds)
         put_testcase_parser = reqparse.RequestParser(bundle_errors=True)
         put_testcase_parser.add_argument('test_case_id', required=True,
                                          type=int)
@@ -389,17 +390,18 @@ class EditTestCase(Resource):
         check_permission(session.user, EDIT_TEST_CASE_PUT,
                          project_id_org_id[0],
                          project_id_org_id[1])
-        testcasedetail = test_case_obj.test_case_detail
+        testcasedetail = copy.deepcopy(test_case_obj.test_case_detail)
         for key, value in user_test_case_detail.items():
             if key == 'src_db_id' and value != None:
                 testcasedetail["src_db_id"] = \
                     user_test_case_detail["src_db_id"]
-                test_case_obj.save_to_db()
             if key == 'target_db_id' and value != None:
                 testcasedetail["target_db_id"] = \
                     user_test_case_detail["target_db_id"]
-                test_case_obj.save_to_db()
             if key == 'src_table' and value != None:
+                if len(user_test_case_detail['src_table']) > 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
                 user_test_case_detail['src_table'] = user_test_case_detail[
                     'src_table'].replace(" ", "")
                 table = testcasedetail["table"]
@@ -410,30 +412,32 @@ class EditTestCase(Resource):
                 table[
                     user_test_case_detail[
                         'src_table']] = target_table
-                test_case_obj.save_to_db()
             if key == "target_table" and value != None:
+                if len(user_test_case_detail['target_table']) > 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
                 user_test_case_detail["target_table"] = user_test_case_detail[
                     "target_table"].replace(" ", "")
                 table = testcasedetail["table"]
                 for key in table:
                     table[key] = user_test_case_detail[
                         "target_table"]
-                test_case_obj.save_to_db()
             if key == "src_qry" and value != None:
                 user_test_case_detail["src_qry"] = user_test_case_detail[
                     "src_qry"].strip()
                 queries = testcasedetail["query"]
                 queries["sourceqry"] = user_test_case_detail[
                     "src_qry"]
-                test_case_obj.save_to_db()
             if key == "target_qry" and value != None:
                 user_test_case_detail["target_qry"] = user_test_case_detail[
                     "target_qry"].strip()
                 queries = testcasedetail["query"]
                 queries["targetqry"] = user_test_case_detail[
                     "target_qry"]
-                test_case_obj.save_to_db()
             if key == "column" and value != None:
+                if len(user_test_case_detail['column']) > 500:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("500"))
                 column = testcasedetail["column"]
                 user_test_case_detail["column"] = user_test_case_detail[
                     "column"].replace(" ", "")
@@ -467,8 +471,6 @@ class EditTestCase(Resource):
                     column[user_test_case_detail["column"]] = \
                         user_test_case_detail["column"]
                     testcasedetail["column"] = column
-
-                test_case_obj.save_to_db()
         test_case_obj.test_case_detail = testcasedetail
         test_case_obj.save_to_db()
         return api_response(
