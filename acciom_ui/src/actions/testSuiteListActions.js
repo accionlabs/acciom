@@ -40,7 +40,9 @@ import {
 	GET_TESTCASE_LOG_BY_ID_ERROR,
 	GET_TESTCASE_DETAIL_BY_SUITE_ID_REQUEST,
 	GET_EACH_TEST_CASE_BY_CASE_ID_REQUEST,
-	GET_ALL_TEST_SUITES_REQUEST
+	GET_ALL_TEST_SUITES_REQUEST,
+	EXPORT_LOG_SUCCESS,
+	EXPORT_LOG_ERROR
 } from "../constants/ActionTypes"; 
 
 export const hideManageConnectionsDialog = () => ({
@@ -86,6 +88,28 @@ export const getAllTestSuites = (projectId) => {
 		})
 	};
 };
+
+export const downloadTestCaseLog = (testCaseLogId) => {
+	return {
+		types: [
+			'',
+			'',
+			''
+		],
+		callAPI: () => fetch(`${BASE_URL}/export?test_case_log_id=${testCaseLogId}`, {
+			method: 'get',
+			headers
+		}).then(function(t) {
+			return t.blob().then((b)=>{
+				var a = document.createElement("a");
+				a.href = URL.createObjectURL(b);
+				a.setAttribute("download", "TestLog.xls");
+				a.click();
+			}
+			);
+		})
+	};
+}
 
 export const executeTestBySuiteId = (suiteID) => {
 	return {

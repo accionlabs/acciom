@@ -106,5 +106,4 @@ const mapDispatchToProps = dispatch => ({
 	getOrganizationUsersList: (data) => dispatch(getOrganizationUsersList(data)),
 	// addOrganizationUsersList:(data) =>dispatch(addOrganizationUsersList(data))
 });
-
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserManagement));
