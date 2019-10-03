@@ -56,11 +56,6 @@ class EnhancedTableHead extends React.Component {
 
     }
   
-
-   
-
-
-  
     render() {
       const {  order, orderBy, rowCount,headers,headerCss,headerHeight } = this.props;
     

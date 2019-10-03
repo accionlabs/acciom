@@ -19,10 +19,12 @@ import { TextField } from '@material-ui/core';
 import Clear from '@material-ui/icons/Clear';
 import Search from '@material-ui/icons/Search';
 import ProjectTableHead from './ProjectTableHead';
-import { Modal,Button} from 'react-bootstrap';
+import { Button} from 'react-bootstrap';
 import { connect } from 'react-redux';
-import {deleteUsersFromTable,addUsersRole } from '../../actions/userManagementActions';
-
+import CustomModal from '../../components/CommonModal/CustomModal';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
+import {deleteProjectDetails} from '../../actions/projectManagementActions';
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -52,10 +54,13 @@ function searchingFor(search){
   
 
   return function(x){
-    
+    if(x.project_description ==null){
+      x.project_description='Project for testing';
+    }
  
-    return (x.first_name.toLowerCase().includes(search.toLowerCase())||
-    x.last_name.toLowerCase().includes(search.toLowerCase())
+    return (x.project_name.toLowerCase().includes(search.toLowerCase())||
+    (x.project_description.toLowerCase().includes(search.toLowerCase()) )
+  
   );
 
   }
@@ -147,15 +152,13 @@ let EnhancedTableToolbar = props => {
      
       </div>
       <div className={classes.spacer} />
-      {/* <div className={classes.actions}>
-    
-           <Tooltip title ="Add Role">
+      <Tooltip title ="Add Role">
             <IconButton  onClick={props.addButton} >
          
-           <AddIcon/>
+            <AddIcon style ={{color:"#696969"}}/> 
           </IconButton>
           </Tooltip>
-      </div> */}
+   
     </Toolbar>
   );
 };
@@ -168,11 +171,11 @@ EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
   root: {
-    width: '100%',
+    // width: '100%',
     marginTop: theme.spacing.unit * 3,
   },
   table: {
-    minWidth: 800,
+    minWidth: 600,
   
    
    
@@ -190,12 +193,13 @@ const styles = theme => ({
   },
   headerStyles:{
    
+    // paddingLeft:'22px !important',
+    fontFamily: 'Open Sans !important',
+    // paddingRight:'12px !important',
+    fontWeight:'bold',
     backgroundColor: '#BD4951',
     color: '#ffffff',
-    paddingLeft:'22px !important',
-    fontFamily: 'Open Sans !important',
-    paddingRight:'12px !important',
-    fontWeight:'bold',
+  
    
   
    
@@ -203,7 +207,18 @@ const styles = theme => ({
 
    
   toolbarCss:{
-    paddingLeft:'2px !important',
+
+    paddingRight:'52px !important',
+   
+    "&:hover": {
+     
+      color:'#ffffff!important'
+    }
+
+  },
+  toolbarDefaultCss:{
+
+    paddingLeft:'8px !important',
    
     "&:hover": {
      
@@ -218,11 +233,12 @@ const styles = theme => ({
     fontFamily: 'Open Sans !important',
     paddingLeft:'22px !important',
     fontWeight:400,
-    height:'10%'
+   
   },
   cellStyling:{
     textAlign:'right !important',
-    // paddingRight:'2px!important'
+    paddingLeft:'12px!important',
+   
   },
   deleteIcon:{
    marginLeft:'7px', 
@@ -241,20 +257,14 @@ function createData(name, calories, fat) {
 class ProjectMangementTableBody extends React.Component {
   state = {
     order: 'asc',
-    orderBy: 'Username',
-    selected: [],
+    orderBy: 'Project Name',
+ 
      page: 0,
     rowsPerPage: 10,
     search:'',
-    showDeleteConfirmationDialog:false,
-    showEditConfirmationDialog:false,
+    showDeleteConfirmationDialog: false,
     deleteConnectionID: null,
-    firstName:'',
-    lastName:'',
-    email:'',
-
- 
-  };
+    };
 
   handleRequestSort = (event, property) => {
 
@@ -272,31 +282,6 @@ class ProjectMangementTableBody extends React.Component {
   };
 
 
-
-  handleClick = (event, id) => {
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-  
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-  
-
-    this.setState({ selected: newSelected });
-
-  };
-
   handleChangePage = (event, page) => {
     
     this.setState({ page });
@@ -306,45 +291,35 @@ class ProjectMangementTableBody extends React.Component {
     this.setState({ rowsPerPage: event.target.value,page:0 });
   };
 
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
   searchTable=()=>{
-      console.log('In search table');
-    
+
     this.setState({search:event.target.value})
   }
   clearTextField=()=>{
     this.setState({search:''});
   }
-	
-  handleDelete=(deleteConnectionID)=>{
-   
-    this.setState({showDeleteConfirmationDialog: true, deleteConnectionID}); 
+  deleteItemHandler=(deleteProjectId)=>{
+	 this.setState({showDeleteConfirmationDialog:true ,deleteConnectionID:deleteProjectId});
   }
-
+ 
   onYesBtnClickHandler=()=>{
-   
-   
-
-   this.props.deleteUsersFromTable(this.state.deleteConnectionID);
- 
-   this.hideConfirmationopup();
- 
-  }
-  onNoBtnClickHandler=()=>{
-  
+    
+    const data = {
+			connectionID:this.state.deleteConnectionID
+    }
+    this.props.deleteProjectDetails(data);
     this.hideConfirmationopup();
-  }
-  addRowsinTable=()=>{
-  
-    this.setState({showEditConfirmationDialog:true});
-		
+	}
+	onNoBtnClickHandler=()=>{
+		this.hideConfirmationopup();
+	}
+	hideConfirmationopup = () => {
+		this.setState({showDeleteConfirmationDialog: false ,deleteConnectionID:null})
+	}
 
-  }
-
- 
   displayTableBody=(projectList)=>{
-  
-    const {  order, orderBy, selected, rowsPerPage, page,showEditConfirmationDialog } = this.state;
+
+    const {  order, orderBy, rowsPerPage, page} = this.state;
     const {classes}=this.props;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, projectList.length - page * rowsPerPage);
     let tableData=[];
@@ -352,52 +327,48 @@ class ProjectMangementTableBody extends React.Component {
           
       .filter(searchingFor(this.state.search))
      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-     .map((user) => {
-   
-    
-     
-       const isSelected = this.isSelected(user.user_id);
-      
-  
+     .map((project) => {
+ 
        return (
          <TableRow
-        
-           onClick={event => this.handleClick(event, user.user_id)}
+   
            role="checkbox"
-           aria-checked={isSelected}
            tabIndex={-1}
-            key={user.user_id}
-           selected={isSelected}
-           className ={classes.tableHover}
-         
-         >
+            key={project.project_id}
+            className ={classes.tableHover}
+            >
          
            <TableCell component="th" scope="row"  align="left"
               className={classes.tableRowStyling}
               style ={{height:'2px'}}
               >
-             {user.first_name}
+             {project.project_name}
            
            
            </TableCell>
            <TableCell align="left" component="th" scope="row"  
            className={classes.tableRowStyling}
            >
-           {user.last_name}
+           {project.project_description?project.project_description:'Project For Testing'}
          
            </TableCell>
-           <TableCell align="left" component="th" scope="row"  
-           className={classes.tableRowStyling}
-           >
-           {user.email}
-       
-           </TableCell>
+         
           <TableCell 
           className={classes.cellStyling}
+          align="right"
           >
-          <Link to={`/edit_user_role/${user.user_id}`}>
+          <Link to={`/edit_user_role/${project.project_id}`}>
           <EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
+          
+         
           </Link>	
+          <DeleteIcon 
+          className="cursorhover" 
+          fontSize="small" 
+          style={{color:"#696969",marginRight:'15px'}} 
+          onClick ={(e) =>{this.deleteItemHandler(project.project_id)}} />
+        
+        
         
          
           </TableCell>
@@ -413,13 +384,13 @@ class ProjectMangementTableBody extends React.Component {
   return tableData;
 
   }
+ 
   
   render() {
-   
+  
     const { classes,headers,projectList } = this.props;
-    const {  order, orderBy, selected, rowsPerPage, page,showEditConfirmationDialog } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, projectList.length - page * rowsPerPage);
-   
+    const {  order, orderBy, rowsPerPage, page } = this.state;
+
     return (
       <Paper className={classes.root}>
    
@@ -431,7 +402,7 @@ class ProjectMangementTableBody extends React.Component {
         />
       
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby="tableTitle" size='medium'>
+          <Table aria-labelledby="tableTitle" size='small'>
             <ProjectTableHead
               order={order}
               orderBy={orderBy}
@@ -441,16 +412,22 @@ class ProjectMangementTableBody extends React.Component {
               headers={headers}
               headerCss ={classes.headerStyles}
               toolbarCss ={classes.toolbarCss}
-              headerHeight={classes.headerHeight}
-              
-              />
+              toolbarDefaultCss={classes.toolbarDefaultCss}
+               />
          
             <TableBody  className="table_body">
          
        
-              {this.displayTableBody(this.props.projectList)}
+              {this.displayTableBody(projectList)}
             </TableBody>
           </Table>
+          { 
+					this.state.showDeleteConfirmationDialog ?
+						<CustomModal
+						  onYesBtnClicked={this.onYesBtnClickHandler}
+						  onNoBtnClicked={this.onNoBtnClickHandler}/>
+						: null
+				}
         </div>
         <TablePagination
           rowsPerPageOptions={[10,15,20,25]}
@@ -475,7 +452,9 @@ class ProjectMangementTableBody extends React.Component {
   }
 }
 
+const mapDispatchToProps = dispatch => ({
 
+	deleteProjectDetails: (data) => dispatch(deleteProjectDetails(data))
+});
+export default withStyles(styles)(connect(null, mapDispatchToProps)(ProjectMangementTableBody));
 
-
-export default withStyles(styles)(ProjectMangementTableBody);

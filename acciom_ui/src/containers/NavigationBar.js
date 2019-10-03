@@ -22,12 +22,13 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Icon from '@material-ui/core/Icon';
-import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
 
 import ChangeOrganisation from '../components/ChangeOrganisation'
 import { logoutFromPortal } from '../actions/loginActions';
 import { showOrgChangePage } from '../actions/appActions';
 import logo from '../assets/images/logo.png';
+import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 const drawerWidth = 240;
 
@@ -314,8 +315,15 @@ function NavigationBar(props) {
 						</ListItemIcon>
 						<Link to={'/projects'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
 						</MenuItem>
+						<MenuItem>
+						<ListItemIcon>
+							<Link to={'/organization'}>
 						
-						
+							<AssignmentIcon/>
+							</Link>
+						</ListItemIcon>
+						<Link to={'/organization'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
+						</MenuItem>
 					</MenuList>
 				</List>
 			</Drawer>
