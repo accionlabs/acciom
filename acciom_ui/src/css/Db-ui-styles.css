@@ -122,6 +122,7 @@ body,html{
 .MuiDrawer-paperAnchorLeft{
     background-color: #69717D !important;
 }
+
 .left_dropdown_btn{
     position: fixed;
     bottom: 10px;
@@ -146,6 +147,12 @@ body,html{
 
 #dashbcolor{
     color: #fff !important;
+    margin-left: 0px;
+    font-size: 13px;
+}
+
+.checkresultlabel{
+    margin-left: 8px;
 }
 
 .leftbar_closebtn{
@@ -210,6 +217,7 @@ body,html{
 
 .adddblabels{
     color: #69717D !important;
+    font-weight: none !important;
 }
 
 .deleteconfirmpopup{
@@ -583,9 +591,10 @@ body,html{
     max-width: 1100px;
 }
 
-.executiontablelog{
-    border: 1px solid red;
+.executionTableLog{
+    border: 1px solid rgb(32, 31, 31,25%);
     margin-right: 16px;
+    margin-top: 22px;
 }
 
 .executiontablebottomborder{
@@ -607,11 +616,11 @@ body,html{
     color: #69717D;
 }
 
-.resultlabel2{
+.nullCheckResultLabel{
     margin-left: -3px;
 }
 
-.resultvaluelabel{
+.duplicateCheckResultlabel{
     margin-left: -10px;
 }
 
@@ -621,109 +630,164 @@ body,html{
 }
 
 .statuslabel{
-    margin-left: 60px;
+    margin-left: 253px;
     color: #69717D;
 }
 
-.duplicatecheckstatuslabel{
-    margin-left: 40px;
+.duplicateCheckStatusLabel{
+    margin-left: 8px;
 }
 
 .datavalitable1{
     border: 1px solid rgb(32, 31, 31,25%);
     margin-left: 18px;
 }
-.datavalitable2{
+.dataValidationSecoundTable{
     border: 1px solid rgb(32, 31, 31,25%);
     margin-left: 18px;
+    width: 95%;
+    margin-top: 20px;
 }
 
-.resultlabel3{
-    margin-left: 143px;
+.dataValidationResultLabel{
+    margin-left: 9px;
 }
 
-.statslabelmargin{
-    margin-left: 100px;
+.dataValidationStatusLabel{
+    margin-left: 168px;
 }
 
-.resultlabel3margin{
+.dataValidationResultValue{
     margin-left: -11px;
 }
 
-.datavalitablefont{
+.datValidationTableFont{
     font-weight: 300;
     font-size: 12px;
     flex-basis: 33.33%;
     flex-shrink: 0;
     padding-left: 9px;
+    line-height: 20px;
 }
 
-.bgcolor{
+.tableHeadBackgroundcolor{
     background-color: #BD4951;
     color: #fff !important;
-    line-height: 2;
+    line-height: 20px;
     vertical-align: middle;
     font-size: 12px;
+    margin-bottom: 0px !important;
+    margin-left: 0px !important
 }
 
-.geticonmargins{
-    margin-left: 155px !important;
+.ddlCheckSecoundTableMargin{
+    border: 1px solid rgb(32, 31, 31,25%);
+    text-align: center;
+    line-height: 20px;
+    width: 124px;
 }
 
-.geticonmargins3{
-    margin-left: 88px !important;
+.ddlSecoundPartpadding{
+    padding-left: 4px;
+}
+
+.nullCheckGetIcon{
+    margin-left: 300px !important;
+}
+
+.dataValidationGetIconMargin{
+    margin-left: 456px !important;
     margin-top: -2px !important;
 }
 
-.geticonmargins2{
-    margin-left: 28px !important;
+.duplicateCheckGetIcon{
+    margin-left: 76px !important;
+}
+
+.geticonmargins4{
+    margin-left: 149px !important;
 }
 
 .logbody{
     margin-top: -15px;
     overflow-y: auto;
     max-height: 470px;
+    /* width: 400px; */
     /* max-width: fit-content; */
 }
 
-.bgcolorOdd{
+.bgColorOddRow{
     background-color: #c5d8f5b4;
-    font-size: 12px;
-    line-height: 1 !important;
+    font-size: 11px;
+    line-height: 20px !important;
     vertical-align: middle;
 }
 
-.bgcolorNull{
-    background-color: yellow;
-    background-clip: content-box;
+.Duplicateline{
+    line-height: 20px !important;
 }
 
-.bgcolorNullmargin{
+.countchecklineheight{
+    line-height: 20px !important;
+}
+
+.countcheckMarginBottom{
+    margin-bottom: 0px !important;
+    margin-left: -12px;
+}
+
+.bgColorNull{
+    background-color: yellow;
+    background-clip: content-box;
+    display: inline;
+}
+
+.bgColorNullMargin{
     background-color: yellow;
     background-clip: content-box;
     margin-left: 11px;
-}
-.geticonmargin{
-    
+    margin-top: 5px;
+    display: unset;
+    color: #69717D
 }
 
 .loglabel{
     margin-left: 13px;
 }
 
-.bgcoloreven{
-    font-size: 12px;
-    line-height: 1;
+.bgColorEvenRow{
+    font-size: 11px;
+    line-height: 20px;
 }
 
-.borderpadding{
+.evenBackgroundColor{
+    font-size: 11px;
+    line-height: 20px;
+    color: #69717D;
+    
+}
+
+.oddBackgroundColor{
+    background-color: #c5d8f5b4;
+    font-size: 11px;
+    line-height: 20px;
+    vertical-align: middle;
+    color: #69717D;
+}
+
+.dataValidationBorderPadding{
     padding-right: 14px;
     padding-left: 0px;
-    padding-top: 4px;
+    /* padding-top: 4px; */
+}
+
+.dataValidationSourceCountLabel{
+    margin-left: 6px;
+    margin-top: 13px;
 }
 
 .resultlabel{
-    margin-left: 122px;
+    margin-left: 9px;
 }
 
 .ddlchecklogborder1{
@@ -735,13 +799,14 @@ body,html{
 }
 
 .ddlresultlabel{
-    margin-left: -144px;
-    margin-top: 11px;
+    margin-left: 22px;
+    margin-top: -21px;
+    margin-bottom: 29px;
 }
 
 .ddlchecktable{
     width: 857px !important;
-    margin-top: -21px;
+    /* margin-top: -21px; */
     
 }
 
@@ -750,16 +815,16 @@ body,html{
 }
 
 .ddlchecktableborder{
-    border: 1px solid black;
+    border: 1px solid rgb(32, 31, 31,25%);
 }
 
 .ddlstatuslabel{
-    margin-left: 40px;
+    margin-left: 22px;
     color: #69717D;
 }
 
 .resultmargin{
-    margin-left: 4px;
+    margin-left: 6px;
     color: #69717D;
     font-weight: 100;
 }
@@ -769,26 +834,36 @@ body,html{
     margin-left: 13px;
 }
 
-.sublabel1{
+.dataValidationSubLabel{
     margin-left: 10px;
+    margin-top: 15px;
+}
+
+.dataValidationLabel{
+    margin-left: 5px;
 }
 
 .countcheckstatuslabel{
-    margin-left: 11px;
+    margin-left: 54px;
     color: #69717D;
     font-size: 14px;
 }
 
-.countchecklabelfont{
-    font-size: 16px !important;
+.downloaddataicon{
+    margin-left: 134px !important;
 }
 
-.sublabel2{
-    margin-left: 140px;
+.countCheckLabelFont{
+    font-size: 17px !important;
+    margin-left: 5px;
+}
+
+.dataValidationSecoundSubLabel{
+    margin-left: 18px;
 }
 
 .targetcountlabel{
-    margin-left: 369px;
+    margin-left: 252px;
 }
 
 .ddlborder{
@@ -801,7 +876,7 @@ body,html{
 
 .tablenamelabel{
     margin-left: 12px;
-    margin-top: -2px;
+    margin-top: 17px;
     color: #69717D;
 
 }

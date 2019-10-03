@@ -11,7 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
   
-      if(property ==='Action'){
+      if(property ==='Manage Role'){
         return;
       }
   this.props.onRequestSort(event, property);
@@ -26,7 +26,7 @@ class EnhancedTableHead extends React.Component {
           <TableCell
             key={row.id}
             className={headerCss}
-            align={row.label ==='Action'?'right':'left'}
+            align={row.label ==='Manage Role'?'right':'left'}
         
             sortDirection={orderBy === row.id ? order : false}
           >
@@ -39,9 +39,9 @@ class EnhancedTableHead extends React.Component {
               <TableSortLabel
                 direction={order}
                 onClick={this.createSortHandler(row.id)}
-                hideSortIcon={row.label ==='Action'}
+                hideSortIcon={row.label ==='Manage Role'}
                 className={this.props.toolbarCss}
-                align={row.label ==='Action'?'right':'left'}
+                align={row.label ==='Manage Role'?'right':'left'}
               >
          
              {row.label}

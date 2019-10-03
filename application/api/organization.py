@@ -10,13 +10,14 @@ from application.common.api_permission import ORGANIZATION_API_PUT, \
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_CREATED,
-                                         STATUS_OK, STATUS_UNAUTHORIZED)
+                                         STATUS_OK, STATUS_FORBIDDEN)
 from application.common.response import api_response
 from application.common.token import token_required
 from application.helper.permission_check import check_permission
 from application.model.models import (Organization, Job, TestSuite,
                                       Project, UserProjectRole, UserOrgRole,
                                       User)
+from index import db
 
 
 class OrganizationAPI(Resource):
@@ -41,13 +42,18 @@ class OrganizationAPI(Resource):
         create_org_parser.add_argument(
             'org_name', help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
+        create_org_parser.add_argument(
+            'org_description', help=APIMessages.PARSER_MESSAGE,
+            required=True, type=str)
         create_org_data = create_org_parser.parse_args()
         check_permission(user_obj)
         create_organization = Organization(create_org_data['org_name'],
+                                           create_org_data['org_description'],
                                            session.user_id)
         create_organization.save_to_db()
         organization_data = {'org_id': create_organization.org_id,
-                             'org_name': create_organization.org_name}
+                             'org_name': create_organization.org_name,
+                             'org_description': create_organization.org_description}
         return api_response(
             True, APIMessages.CREATE_RESOURCE.format('Organization'),
             STATUS_CREATED, organization_data)
@@ -70,6 +76,9 @@ class OrganizationAPI(Resource):
         update_org_parser.add_argument(
             'org_name', help=APIMessages.PARSER_MESSAGE,
             required=True, type=str)
+        update_org_parser.add_argument(
+            'org_description', help=APIMessages.PARSER_MESSAGE,
+            required=True, type=str)
 
         update_org_data = update_org_parser.parse_args()
         user_obj = User.query.filter_by(user_id=session.user_id,
@@ -83,6 +92,7 @@ class OrganizationAPI(Resource):
         check_permission(user_obj, list_of_permissions=ORGANIZATION_API_PUT,
                          org_id=current_org.org_id)
         current_org.org_name = update_org_data['org_name']
+        current_org.org_description = update_org_data['org_description']
         current_org.save_to_db()
         return api_response(
             True, APIMessages.UPDATE_RESOURCE.format('Organization'),
@@ -98,23 +108,30 @@ class OrganizationAPI(Resource):
 
         Returns: Standard API Response with HTTP status code
         """
-        # TODO: Currently, get call will give all
-        #  organizations which are active
-        # TODO: Implement a logic to return organizations that user is part
         # Storing all active projects in a list
-
-        list_of_active_orgs = Organization.query.filter_by(
-            is_deleted=False).all()
+        org_id_from_org_role = db.session.query(UserOrgRole.org_id).filter(
+            UserOrgRole.user_id == session.user_id).distinct().all()
+        org_id_in_org_role = [org_id for org_id, in org_id_from_org_role]
+        org_id_from_project_role = db.session.query(
+            UserProjectRole.org_id).filter(
+            UserProjectRole.user_id == session.user_id).distinct().all()
+        org_id_in_project_role = [org_id for org_id, in
+                                  org_id_from_project_role]
+        active_org = org_id_in_org_role + org_id_in_project_role
+        list_of_active_orgs = Organization.query.filter(
+            Organization.org_id.in_(set(active_org)),
+            Organization.is_deleted == False).all()
         if not list_of_active_orgs:
             return api_response(
                 False, APIMessages.NO_RESOURCE.format('Organization'),
-                STATUS_OK, STATUS_UNAUTHORIZED)
+                STATUS_FORBIDDEN)
         # list of projects to be returned in the response
         org_details_to_return = list()
-        for each_project in list_of_active_orgs:
+        for each_org in list_of_active_orgs:
             org_details_to_return.append(
-                {'org_id': each_project.org_id,
-                 'org_name': each_project.org_name})
+                {'org_id': each_org.org_id,
+                 'org_name': each_org.org_name,
+                 'org_description': each_org.org_description})
         return api_response(
             True, APIMessages.SUCCESS, STATUS_OK,
             {"organization_details": org_details_to_return})

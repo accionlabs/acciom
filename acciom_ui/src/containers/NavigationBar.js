@@ -295,7 +295,7 @@ function NavigationBar(props) {
 									<Icon className={clsx(classes.icon, 'fas fa-database fa-2x')} color="primary" />
 								</Link>
 							</ListItemIcon>
-							<Link to={`/view_db_details`} id="dashbcolor"  className = {classes.startup}>View DB Details</Link>
+							<Link to={`/view_db_details`} id="dashbcolor"  className = {classes.startup}>Manage DB Connections</Link>
 						</MenuItem>
 						<MenuItem>
 						<ListItemIcon>
@@ -303,7 +303,7 @@ function NavigationBar(props) {
 								<Icon className="fa fa-users usericon" color="primary"></Icon>
 							</Link>
 						</ListItemIcon>
-							<Link to={'/user_management'} id="dashbcolor"  className = {classes.startup}>Manage User Roles</Link>
+							<Link to={'/user_management'} id="dashbcolor"  className = {classes.startup}>Manage Users</Link>
 						</MenuItem>
 						<MenuItem>
 							<ListItemIcon>

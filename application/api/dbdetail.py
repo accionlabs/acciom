@@ -98,13 +98,13 @@ class DbDetails(Resource):
                                 STATUS_BAD_REQUEST)
         else:
             # Validating maximum characters
-            if len(db_detail['db_connection_name']) >= 100:
+            if len(db_detail['db_connection_name']) > 100:
                 raise IllegalArgumentException(
                     APIMessages.INVALID_LENGTH.format("100"))
-            if len(db_detail['db_name']) >= 50 or \
-                    len(db_detail['db_hostname']) >= 50 or \
-                    len(db_detail['db_username']) >= 50 or \
-                    len(db_detail['db_password']) >= 50:
+            if len(db_detail['db_name']) > 50 or \
+                    len(db_detail['db_hostname']) > 50 or \
+                    len(db_detail['db_username']) > 50 or \
+                    len(db_detail['db_password']) > 50:
                 raise IllegalArgumentException(
                     APIMessages.INVALID_LENGTH.format("50"))
             # Check Db connection name already exist in db or not
@@ -351,23 +351,23 @@ class DbDetails(Resource):
         else:
             # Validating maximum characters
             if db_details['db_connection_name'] != None:
-                if len(db_details['db_connection_name']) >= 100:
+                if len(db_details['db_connection_name']) > 100:
                     raise IllegalArgumentException(
                         APIMessages.INVALID_LENGTH.format("100"))
             if db_details['db_name'] != None:
-                if len(db_detail['db_name']) >= 50:
+                if len(db_detail['db_name']) > 50:
                     raise IllegalArgumentException(
                         APIMessages.INVALID_LENGTH.format("50"))
             if db_details['db_hostname'] != None:
-                if len(db_detail['db_hostname']) >= 50:
+                if len(db_detail['db_hostname']) > 50:
                     raise IllegalArgumentException(
                         APIMessages.INVALID_LENGTH.format("50"))
             if db_details['db_username'] != None:
-                if len(db_detail['db_username']) >= 50:
+                if len(db_detail['db_username']) > 50:
                     raise IllegalArgumentException(
                         APIMessages.INVALID_LENGTH.format("50"))
             if db_details['db_password'] != None:
-                if len(db_detail['db_password']) >= 50:
+                if len(db_detail['db_password']) > 50:
                     raise IllegalArgumentException(
                         APIMessages.INVALID_LENGTH.format("50"))
             # Check Db connection name already exist in db or not

@@ -1,14 +1,19 @@
+import copy
 from datetime import datetime
 
 from flask import request
 from flask_restful import reqparse, Resource
 
-from application.common.api_permission import (TEST_SUITE_POST, 
-    TEST_SUITE_POST_EXECUTE, TEST_SUITE_PUT, CREATE_NEW_TEST_SUITE_POST, 
-    ADD_TEST_SUITE_MANUALLY_POST, TEST_CASE_LOG_DETAIL_GET, 
-    EXPORT_TEST_LOG_GET, TEST_CASE_LOG_API_GET)
+from application.common.api_permission import (TEST_SUITE_POST,
+                                               TEST_SUITE_POST_EXECUTE,
+                                               TEST_SUITE_PUT,
+                                               CREATE_NEW_TEST_SUITE_POST,
+                                               ADD_TEST_SUITE_MANUALLY_POST,
+                                               TEST_CASE_LOG_DETAIL_GET,
+                                               EXPORT_TEST_LOG_GET,
+                                               TEST_CASE_LOG_API_GET)
 from application.common.common_exception import (ResourceNotAvailableException,
-                                    IllegalArgumentException)
+                                                 IllegalArgumentException)
 from application.common.constants import (APIMessages, SupportedTestClass)
 from application.common.createdbdetail import create_dbconnection
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
@@ -27,6 +32,7 @@ from application.helper.uploadfiledb import save_file_to_db
 from application.model.models import (Project, TestCaseLog, TestCase,
                                       TestSuite, User, Organization)
 from index import db
+
 
 class TestSuiteAPI(Resource):
     """
@@ -79,9 +85,10 @@ class TestSuiteAPI(Resource):
             return api_response(False, APIMessages.
                                 TEST_SUITE_NAME_CANNOT_BE_BLANK,
                                 STATUS_BAD_REQUEST)
-        if len(test_suite_data['suite_name']) >=50:
-            raise IllegalArgumentException(APIMessages.INVALID_LENGTH.format("50"))
-        
+        if len(test_suite_data['suite_name']) >= 50:
+            raise IllegalArgumentException(
+                APIMessages.INVALID_LENGTH.format("50"))
+
         if temp_connection:
             return api_response(False, APIMessages.
                                 TEST_SUITE_NAME_ALREADY_PRESENT,
@@ -100,7 +107,7 @@ class TestSuiteAPI(Resource):
                              org_id=project_obj.org_id,
                              project_id=test_suite_obj.project_id)
             create_job(current_user, test_suite_obj, False)
-            
+
         return api_response(True, APIMessages.ADD_DATA, STATUS_CREATED)
 
     @token_required
@@ -142,7 +149,6 @@ class TestSuiteAPI(Resource):
              Standard API Response with message(returns message saying
             that test suite updated successfully) and http status code.
         """
-        # TODO: Need to use save to db only at the last(after all the fileds)
         put_testcase_parser = reqparse.RequestParser(bundle_errors=True)
         put_testcase_parser.add_argument('test_case_detail', required=True,
                                          type=list, location='json')
@@ -183,7 +189,7 @@ class TestSuiteAPI(Resource):
             check_permission(session.user, TEST_SUITE_PUT,
                              project_id_org_id[0],
                              project_id_org_id[1])
-            testcasedetail = test_case_obj.test_case_detail
+            testcasedetail = copy.deepcopy(test_case_obj.test_case_detail)
             if "src_db_id" in keys:
                 src_db_id = each_test_case["src_db_id"]
                 del each_test_case["src_db_id"]
@@ -194,10 +200,8 @@ class TestSuiteAPI(Resource):
                 each_test_case[key] = value.strip()
             if "src_db_id" in keys:
                 testcasedetail["src_db_id"] = src_db_id
-                test_case_obj.save_to_db()
             if "target_db_id" in keys:
                 testcasedetail["target_db_id"] = target_db_id
-                test_case_obj.save_to_db()
             if "test_class" in keys:
                 if SupportedTestClass(). \
                         get_test_class_id_by_name \
@@ -209,11 +213,9 @@ class TestSuiteAPI(Resource):
                 test_case_obj.test_case_class = SupportedTestClass(). \
                     get_test_class_id_by_name \
                     (each_test_case["test_class"])
-                test_case_obj.save_to_db()
             if "test_description" in keys:
                 testcasedetail["test_desc"] = \
                     each_test_case["test_description"]
-                test_case_obj.save_to_db()
             if "src_table" in keys:
                 table = testcasedetail["table"]
                 for key in table:
@@ -223,23 +225,19 @@ class TestSuiteAPI(Resource):
                 table[
                     each_test_case[
                         "src_table"]] = target_table
-                test_case_obj.save_to_db()
             if "target_table" in keys:
                 table = testcasedetail["table"]
                 for key in table:
                     table[key] = each_test_case[
                         "target_table"]
-                test_case_obj.save_to_db()
             if "src_qry" in keys:
                 queries = testcasedetail["query"]
                 queries["sourceqry"] = each_test_case[
                     "src_qry"]
-                test_case_obj.save_to_db()
             if "target_qry" in keys:
                 queries = testcasedetail["query"]
                 queries["targetqry"] = each_test_case[
                     "target_qry"]
-                test_case_obj.save_to_db()
             if "column" in keys:
                 column = testcasedetail["column"]
                 testcasedetail["column"] = column
@@ -273,8 +271,6 @@ class TestSuiteAPI(Resource):
                     column[each_test_case["column"]] = \
                         each_test_case["column"]
                     testcasedetail["column"] = column
-                test_case_obj.save_to_db()
-
             test_case_obj.test_case_detail = testcasedetail
             test_case_obj.save_to_db()
         return api_response(

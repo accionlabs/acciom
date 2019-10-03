@@ -123,7 +123,6 @@ class RoleAPI(Resource):
             #  permissions
             check_valid_id_passed_by_user(org_id=get_role_data['org_id'])
 
-            # TODO: Enable check_permission
             check_permission(user_object=session.user,
                              list_of_permissions=ROLE_API_GET,
                              org_id=get_role_data["org_id"])
@@ -132,10 +131,13 @@ class RoleAPI(Resource):
             check_valid_id_passed_by_user(
                 project_id=get_role_data['project_id'])
 
-            # TODO: Enable check_permission
-            # check_permission(user_object=session.user,
-            #                  list_of_permissions=ROLE_API_GET,
-            #                  project_id=get_role_data["project_id"])
+            project_obj = Project.query.filter(
+                Project.project_id == get_role_data["project_id"],
+                Project.is_deleted == False).first()
+            check_permission(user_object=session.user,
+                             list_of_permissions=ROLE_API_GET,
+                             project_id=get_role_data["project_id"],
+                             org_id=project_obj.org_id)
             get_project = Project.query.filter_by(
                 project_id=get_role_data['project_id'],
                 is_deleted=False).first()
