@@ -235,7 +235,6 @@ class ProjectAPI(Resource):
                 user_obj = User.query.filter_by(user_id=each_user.user_id).first()
                 user_associated.append({"user_id":user_obj.user_id,"email_id":user_obj.email})
             if user_associated == []:
-                print("23777")
                 distinct_user_associated =[]
             else:
                 distinct_user_associated = unique_users(user_associated)
