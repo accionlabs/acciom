@@ -95,6 +95,7 @@ class CustomTable extends React.Component {
             handleClear = {this.handleClear}
             search = {search}
             />
+            
             <div className={classes.tableWrapper}>
               <TableHeader 
                 headers={headers}

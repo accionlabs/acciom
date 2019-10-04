@@ -1,73 +1,140 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import TableToolbar from './TableToolbar';
+import TableHeader from './TableHeader';
+import TableListBody from './TableListBody';
+import TablePagination from '@material-ui/core/TablePagination';
+import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing(3),
-    overflowX: 'auto',
-  },
-  table: {
-    minWidth: 650,
-  },
-}));
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    // createData('Eclair', 262, 16.0, 24, 6.0),
-    // createData('Cupcake', 305, 3.7, 67, 4.3),
-    // createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-export default function SimpleTable(props) {
-  const classes = useStyles();
+const desc = (a, b, orderBy) => {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
   
-  return (
-    <Paper className={classes.root}>
-      <Table className={classes.table}>
-          <TableHead>
-            {/* <button className='queryAnalDeleteTableBtn' onClick={(e)=> this.setState({isOpen:true})}>X</button>
-            <button className='queryAnalExportBtn'>Export</button>
-            <button className='queryAnalExportPopUp'>PopUp</button> */}
-          <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.rows.map(row => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Paper>
-    
-  );
+const stableSort = (array, cmp) => {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = cmp(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map(el => el[0]);
+}
+  
+const getSorting = (order, orderBy) => {
+    return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+}
+  
+const searchingFor = (search,headers) => {
+    return function(sortData){
+      return headers.some(data => {
+        return sortData[data.id].toLowerCase().includes(search.toLowerCase());
+      });
+    }
 }
 
-// SimpleTable.propTypes = {
-//     classes: PropTypes.object.isRequired,
-// };
-// export default withStyles(styles)(SimpleTable);
+
+const styles = theme => ({
+    root: {
+      marginTop: theme.spacing.unit * 3,
+    },
+    tableWrapper: {
+      overflowX: 'auto'
+    },
+  
+  });
+
+class QueryAnalyzerTable extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+          order: 'asc',
+          orderBy: '',
+          page: 0,
+          rowsPerPage: 10,
+          search:'',      
+        };
+    }
+
+    handleSort = (property) => {
+      const orderBy = property;
+      let order = 'desc';
+      if (this.state.orderBy === property && this.state.order === 'desc') {
+        order = 'asc';
+      }
+      this.setState({ order, orderBy });
+    };
+
+    handleChangePage = (event, page) => {
+      this.setState({ page });
+    };
+  
+    handleChangeRowsPerPage = event => {
+      this.setState({ rowsPerPage: event.target.value, page:0 });
+    };
+
+    handleClear=()=>{
+      this.setState({search:''});
+    }
+    handleSearch=(event)=>{
+      this.setState({search:event.target.value})
+    }
+
+    render(){
+      const {classes, headers, bodyData, actionLabel} = this.props;
+      const { order, orderBy, page, rowsPerPage, search } = this.state;
+        return(
+          <Paper className={classes.root}>
+            <TableToolbar
+            handleSearch = {this.handleSearch}
+            handleClear = {this.handleClear}
+            search = {search}
+            />
+            
+            <div className={classes.tableWrapper}>
+              <TableHeader 
+                headers={headers}
+                handleSort={this.handleSort}
+                actionLabel={actionLabel} 
+                order = {order}
+                orderBy = {orderBy}
+              />
+              <TableListBody
+                bodyData = {bodyData} 
+                order = {order}
+                orderBy = {orderBy}
+                page = {page}
+                rowsPerPage = {rowsPerPage}
+                search = {search}
+                stableSort = {stableSort}
+                getSorting = {getSorting}
+                headers = {headers}
+                searchingFor={searchingFor}
+              />
+            </div>
+            <TablePagination
+              rowsPerPageOptions={[10,15,20,25]}
+              component="div"
+              count={bodyData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page',
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page',
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+          </Paper>
+        )
+    }
+}
+
+export default withStyles(styles)(QueryAnalyzerTable);

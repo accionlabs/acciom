@@ -1,11 +1,12 @@
 import { BASE_URL, headers, TIMEOUT } from './appActions';
  import { 
     GET_SELECTED_DATABASE_TYPE_SUCCESS,
-    GET_SELECTED_DATABASE_TYPE_ERROR,
+	GET_SELECTED_DATABASE_TYPE_ERROR,
+	RUN_QUERY_SUCCESS,
+	RUN_QUERY_ERROR
 } from "../constants/ActionTypes";
 
 export const getSelectedDatabaseType = () => {
-    console.log("@@@@@@@@@@@@@")
 	return {
 		types: [
             '',

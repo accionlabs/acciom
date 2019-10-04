@@ -4626,8 +4626,7 @@ html
 }
 .queryAnalyzer{
     width: 600px;
-    left: 50%;
-    margin: auto
+    margin-left: 30px
     
 }
 .runQuery{
@@ -4637,18 +4636,19 @@ html
     margin-bottom: 2px
 }
 .queryAnalDeleteTableBtn{
-    float: left
+    display: inline-block;
+    
 }
 .queryAnalExportBtn{
+    display: inline-block;
     background-color: #BD4951;
     color: white;
-    float: left;
+    /* float: left; */
     margin-left: 450px
 }
 .queryAnalExportPopUp{
-    margin-left: 565px;
-    float: left;
-    margin-top: 2px
+    display: inline-block;
+   
 }
 .queryAnalConnectionDropdown{
     margin-left: 180px
@@ -4676,4 +4676,24 @@ html
     background-color: white;
     opacity: 1;
 
+}
+.query{
+    display: inline-block;
+    font-size: 20px
+}
+.dropdown{
+    display: inline-block;
+    margin-left: 239px;
+}
+.textarea{
+    display: inline-block;
+    margin-top: 10px
+}
+.runQuery{
+    display: inline-block;
+    margin-top: 5px
+}
+.tableHeader{
+    display: inline-block;
+    margin-top: 15px
 }
