@@ -35,10 +35,7 @@ class QueryAnalyzer extends Component {
         console.log(e.target.value)
         this.setState({
             db_connection_id:e.target.value
-        })
-
-
-    }
+        })}
     onRunQueryClick = (e) => {
         console.log('Run Query Clicked !!');
     let querybody = {
@@ -60,8 +57,20 @@ handleDialogBox = (e) => {
     // alert("this.state.query_text");
     // SFCDZX// }
 }
+ createData(name, calories, fat, carbs, protein) {
+    return { name, calories, fat, carbs, protein };
+  }
+  
+  
 
     render() {
+        const rows = [
+            this.createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+            this.createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+              // createData('Eclair', 262, 16.0, 24, 6.0),
+              // createData('Cupcake', 305, 3.7, 67, 4.3),
+              // createData('Gingerbread', 356, 16.0, 49, 3.9),
+          ];
          return (
             <div className='queryAnalyzer'>
                 <h3>Analyse Queries</h3>
@@ -85,65 +94,15 @@ handleDialogBox = (e) => {
                     <button className='queryAnalDeleteTableBtn'>X</button>
                     <button className='queryAnalExportBtn'>Export</button>
                     <button className='queryAnalExportPopUp' onClick={this.handleDialogBox}>PopUp</button>
-                    <Modal
-                        show={this.props.showConnectionsDialog}
-                        size="lg"
-                        aria-labelledby="contained-modal-title-vcenter"
-                        onHide={this.handleDialogBoxClose}
-                        className="ModalMargin"
-                    >
-                        <Modal.Header closeButton className="panelheadborder sub_title">
-                            <Modal.Title id="contained-modal-title-vcenter">
-                                <label className="manageConnectionHeading sub_title">{this.state.query_text}</label>
-                            </Modal.Title>
-                        </Modal.Header>
-                        {/* <Modal.Body className="panelheadborder">
-                            <ManageConnectionInputs selectedConnectionType={this.state.selectedConnectionType}  onChange={this.handleConnectionTypeChange}></ManageConnectionInputs>
-                            <ManageConnectionSelect 
-                                selectedConnection={this.state.selectedConnection} 
-                                selectedCases={this.state.selectedCases}
-                                onConnectionChange={this.handleConnectionChange}
-                                onCaseSelectionChange={this.handleCasesChange}
-                                testCaseSelectAllToggle= {this.handletestCaseSelectAllToggle}
-                                testSuiteId={this.props.testSuiteId}>
-                            </ManageConnectionSelect>
-                        </Modal.Body>
-                        <Modal.Footer className="footertable">
-                        <Button className="backbtnbackgroundcolor manageconnclosebtn" onClick={this.handleDialogBoxClose}>Close</Button>
-                            <Button className="btn btn-primary manageconnectionsavebtn button-colors" onClick={this.handleManageConnectionSave} disabled={isValid}>
-                                Save
-                            </Button>
-                            <Button className="btn btn-primary" onClick={e => this.handleResetConnection(e)}>Reset</Button>
-                        </Modal.Footer> */}
-			        </Modal>
-                    {this.state.isDialogOpen && (
-                        <div>
-                            <Modal
-                                show={this.props.showConnectionsDialog}
-                                size="lg"
-                                aria-labelledby="contained-modal-title-vcenter"
-                                onHide={this.handleDialogBoxClose}
-                                className="ModalMargin"
-                            >
-                                <Modal.Header closeButton className="panelheadborder sub_title">
-                                    <Modal.Title id="contained-modal-title-vcenter">
-                                        <label className="manageConnectionHeading sub_title"></label>
-                                    </Modal.Title>
-                                <Modal.Body>
-                                    {this.state.query_text}
-                                </Modal.Body>
-                                </Modal.Header>
-                                </Modal>
-                        </div>
-                )}
+                   
+                    
                     {/* {this.handleDialogBox} */}
                     {/* <div>{this.state.query_text}</div> */}
                 
                 </div>
                 <div>
                     <tr className='queryAnalTable'>
-                        <QueryAnalyzerTable />
-                        <QueryAnalyzerTable />
+                        <QueryAnalyzerTable rows={rows} />
                     </tr>
                    
                 </div>
@@ -151,6 +110,11 @@ handleDialogBox = (e) => {
                {/* {this.state.isDialogOpen && (
                    <div>{this.state.query_text}</div>
                 )} */}
+                {this.state.isDialogOpen && (
+                        <div style={{position:'absolute', zIndex:'99999', }}>
+                           {this.state.query_text}
+                        </div>
+                )}
             </div>
 
             

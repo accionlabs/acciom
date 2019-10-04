@@ -30,9 +30,9 @@ const rows = [
     // createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-export default function SimpleTable() {
+export default function SimpleTable(props) {
   const classes = useStyles();
-
+  
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -49,7 +49,7 @@ export default function SimpleTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
+          {props.rows.map(row => (
             <TableRow key={row.name}>
               <TableCell component="th" scope="row">
                 {row.name}
