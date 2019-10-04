@@ -164,10 +164,10 @@ class CaseLogDetails extends React.Component {
 								<Table size="sm" className="executionLog executionTableLog">
 									<tr className="executiontablebottomborder tableHeadBackgroundcolor dataValidationBorderPadding">
 										<td className="testCaseLogLabel">
-											<label className="testViewDataLabel">Source Table Execution</label>
+											<label className="testViewDataLabel">Source Table</label>
 										</td>
 										<td className="testCaseLogLabel">
-											<label className="testViewDataLabel">Target Table Execution</label>
+											<label className="testViewDataLabel">Target Table</label>
 										</td>
 									</tr>
 									<tr className="executiontablebottomborder bgColorOddRow countchecklineheight">
