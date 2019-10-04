@@ -12,8 +12,10 @@ from application.common.token import token_required
 from application.common.utils import validate_empty_fields
 from application.helper.permission_check import check_permission
 from application.helper.permission_check import check_valid_id_passed_by_user
+from application.helper.role_operation import retrieve_roles_under_org
 from application.model.models import (Project, Role, Permission,
-                                      RolePermission)
+                                      RolePermission, UserOrgRole)
+from index import db
 
 
 class RoleAPI(Resource):
@@ -117,6 +119,7 @@ class RoleAPI(Resource):
             raise GenericBadRequestException(APIMessages.ORG_PROJECT_REQUIRED)
         if get_role_data['org_id'] and get_role_data['project_id']:
             raise GenericBadRequestException(APIMessages.ONLY_ORG_OR_PROJECT)
+
         if get_role_data['org_id'] and not get_role_data['project_id']:
             # get all roles based on org_id
             # TODO: Returns roles with permission not exceeding the User's
@@ -126,7 +129,17 @@ class RoleAPI(Resource):
             check_permission(user_object=session.user,
                              list_of_permissions=ROLE_API_GET,
                              org_id=get_role_data["org_id"])
-            payload = retrieve_roles_under_org(get_role_data['org_id'])
+            permissions = db.session.query(
+                Permission.permission_id).join(
+                RolePermission,
+                Permission.permission_id == RolePermission.permission_id).join(
+                UserOrgRole,
+                RolePermission.role_id == UserOrgRole.role_id).filter(
+                UserOrgRole.user_id == session.user_id,
+                UserOrgRole.org_id == get_role_data["org_id"]).distinct().all()
+            permission_id_list = [permission for permission, in permissions]
+            payload = retrieve_roles_under_org(get_role_data['org_id'],
+                                               permission_id_list)
         if get_role_data['project_id'] and not get_role_data['org_id']:
             check_valid_id_passed_by_user(
                 project_id=get_role_data['project_id'])
@@ -138,41 +151,21 @@ class RoleAPI(Resource):
                              list_of_permissions=ROLE_API_GET,
                              project_id=get_role_data["project_id"],
                              org_id=project_obj.org_id)
-            get_project = Project.query.filter_by(
-                project_id=get_role_data['project_id'],
-                is_deleted=False).first()
-            payload = retrieve_roles_under_org(get_project.org_id)
+            permissions = db.session.query(
+                Permission.permission_id).join(
+                RolePermission,
+                Permission.permission_id == RolePermission.permission_id).join(
+                UserOrgRole,
+                RolePermission.role_id == UserOrgRole.role_id).filter(
+                UserOrgRole.user_id == session.user_id,
+                UserOrgRole.org_id == project_obj.org_id).distinct().all()
+            permission_id_list = [permission for permission, in permissions]
+            payload = retrieve_roles_under_org(project_obj.org_id,
+                                               permission_id_list)
         if payload:
             return api_response(True, APIMessages.SUCCESS, STATUS_OK,
                                 {'roles': payload})
         raise GenericBadRequestException(APIMessages.NO_ROLES)
-
-
-def retrieve_roles_under_org(org_id):
-    """
-    Retrieve Roles for given org Id.
-
-    Args:
-        org_id (int): Id of the organization
-
-    Returns: list of roles with Id, Name and permission names
-    """
-    roles_to_send = []
-    get_role = Role.query.filter_by(org_id=org_id).all()
-    for each_role in get_role:
-        roles_to_send.append({'role_id': each_role.role_id,
-                              'role_name': each_role.role_name,
-                              'permissions': []})
-    for role in roles_to_send:
-        get_role_permission = RolePermission.query.filter_by(
-            org_id=org_id, role_id=role['role_id']).all()
-        for each_role_permission in get_role_permission:
-            role['permissions'].append(
-                {'permission_id': each_role_permission.permission.
-                    permission_id,
-                 'permission_name':
-                     each_role_permission.permission.permission_name})
-    return roles_to_send
 
 
 def check_permission_exists(permission_id_given_by_user):

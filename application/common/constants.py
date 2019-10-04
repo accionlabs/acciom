@@ -121,6 +121,9 @@ class APIMessages:
     COLUMN = "Column Name"
     IS_NULLABLE = "IS Nullable"
     DATA_TYPE = "Data Type"
+    TEST_CASE_ADDED = "Test Case Added Successfully"
+    PASS_TABLES = "Table names are Compulsory"
+    PASS_TEST_CASE_CLASS = "Please provide Test Class Name"
 
 
 class GenericStrings:
