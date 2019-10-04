@@ -16,6 +16,8 @@ import {
 	NEW, PASS, FAIL, ERROR, INPROGRESS, INPROGRESS_ID, PASS_ID, FAIL_ID, ERROR_ID, NEW_ID
 } from '../constants/common';
 
+import { downloadTestCaseLog } from '../actions/testSuiteListActions';
+
 export const renderStatusLabel = (status) => {
 	let labelColor = '';
 	let  label = '';
@@ -90,13 +92,15 @@ export const renderStatusIcon = (status) => {
 	return <i className={iconClassName} aria-hidden="true"></i>;
 };
 
+
+
 class CaseLogDetails extends React.Component {
 
 	handleMessage = (status, name) => {
 		let message = null;
 		if (status === PASS) {
 			if (name === COUNT_CHECK) {
-				message = 'Source and Target Records Count Matches.';
+				message = 'Source and Target Record Count Matches.';
 			} else if (name === DUPLICATE_CHECK) {
 				message = 'No Duplicate rows found in Target Table.';
 			} else if (name === NULL_CHECK) {
@@ -106,7 +110,7 @@ class CaseLogDetails extends React.Component {
 			}
 		} else {
 			if (name === COUNT_CHECK) {
-				message = 'Source and Target Records Count do not Match';
+				message = 'Source and Target Record Count do not Match';
 			} else if (name === DUPLICATE_CHECK) {
 				message = 'Duplicates Found';
 			} else if (name === NULL_CHECK) {
@@ -117,6 +121,10 @@ class CaseLogDetails extends React.Component {
 		}
 		return message;
 	};
+
+	downloadLog = (logId) => {
+		this.props.downloadTestCaseLog(logId);
+	}
 
 	render() {
 		
@@ -136,7 +144,7 @@ class CaseLogDetails extends React.Component {
 									</label>&nbsp;
 									{ renderStatusIcon(this.props.TestCaseLogDetails.Execution_status) }
 									{ this.props.TestCaseLogDetails.Execution_status === 'fail' &&
-										<IconButton className="downloaddataicon">
+										<IconButton className="downloaddataicon" onClick={() => this.downloadLog(this.props.TestCaseLogDetails.test_case_log_id)}>
 											<GetAppIcon 
 											
 											/>
@@ -156,10 +164,10 @@ class CaseLogDetails extends React.Component {
 								<Table size="sm" className="executionLog executionTableLog">
 									<tr className="executiontablebottomborder tableHeadBackgroundcolor dataValidationBorderPadding">
 										<td className="testCaseLogLabel">
-											<label className="testViewDataLabel">Source Table Execution</label>
+											<label className="testViewDataLabel">Source Table</label>
 										</td>
 										<td className="testCaseLogLabel">
-											<label className="testViewDataLabel">Target Table Execution</label>
+											<label className="testViewDataLabel">Target Table</label>
 										</td>
 									</tr>
 									<tr className="executiontablebottomborder bgColorOddRow countchecklineheight">
@@ -196,7 +204,7 @@ class CaseLogDetails extends React.Component {
 										</label>&nbsp;&nbsp;
 										{ renderStatusIcon(this.props.TestCaseLogDetails.Execution_status) }
 										{ this.props.TestCaseLogDetails.Execution_status === 'fail' &&
-										<IconButton className="duplicateCheckGetIcon">
+										<IconButton className="duplicateCheckGetIcon" onClick={() => this.downloadLog(this.props.TestCaseLogDetails.test_case_log_id)}>
 											<GetAppIcon />
 										</IconButton>
 										}
@@ -206,8 +214,9 @@ class CaseLogDetails extends React.Component {
 									<label className="sub_title testViewDataLabel duplicateCheckStatusLabel">Result: </label>
 										<label className="testViewDataLabel duplicateCheckResultlabel">
 										&nbsp;&nbsp;{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
-										</label>
-									</tr>
+									</label>
+									<label className="duplicateCheckLabel">Top 10 Duplicates Records</label>
+								</tr>
 								{ this.props.TestCaseLogDetails.Execution_status !== 'pass' && this.props.TestCaseLogDetails.Execution_log && this.props.TestCaseLogDetails.Execution_log.hasOwnProperty('dest_execution_log') && this.props.TestCaseLogDetails.Execution_log['dest_execution_log'].length > 0 ?
 								<tr>
 									<Table className="executionTableLog executionLog">
@@ -240,7 +249,7 @@ class CaseLogDetails extends React.Component {
 										</label>&nbsp;&nbsp;
 										{ renderStatusIcon(this.props.TestCaseLogDetails.Execution_status) }&nbsp;&nbsp;
 										{ this.props.TestCaseLogDetails.Execution_status === 'fail' &&
-										<IconButton className="nullCheckGetIcon">
+										<IconButton className="nullCheckGetIcon" onClick={() => this.downloadLog(this.props.TestCaseLogDetails.test_case_log_id)}>
 											<GetAppIcon 
 											
 											/>
@@ -258,7 +267,7 @@ class CaseLogDetails extends React.Component {
 								{this.props.TestCaseLogDetails.Execution_log['dest_log'] && <td className="testCaseLogMessage">
 										<label className="tablenamelabel">Table:&nbsp;</label>
 										<label className="table_namelabel">{this.props.TestCaseLogDetails.Execution_log.table_name}</label>
-										<label className="top10label">Top 10 Null Records </label>
+										<label className="nullCheckRecords">Top 10 Null Records </label>
 									</td>}
 								</tr>
 								{this.props.TestCaseLogDetails.Execution_status !== 'pass' && this.props.TestCaseLogDetails.Execution_log && this.props.TestCaseLogDetails.Execution_log.hasOwnProperty('dest_log') && this.props.TestCaseLogDetails.Execution_log['dest_log'].length > 0 ?
@@ -295,7 +304,7 @@ class CaseLogDetails extends React.Component {
 										</label>&nbsp;&nbsp;
 										{ renderStatusIcon(this.props.TestCaseLogDetails.Execution_status) }
 										{ this.props.TestCaseLogDetails.Execution_status === 'fail' &&
-										<IconButton className="geticonmargins4">
+										<IconButton className="ddlCheckGetIcon" onClick={() => this.downloadLog(this.props.TestCaseLogDetails.test_case_log_id)}>
 											<GetAppIcon 
 											
 											/>
@@ -318,11 +327,13 @@ class CaseLogDetails extends React.Component {
 											this.props.TestCaseLogDetails.Execution_log['source_execution_log'].map((log, index) => (
 											<tr className={index%2 === 0 ? "testCaseLogLabel evenBackgroundColor" : "testCaseLogLabel oddBackgroundColor"}>
 												{
-													log.map((value,index) => (
-														value !== 'Not Available' ?
+													log.map((value,i) => (
+													value === this.props.TestCaseLogDetails.Execution_log['dest_execution_log'][index][i] ?
 													<td style={{border:'1px solid rgb(32, 31, 31,25%)',width:"124px"}} className="ddlSecoundPartpadding">
 														{value}
-													</td>: <td className="ddlCheckSecoundTableMargin" colspan="3">Not Available</td>
+													</td>: (value !== 'Not Available' ? <td style={{border:'1px solid rgb(32, 31, 31,25%)',width:"124px"}} className="ddlSecoundPartpadding ddlCheckMissmatchHighlight">
+														{value}
+													</td> : <td className="ddlCheckSecoundTableMargin" colSpan="3" style={{color:'red'}}>Not Available</td>)
 													))											
 												}
 											</tr>
@@ -336,11 +347,13 @@ class CaseLogDetails extends React.Component {
 											this.props.TestCaseLogDetails.Execution_log['dest_execution_log'].map((log, index) => (
 											<tr className={index%2 === 0 ? "testCaseLogLabel evenBackgroundColor" : "testCaseLogLabel oddBackgroundColor"}>
 											{
-												log.map((value, index) => (
-													value !== 'Not Available' ?
+												log.map((value, i) => (
+												value === this.props.TestCaseLogDetails.Execution_log['source_execution_log'][index][i] ?
 												<td style={{border:'1px solid rgb(32, 31, 31,25%)' ,width:"130px"}} className="ddlSecoundPartpadding">
 													{value}
-												</td>: <td className="ddlCheckSecoundTableMargin" colSpan="3">Not Available</td>
+												</td>: (value !== 'Not Available' ? <td style={{border:'1px solid rgb(32, 31, 31,25%)',width:"124px", backgroundColor:'yellow'}} className="ddlSecoundPartpadding">
+													{value}
+												</td> : <td className="ddlCheckSecoundTableMargin" colSpan="3" style={{color:'red'}}>Not Available</td>)
 												))											
 											}
 											</tr>
@@ -364,7 +377,7 @@ class CaseLogDetails extends React.Component {
 										</label>&nbsp;&nbsp;
 										{ renderStatusIcon(this.props.TestCaseLogDetails.Execution_status) }&nbsp;&nbsp;
 										{ this.props.TestCaseLogDetails.Execution_status === 'fail' &&
-										<IconButton className="dataValidationGetIconMargin">
+										<IconButton className="dataValidationGetIconMargin" onClick={() => this.downloadLog(this.props.TestCaseLogDetails.test_case_log_id)}>
 											<GetAppIcon 
 											
 											/>
@@ -406,7 +419,7 @@ class CaseLogDetails extends React.Component {
 								<tr>
 								{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
 								<label className="testViewDataLabel dataValidationSubLabel">
-												Number of Mismatch Records found in Source&nbsp; :
+												Number of Mismatch Record found in Source&nbsp; :
 												&nbsp;{ this.props.TestCaseLogDetails.Execution_log  !== null?
 												 <span className="red">{this.props.TestCaseLogDetails.Execution_log['src_to_dest_count']}</span> 
 												 :null
@@ -415,7 +428,7 @@ class CaseLogDetails extends React.Component {
 										}
 										{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
 										<label className="testViewDataLabel dataValidationSecoundSubLabel">
-												Number of Mismatch Records found in Target&nbsp;: 
+												Number of Mismatch Record found in Target&nbsp;: 
 												&nbsp;{ this.props.TestCaseLogDetails.Execution_log  !==null?
 												<span className="red">{this.props.TestCaseLogDetails.Execution_log['dest_to_src_count']}</span> 
 												: null
@@ -431,7 +444,7 @@ class CaseLogDetails extends React.Component {
 											this.props.TestCaseLogDetails.Execution_log.source_execution_log.map((log, index) => (
 											<tr className={index === 0 ? "testCaseLogLabel tableHeadBackgroundcolor dataValidationBorderPadding" : (index%2 === 0 ? "testCaseLogLabel bgColorEvenRow" : "testCaseLogLabel bgColorOddRow")} nowrap>
 												{log.map(details => (
-													<td className="datValidationTableFont">{details}</td>
+													<td className={details === null || details.toLowerCase() === 'null' ? "testViewDataLabel bgColorNull" : "testViewDataLabel"} >{details === null ? 'NULL' : details}</td>
 												))}
 											</tr>
 											))											
@@ -446,7 +459,7 @@ class CaseLogDetails extends React.Component {
 											this.props.TestCaseLogDetails.Execution_log.dest_execution_log.map((log, index) => (
 											<tr className={index === 0 ? "testCaseLogLabel tableHeadBackgroundcolor dataValidationBorderPadding" : (index%2 === 0 ? "testCaseLogLabel bgColorEvenRow" : "testCaseLogLabel bgColorOddRow")} nowrap>
 												{log.map(details => (
-													<td className="datValidationTableFont">{details}</td>
+													<td className={details === null || details.toLowerCase() === 'null' ? "testViewDataLabel bgColorNull" : "testViewDataLabel"} >{details === null ? 'NULL' : details}</td>
 												))}
 											</tr>
 											))											
@@ -470,4 +483,11 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps)(CaseLogDetails);
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		downloadTestCaseLog: (logId) => dispatch(downloadTestCaseLog(logId))
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CaseLogDetails);
