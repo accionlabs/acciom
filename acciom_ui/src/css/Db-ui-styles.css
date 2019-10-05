@@ -145,6 +145,8 @@ body,html{
     border: none;
 }
 
+
+
 #dashbcolor{
     color: #fff !important;
     margin-left: 0px;
@@ -535,7 +537,6 @@ body,html{
     width: 121px;
     height: 31px;
 }
-
 .backbutton_colors{
     background-color: #69717D !important;
     color: #fff;
@@ -918,6 +919,9 @@ body,html{
 .viewbackbtn:active{
     color: #fff !important;
 }
+.newSuite{
+    margin-right: 10px;
+}
 
 .tablecontent{
     padding: 15px;
@@ -1134,4 +1138,14 @@ body,html{
 .lname{
     padding: 10px;
     vertical-align: -webkit-baseline-middle;
+}
+.create-suite{
+    font-family: inherit;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height: 31px;
+
 }
