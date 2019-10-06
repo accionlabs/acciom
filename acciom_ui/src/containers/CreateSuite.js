@@ -62,7 +62,8 @@ export class CreateSuite extends Component {
   
 
     componentDidMount(){
-        console.log(this.state.suiteData)
+        // console.log(this.state.suiteData)
+
     }
     renderData = () =>{
         {
@@ -83,34 +84,35 @@ export class CreateSuite extends Component {
             ))
         }
     }
-    addRow = ()=>{
+    addRow (){
         console.log("add row")
-        const suitedata = [...this.state.suiteData];
-        console.log(suitedata)
-        suitedata.push( {'test_case_class':"Countcheck",
-        'test_description':"countcheck",
-        'source_db_connection':null,
-        'target_db_connection':null,
-        'source_details':{
-            "source_db_type":null,
-            "source_db_name":null,
-            "source_db_server":null,
-            "source_db_username":null,
-        },
-        'target_details':{
-            "target_db_type":null,
-            "target_db_name":null,
-            "target_db_server":null,
-            "target_db_username":null,
-        },
-        "source_table":"Customer_Account",
-        "target_table":"Customer_Account",
-        "columns":"null",
-        "source_query":"null",
-        "target_query":"null"
-        })
-        this.setState({suitedata})
-        console.log(suitedata)
+       this.setState({
+          suiteData:[...this.state.suiteData,{'test_case_class':"Nullcheck",
+          'test_description':"nullcheck",
+          'source_db_connection':null,
+          'target_db_connection':null,
+          'source_details':{
+              "source_db_type":null,
+              "source_db_name":null,
+              "source_db_server":null,
+              "source_db_username":null,
+          },
+          'target_details':{
+              "target_db_type":null,
+              "target_db_name":null,
+              "target_db_server":null,
+              "target_db_username":null,
+          },
+          "source_table":"Customer_Account",
+          "target_table":"Customer_Account",
+          "columns":"null",
+          "source_query":"null",
+          "target_query":"null"
+          }] 
+       },()=>{
+           console.log(this.state.suiteData)
+       })
+        console.log(this.state.suiteData)
     }
 
     render(){
