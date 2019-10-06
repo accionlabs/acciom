@@ -537,6 +537,18 @@ body,html{
     width: 121px;
     height: 31px;
 }
+.button-create{
+    background-color: #BD4951 !important;
+    border-color: #BD4951 !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height:31px;
+    margin-left: 5px;
+}
+
 .backbutton_colors{
     background-color: #69717D !important;
     color: #fff;
@@ -969,6 +981,15 @@ body,html{
     border-radius: 4px;
     border: 1px solid #ccc;
 }
+.suite-text{
+    height: 29px;
+    width: 301px;
+    margin-right: 10px;
+    margin-top: 2px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ccc; 
+}
 
 .brows-btn{
     margin-top: -3px;
@@ -1148,4 +1169,14 @@ body,html{
     width: 121px;
     height: 31px;
 
+}
+.minus-btn{
+    float:right;
+}
+
+
+.table_head_create_suite{
+    vertical-align: middle;
+   
+    color: rgb(32, 31, 31,75%);
 }

@@ -12,10 +12,13 @@ export class ViewSuite extends Component {
 		this.state = {
 			
 		};
-	}
+    }
+    
+
     componentDidMount(){
         console.log("dsdsdsds",this.props.currentProject)
     }
+
     static getDerivedStateFromProps = (nextProps, prevState) => {
 		if (nextProps.refreshTestSuites) {
 			nextProps.getAllTestSuites(nextProps.currentProject.project_id);
@@ -44,7 +47,6 @@ export class ViewSuite extends Component {
         return (
                 <div className="viewDbDetailsForm">
 				<div className='btnContainer'>
-				{/* <i class="fa fa-database" id="db_icon" aria-hidden="true"></i> */}
 				<label className="db_page_title main_titles">Manage Test Suites</label>
 					<div className='project-switch'><Button className="button-colors" bsStyle="primary" onClick={ (e) => this.handleSwitchProject()}>Switch Project</Button> </div>
                     <div className='project-switch'><Button className="button-colors newSuite" type="button" bsStyle="primary" onClick={ (e) => this.handleSwitchProject()}>New Suite</Button> </div>

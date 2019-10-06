@@ -11,7 +11,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { 
-	getTestCaseDetailBySuiteId,
+  getTestCaseDetailBySuiteId,
+  getAllConnections
 } from '../actions/testSuiteListActions';
 
 
@@ -37,31 +38,34 @@ export class EditTestCase extends Component {
     componentDidMount () {
 		const suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
         console.log(suite_id)
-        this.props.getTestCaseDetailBySuiteId(suite_id,false)
-        
-	}
-    // renderSuiteList = (suiteData) =>{
-    //     return suiteData.map((item,index)=>{
-    //     return (
-    //         <tr key={index}>
-    //             <td>{item.test_case_id}</td>
-    //             <td>{item.test_class_name}</td>
-    //             <td>{item.test_class_description}</td>
-    //             <td>{item.test_class_description}</td>
-    //             <td>
-    //             <Link to={`/edit_test_case/${item.test_suite_id}`}><EditIcon fontSize="small"  style={{color:"#696969"}} /></Link>
-    //             <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} />
-    //             </td>
-    //         </tr>	
-    //     );
-    //     })
-    // };
+        this.props.getTestCaseDetailBySuiteId(suite_id,false)     
+  }
+  
+      showdata = (SuiteData) =>{
+      const	suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
+      console.log(SuiteData[suite_id])
+      if (!SuiteData[suite_id]) return null;
+      return SuiteData[suite_id].map(item =>(
+        <TableRow  className="table_body"> 
+        <TableCell>{item.case_id}</TableCell>
+        <TableCell>{item.test_class_name}</TableCell>
+        <TableCell>{item.class_name}</TableCell>
+        <TableCell>{item.class_name}</TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+            </TableRow>
+      ))
+     
 
+
+  };
     render() {
         return (
+          
             <div>
                 <h2 className="main_titles">EditTestCase :  </h2>
-                {/* <Button className="button-colors" bsStyle="primary"><div className="create-suite"> Clone</div></Button> */}
                <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Create Suite</div></Button>
                <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Save</div></Button>
                <Paper >
@@ -80,26 +84,9 @@ export class EditTestCase extends Component {
             <TableCell align="right">Target Query</TableCell>
           </TableRow>
         </TableHead>
-
-        {/* <TableBody>
-                {
-                suiteData.map((item,index)=>{
-                    <TableRow key={index}>
-                    
-                <TableCell>{item.test_case_id}</TableCell>
-                <TableCell>{item.test_class_name}</TableCell>
-                <TableCell>{item.test_class_description}</TableCell>
-                <TableCell>{item.test_class_description}</TableCell>
-                <TableCell>
-                <Link to={`/edit_test_case/${item.test_suite_id}`}><EditIcon fontSize="small"  style={{color:"#696969"}} /></Link>
-                <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} />
-                </TableCell>
-                    </TableRow>
-
-                })
-                }
-            </TableBody> */}
-       
+        <TableBody>
+            {this.showdata(this.props.suiteData)}
+        </TableBody>
       </Table>
     </Paper>
                 </div>
@@ -107,8 +94,9 @@ export class EditTestCase extends Component {
     }
 }
 const mapStateToProps = (state) => {
-suiteData:state.testSuites.testSuiteList.test_case_list?state.testSuites.testSuiteList.test_case_list:[]
-	
+        return {
+              suiteData: state.testSuites.connectionsList? state.testSuites.connectionsList.allCases: {}
+           };
 };
 
 const mapDispatchToProps = dispatch => ({

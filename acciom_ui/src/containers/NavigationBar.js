@@ -165,6 +165,9 @@ const getLoginOptions = (props, classes) => {
 					<MenuItemBS eventKey="6">
 						<span id="logoutLink" className={classes.loginbtn} onClick={(event) => { event.preventDefault(); props.logoutFromPortal() }}>Logout</span>
 					</MenuItemBS>
+					<MenuItemBS eventKey="1" className={classes.width}>
+						<Link to="/create_suite"  className={classes.width}>create suite</Link>
+					</MenuItemBS>
 				</DropdownButton>
 			</div>
 			);

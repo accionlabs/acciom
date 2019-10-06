@@ -18,6 +18,8 @@ import ChangePasswordComponent from './ChangePassword';
 import EditUserRoles from '../containers/EditUserRoles';
 import EditTestCase from '../containers/EditTestCase';
 import ViewSuite from '../containers/ViewSuite';
+import CreateSuite from '../containers/CreateSuite';
+
 const RootContainer = styled.div`
 	font-size: 0.8rem;	
 `;
@@ -67,6 +69,7 @@ const App = (props) => (
 				<PrivateRoute path="/user_management" authTokenExpired={props.authTokenExpired} component={UserManagement} />
 				<PrivateRoute path="/edit_user_role/:id" authTokenExpired={props.authTokenExpired} component={EditUserRoles} />
 				<PrivateRoute path="/edit_test_case/:suite_id" authTokenExpired={props.authTokenExpired} component={EditTestCase} /> 
+				<PrivateRoute path="/create_suite" authTokenExpired={props.authTokenExpired} component={CreateSuite} /> 
 				{/* for future */}
 				<PrivateRoute path = "/view_suites" authTokenExpired={props.authTokenExpired} component={ViewSuite}/>
 			</Content>
