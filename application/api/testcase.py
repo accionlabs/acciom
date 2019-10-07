@@ -6,12 +6,13 @@ from flask_restful import Resource, reqparse
 
 from application.common.api_permission import TEST_CASE_JOB_POST, \
     EDIT_TEST_CASE_GET, EDIT_TEST_CASE_PUT, EDIT_TEST_CASE_DELETE, \
-    TEST_CASE_JOB_EXTERNAL_POST
+    TEST_CASE_JOB_EXTERNAL_POST, EDIT_TEST_CASE_POST
 from application.common.common_exception import ResourceNotAvailableException, \
     IllegalArgumentException
 from application.common.constants import (APIMessages, ExecutionStatus,
                                           SupportedTestClass, SupportedDBType,
                                           TestClass)
+from application.common.createdbdetail import create_dbconnection
 from application.common.response import (STATUS_CREATED, STATUS_SERVER_ERROR,
                                          STATUS_BAD_REQUEST)
 from application.common.response import api_response
@@ -191,7 +192,164 @@ class TestCaseSparkJob(Resource):
 
 
 class EditTestCase(Resource):
-    """ To handle GET,PUT APIs for getting and updating tese case details """
+    """ To handle POST,GET,PUT,DELETE APIs for adding,getting,updating and deleting
+    tese case details """
+
+    @token_required
+    def post(self, session):
+        """
+        It handles a POST API to add test case details into database.
+
+       Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message saying
+            that test case's added successfully) and http status code.
+        """
+        test_case_parser = reqparse.RequestParser()
+        test_case_parser.add_argument('test_suite_id',
+                                      help=APIMessages.PARSER_MESSAGE,
+                                      required=True, type=int)
+        test_case_parser.add_argument('project_id',
+                                      help=APIMessages.PARSER_MESSAGE,
+                                      required=True, type=int)
+        test_case_parser.add_argument('test_case_detail',
+                                      help=APIMessages.PARSER_MESSAGE,
+                                      required=True, type=list,
+                                      location='json')
+        test_case_data = test_case_parser.parse_args()
+        project_obj = Project.query.filter(
+            Project.project_id == test_case_data["project_id"],
+            Project.is_deleted == False).first()
+        if not project_obj:
+            return api_response(False, APIMessages.PROJECT_NOT_EXIST,
+                                STATUS_BAD_REQUEST)
+        check_permission(session.user, EDIT_TEST_CASE_POST,
+                         project_obj.org_id, test_case_data["project_id"])
+        for each_test_case in test_case_data['test_case_detail']:
+            keys = []
+            for key in each_test_case:
+                keys.append(key)
+            if "test_case_class" not in keys:
+                return api_response(False, APIMessages.PASS_TEST_CASE_CLASS,
+                                    STATUS_BAD_REQUEST)
+            if "test_description" not in keys:
+                each_test_case["test_description"] = APIMessages.NO_NAME_DEFINE
+            if "source_table " and "target_table" not in keys:
+                return api_response(False, APIMessages.PASS_TABLES,
+                                    STATUS_BAD_REQUEST)
+
+            if "source_db_existing_connection" in keys:
+                source_db_existing_connection = each_test_case[
+                    "source_db_existing_connection"]
+                del each_test_case[
+                    "source_db_existing_connection"]
+            if "target_db_existing_connection" in keys:
+                target_db_existing_connection = each_test_case[
+                    "target_db_existing_connection"]
+                del each_test_case[
+                    "target_db_existing_connection"]
+            for key, value in dict(each_test_case).items():
+                each_test_case[key] = value.strip()
+            if "source_db_existing_connection" not in keys:
+                src_db_id = create_dbconnection(session.user_id,
+                                                each_test_case[
+                                                    'source_db_type'].lower(),
+                                                each_test_case[
+                                                    'source_db_name'],
+                                                each_test_case[
+                                                    'source_db_server'].lower(),
+                                                each_test_case[
+                                                    'source_db_username'],
+                                                test_case_data[
+                                                    "project_id"])
+            else:
+                db_obj = DbConnection.query.filter(
+                    DbConnection.db_connection_id == source_db_existing_connection,
+                    DbConnection.is_deleted == False).first()
+                if not db_obj:
+                    return api_response(False, APIMessages.DB_NOT_EXIST,
+                                        STATUS_BAD_REQUEST)
+                src_db_id = source_db_existing_connection
+            if "target_db_existing_connection" not in keys:
+                target_db_id = create_dbconnection(session.user_id,
+                                                   each_test_case[
+                                                       'target_db_type'].lower(),
+                                                   each_test_case[
+                                                       'target_db_name'],
+                                                   each_test_case[
+                                                       'target_db_server'].lower(),
+                                                   each_test_case[
+                                                       'target_db_username'],
+                                                   test_case_data[
+                                                       "project_id"])
+            else:
+                db_obj = DbConnection.query.filter(
+                    DbConnection.db_connection_id == target_db_existing_connection,
+                    DbConnection.is_deleted == False).first()
+                if not db_obj:
+                    return api_response(False, APIMessages.DB_NOT_EXIST,
+                                        STATUS_BAD_REQUEST)
+                target_db_id = target_db_existing_connection
+
+            table = {}
+            table[each_test_case["source_table"]] = each_test_case[
+                "target_table"]
+            if "column" not in keys:
+                column = {}
+            else:
+                each_test_case["column"] = each_test_case[
+                    "column"].replace(
+                    " ",
+                    "")
+                if each_test_case["column"] == "":
+                    column = {}
+                elif ";" and ":" in each_test_case["column"]:
+                    column = {}
+                    user_columns = each_test_case["column"].split(
+                        ";")
+                    for columnpair in user_columns:
+                        if ":" in columnpair:
+                            singlecolumn = columnpair.split(
+                                ":")
+                            column[singlecolumn[0]] = \
+                                singlecolumn[1]
+                        else:
+                            column[columnpair] = columnpair
+                elif ";" in each_test_case["column"]:
+                    column = {}
+                    columns = each_test_case["column"].split(";")
+                    for singlecolumn in columns:
+                        column[singlecolumn] = singlecolumn
+                else:
+                    column = {}
+                    column[each_test_case["column"]] = \
+                        each_test_case["column"]
+            query = {}
+            if "source_query" not in keys and "target_query" not in keys:
+                query["sourceqry"] = ""
+                query["targetqry"] = ""
+            elif "source_query" not in keys:
+                query["sourceqry"] = ""
+                query["targetqry"] = each_test_case["target_query"]
+            else:
+                query["sourceqry"] = each_test_case["source_query"]
+                query["targetqry"] = each_test_case["target_query"]
+            jsondict = {"column": column, "table": table, "query": query,
+                        "src_db_id": src_db_id,
+                        "target_db_id": target_db_id,
+                        "test_desc": each_test_case["test_description"]}
+            test_case = TestCase(test_suite_id=test_case_data["test_suite_id"],
+                                 owner_id=session.user_id,
+                                 test_case_class=SupportedTestClass().
+                                 get_test_class_id_by_name(
+                                     each_test_case["test_case_class"]),
+                                 test_case_detail=jsondict)
+
+            test_case.save_to_db()
+        return api_response(True, APIMessages.TEST_CASE_ADDED,
+                            STATUS_CREATED)
 
     @token_required
     def get(self, session):

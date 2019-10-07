@@ -153,8 +153,8 @@ class AddDbDetails extends Component {
 								<Link to={'/view_db_details'} className="backbtn">
 									<Button className="backbtnbackgroundcolor">Back</Button>
 								</Link>
-								<Button className="button-colors testconnbtn" type="button" onClick={(e) => {this.checkConnection()}} disabled={inValid} >Test Connection</Button>
-								<Button className="button-colors submitbtn" type="submit" disabled={inValid} >Submit</Button>
+								<Button className="button-colors testConnectionButton" type="button" onClick={(e) => {this.checkConnection()}} disabled={inValid} >Test Connection</Button>
+								<Button className="button-colors submitButton" type="submit" disabled={inValid} >Submit</Button>
 							</FormGroup>
 						</Form>
 					</Panel.Body>
