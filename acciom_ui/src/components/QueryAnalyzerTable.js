@@ -1,7 +1,7 @@
 import React from 'react';
-import TableToolbar from './TableToolbar';
-import TableHeader from './TableHeader';
-import TableListBody from './TableListBody';
+import TableToolbar from './Table/TableToolbar';
+import TableHeader from './Table/TableHeader';
+import TableListBody from './Table/TableListBody';
 import TablePagination from '@material-ui/core/TablePagination';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';

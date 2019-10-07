@@ -16,7 +16,7 @@ import ForgotPassword from './ForgotPassword';
 import AuthToken from './AuthToken';
 import ChangePasswordComponent from './ChangePassword';
 import EditUserRoles from '../containers/EditUserRoles';
-// import QueryAnalyzer from '../containers/QueryAnalyzer';
+import QueryAnalyzer from '../containers/QueryAnalyzer';
 
 const RootContainer = styled.div`
 	font-size: 0.8rem;	
@@ -66,7 +66,7 @@ const App = (props) => (
 				<PrivateRoute path="/access_token" authTokenExpired={props.authTokenExpired} component={AuthToken} />
 				<PrivateRoute path="/user_management" authTokenExpired={props.authTokenExpired} component={UserManagement} />
 				<PrivateRoute path="/edit_user_role/:id" authTokenExpired={props.authTokenExpired} component={EditUserRoles} />
-				{/* <PrivateRoute path="/query_analyzer" component={QueryAnalyzer}/> */}
+				<PrivateRoute path="/query_analyzer" component={QueryAnalyzer}/>
 
 			</Content>
 		</Router>

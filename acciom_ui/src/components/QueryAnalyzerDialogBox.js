@@ -8,14 +8,15 @@ let dialogStyles ={
     left: '50%',
     top: '50%',
     transform: 'translate(-50%,-50%)',
-    zIndex= '999',
-    backgroundColor: '#eee',
+    zIndex: '999',
+    backgroundColor: 'darkgrey',
     padding: '10px 20px 40px',
     borderRaadius: '8px',
     dislay: 'flex',
     flexDirection: 'column'
 };
 let dialogCloseButtonStyles={
+    backgroundColor: 'BD4951',
     marginBottom: '15px',
     adding: '3px 8px',
     cursor: 'pointer',
@@ -30,7 +31,7 @@ let dialogCloseButtonStyles={
      render() {
          let dialog = (
             <div style={dialogStyles}>
-                <button style={dialogCloseButtonStyles}>X</button>
+                <button style={dialogCloseButtonStyles} onClick={this.props.onDialogBoxClose}>X</button>
                 <div>{this.props.children}</div>
             </div>
          );

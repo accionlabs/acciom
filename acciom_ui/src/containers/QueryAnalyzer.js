@@ -15,7 +15,7 @@ import  RoleListItemContainer  from './RoleListItemContainer';
 import CustomPaginationActionsTable from '../components/Tables';
 import GroupIcon from '@material-ui/icons/Group';
 import EditIcon from '@material-ui/icons/Edit';
-// import QueryAnalyzerDialogBox from '../components/QueryAnalyzerDialogBox'
+import QueryAnalyzerDialogBox from '../components/QueryAnalyzerDialogBox'
 
 
 class QueryAnalyzer extends Component {
@@ -62,8 +62,6 @@ handleQueryTextChange = (e) =>{
 }
 handleDialogBox = (e) => {
     this.setState({isDialogOpen: true});
-    // alert("this.state.query_text");
-    // SFCDZX// }
 }
  createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
@@ -101,9 +99,9 @@ handleDialogBox = (e) => {
           }
          return (
             <div className='queryAnalyzer'>
-                <h3>Analyse Queries</h3>
-               <div className='queryAnalElemment'>
-                <div className='query'>Query</div>
+                <div style={{fontSize:'17px'}}>Analyse Queries</div>
+                <div className='queryAnalElemment'>
+                <div className='query' style={{fontSize:'17px'}}>Query</div>
                 <div className='dropdown'>
                     <select onChange={this.handleConnectionChange}>
                         <option value="" disabled></option>
@@ -124,30 +122,17 @@ handleDialogBox = (e) => {
                     <button className='queryAnalDeleteTableBtn'>X</button>
                     <button className='queryAnalExportBtn'>Export</button>
                     <button className='queryAnalExportPopUp' onClick={this.handleDialogBox}>Query</button>
-                    <CustomTable 
+                    <QueryAnalyzerTable 
                         headers={headers}
                         bodyData={userList}
                     />
                 </div>
-                {/* <CustomTable /> */}
-                {/* {this.handleDialogBox} */}
-                    {/* <div>{this.state.query_text}</div> */}
-                {/* <div>
-                    <tr className='queryAnalTable'>
-                        <QueryAnalyzerTable />
-                    </tr>
-                   
-                </div> */}
-               {/* </div> */}
-               {/* {this.state.isDialogOpen && (
-                   <div>{this.state.query_text}</div>
-                )} */}
                 {this.state.isDialogOpen && (
-                        <div style={{position:'absolute', zIndex:'99999', }}>
+                        <QueryAnalyzerDialogBox style={{position:'absolute', zIndex:'99999'}} onDialogBoxClose={(e) => this.setState({isDialogOpen: false})}>
                            {this.state.query_text}
-                        </div>
-                )}
-            </div>
+                        </QueryAnalyzerDialogBox>
+                )} 
+                </div>
             </div>
 
             
