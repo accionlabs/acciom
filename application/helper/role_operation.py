@@ -42,7 +42,7 @@ def retrieve_roles_under_org(org_id, permission_id_list):
                 keys.append(key)
     for key in keys:
         del main_dict[key]
-    data = {}
+    # data = {}
     roles = []
     for key, value in main_dict.items():
         role_dic = {}
@@ -56,5 +56,5 @@ def retrieve_roles_under_org(org_id, permission_id_list):
             permission_list.append(permission_dict)
         role_dic["permissions"] = permission_list
         roles.append((role_dic))
-        data["roles"] = roles
-    return data
+        # data["roles"] = roles
+    return roles
