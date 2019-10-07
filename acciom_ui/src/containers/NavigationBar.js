@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button,  Modal, ButtonGroup, DropdownButton, Item , MenuItem as MenuItemBS  } from 'react-bootstrap';
-
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import CommentSharpIcon from '@material-ui/icons/CommentSharp';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -307,6 +308,16 @@ function NavigationBar(props) {
 							</Link>
 						</ListItemIcon>
 						<Link to={'/user_management'} id="dashbcolor"  className = {classes.startup}>Manage Users</Link>
+						</MenuItem>
+
+						<MenuItem>
+						<ListItemIcon>
+							<Link to={'/view_suites'}>
+						
+							<CommentSharpIcon fontSize="large"/>
+							</Link>
+						</ListItemIcon>
+						<Link to={'/view_suites'} id="dashbcolor"  className = {classes.startup}>Manage Suites</Link>
 						</MenuItem>
 						
 					</MenuList>

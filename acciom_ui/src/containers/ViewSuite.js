@@ -49,7 +49,11 @@ export class ViewSuite extends Component {
 				<div className='btnContainer'>
 				<label className="db_page_title main_titles">Manage Test Suites</label>
 					<div className='project-switch'><Button className="button-colors" bsStyle="primary" onClick={ (e) => this.handleSwitchProject()}>Switch Project</Button> </div>
-                    <div className='project-switch'><Button className="button-colors newSuite" type="button" bsStyle="primary" onClick={ (e) => this.handleSwitchProject()}>New Suite</Button> </div>
+                    <div className='project-switch'>
+                    <Link to={"/create_suite"}>
+                    <Button className="button-colors newSuite" type="button" bsStyle="primary">New Suite</Button>
+                    </Link>
+                     </div>
 
 				</div>
 				<Table responsive className="manage-db-table">

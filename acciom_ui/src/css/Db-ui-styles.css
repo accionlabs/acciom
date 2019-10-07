@@ -188,6 +188,14 @@ body,html{
     line-height: 1px;
     font-size: 10px;
     color: #555555;
+
+}
+.table_body-new-suite{
+    line-height: 2px;
+    font-size: 12px;
+    color: #555555;
+    height: auto;
+
 }
 
 .table_body tr td{
@@ -1179,4 +1187,10 @@ body,html{
     vertical-align: middle;
    
     color: rgb(32, 31, 31,75%);
+}
+.manage-suite-icon{
+    font-size: 50px;
+}
+.savebtn{
+    float: right;
 }

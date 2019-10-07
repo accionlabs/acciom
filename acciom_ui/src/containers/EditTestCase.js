@@ -3,16 +3,13 @@ import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 import '../css/Db-ui-styles.css';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
+import LaunchIcon from '@material-ui/icons/Launch';
 
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import Checkbox from '@material-ui/core/Checkbox';
+
 import { 
-  getTestCaseDetailBySuiteId,
-  getAllConnections
+	getTestCaseDetailBySuiteId,
 } from '../actions/testSuiteListActions';
 
 
@@ -38,70 +35,77 @@ export class EditTestCase extends Component {
     componentDidMount () {
 		const suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
         console.log(suite_id)
-        this.props.getTestCaseDetailBySuiteId(suite_id,false)     
+        this.props.getTestCaseDetailBySuiteId(suite_id,false)
+         
   }
   
-      showdata = (SuiteData) =>{
+  renderData = (SuiteData)=>{
+    {
       const	suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
       console.log(SuiteData[suite_id])
       if (!SuiteData[suite_id]) return null;
-      return SuiteData[suite_id].map(item =>(
-        <TableRow  className="table_body"> 
-        <TableCell>{item.case_id}</TableCell>
-        <TableCell>{item.test_class_name}</TableCell>
-        <TableCell>{item.class_name}</TableCell>
-        <TableCell>{item.class_name}</TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-            </TableRow>
+      return SuiteData[suite_id].map(eachrow =>(
+        <tr className="table-create-suite-row">
+                <td>{eachrow.case_id}  <Checkbox
+        value="checkedC"
+        inputProps={{
+          'aria-label': 'uncontrolled-checkbox',
+        }}
+      /></td>
+                <td>{eachrow.case_name}</td>
+                <td ><LaunchIcon onClick={() => this.EditTestConnection()}/></td>
+                <td  ><LaunchIcon/></td>
+                <td  > {eachrow.source_table}</td>
+                <td  >{eachrow.target_table}</td>
+                <td  >{eachrow.test_description}</td>
+                <td  >{eachrow.source_query}</td> 
+                <td  >{eachrow.target_query}</td>
+              </tr>
       ))
-     
+  }
+  }
+    
 
-
-  };
     render() {
         return (
-          
             <div>
                 <h2 className="main_titles">EditTestCase :  </h2>
+                {/* <Button className="button-colors" bsStyle="primary"><div className="create-suite"> Clone</div></Button> */}
+               <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Clone</div></Button>
                <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Create Suite</div></Button>
-               <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Save</div></Button>
-               <Paper >
-      <Table >
-        <TableHead>
-          <TableRow>
-            <TableCell>Select all</TableCell>
-            <TableCell align="right">Test Class</TableCell>
-            <TableCell align="right">Description</TableCell>
-            <TableCell align="right">Source Connection</TableCell>
-            <TableCell align="right">Target Connection</TableCell>
-            <TableCell align="right">Source Table </TableCell>
-            <TableCell align="right">Target Table </TableCell>
-            <TableCell align="right">Column</TableCell>
-            <TableCell align="right">Source Query</TableCell>
-            <TableCell align="right">Target Query</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-            {this.showdata(this.props.suiteData)}
-        </TableBody>
-      </Table>
-    </Paper>
+
+               <Button className="button-colors savebtn" bsStyle="primary"> <div className="create-suite">Save</div></Button>
+               <Table responsive className="manage-db-table">
+					<thead className="table_head_create_suite">
+						<tr>
+							<th>Test class</th>
+							<th>Description</th>
+							<th>Source Connection</th>
+							<th>Target Connection</th>
+              <th>Source Table</th>
+              <th>Target Table</th>
+              <th>Columns</th>
+              <th>Source query</th>
+              <th>Target query</th>
+						</tr>
+					</thead>
+					<tbody className="table_body">
+                    {this.renderData(this.props.suiteData)}
+					</tbody>
+				</Table>
                 </div>
         )
     }
 }
 const mapStateToProps = (state) => {
-        return {
-              suiteData: state.testSuites.connectionsList? state.testSuites.connectionsList.allCases: {}
-           };
+  return {
+        suiteData: state.testSuites.connectionsList? state.testSuites.connectionsList.allCases: {}
+     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    getTestCaseDetailBySuiteId : (suite_id,bool) => dispatch(getTestCaseDetailBySuiteId(suite_id,bool))
-	
+getTestCaseDetailBySuiteId : (suite_id,bool) => dispatch(getTestCaseDetailBySuiteId(suite_id,bool))
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditTestCase);
