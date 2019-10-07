@@ -20,7 +20,8 @@ export const getSelectedDatabaseType = () => {
 	};
 };
 export const runQuery = (body) => {
-    console.log("@@@@@@@@@@@@@@@@@@@@")
+	console.log("@@@@@@@@@@@@@@@@@@@@")
+	// console.log("body.project_id====>",body.project_id)
     return {
 		types: [
             '',
@@ -31,6 +32,7 @@ export const runQuery = (body) => {
 			method: 'post',
             headers,
             body
+		
 		})
 	};
 };

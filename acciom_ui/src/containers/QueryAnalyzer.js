@@ -43,23 +43,24 @@ class QueryAnalyzer extends Component {
         this.setState({
             db_connection_id:e.target.value
         })}
+
     onRunQueryClick = (e) => {
-        console.log('Run Query Clicked !!');
-        console.log("this.props.runQuery====>",this.props.runQuery);
+        // console.log('Run Query Clicked !!');
+        // console.log("this.props.runQuery====>",this.props.runQuery);
     let querybody = {
         'project_id':this.props.currentProject.project_id,
-        'db_connection_id':this.state.db_connection_id,
+        'connection_id':this.state.db_connection_id,
         'query':this.state.query_text
     }
     this.props.runQuery(JSON.stringify(querybody));
 }
 
-handleQueryTextChange = (e) =>{
-    this.setState({
-        query_text: e.target.value
-      });
-    //   console.log(this.state.query_text)
-}
+    handleQueryTextChange = (e) =>{
+        this.setState({
+            query_text: e.target.value
+        });
+        //   console.log(this.state.query_text)
+    }
 handleDialogBox = (e) => {
     this.setState({isDialogOpen: true});
 }
