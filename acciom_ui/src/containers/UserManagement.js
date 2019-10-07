@@ -9,8 +9,6 @@ import CustomPaginationActionsTable from '../components/Tables';
 import GroupIcon from '@material-ui/icons/Group';
 
 import CustomTable from '../components/Table/CustomTable'
-
-
 import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
 	textField:{
