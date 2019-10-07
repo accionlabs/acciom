@@ -8,7 +8,8 @@ import RoleListItemContainer from '../containers/RoleListItemContainer';
 
 
 class ManageUserRole extends Component{
-    render(){
+
+        render(){
         return(
             <div>
             <div className="main_titles manageUserRoleTitles">Manage User Role</div>
@@ -16,16 +17,16 @@ class ManageUserRole extends Component{
                 <tr>
                     <td className="sub_title userRoleFname">First Name:</td>
                     <td><input className="editRoleFnameLabel" type="text" name="Fname"></input></td>
-                    <td className="sub_title userRoleLname">Last Name: <input className="editRoleLanameLabel" type="text" name="Lname"></input></td>
-                    
-                  
-                    
-                </tr>
-                <tr>
+                    <td className="sub_title userRoleLname">Last Name:</td>
+                    <td><input className="editRoleLanameLabel" type="text" name="Lname"></input></td>
                     <td>
                         <label className="emailRoleLabel sub_title">Email:</label>
                     </td>
                     <td><input className="editRoleLabel" type="text" name="email"></input></td>
+                    
+                </tr>
+                <tr>
+                    
                 </tr>
                 
             </table>

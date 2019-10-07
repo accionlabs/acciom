@@ -7,7 +7,7 @@ import { roleTypes } from '../reducers/userManagementReducer';
 const formatRoleListData = (rolesList) => {
 	let formatedList = [];
 	if (rolesList) {
-		formatedList = rolesList.map((item) => {
+		formatedList = rolesList.roles.map((item) => {
 			return { value: item.role_id, label: item.role_name };
 		});
 	}
