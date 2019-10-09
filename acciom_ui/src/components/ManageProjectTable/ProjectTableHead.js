@@ -8,18 +8,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import { classes } from 'istanbul-lib-coverage';
-const styles = theme => ({
-  table: {
-    // width:'900px!important',
-    
-   
-    // backgroundColor: '#BD4951',
-    color: '#ffffff',     
-  
-   
-   
-  },
-})
+
 class ProjectTableHead extends React.Component {
 
     createSortHandler = property => event => {
@@ -38,7 +27,8 @@ class ProjectTableHead extends React.Component {
         (row) => (
           <TableCell
             key={row.id}
-             className={headerCss}
+         
+            className="commonTableData"
             align={row.label ==='Action'?'right':'left'}
          
         
@@ -51,11 +41,12 @@ class ProjectTableHead extends React.Component {
               enterDelay={300}
             >
               <TableSortLabel
+              className="commonTableHovercolor"
                 direction={order}
                 onClick={this.createSortHandler(row.id)}
                 hideSortIcon={row.label ==='Action'}
-                className={row.label==='Action'?this.props.toolbarCss:this.props.toolbarDefaultCss}
-                // align={row.label ==='Action'?'right':'left'}
+                
+             
               >
          
              {row.label}
@@ -76,18 +67,12 @@ class ProjectTableHead extends React.Component {
 
   
     render() {
-      const {  order, orderBy, rowCount,headers,headerCss,headerHeight } = this.props;
-    
-      const {id,label}=this.props.headers;
- 
-     
-    
-      
+
       return (
        <Fragment>
       
-        <TableHead   >
-          <TableRow >
+        <TableHead  className ="commonTableHead" >
+          <TableRow className ="commonTableLineheight" >
         
          {this.displayTableHead(this.props.headers)}
            
@@ -108,4 +93,4 @@ class ProjectTableHead extends React.Component {
     rowCount: PropTypes.number.isRequired,
   };
 
-  export default withStyles(styles)(ProjectTableHead);
+  export default(ProjectTableHead);

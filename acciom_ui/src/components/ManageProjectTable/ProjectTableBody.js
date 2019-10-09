@@ -46,7 +46,7 @@ function stableSort(array, cmp) {
 }
 
 function getSorting(order, orderBy) {
-  // return;
+ 
   return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
 
@@ -171,7 +171,7 @@ EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
   root: {
-    // width: '100%',
+  
     marginTop: theme.spacing.unit * 3,
   },
   table: {
@@ -184,75 +184,10 @@ const styles = theme => ({
     overflowX: 'auto',
     height:'100%'
   },
-  tableHover:{
-    "&:hover": {
-     
-      color:'#eff4fc!important'
-    }
-
-  },
-  headerStyles:{
-   
-    // paddingLeft:'22px !important',
-    fontFamily: 'Open Sans !important',
-    // paddingRight:'12px !important',
-    fontWeight:'bold',
-    backgroundColor: '#BD4951',
-    color: '#ffffff',
-  
-   
-  
-   
-  },
-
-   
-  toolbarCss:{
-
-    paddingRight:'52px !important',
-   
-    "&:hover": {
-     
-      color:'#ffffff!important'
-    }
-
-  },
-  toolbarDefaultCss:{
-
-    paddingLeft:'8px !important',
-   
-    "&:hover": {
-     
-      color:'#ffffff!important'
-    }
-
-  },
-  headerHeight:{
-    height:'10px!important'
-  },
-  tableRowStyling:{
-    fontFamily: 'Open Sans !important',
-    paddingLeft:'22px !important',
-    fontWeight:400,
-   
-  },
-  cellStyling:{
-    textAlign:'right !important',
-    paddingLeft:'12px!important',
-   
-  },
-  deleteIcon:{
-   marginLeft:'7px', 
-   color:"#696969",
-    padding :'1px',
-
-  }
- 
 
 });
 
-function createData(name, calories, fat) {
-  return { name, calories, fat };
-}
+
 
 class ProjectMangementTableBody extends React.Component {
   state = {
@@ -309,6 +244,8 @@ class ProjectMangementTableBody extends React.Component {
     }
     this.props.deleteProjectDetails(data);
     this.hideConfirmationopup();
+ 
+    // location.reload(true);
 	}
 	onNoBtnClickHandler=()=>{
 		this.hideConfirmationopup();
@@ -335,11 +272,11 @@ class ProjectMangementTableBody extends React.Component {
            role="checkbox"
            tabIndex={-1}
             key={project.project_id}
-            className ={classes.tableHover}
+            className="commonTableCellTextColor"
             >
          
            <TableCell component="th" scope="row"  align="left"
-              className={classes.tableRowStyling}
+               className="commonTableCellBorder"
               style ={{height:'2px'}}
               >
              {project.project_name}
@@ -347,14 +284,15 @@ class ProjectMangementTableBody extends React.Component {
            
            </TableCell>
            <TableCell align="left" component="th" scope="row"  
-           className={classes.tableRowStyling}
+            className="commonTableCellBorder"
            >
            {project.project_description?project.project_description:'Project For Testing'}
          
            </TableCell>
          
           <TableCell 
-          className={classes.cellStyling}
+          
+          className="commonTableCellBorder"
           align="right"
           >
           <Link to={`/edit_user_role/${project.project_id}`}>
@@ -410,12 +348,10 @@ class ProjectMangementTableBody extends React.Component {
               onRequestSort={this.handleRequestSort}
               rowCount={projectList.length}
               headers={headers}
-              headerCss ={classes.headerStyles}
-              toolbarCss ={classes.toolbarCss}
-              toolbarDefaultCss={classes.toolbarDefaultCss}
+           
                />
          
-            <TableBody  className="table_body">
+            <TableBody  className="commonTableBody">
          
        
               {this.displayTableBody(projectList)}

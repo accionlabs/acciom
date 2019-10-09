@@ -20,8 +20,10 @@ const initialState = {
 const projectManagementData = (state = initialState, action) => {
     switch (action.type) {
 		case DELETE_PROJECT_LIST_SUCCESS:
-        case GET_PROJECT_LIST_SUCCESS:
+		console.log('Reducer delete', action.response.data);
 		
+        case GET_PROJECT_LIST_SUCCESS:
+			
                 return {
                     ...state,
                     projectUserList: action.response.data.projects_under_organization.project_details,

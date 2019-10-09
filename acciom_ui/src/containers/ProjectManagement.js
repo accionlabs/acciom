@@ -45,8 +45,8 @@ class ProjectManagement extends Component {
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		if (!prevState.isOrganisationInitialised && 
 			nextProps.isOrganisationInitialised > 0) {
-		
-	
+		     
+	      
 			nextProps.getProjectList(nextProps.currentOrg.org_id);
 		}
 		return ({
@@ -91,7 +91,7 @@ class ProjectManagement extends Component {
 
 				</div>
 			
-				{/* <h1>Project Management Page</h1> */}
+		
 				<ProjectMangementTableBody 
 				projectList ={projectList}
 				  headers={headers}

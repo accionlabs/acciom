@@ -5,63 +5,28 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
-    toolbarCss:{
-        paddingLeft:'2px !important',
-       
-        "&:hover": {
-         
-          color:'#ffffff!important'
-        }
-    
-      },
-      headerStyles:{
-   
-        backgroundColor: '#BD4951',
-        color: '#ffffff',
-        paddingLeft:'22px !important',
-        fontFamily: 'Open Sans !important',
-        paddingRight:'12px !important',
-        fontWeight:'bold',
-        marginLeft:'0px',
-        width:1080
-       
-      
-       
-      },
-      newheaderStyles:{
-   
-        backgroundColor: '#BD4951',
-        color: '#ffffff',
-        // paddingLeft:'22px !important',
-        fontFamily: 'Open Sans !important',
-        // paddingRight:'12px !important',
-        fontWeight:'bold',
-        marginLeft:'0px'
-       
-      
-       
-      },
-})
+
 
 function TableHeader(props) {
     const { headers, orderBy, order, handleSort, actionLabel,classes } = props;
     return(
-        <TableHead >
-            <TableRow >
+        <TableHead className ="commonTableHead" >
+            <TableRow  className ="commonTableLineheight">
                 {headers.map(header => (
                     <TableCell
+                    className="commonTableData"
                         key={header.id}
                         align='left'
                     
                         sortDirection={orderBy === header.id ? order : false}
-                        className={classes.headerStyles}
+                      
                     >
                         <TableSortLabel
+                            className="commonTableHovercolor"
                             direction={order}
                             onClick={() => handleSort(header.id)}
                             align ='left'
-                            className={classes.toolbarCss}
+                        
                         >
                     
                         {header.label}
@@ -69,9 +34,9 @@ function TableHeader(props) {
                     </TableCell>
                 ))}
                     <TableCell 
-                    align ='left'
+                    align ='right'
                    
-                     className={classes.newheaderStyles}
+                     className="commonTableCellWidth"
                  >
                         {actionLabel}
                     </TableCell>
@@ -79,4 +44,4 @@ function TableHeader(props) {
         </TableHead>
     )
 }
-export default withStyles(styles)(TableHeader);
+export default (TableHeader);
