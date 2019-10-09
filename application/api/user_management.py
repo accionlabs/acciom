@@ -11,7 +11,8 @@ from application.common.common_exception import (ResourceNotAvailableException,
 from application.common.constants import APIMessages
 from application.common.constants import GenericStrings
 from application.common.response import (api_response, STATUS_OK,
-                                         STATUS_CREATED, STATUS_BAD_REQUEST)
+                                         STATUS_CREATED, STATUS_BAD_REQUEST,
+                                         STATUS_NOT_FOUND)
 from application.common.token import (token_required)
 from application.common.utils import generate_hash
 from application.helper.permission_check import (check_valid_id_passed_by_user,
@@ -230,6 +231,7 @@ class UserRoleAPI(Resource):
 
         Returns: Standard API Response with HTTP status code
         """
+        # TODO: Need to reduce DB hit
         parser = reqparse.RequestParser()
         parser.add_argument('org_id',
                             help=APIMessages.PARSER_MESSAGE,
@@ -242,6 +244,7 @@ class UserRoleAPI(Resource):
                             required=False, type=str, location='args')
         get_role_api_parser = parser.parse_args()
         result_dict = {}
+
         # Checking if User Id or Email Id is mandatorily passed
         if not get_role_api_parser['user_id'] and \
                 not get_role_api_parser['email_id']:
@@ -249,9 +252,7 @@ class UserRoleAPI(Resource):
                                 STATUS_BAD_REQUEST)
         if get_role_api_parser['user_id'] and get_role_api_parser['email_id']:
             raise GenericBadRequestException(APIMessages.ONLY_USER_OR_EMAIL)
-        # Storing user id if user id is passed
-        user_id = get_role_api_parser['user_id'] \
-            if get_role_api_parser['user_id'] else None
+
         # checking if User Id is valid
         if get_role_api_parser['user_id']:
             check_valid_id_passed_by_user(
@@ -260,6 +261,7 @@ class UserRoleAPI(Resource):
         check_permission(user_object=session.user,
                          list_of_permissions=USER_ROLE_API_GET,
                          org_id=get_role_api_parser["org_id"])
+
         # Get user Id based on email Id passed
         if get_role_api_parser['email_id'] and \
                 not get_role_api_parser['user_id']:
@@ -268,7 +270,8 @@ class UserRoleAPI(Resource):
                 User.email.ilike(get_role_api_parser['email_id']),
                 User.is_deleted == False).first()
             if not user_record:
-                raise ResourceNotAvailableException("User")
+                return api_response(False, APIMessages.NO_RESOURCE.format(
+                    get_role_api_parser['email_id']), STATUS_NOT_FOUND)
             user_id = user_record.user_id
             result_dict['email_id'] = user_record.email
         if get_role_api_parser['org_id'] and user_id:
@@ -310,6 +313,8 @@ class UserRoleAPI(Resource):
                 result_dict['first_name'] = user_detail.first_name
                 result_dict['last_name'] = user_detail.last_name
             result_dict['org_id'] = get_role_api_parser['org_id']
+            result_dict['user_id'] = get_role_api_parser['user_id']
+
             return api_response(True, APIMessages.SUCCESS, STATUS_OK,
                                 result_dict)
 
