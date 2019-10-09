@@ -312,8 +312,8 @@ class UserRoleAPI(Resource):
                 result_dict['email_id'] = user_detail.email
                 result_dict['first_name'] = user_detail.first_name
                 result_dict['last_name'] = user_detail.last_name
+                result_dict['user_id'] = user_detail.user_id
             result_dict['org_id'] = get_role_api_parser['org_id']
-            result_dict['user_id'] = user_detail.user_id
 
             return api_response(True, APIMessages.SUCCESS, STATUS_OK,
                                 result_dict)
