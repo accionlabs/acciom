@@ -245,7 +245,7 @@ class ProjectMangementTableBody extends React.Component {
     this.props.deleteProjectDetails(data);
     this.hideConfirmationopup();
  
-    // location.reload(true);
+    location.reload(true);
 	}
 	onNoBtnClickHandler=()=>{
 		this.hideConfirmationopup();
