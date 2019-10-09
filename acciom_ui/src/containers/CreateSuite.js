@@ -119,6 +119,7 @@ export class CreateSuite extends Component {
             console.log("")
 
         }
+        console.log(e.target.value,index)
 
     }
 
