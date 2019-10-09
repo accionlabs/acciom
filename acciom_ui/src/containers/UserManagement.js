@@ -22,7 +22,9 @@ const styles = theme => ({
 	},
 	IconClass:{
 		marginBottom:'-5px',
-		marginLeft:'3px'
+		marginLeft:'3px',
+		color:'#69717D',
+		fontSize:'20px'
 	}
 });
 
@@ -77,7 +79,7 @@ class UserManagement extends Component {
 		return (
 			<div id="userManagement">
 				<div>
-					<GroupIcon className={classes.IconClass}/>
+					<GroupIcon className="manageUsersIcon" />
 					&nbsp; &nbsp;
 					<label className="main_titles" > Manage Users</label>
 					<Link to="/ManageUserRole"><Button className="backbutton_colors addUserButton">Add User</Button></Link>				

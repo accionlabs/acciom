@@ -8,16 +8,18 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 function TableHeader(props) {
     const { headers, orderBy, order, handleSort, actionLabel } = props;
     return(
-        <TableHead >
-            <TableRow >
+        <TableHead className="commonTableHead">
+            <TableRow className="commonTableLineheight">
                 {headers.map(header => (
                     <TableCell
+                        className="commonTableData"
                         key={header.id}
                         align='left'
                     
                         sortDirection={orderBy === header.id ? order : false}
                     >
                         <TableSortLabel
+                            className="commonTableHovercolor"
                             direction={order}
                             onClick={() => handleSort(header.id)}
                             align ='left'
@@ -27,7 +29,7 @@ function TableHeader(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
-                    <TableCell align='right'>
+                    <TableCell align='right' className="commonTableCellWidth">
                         {actionLabel}
                     </TableCell>
             </TableRow>
