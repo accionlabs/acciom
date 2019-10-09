@@ -9,8 +9,6 @@ import  RoleListItemContainer  from './RoleListItemContainer';
 import GroupIcon from '@material-ui/icons/Group';
 
 import CustomTable from '../components/Table/CustomTable'
-
-
 import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
 	textField:{
@@ -81,7 +79,8 @@ class UserManagement extends Component {
 				<div>
 					<GroupIcon className={classes.IconClass}/>
 					&nbsp; &nbsp;
-					<label className="main_titles" > Manage Users</label>				
+					<label className="main_titles" > Manage Users</label>
+					<Link to="/ManageUserRole"><Button className="backbutton_colors addUserButton">Add User</Button></Link>				
 				</div>				
 				<CustomTable 
 					headers={headers}
@@ -104,6 +103,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => ({
 	getOrganizationUsersList: (data) => dispatch(getOrganizationUsersList(data)),
+
+
+
+	// addOrganizationUsersList:(data) =>dispatch(addOrganizationUsersList(data))
 
 });
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserManagement));

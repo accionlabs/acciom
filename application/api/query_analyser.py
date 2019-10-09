@@ -36,11 +36,11 @@ class QueryAnalyser(Resource):
 
             user_id = session.user_id
             query_parser = reqparse.RequestParser()
-            query_parser.add_argument('project_id', type=int, required=True,
+            query_parser.add_argument('project_id', type=int, required=True, location='json',
                                 help=APIMessages.PARSER_MESSAGE,)
-            query_parser.add_argument('connection_id', type=int, required=True,
+            query_parser.add_argument('connection_id', type=int, required=True, location='json',
                                 help=APIMessages.PARSER_MESSAGE,)
-            query_parser.add_argument('query', type=str, required=True,
+            query_parser.add_argument('query', type=str, required=True, location='json',
                                 help=APIMessages.PARSER_MESSAGE,)
             query_data = query_parser.parse_args()
             project_obj = Project.query.filter_by(
