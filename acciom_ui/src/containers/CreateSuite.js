@@ -14,7 +14,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Icon } from '@material-ui/core';
 import LaunchIcon from '@material-ui/icons/Launch';
 import { __esModule } from 'react-redux/lib/utils/reactBatchedUpdates';
-
+import Dialog from '../components/Dialog';
  const useStyles = theme => ({
     root: {
       width: '100%',
@@ -30,8 +30,10 @@ import { __esModule } from 'react-redux/lib/utils/reactBatchedUpdates';
 export class CreateSuite extends Component {
     constructor(props) {
         super(props);
-        
+        //   const [open, setOpen] = React.useState(false);
+
 		this.state = {
+            isOpen:false,
             show_input:'a,b',
             suiteName:'',
             suiteData : [
@@ -64,7 +66,6 @@ export class CreateSuite extends Component {
   
 
     componentDidMount(){
-        // console.log(this.state.suiteData)
 
     }
     switchstate =(index,v_index)=>{
@@ -122,6 +123,8 @@ export class CreateSuite extends Component {
         console.log(e.target.value,index)
 
     }
+    
+   
 
 
     renderData = () =>{
@@ -132,7 +135,7 @@ export class CreateSuite extends Component {
                 <td><input type="text" value={eachrow.test_case_class} onChange={()=> this.handleChange(event,index,1) }/></td>}
                 {this.splitAndMatch(index,2)?<td  onClick= {() =>this.switchstate(index,2)}>{eachrow.test_description}</td>:
                 <td><textarea value={eachrow.test_description}  onChange={()=> this.handleChange(event,index,2) }/></td>}              
-                <td onClick= {() =>this.switchstate(index,3)}><LaunchIcon/></td>
+                <td  onClick={(e) => this.setState({ isOpen: true })}><LaunchIcon/></td>
                 <td onClick= {() =>this.switchstate(index,4)}><LaunchIcon/></td>
                 {this.splitAndMatch(index,5)?<td  onClick= {() =>this.switchstate(index,5)}>{eachrow.source_table}</td>:
                 <td><input value={eachrow.source_table}  onChange={()=> this.handleChange(event,index,5)} /></td>}   
@@ -210,7 +213,10 @@ export class CreateSuite extends Component {
 					</tbody>
 				</Table>
                 <div><i className='fas fa-plus-circle plusCircle minuscirclecolor' onClick={() => this.addRow()}></i>
-            </div>   
+            </div>  
+
+            <Dialog isOpen={this.state.isOpen} onClose={(e) => this.setState({ isOpen: false })}>
+        </Dialog>
 
             </div>
         )}}
