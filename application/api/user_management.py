@@ -11,8 +11,7 @@ from application.common.common_exception import (ResourceNotAvailableException,
 from application.common.constants import APIMessages
 from application.common.constants import GenericStrings
 from application.common.response import (api_response, STATUS_OK,
-                                         STATUS_CREATED, STATUS_BAD_REQUEST,
-                                         STATUS_NOT_FOUND)
+                                         STATUS_CREATED, STATUS_BAD_REQUEST)
 from application.common.token import (token_required)
 from application.common.utils import generate_hash
 from application.helper.permission_check import (check_valid_id_passed_by_user,
@@ -273,7 +272,7 @@ class UserRoleAPI(Resource):
                 User.is_deleted == False).first()
             if not valid_user:
                 return api_response(False, APIMessages.NO_ROLES,
-                                    STATUS_NOT_FOUND)
+                                    STATUS_OK)
 
         if get_role_api_parser['org_id'] and valid_user.user_id:
             # Get Project Role list
@@ -307,7 +306,7 @@ class UserRoleAPI(Resource):
             if not (result_dict['org_allowed_role_list'] or result_dict[
                 'project_role_list']):
                 return api_response(False, APIMessages.NO_ROLES,
-                                    STATUS_NOT_FOUND)
+                                    STATUS_OK)
 
             result_dict['user_id'] = valid_user.user_id
             result_dict['email_id'] = valid_user.email
