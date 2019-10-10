@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { Table } from '@material-ui/core';
 
+
 const desc = (a, b, orderBy) => {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -97,6 +98,7 @@ class CustomTable extends React.Component {
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
           <Paper className={classes.root}>
+            <Table size='medium'>
             <TableToolbar
             handleSearch = {this.handleSearch}
             handleClear = {this.handleClear}
@@ -140,6 +142,7 @@ class CustomTable extends React.Component {
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
+          </Table>
           </Paper>
         )
     }

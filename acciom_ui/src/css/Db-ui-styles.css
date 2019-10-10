@@ -464,6 +464,14 @@ body,html{
     width: 60%;
 }
 
+.manageUsersIcon{
+    margin-bottom: -5px;
+    margin-left: -3px;
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 3px;
+}
+
 .hovercolor tr:hover {
     background-color: #eff4fc;
     cursor: default; 
@@ -1193,6 +1201,10 @@ body,html{
     border: 0px !important;
 }
 
+.verifyButtons:disabled{
+    background-color: rgb(250, 189, 189) !important;
+}
+
 .userRoleFname{
     float: left;
     margin-left: 8px;
@@ -1233,6 +1245,8 @@ body,html{
     font-weight: 300;
     font-size: 13px;
 }
+
+/* common table css  */
 
 
 .commonTableHead{
@@ -1276,6 +1290,8 @@ body,html{
     font-size: 13px !important;
     font-family:  Open sans !important;
     padding: 1px 50px 3px 11px !important;
+
+    /* line-height: 10px !important; */
 }
 
 .commonTableHovercolor{
@@ -1294,8 +1310,21 @@ body,html{
     padding: 3px 6px 6px 10px !important;
     font-family: Open sans !important;
     font-weight: 300 !important;
+
     line-height: 20px !important;
 }
 .commonTableCellBorder{
     border-bottom: none !important;
+
+    line-height: 0px !important;
+    font-size: 13px !important;
+}
+
+.commonTableCellBorder{
+    border-bottom: none !important;
+}
+
+.commonTableLineheight{
+    
+
 }

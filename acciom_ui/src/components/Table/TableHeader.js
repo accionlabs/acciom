@@ -10,11 +10,13 @@ import { withStyles } from '@material-ui/core/styles';
 function TableHeader(props) {
     const { headers, orderBy, order, handleSort, actionLabel,classes } = props;
     return(
-        <TableHead className ="commonTableHead" >
-            <TableRow  className ="commonTableLineheight">
+
+        <TableHead className="commonTableHead">
+            <TableRow className="commonTableLineheight">
                 {headers.map(header => (
                     <TableCell
-                    className="commonTableData"
+                        className="commonTableData"
+
                         key={header.id}
                         align='left'
                     
@@ -33,11 +35,15 @@ function TableHeader(props) {
                         </TableSortLabel>
                     </TableCell>
                 ))}
+
                     <TableCell 
                     align ='right'
                    
                      className="commonTableCellWidth"
                  >
+
+                    
+
                         {actionLabel}
                     </TableCell>
             </TableRow>
