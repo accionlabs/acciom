@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 function TableListBody(props) {
     const {page, rowsPerPage, orderBy, order, search, bodyData, headers, stableSort, getSorting, searchingFor,classes } = props;
+
     return(
 
         <TableBody className="commonTableBody">

@@ -33,9 +33,12 @@ const getSorting = (order, orderBy) => {
 }
   
 const searchingFor = (search,headers) => {
+
     return function(sortData){
+   
       return headers.some(data => {
-        return sortData[data.id].toLowerCase().includes(search.toLowerCase());
+      
+        return sortData[data.id] !== null && sortData[data.id].toLowerCase().includes(search.toLowerCase());
       });
     }
 }
@@ -49,7 +52,7 @@ const styles = theme => ({
       overflowX: 'auto'
     },
     table: {
-      minWidth: 1080,
+      minWidth: 900,
     
      
      
