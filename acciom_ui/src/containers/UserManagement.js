@@ -67,7 +67,7 @@ class UserManagement extends Component {
 						email: user.email,
 						action: (
 							<Link to={`/edit_user_role/${user.user_id}`}>
-								<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
+								<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'35px'}} />
 							</Link>	
 						)
 					})

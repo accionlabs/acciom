@@ -1269,6 +1269,7 @@ body,html{
     color: #fff !important;
     font-weight: bold !important;
     font-size: 13px !important;
+    padding-right: 8px !important
 }
 
 .commonTableData{

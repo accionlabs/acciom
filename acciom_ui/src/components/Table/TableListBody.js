@@ -22,8 +22,7 @@ function TableListBody(props) {
                     { headers.map(header => (
                         <TableCell key={`${header.id}-${index}`}
                        className="commonTableCellTextColor" >
-                           
-                            {item[header.id]?item[header.id]:'Project For Testing'}
+                            {item[header.id]}
                         </TableCell>
                     ))}
                     <TableCell align="right"

@@ -36,10 +36,8 @@ const searchingFor = (search,headers) => {
     return function(sortData){
    
       return headers.some(data => {
-        if(sortData[data.id] ==null){
-          sortData[data.id]='Project for testing';
-        }
-        return sortData[data.id].toLowerCase().includes(search.toLowerCase());
+      
+        return sortData[data.id] !== null && sortData[data.id].toLowerCase().includes(search.toLowerCase());
       });
     }
 }

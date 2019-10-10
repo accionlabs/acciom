@@ -114,12 +114,12 @@ class ProjectManagement extends Component {
 					action: (
 						<Fragment>
 								{/* <Link to={`/edit_user_role/${project.project_id}`}> */}
-							<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
+							<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'8px'}} />
 						{/* </Link>	 */}
 						      <DeleteIcon 
 							  className="cursorhover" 
 							  fontSize="small" 
-							  style={{color:"#696969",marginRight:'15px'}} 
+							  style={{color:"#696969",marginRight:'8px'}} 
 							  onClick ={(e) =>{this.deleteItemHandler(project.project_id)}}
 							   />
 
