@@ -2,73 +2,120 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ListGroup, Button, Col } from 'react-bootstrap';
-import { getOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
-import  RoleListItemContainer  from './RoleListItemContainer';
 
-class ProjectManagement extends Component {
+import {getProjectList} from '../actions/projectManagementActions';
+import  RoleListItemContainer  from './RoleListItemContainer';
+import ProjectMangementTableBody from '../components/ManageProjectTable/ProjectTableBody';
+import GroupIcon from '@material-ui/icons/Group';
+import { withStyles } from '@material-ui/core/styles';
+
+
+const styles = theme => ({
+	textField:{
+		float:'right',
+		
+	},
+	label:{
 	
+		top:0,
+		left:0
+	},
+	IconClass:{
+		marginBottom:'-5px',
+		marginLeft:'3px'
+	}
+});
+class ProjectManagement extends Component {
+
+	componentDidMount(){
+    
+		let location=window.location.href
+		if(location.includes('projects')){
+		  this.setState({location:'projects'});
+		}
+		  else if(location.includes('organization')){
+			this.setState({location:'organization'});
+  
+		  }
+		
+	   
+		
+	  }
+
+	static getDerivedStateFromProps = (nextProps, prevState) => {
+		if (!prevState.isOrganisationInitialised && 
+			nextProps.isOrganisationInitialised > 0) {
+		     
+	      
+			nextProps.getProjectList(nextProps.currentOrg.org_id);
+		}
+		return ({
+		
+			isOrganisationInitialised: nextProps.isOrganisationInitialised
+		});
+	}
 	constructor(props) {
 		super(props);
 		this.state = {
 			isOrganisationInitialised: false,
-			isEditable : false
+			isEditable : false,
+			headers : [
+				{ id: 'project_name',  label: 'Project Name' },
+				{ id: 'project_description',  label: ' Description' },
+				{ id: 'Action',  label: 'Action' },
+			
+			
+			  ],
+			  location:'projects',
+			  
+			
 		};
 	}
-	
-	static getDerivedStateFromProps = (nextProps, prevState) => {
-		if (!prevState.isOrganisationInitialised && 
-			nextProps.isOrganisationInitialised > 0) {
-			let orgId = 1;//TODO: hard coded value. To be cleaned up after org switch
-			nextProps.getOrganizationUsersList(orgId);
-		}
-		return ({
-			isOrganisationInitialised: nextProps.isOrganisationInitialised
-		});
-	};
-	
-	showEditContent = (user) => {
-		this.setState({isEditable: true});
-	};
 
-	getOrgProjectList = () => {
-		return (
-			<li  className="list-group-item" >
-				<Col sm={1}><i className="fas fa-user-circle"></i></Col>
-				<Col sm={7}>
-					<span className="fName" >Project1</span>
-					<span className="email" >Project2</span>
-				</Col>
-				<Col sm={4} className="editBtn">
-					<Button type="button" bsStyle="primary">Edit</Button>
-				</Col>
-			</li>
-		);
-	}
 		
 	render() {
-		const { isEditable } = this.state;
+		
+		const { isEditable,headers } = this.state;
+		const {projectList,classes} =this.props;
+		let currentHeader =<h1 style ={{paddingLeft:"10px"}}>Project Management</h1>;
+		if(this.state.location =='organization'){
+		  currentHeader =<h1 style ={{paddingLeft:"10px"}}>Organization Management</h1>
+		}
+		
 		return (
 			<div>
-				<h1>Project Management Page</h1>
-				{this.getOrgProjectList()}
+				<div>
+				<GroupIcon className={classes.IconClass}/>
+			&nbsp; &nbsp;
+			<label className="main_titles" >{currentHeader}</label>
+
+				</div>
+			
+		
+				<ProjectMangementTableBody 
+				projectList ={projectList}
+				  headers={headers}
+				  deleteClicked={this.deleteItemHandler}/>
+				
 			</div>
 		);
 	 }
 }
 
-// const mapStateToProps = (state) => {
-// 	console.log('UserManagement.mapStateToProps() ', state);
-// 	return {
-// 		orgUserList: state.userManagementData.orgUserList? state.userManagementData.orgUserList: [],
-// 		projectList: state.appData.projectList? state.appData.projectList: [],
-// 		isOrganisationInitialised: state.appData.isOrganisationInitialised
-// 	};
-// };
+const mapStateToProps = (state) => {
 
-// const mapDispatchToProps = dispatch => ({
-// 	getOrganizationUsersList: (data) => dispatch(getOrganizationUsersList(data))
-// });
+	return {
+		currentOrg: state.appData.currentOrg,
+		projectUserList:state.projectManagementData.projectUserList,
+		orgUserList: state.userManagementData.orgUserList? state.userManagementData.orgUserList: [],
+		projectList: state.appData.projectList? state.appData.projectList: [],
+		isOrganisationInitialised: state.appData.isOrganisationInitialised
+	};
+};
 
-// export default connect(mapStateToProps, mapDispatchToProps)(UserManagement);
+const mapDispatchToProps = dispatch => ({
+	getProjectList: (data) => dispatch(getProjectList(data))
+});
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(ProjectManagement));
 
-export default ProjectManagement;
+

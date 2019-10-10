@@ -48,6 +48,12 @@ const styles = theme => ({
     tableWrapper: {
       overflowX: 'auto'
     },
+    table: {
+      minWidth: 1080,
+    
+     
+     
+    },
   
   });
 
@@ -99,6 +105,7 @@ class CustomTable extends React.Component {
             search = {search}
             />
             <div className={classes.tableWrapper}>
+              <Table className={classes.table} aria-labelledby="tableTitle" size='medium'>
               <TableHeader 
                 headers={headers}
                 handleSort={this.handleSort}
@@ -118,6 +125,7 @@ class CustomTable extends React.Component {
                 headers = {headers}
                 searchingFor={searchingFor}
               />
+              </Table>
             </div>
             <TablePagination
               rowsPerPageOptions={[10,15,20,25]}
