@@ -9,7 +9,8 @@ from application.api.connectiondetail import (SelectConnection, DbConnection,
 from application.api.dashboard import SideBarMenu
 from application.api.data_quality_index import (ProjectDQI, OrganizationDQI,
                                                 ProjectDQIHistory)
-from application.api.dbdetail import DbDetails, SupportedDBTypes
+from application.api.dbdetail import DbDetails, SupportedDBTypes, \
+    SupportedTestClasses
 from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
                                    ForgotPasswordVerifyToken, ResetPassword,
                                    GetToken, ChangePassword)
@@ -140,3 +141,4 @@ api.add_resource(CreateNewTestSuite, '/api/create-new-test-suite')
 api.add_resource(SupportedDBTypes, '/api/supported-database-type')
 api.add_resource(QueryAnalyser, '/api/query-analyser')
 api.add_resource(QueryExporter, '/api/query-exporter')
+api.add_resource(SupportedTestClasses, '/api/supported-test-class-type')
