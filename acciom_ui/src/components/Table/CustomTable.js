@@ -32,8 +32,13 @@ const getSorting = (order, orderBy) => {
 }
   
 const searchingFor = (search,headers) => {
+
     return function(sortData){
+   
       return headers.some(data => {
+        if(sortData[data.id] ==null){
+          sortData[data.id]='Project for testing';
+        }
         return sortData[data.id].toLowerCase().includes(search.toLowerCase());
       });
     }
@@ -48,7 +53,7 @@ const styles = theme => ({
       overflowX: 'auto'
     },
     table: {
-      minWidth: 1080,
+      minWidth: 900,
     
      
      

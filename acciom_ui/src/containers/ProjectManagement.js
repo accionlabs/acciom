@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { ListGroup, Button, Col } from 'react-bootstrap';
 
+import EditIcon from '@material-ui/icons/Edit';
 import {getProjectList} from '../actions/projectManagementActions';
-import  RoleListItemContainer  from './RoleListItemContainer';
-import ProjectMangementTableBody from '../components/ManageProjectTable/ProjectTableBody';
 import GroupIcon from '@material-ui/icons/Group';
 import { withStyles } from '@material-ui/core/styles';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CustomTable from '../components/Table/CustomTable'
+import CustomModal from '../components/CommonModal/CustomModal';
+import {deleteProjectDetails} from '../actions/projectManagementActions';
 
 
 const styles = theme => ({
@@ -41,7 +43,27 @@ class ProjectManagement extends Component {
 	   
 		
 	  }
+	  deleteItemHandler=(deleteProjectId)=>{
+		 
+		  this.setState({showDeleteConfirmationDialog:true ,deleteConnectionID:deleteProjectId});
+	  }
+	  onYesBtnClickHandler=()=>{
+    
+		const data = {
+				connectionID:this.state.deleteConnectionID
+		}
+		this.props.deleteProjectDetails(data);
+		this.hideConfirmationopup();
+	 
+		location.reload(true);
+		}
 
+		onNoBtnClickHandler=()=>{
+			this.hideConfirmationopup();
+		}
+		hideConfirmationopup = () => {
+			this.setState({showDeleteConfirmationDialog: false ,deleteConnectionID:null})
+		}
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 		if (!prevState.isOrganisationInitialised && 
 			nextProps.isOrganisationInitialised > 0) {
@@ -62,11 +84,10 @@ class ProjectManagement extends Component {
 			headers : [
 				{ id: 'project_name',  label: 'Project Name' },
 				{ id: 'project_description',  label: ' Description' },
-				{ id: 'Action',  label: 'Action' },
-			
-			
 			  ],
 			  location:'projects',
+			  showDeleteConfirmationDialog: false,
+			  deleteConnectionID: null,
 			  
 			
 		};
@@ -77,11 +98,41 @@ class ProjectManagement extends Component {
 		
 		const { isEditable,headers } = this.state;
 		const {projectList,classes} =this.props;
+		
 		let currentHeader =<h1 style ={{paddingLeft:"10px"}}>Project Management</h1>;
 		if(this.state.location =='organization'){
 		  currentHeader =<h1 style ={{paddingLeft:"10px"}}>Organization Management</h1>
 		}
-		
+
+		const projectModifyData=[];
+		if(projectList){
+			projectList.forEach(project => {
+				projectModifyData.push({
+					project_name: project.project_name,
+					project_description: project.project_description,
+				
+					action: (
+						<Fragment>
+								{/* <Link to={`/edit_user_role/${project.project_id}`}> */}
+							<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
+						{/* </Link>	 */}
+						      <DeleteIcon 
+							  className="cursorhover" 
+							  fontSize="small" 
+							  style={{color:"#696969",marginRight:'15px'}} 
+							  onClick ={(e) =>{this.deleteItemHandler(project.project_id)}}
+							   />
+
+						</Fragment>
+					
+					)
+				})
+
+
+			})
+
+		}
+	
 		return (
 			<div>
 				<div>
@@ -92,10 +143,19 @@ class ProjectManagement extends Component {
 				</div>
 			
 		
-				<ProjectMangementTableBody 
-				projectList ={projectList}
-				  headers={headers}
-				  deleteClicked={this.deleteItemHandler}/>
+			
+				  	<CustomTable 
+					headers={headers}
+					bodyData={projectModifyData}
+					actionLabel="Action"
+				/>
+				 { 
+					this.state.showDeleteConfirmationDialog ?
+						<CustomModal
+						  onYesBtnClicked={this.onYesBtnClickHandler}
+						  onNoBtnClicked={this.onNoBtnClickHandler}/>
+						: null
+				}
 				
 			</div>
 		);
@@ -114,7 +174,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-	getProjectList: (data) => dispatch(getProjectList(data))
+	getProjectList: (data) => dispatch(getProjectList(data)),
+	deleteProjectDetails: (data) => dispatch(deleteProjectDetails(data))
 });
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(ProjectManagement));
 

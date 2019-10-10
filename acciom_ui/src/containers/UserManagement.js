@@ -72,8 +72,9 @@ class UserManagement extends Component {
 						)
 					})
 				})
+			
 			}
-	
+			
 		return (
 			<div id="userManagement">
 				<div>
