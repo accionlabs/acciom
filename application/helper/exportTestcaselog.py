@@ -1,8 +1,7 @@
-import ast
-import json
+from tempfile import NamedTemporaryFile
+
 from flask import Response
 from openpyxl import Workbook
-from tempfile import NamedTemporaryFile
 
 from application.common.constants import SupportedTestClass, TestClass
 from application.model.models import TestCaseLog
@@ -25,48 +24,58 @@ def export_test_case_log(case_log_id):
     if test_case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
             'Datavalidation'):
         log_data = case_log.execution_log  # dict
-        if log_data["source_execution_log"]:
-            export_response.append(['Source Table'])
-            dict_src = ast.literal_eval(log_data["source_execution_log"])
-            for each_row in dict_src:
-                dict_key = ast.literal_eval(each_row)
-                key_list = [key for key in dict_key.keys()]
-            export_response.append(key_list)
-            for each_row in dict_src:
-                dict_key = ast.literal_eval(each_row)
-                value_list = [val for val in dict_key.values()]
-                export_response.append(value_list)
+        if log_data["source_execution_log"] and not log_data[
+            "dest_execution_log"]:
+            dict_src = log_data["source_execution_log"]
+            dict_src.insert(0, ["Source Table"])
+            response = dict_src
 
-        if log_data["dest_execution_log"]:
-            export_response.append(['Target Table'])
-            dict_dest = ast.literal_eval(log_data["dest_execution_log"])
-            for each_row in dict_dest:
-                dict_key = ast.literal_eval(each_row)
-                key_list = [key for key in dict_key.keys()]
-            export_response.append(key_list)
-            for each_row in dict_dest:
-                dict_key = ast.literal_eval(each_row)
-                value_list = [val for val in dict_key.values()]
-                export_response.append(value_list)
+        if log_data["dest_execution_log"] and not log_data[
+            "source_execution_log"]:
+            dict_dest = log_data["dest_execution_log"]
+            dict_dest.insert(0, ["Target Table"])
+            response = dict_dest
 
-        response = json.dumps(export_response)
+        if log_data["dest_execution_log"] and log_data["source_execution_log"]:
+            dict_src = log_data["source_execution_log"]
+            dict_src.insert(0, ["Source Table"])
+            dict_dest = log_data["dest_execution_log"]
+            dict_src.append(["Target Table"])
+            for each_response in dict_dest:
+                dict_src.append(each_response)
+            response = dict_src
+
+
     elif test_case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
             TestClass.COUNT_CHECK):
         src_response = case_log.execution_log["source_execution_log"]
         des_response = case_log.execution_log["dest_execution_log"]
         res = [['Source Count', 'destination Count']]
         res.append([src_response, des_response])
-        response = json.dumps(res)
+        response = res
 
-    elif test_case.test_name == SupportedTestClass().get_test_class_id_by_name(
-            TestClass.DUPLICATE_CHECK) or SupportedTestClass().get_test_class_id_by_name(
-        TestClass.NULL_CHECK):
-        response = case_log.execution_log["dest_Execution_log"]
+
+    elif test_case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
+            TestClass.DUPLICATE_CHECK):
+        response = case_log.execution_log["dest_execution_log"]
+
+    elif test_case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
+            TestClass.NULL_CHECK):
+        response = case_log.execution_log["dest_log"]
+
+    elif test_case.test_case_class == SupportedTestClass().get_test_class_id_by_name(
+            TestClass.DDL_CHECK):
+        src_response = case_log.execution_log["source_execution_log"]
+        dest_response = case_log.execution_log["dest_execution_log"]
+        src_response.append(["Target Schema"])
+        for each_response in dest_response:
+            src_response.append(each_response)
+        src_response.insert(0, ["Source Schema"])
+        response = src_response
 
     work_book = Workbook()
     work_sheet = work_book.active
 
-    response = json.loads(response)
     for each in response:
         work_sheet.append(list(each))
 
