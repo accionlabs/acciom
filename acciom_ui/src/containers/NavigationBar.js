@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button,  Modal, ButtonGroup, DropdownButton, Item , MenuItem as MenuItemBS  } from 'react-bootstrap';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import CommentSharpIcon from '@material-ui/icons/CommentSharp';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -21,13 +20,13 @@ import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Icon from '@material-ui/core/Icon';
 import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 import ChangeOrganisation from '../components/ChangeOrganisation'
 import { logoutFromPortal } from '../actions/loginActions';
 import { showOrgChangePage } from '../actions/appActions';
 import logo from '../assets/images/logo.png';
+import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
 
 const drawerWidth = 240;
 
@@ -309,7 +308,6 @@ function NavigationBar(props) {
 						</ListItemIcon>
 						<Link to={'/user_management'} id="dashbcolor"  className = {classes.startup}>Manage Users</Link>
 						</MenuItem>
-
 						<MenuItem>
 						<ListItemIcon>
 							<Link to={'/view_suites'}>
@@ -319,7 +317,23 @@ function NavigationBar(props) {
 						</ListItemIcon>
 						<Link to={'/view_suites'} id="dashbcolor"  className = {classes.startup}>Manage Suites</Link>
 						</MenuItem>
+						<MenuItem>
+						<ListItemIcon>
+							<Link to={'/projects'}>
+							<SpeakerNotesIcon/>
+							</Link>
+						</ListItemIcon>
+						<Link to={'/projects'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
+						</MenuItem>
+						<MenuItem>
+						<ListItemIcon>
+							<Link to={'/organization'}>
 						
+							<AssignmentIcon/>
+							</Link>
+						</ListItemIcon>
+						<Link to={'/organization'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
+						</MenuItem>
 					</MenuList>
 				</List>
 			</Drawer>

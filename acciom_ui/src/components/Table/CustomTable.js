@@ -5,6 +5,8 @@ import TableListBody from './TableListBody';
 import TablePagination from '@material-ui/core/TablePagination';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { Table } from '@material-ui/core';
+
 
 const desc = (a, b, orderBy) => {
     if (b[orderBy] < a[orderBy]) {
@@ -31,9 +33,12 @@ const getSorting = (order, orderBy) => {
 }
   
 const searchingFor = (search,headers) => {
+
     return function(sortData){
+   
       return headers.some(data => {
-        return sortData[data.id].toLowerCase().includes(search.toLowerCase());
+      
+        return sortData[data.id] !== null && sortData[data.id].toLowerCase().includes(search.toLowerCase());
       });
     }
 }
@@ -45,6 +50,12 @@ const styles = theme => ({
     },
     tableWrapper: {
       overflowX: 'auto'
+    },
+    table: {
+      minWidth: 900,
+    
+     
+     
     },
   
   });
@@ -90,12 +101,14 @@ class CustomTable extends React.Component {
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
           <Paper className={classes.root}>
+            <Table size='medium'>
             <TableToolbar
             handleSearch = {this.handleSearch}
             handleClear = {this.handleClear}
             search = {search}
             />
             <div className={classes.tableWrapper}>
+              <Table className={classes.table} aria-labelledby="tableTitle" size='medium'>
               <TableHeader 
                 headers={headers}
                 handleSort={this.handleSort}
@@ -115,6 +128,7 @@ class CustomTable extends React.Component {
                 headers = {headers}
                 searchingFor={searchingFor}
               />
+              </Table>
             </div>
             <TablePagination
               rowsPerPageOptions={[10,15,20,25]}
@@ -131,6 +145,7 @@ class CustomTable extends React.Component {
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
+          </Table>
           </Paper>
         )
     }

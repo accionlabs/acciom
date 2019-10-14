@@ -17,8 +17,10 @@ def query_exectuion(query, db_cursor, export=False):
         if export:
             payload = {'res': 1, 'query_result':"done"}
         else:
-            if not str(query).find('limit'):
-               str(query).replace(';','limit 10;')
+            if not ';' in query:
+                query = str(query) + ';'
+            if not 'limit' in query:
+                query = str(query).replace(';', ' limit 10;')
             result_list = list()
             db_cursor.execute(query)
             for row in db_cursor:

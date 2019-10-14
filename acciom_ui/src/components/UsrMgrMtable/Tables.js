@@ -20,13 +20,13 @@ import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { Link } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import { TextField } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+
 import Clear from '@material-ui/icons/Clear';
 import Search from '@material-ui/icons/Search';
 import EnhancedTableHead from './TableHead';
 import { Modal,Button} from 'react-bootstrap';
 import { connect } from 'react-redux';
-import {deleteUsersFromTable,addUsersRole } from '../actions/userManagementActions';
+import {deleteUsersFromTable,addUsersRole } from '../../actions/userManagementActions';
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -609,7 +609,7 @@ name="firstName"
    
     return (
       <Paper className={classes.root}>
-   
+        
         <EnhancedTableToolbar 
         searchData ={this.searchTable} 
         textValue={this.state.search}
@@ -618,6 +618,9 @@ name="firstName"
         addButton ={this.addRowsinTable}
         
         />
+        
+           
+            
       
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle" size='medium'>

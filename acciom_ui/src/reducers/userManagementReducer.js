@@ -6,7 +6,9 @@ import {
 	RETRIVE_USER_ROLE_SUCCESS,
 	UPDATE_USER_ROLES_SUCCESS,
 	DELETE_USERS_FROM_TABLE,
-	ADD_USER_ROLES_SUCCESS
+	ADD_USER_ROLES_SUCCESS,
+	EMAIL_VERIFY_SUCCESS,
+	ADD_USER_ONLOAD
 
 } from '../constants/ActionTypes';
 
@@ -23,7 +25,9 @@ const initialState = {
 	userProjectRoleList: [],
 	userNewRoleList: [],
 	selectedUser: null,
-	redirectToUserMgmtHome: false
+	redirectToUserMgmtHome: false,
+	redirectToUserMgmtEdit: false,
+	emailUserID: ''
 };
 
 const userManagementData = (state = initialState, action) => {
@@ -37,7 +41,8 @@ const userManagementData = (state = initialState, action) => {
 			userProjectRoleList: [],
 			userNewRoleList: [],
 			selectedUser: null,
-			redirectToUserMgmtHome: false
+			redirectToUserMgmtHome: false,
+			emailUserID: ''
 		};
 		case DELETE_USERS_FROM_TABLE:
 				
@@ -81,6 +86,19 @@ const userManagementData = (state = initialState, action) => {
 		return {
 			...state,
 			redirectToUserMgmtHome: true
+		};
+
+	case EMAIL_VERIFY_SUCCESS:
+		return {
+			...state,
+			redirectToUserMgmtEdit: action.response.success,
+			emailUserID: action.response.data.user_id ? action.response.data.user_id: '',
+		};
+
+	case ADD_USER_ONLOAD:
+		return {
+			...state,
+			redirectToUserMgmtEdit: false
 		};
 		
 	default:

@@ -30,7 +30,8 @@ from application.helper.returnallsuites import (return_all_suites,
 from application.helper.runnerclasshelpers import args_as_list
 from application.helper.uploadfiledb import save_file_to_db
 from application.model.models import (Project, TestCaseLog, TestCase,
-                                      TestSuite, User, Organization)
+                                      TestSuite, User, Organization,
+                                      DbConnection)
 from index import db
 
 
@@ -453,6 +454,14 @@ class AddTestSuiteManually(Resource):
             keys = []
             for key in each_test_case:
                 keys.append(key)
+            if "test_case_class" not in keys:
+                return api_response(False, APIMessages.PASS_TEST_CASE_CLASS,
+                                    STATUS_BAD_REQUEST)
+            if "test_description" not in keys:
+                each_test_case["test_description"] = APIMessages.NO_NAME_DEFINE
+            if "source_table " and "target_table" not in keys:
+                return api_response(False, APIMessages.PASS_TABLES,
+                                    STATUS_BAD_REQUEST)
             if "source_db_existing_connection" in keys:
                 source_db_existing_connection = each_test_case[
                     "source_db_existing_connection"]
@@ -478,6 +487,12 @@ class AddTestSuiteManually(Resource):
                                                 test_suite_data[
                                                     "project_id"])
             else:
+                db_obj = DbConnection.query.filter(
+                    DbConnection.db_connection_id == source_db_existing_connection,
+                    DbConnection.is_deleted == False).first()
+                if not db_obj:
+                    return api_response(False, APIMessages.DB_NOT_EXIST,
+                                        STATUS_BAD_REQUEST)
                 src_db_id = source_db_existing_connection
             if "target_db_existing_connection" not in keys:
                 target_db_id = create_dbconnection(session.user_id,
@@ -492,7 +507,14 @@ class AddTestSuiteManually(Resource):
                                                    test_suite_data[
                                                        "project_id"])
             else:
+                db_obj = DbConnection.query.filter(
+                    DbConnection.db_connection_id == target_db_existing_connection,
+                    DbConnection.is_deleted == False).first()
+                if not db_obj:
+                    return api_response(False, APIMessages.DB_NOT_EXIST,
+                                        STATUS_BAD_REQUEST)
                 target_db_id = target_db_existing_connection
+
             table = {}
             table[each_test_case["source_table"]] = each_test_case[
                 "target_table"]

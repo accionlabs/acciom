@@ -31,7 +31,6 @@ componentDidMount() {
         "index":this.props.connectionDetail.index,
         "type":this.props.connectionDetail.type
     })
-    // console.log(this.props.allConnections)
     this.props.getAllConnections(this.props.currentProject.project_id)
 }
 
@@ -50,7 +49,6 @@ ConnectionExists = () =>{
     onYesBtnClickHandlers = () =>{
        this.props.onYesBtnClickHandler(false)
        this.props.ConnectionData(this.state)
-       console.log(this.state)
     }
     onCloseBtnClickHandlers = () =>{
         this.props.onYesBtnClickHandler(false)
@@ -94,7 +92,6 @@ ConnectionExists = () =>{
         return options;
     }
     handleExistingDBTypeChange = (item) =>{
-        console.log(item)
         this.setState({source_db_connection_id:item.value})
     }
 

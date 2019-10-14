@@ -230,6 +230,7 @@ class UserRoleAPI(Resource):
 
         Returns: Standard API Response with HTTP status code
         """
+        # TODO: Need to reduce DB hit
         parser = reqparse.RequestParser()
         parser.add_argument('org_id',
                             help=APIMessages.PARSER_MESSAGE,
@@ -242,6 +243,7 @@ class UserRoleAPI(Resource):
                             required=False, type=str, location='args')
         get_role_api_parser = parser.parse_args()
         result_dict = {}
+
         # Checking if User Id or Email Id is mandatorily passed
         if not get_role_api_parser['user_id'] and \
                 not get_role_api_parser['email_id']:
@@ -249,35 +251,36 @@ class UserRoleAPI(Resource):
                                 STATUS_BAD_REQUEST)
         if get_role_api_parser['user_id'] and get_role_api_parser['email_id']:
             raise GenericBadRequestException(APIMessages.ONLY_USER_OR_EMAIL)
-        # Storing user id if user id is passed
-        user_id = get_role_api_parser['user_id'] \
-            if get_role_api_parser['user_id'] else None
+
         # checking if User Id is valid
+        valid_org, valid_project, valid_user = None, None, None
         if get_role_api_parser['user_id']:
-            check_valid_id_passed_by_user(
+            valid_org, valid_project, valid_user = check_valid_id_passed_by_user(
                 org_id=get_role_api_parser['org_id'],
                 user_id=get_role_api_parser['user_id'])
         check_permission(user_object=session.user,
                          list_of_permissions=USER_ROLE_API_GET,
                          org_id=get_role_api_parser["org_id"])
+
         # Get user Id based on email Id passed
         if get_role_api_parser['email_id'] and \
                 not get_role_api_parser['user_id']:
-            check_valid_id_passed_by_user(org_id=get_role_api_parser['org_id'])
-            user_record = User.query.filter(
+            valid_org, valid_project, valid_user = check_valid_id_passed_by_user(
+                org_id=get_role_api_parser['org_id'])
+            valid_user = User.query.filter(
                 User.email.ilike(get_role_api_parser['email_id']),
                 User.is_deleted == False).first()
-            if not user_record:
-                raise ResourceNotAvailableException("User")
-            user_id = user_record.user_id
-            result_dict['email_id'] = user_record.email
-        if get_role_api_parser['org_id'] and user_id:
+            if not valid_user:
+                return api_response(False, APIMessages.NO_ROLES,
+                                    STATUS_OK)
+
+        if get_role_api_parser['org_id'] and valid_user.user_id:
             # Get Project Role list
             project_role_list = list()
             temp_dict = {}
             user_project_roles = UserProjectRole.query.filter_by(
                 org_id=get_role_api_parser['org_id'],
-                user_id=user_id).all()
+                user_id=valid_user.user_id).all()
             for each_project_role in user_project_roles:
                 if each_project_role.project_id not in temp_dict.keys():
                     # Add a key with value as role_id
@@ -293,23 +296,25 @@ class UserRoleAPI(Resource):
             # Get Org Roles
             user_org_roles = UserOrgRole.query.filter_by(
                 org_id=get_role_api_parser['org_id'],
-                user_id=user_id).all()
+                user_id=valid_user.user_id).all()
             result_dict['is_org_user'] = True if user_org_roles else False
             result_dict['org_allowed_role_list'] = []
             if user_org_roles:
                 for each_user_org_role in user_org_roles:
                     result_dict['org_allowed_role_list'].append(
                         each_user_org_role.role_id)
-            # Get User email
-            if get_role_api_parser['user_id'] and \
-                    not get_role_api_parser['email_id']:
-                user_detail = User.query.filter_by(
-                    user_id=get_role_api_parser['user_id'],
-                    is_deleted=False).first()
-                result_dict['email_id'] = user_detail.email
-                result_dict['first_name'] = user_detail.first_name
-                result_dict['last_name'] = user_detail.last_name
+            if not (result_dict['org_allowed_role_list'] or result_dict[
+                'project_role_list']):
+                return api_response(False, APIMessages.NO_ROLES,
+                                    STATUS_OK)
+
+            result_dict['user_id'] = valid_user.user_id
+            result_dict['email_id'] = valid_user.email
+            result_dict['first_name'] = valid_user.first_name
+            result_dict['last_name'] = valid_user.last_name
+            result_dict['user_id'] = valid_user.user_id
             result_dict['org_id'] = get_role_api_parser['org_id']
+
             return api_response(True, APIMessages.SUCCESS, STATUS_OK,
                                 result_dict)
 

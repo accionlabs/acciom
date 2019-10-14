@@ -5,12 +5,10 @@ import { connect } from 'react-redux';
 import { ListGroup,Table, Button, Col } from 'react-bootstrap';
 import { getOrganizationUsersList,addOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
 import  RoleListItemContainer  from './RoleListItemContainer';
-import CustomPaginationActionsTable from '../components/Tables';
+
 import GroupIcon from '@material-ui/icons/Group';
 
 import CustomTable from '../components/Table/CustomTable'
-
-
 import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
 	textField:{
@@ -24,7 +22,9 @@ const styles = theme => ({
 	},
 	IconClass:{
 		marginBottom:'-5px',
-		marginLeft:'3px'
+		marginLeft:'3px',
+		color:'#69717D',
+		fontSize:'20px'
 	}
 });
 
@@ -69,19 +69,21 @@ class UserManagement extends Component {
 						email: user.email,
 						action: (
 							<Link to={`/edit_user_role/${user.user_id}`}>
-								<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
+								<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'35px'}} />
 							</Link>	
 						)
 					})
 				})
+			
 			}
-	
+			
 		return (
 			<div id="userManagement">
 				<div>
-					<GroupIcon className={classes.IconClass}/>
+					<GroupIcon className="manageUsersIcon" />
 					&nbsp; &nbsp;
-					<label className="main_titles" > Manage Users</label>				
+					<label className="main_titles" > Manage Users</label>
+					<Link to="/ManageUserRole"><Button className="backbutton_colors addUserButton">Add User</Button></Link>				
 				</div>				
 				<CustomTable 
 					headers={headers}
@@ -104,7 +106,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => ({
 	getOrganizationUsersList: (data) => dispatch(getOrganizationUsersList(data)),
-	// addOrganizationUsersList:(data) =>dispatch(addOrganizationUsersList(data))
-});
 
+
+});
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserManagement));
