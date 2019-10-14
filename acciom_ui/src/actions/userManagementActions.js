@@ -15,7 +15,10 @@ import {
 	GET_ORGANIZATION_USER_LIST_ADD,
 	DELETE_USERS_FROM_TABLE,
 	ADD_USER_ROLES_SUCCESS,
-	ADD_USER_ROLES_ERROR
+	ADD_USER_ROLES_ERROR,
+	EMAIL_VERIFY_SUCCESS,
+	EMAIL_VERIFY_ERROR,
+	ADD_USER_ONLOAD
 		
 } from "../constants/ActionTypes";
 
@@ -128,4 +131,24 @@ export const addUsersRole = (body) => {
 		})
 	
 	};		
+};
+
+export const emailExsistingVerify = (email) => {
+	return {
+		types: [
+			'',
+			EMAIL_VERIFY_SUCCESS,
+			EMAIL_VERIFY_ERROR
+		],
+		callAPI: () => fetch(`${BASE_URL}/user-role?org_id=1&email_id=${email}`, {
+			method: 'get',
+			headers
+		})
+	};
+};
+
+export const addUserOnload = () => {
+	return {
+		type: ADD_USER_ONLOAD
+	};
 };

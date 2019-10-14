@@ -45,7 +45,7 @@ class ProjectManagement extends Component {
 			          };
                       this.props.deleteProjectDetails(connectionId);
 		              this.hideConfirmationopup();
-	  	            //   location.reload(true);
+	  	              location.reload(true);
 		       }
 
 		onNoBtnClickHandler=()=>{

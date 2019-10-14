@@ -9,8 +9,9 @@ function TableListBody(props) {
     const {page, rowsPerPage, orderBy, order, search, bodyData, headers, stableSort, getSorting, searchingFor,editIdx,handleChange,projectNameValue,projectDescriptionValue } = props;
   
     return(
-        <TableBody  className="commonTableBody">
-           
+
+        <TableBody className="commonTableBody">
+
             {bodyData.length > 0 &&
             stableSort(bodyData, getSorting(order, orderBy))
             .filter(searchingFor(search,headers))

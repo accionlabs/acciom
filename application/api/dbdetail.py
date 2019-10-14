@@ -7,7 +7,8 @@ from flask_restful import Resource, reqparse
 from application.common.api_permission import DB_DETAILS_POST, DB_DETAILS_GET, \
     DB_DETAILS_PUT, DB_DETAILS_DELETE
 from application.common.common_exception import IllegalArgumentException
-from application.common.constants import APIMessages, SupportedDBType
+from application.common.constants import APIMessages, SupportedDBType, \
+    SupportedTestClass
 from application.common.response import (api_response, STATUS_BAD_REQUEST,
                                          STATUS_CREATED, STATUS_OK,
                                          STATUS_CONFLICT)
@@ -539,5 +540,37 @@ class SupportedDBTypes(Resource):
             supported_db_type_list.append(supported_db_type_dict)
         payload = {"data": supported_db_type_list}
 
+        return api_response(True, APIMessages.SUCCESS,
+                            STATUS_CREATED, payload)
+
+
+class SupportedTestClasses(Resource):
+    """Class to get available types of testclasses"""
+
+    @token_required
+    def get(self, session):
+        """
+        this method returns list of all the available testclasses types supported
+        in the Acciom
+        Args:
+            session: to get the User Id
+
+        Returns: list of all the available testclasses types supported
+        in the Acciom
+
+        """
+        supported_test_class_list = []
+        x = SupportedTestClass()
+        for (i, j) in zip(x.supported_test_class,
+                          x.supported_test_class_display_name):
+            supported_test_class_dict = {}
+            test_class = {}
+            test_class["supported_test_class"] = x.supported_test_class[i]
+            test_class[
+                "supported_test_class_display_name"] = \
+                x.supported_test_class_display_name[i]
+            supported_test_class_dict[i] = test_class
+            supported_test_class_list.append(supported_test_class_dict)
+        payload = {"data": supported_test_class_list}
         return api_response(True, APIMessages.SUCCESS,
                             STATUS_CREATED, payload)
