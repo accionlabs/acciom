@@ -96,7 +96,7 @@ class CustomTable extends React.Component {
     }
 
     render(){
-      const {classes, headers, bodyData, actionLabel} = this.props;
+      const {classes, headers, bodyData, actionLabel,editIdx,handleChange,projectNameValue,projectDescriptionValue} = this.props;
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
           <Paper className={classes.root}>
@@ -125,6 +125,11 @@ class CustomTable extends React.Component {
                 getSorting = {getSorting}
                 headers = {headers}
                 searchingFor={searchingFor}
+                editIdx={editIdx}
+                handleChange={handleChange}
+                projectNameValue={projectNameValue}
+                projectDescriptionValue={projectDescriptionValue}
+              
               />
               </Table>
             </div>

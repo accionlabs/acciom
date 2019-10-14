@@ -2,7 +2,9 @@ import {
     GET_PROJECT_LIST_SUCCESS,
 	GET_PROJECT_LIST_ERROR,
 	DELETE_PROJECT_LIST_SUCCESS,
-	DELETE_PROJECT_LIST_ERROR} from "../constants/ActionTypes";
+	DELETE_PROJECT_LIST_ERROR,
+	UPDATE_PROJECT_LIST_SUCCESS,
+	UPDATE_PROJECT_LIST_ERROR} from "../constants/ActionTypes";
     import {  BASE_URL, headers} from './appActions';
 export const getProjectList = (orgId) => {
     
@@ -19,9 +21,26 @@ export const getProjectList = (orgId) => {
 	};	
 
 }
+export const updateProjectList=(data,orgId)=>{
 
+return{
+	types:[
+		'',
+		UPDATE_PROJECT_LIST_SUCCESS,
+		UPDATE_PROJECT_LIST_ERROR
+
+	],
+	callAPI:() => fetch(`${BASE_URL}/project`,{
+		method: 'put',
+		headers,
+		body: data
+
+	}) 
+
+}
+}
 export const deleteProjectDetails = (data) => {
-	
+
 	return {
 		types: [
 			'',
@@ -29,9 +48,10 @@ export const deleteProjectDetails = (data) => {
 			DELETE_PROJECT_LIST_ERROR
 		],
 		
-		callAPI: () => fetch(`${BASE_URL}/project?project_id=${data.connectionID}`, {
+		callAPI: () => fetch(`${BASE_URL}/project?project_id=${data.rowconnectionID}`, {
 			method: 'delete',
 			headers
 		})
 	};		
 };
+
