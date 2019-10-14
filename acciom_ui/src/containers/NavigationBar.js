@@ -23,7 +23,7 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Icon from '@material-ui/core/Icon';
-
+import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 import ChangeOrganisation from '../components/ChangeOrganisation'
 import { logoutFromPortal } from '../actions/loginActions';
 import { showOrgChangePage } from '../actions/appActions';
@@ -314,7 +314,7 @@ function NavigationBar(props) {
 						<ListItemIcon>
 							<Link to={'/view_suites'}>
 						
-							<CommentSharpIcon fontSize="large"/>
+							<ChromeReaderModeIcon fontSize="large"/>
 							</Link>
 						</ListItemIcon>
 						<Link to={'/view_suites'} id="dashbcolor"  className = {classes.startup}>Manage Suites</Link>

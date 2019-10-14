@@ -9,7 +9,8 @@ import {
 	RESET_TEST_SUITE_UPLOAD_DATA,
 	ON_SHEET_NAME_CHANGE,
 	RESET_DATA_FOR_SHEET_PAGE,
-	RESET_DATA_FOR_CASE_PAGE
+	RESET_DATA_FOR_CASE_PAGE,
+	
 } from '../constants/ActionTypes';
 
 import { BASE_URL, headers } from './appActions';

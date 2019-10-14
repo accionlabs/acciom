@@ -165,8 +165,10 @@ body,html{
     color: #fff !important;
 }
 
-.manage-db-table{
-    border: 1px solid rgb(32, 31, 31,25%);
+
+
+.table-responsive {
+    overflow: unset;
 }
 
 .table_head{
@@ -282,6 +284,7 @@ body,html{
     margin-left: 1rem;
     margin-top: 12.5%;
 }
+
 
 .deleteconfirmpopupfieldtext{
     padding: 5px 16px;
@@ -1193,4 +1196,8 @@ body,html{
 }
 .savebtn{
     float: right;
+}
+
+.DropDown-SelectClass{
+ width: 11vw; 
 }

@@ -134,14 +134,15 @@ function ManageConnectionSelect(props) {
 const mapStateToProps = (state) => {
 	return {
 		allConnections : state.testSuites.connectionsList && 
-			state.testSuites.connectionsList.allConnections? state.testSuites.connectionsList.allConnections : [],
+		state.testSuites.connectionsList.allConnections? state.testSuites.connectionsList.allConnections : [],
 		allCases : state.testSuites.connectionsList && 
-			state.testSuites.connectionsList.allCases? state.testSuites.connectionsList.allCases : []
+		state.testSuites.connectionsList.allCases? state.testSuites.connectionsList.allCases : []
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		
 		onManageConnectionsCaseUpdate: data => dispatch(manageConnectionsCaseUpdate(data))
 	};
 };
