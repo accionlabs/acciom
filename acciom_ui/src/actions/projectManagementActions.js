@@ -21,7 +21,7 @@ export const getProjectList = (orgId) => {
 	};	
 
 }
-export const updateProjectList=(data,orgId)=>{
+export const updateProjectList=(data)=>{
 
 return{
 	types:[
