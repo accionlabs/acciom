@@ -137,7 +137,6 @@ const mapStateToProps = (state) => {
 		dbDetailsList: state.dbDetailsData.dbDetailsList?state.dbDetailsData.dbDetailsList: [],
 		refreshDBDetails: state.dbDetailsData.refreshDBDetails,
 		currentProject: state.appData.currentProject
-		
 	};
 };
 
