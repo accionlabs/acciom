@@ -259,6 +259,6 @@ class ProjectAPI(Resource):
             user_obj = session.user
             return api_response(
                 False, delete_message, STATUS_OK, {
-                    "Associated_db_connections": db_connections,
-                    "Associated_test_suites": suites,
-                    "Asociated_users": user_associated})
+                    "associated_db_connections": db_connections,
+                    "associated_test_suites": suites,
+                    "asociated_users": user_associated})
