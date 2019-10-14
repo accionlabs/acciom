@@ -159,7 +159,6 @@ const getLoginOptions = (props, classes) => {
 					</MenuItemBS>
 					
 					<MenuItemBS eventKey="4">
-						{/* <Link to="/change_password">Change Password</Link> */}
 						<span id="change_organisation" onClick={(event) => { handleShowOrg(props, true);}}>Change Organisation</span>
 					</MenuItemBS>
 					<MenuItemBS eventKey="6">

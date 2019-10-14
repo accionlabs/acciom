@@ -67,7 +67,7 @@ class ChangePasswordComponent extends Component {
 									}
 								</FormGroup>
 
-								<FormControl type="password" name="new_password" placeholder="New Password" onChange={this.handleInputChange} />
+								<FormControl type="password" name="new_password" id="password" placeholder="New Password" onChange={this.handleInputChange} />
 								{ errors.email && 
 									<HelpBlock>{errors.email}</HelpBlock> 
 								}

@@ -41,6 +41,7 @@ class RoleListItemContainer extends Component {
 			if (nextProps.orgProjectRolesList.hasOwnProperty(nextProps.selectedOrgProject.value)) {
 				const rolesList = formatRoleListData(nextProps.orgProjectRolesList[nextProps.selectedOrgProject.value]);
 				const selectedRoles = getSelectedRoleItems(rolesList, nextProps.selectedRoles);
+				console.log(nextProps.selectedRoles, rolesList,"selectedRoles");
 				return {
 					...prevState,
 					rolesList,
@@ -70,6 +71,7 @@ class RoleListItemContainer extends Component {
 
 	handleRoleChange = (roles) => {
 		this.props.onRoleChange(this.props.index, roles);
+		console.log("4444",this.props.index, roles)
 	};
 
 	addRow = () => {
@@ -123,6 +125,7 @@ class RoleListItemContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
+	console.log("state",state);
 	return {
 		orgProjectRolesList: state.userManagementData.orgProjectRolesList,
 	};

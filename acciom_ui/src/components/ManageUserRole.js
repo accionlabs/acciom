@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
-import { emailExsistingVerify, addUserOnload } from '../actions/userManagementActions';
+import { emailExsistingVerify, addUserOnload, updateUserRoles } from '../actions/userManagementActions';
 import { roleTypes } from '../reducers/userManagementReducer';
 import RoleListItemContainer from '../containers/RoleListItemContainer';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+
 
 const formatOrgProjectList = (currentOrg, projectList) => {
 	const orgList = [{
@@ -25,11 +27,15 @@ const getObjFromList = (list, key, value)=> list.find(v => v[key] === value);
 
 class ManageUserRole extends Component{
     constructor(props){
-        super(props)
+		super(props)
+		const userRoleList = [].concat(
+			[{ id: Math.floor(Math.random()*1000000), allowed_role_list: [], roleType: roleTypes.NEW }]
+		);
+		//const orgProjectList = formatOrgProjectList(props.currentOrg, props.projectList);
         this.state = {
             email: "",
             selectedUser: null,
-			userRoleList: [],
+			userRoleList: userRoleList,
 			orgProjectList: [],
 			firstname: "",
 			lastname: "",
@@ -53,70 +59,45 @@ class ManageUserRole extends Component{
         event.preventDefault()
         this.setState({
             [event.target.name]: event.target.value
-        })
+        },()=>{
+			console.log(this.state,"this......")
+		})
 
 	}
-
-	// validate = () => {
-	// 	let email = "";
-
-	// 	if (!this.state.email.includes("@")){
-	// 		emailError = "Invalid email" ;
-	// 	}
-
-	// 	if (emailError){
-	// 		this.setState({ emailError })
-	// 		return false;
-	// 	}
-	// }
 	
 	componentWillUnmount() {
 		this.props.addUserOnload();
 	}
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
-		console.log("nextProps.emailUserID", nextProps.emailUserID);
-		console.log("nextProps.redirectToUserMgmtEdit ", nextProps.redirectToUserMgmtEdit);
 		if (nextProps.redirectToUserMgmtEdit) {
 			nextProps.history.push(`/edit_user_role/${nextProps.emailUserID}`);
-		} else if (!prevState.selectedUser && nextProps.selectedUser) {
-			
+		} 
+		if (nextProps.currentOrg && nextProps.projectList) {
 			const orgProjectList = formatOrgProjectList(nextProps.currentOrg, nextProps.projectList);
+			return { ...prevState, orgProjectList };
+		}
+		return prevState;
+	};
 
-			let userRoleList = [];
-
-			// organization roles
-			if (nextProps.selectedUser.org_allowed_role_list.length > 0) {
-				userRoleList = [{
-					id: `o_${nextProps.currentOrg.org_id}`, 
-					allowed_role_list: nextProps.selectedUser.org_allowed_role_list, 
-					roleType: roleTypes.ORGANIZATION,
-					uid: nextProps.currentOrg.org_id
-				}];
+	
+	renderUserRoles = () => {
+		let element = null;
+		if (this.state.userRoleList.length > 0) {
+			element = this.getRoleItemComponent(this.state.userRoleList);
+			if (element.length > 0) {
+				element.push(
+					(<div class='footer'>
+						<Link to={`/user_management`}>
+							<Button type="button" className="userbackbtn adduserBackButton" bsStyle="primary">Back To User List</Button>
+						</Link>
+						<Button type="button" className="button-colors adduserSaveButton" bsStyle="primary" onClick={(e) => {this.onSaveUserRoles()}}>Save</Button>
+					</div>)
+				);
 			}
-
-			// project roles
-			if (nextProps.selectedUser.project_role_list.length > 0) {
-				const userProjectRoleList = nextProps.selectedUser.project_role_list.map((item) => {
-					return {
-						id: `p_${item.project_id}`, 
-						allowed_role_list: item.allowed_role_list, 
-						roleType: roleTypes.PROJECT,
-						uid: item.project_id
-					};
-				});
-				userRoleList = userRoleList.concat(userProjectRoleList);
-			}
-			
-			return {
-				...prevState,
-				selectedUser: nextProps.selectedUser,
-				userRoleList,
-				orgProjectList
-			};
 		}
 
-		return prevState;
+		return element;
 	};
 
 	onAddRowClick = () => {
@@ -149,11 +130,9 @@ class ManageUserRole extends Component{
 	onRoleChange = (index, roles) => {
 		const userRoleList = [...this.state.userRoleList];
 		const listItem = userRoleList[index];
-
 		const allowed_role_list = roles.map((role) =>{
 			return role.value;
 		});
-		
 		userRoleList.splice(index, 1, {...listItem, allowed_role_list});
 		this.setState({userRoleList});
 	};
@@ -175,9 +154,9 @@ class ManageUserRole extends Component{
 			if (count-1 === index) {
 				showAdd = true;
 			}
-
+			
 			return (
-				<li key={`${item.roleType}${index}`}>
+				<li key={`${item.roleType}${index}`} className="listDots">
 					<RoleListItemContainer 
 						onAddRowClick={this.onAddRowClick}
 						onDeleteRowClick={this.onDeleteRowClick}
@@ -198,27 +177,65 @@ class ManageUserRole extends Component{
 
 		return roleElements;
 	};
+	onSaveUserRoles = () => {
+		// build payload
+		const projectRoleList = [];
+		let orgAllowedRoleList = []; 
+		this.state.userRoleList.forEach((item) => {
+			if (item.roleType === roleTypes.PROJECT) {
+				projectRoleList.push(
+					{
+						'project_id': item.uid,
+						'allowed_role_list': item.allowed_role_list
+					}
+				);
+			} else if (item.roleType === roleTypes.ORGANIZATION) {
+				orgAllowedRoleList = orgAllowedRoleList.concat([...item.allowed_role_list]);
+			}
+
+		});
+		console.log(this.state.email,"this.state.email");
+		const payload = {
+			'org_id': this.props.currentOrg.org_id,
+			//'user_id': this.props.selectedUser.user_id,
+			'email_id': this.state.email,
+			'project_role_list': projectRoleList,
+			'org_allowed_role_list': orgAllowedRoleList
+		};
+		this.props.updateUserRoles(JSON.stringify(payload));
+	};
 
     render(){
         return(
             <div>
-            <div className="main_titles manageUserRoleTitles">Manage User Role</div>
+				<table>
+					<tr>
+						<td>
+							<PersonAddIcon  className="addUserIcon" />
+						</td>
+						<td><div className="main_titles manageUserRoleTitles">Manage User Role</div></td>
+					</tr>
+				</table>
             <table>
                 <tr>
                     <td className="sub_title userRoleFname">First Name:</td>
                     <td><input className="editRoleFnameLabel" type="text" name="firstname" onChange={this.handleInputChange}></input></td>
                     <td className="sub_title userRoleLname">Last Name:</td>
                     <td><input className="editRoleLanameLabel" type="text" name="lastname" onChange={this.handleInputChange}></input></td>
-                    <td>
-                        <label className="emailRoleLabel sub_title">Email:</label>
-                    </td>
-                    <td><input className="editRoleLabel" type="text" onChange={this.handleInputChange}  name="email"></input></td>
+                    
                 </tr>
+				<tr>
+				<td>
+                    <label className="emailRoleLabel sub_title">Email:</label>
+                    </td>
+                    <td><input className="editRoleLabel" type="email" pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" onChange={this.handleInputChange}  name="email"></input></td>
+					<td><button className="button-colors verifyButtons" disabled={!this.state.firstname || !this.state.lastname || !this.state.email} onClick={() => this.emailVerify()}>Verify</button></td>
+				</tr>
             </table>
-            <button className="button-colors verifyButtons" disabled={!this.state.firstname || !this.state.lastname || !this.state.email} onClick={() => this.emailVerify()}>Verify</button>
+
             <div className="rolesborder">
-				{/* { this.renderUserRoles() } */}
-			    </div>
+				{ this.renderUserRoles() }
+			</div>
             </div>
             
         );
@@ -229,7 +246,8 @@ class ManageUserRole extends Component{
 const mapDispatchToProps = dispatch => ({
     getSelectedUser: (org_id, user_id) => dispatch(retriveUserRoleByUserId(org_id, user_id)),
 	emailExsistingVerify: (data) => dispatch(emailExsistingVerify(data)),
-	addUserOnload: () => dispatch(addUserOnload())
+	addUserOnload: () => dispatch(addUserOnload()),
+	updateUserRoles: (data) => dispatch(updateUserRoles(data))
 })
 
 const mapStateToProps = (state) => {

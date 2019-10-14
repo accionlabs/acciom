@@ -7,9 +7,11 @@ import { getOrganizationUsersList,addOrganizationUsersList, retriveUserRoleByUse
 import  RoleListItemContainer  from './RoleListItemContainer';
 import CustomPaginationActionsTable from '../components/Tables';
 import GroupIcon from '@material-ui/icons/Group';
-
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CustomTable from '../components/Table/CustomTable'
 import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 const styles = theme => ({
 	textField:{
 		float:'right',
@@ -82,7 +84,13 @@ class UserManagement extends Component {
 					<GroupIcon className="manageUsersIcon" />
 					&nbsp; &nbsp;
 					<label className="main_titles" > Manage Users</label>
-					<Link to="/ManageUserRole"><Button className="backbutton_colors addUserButton">Add User</Button></Link>				
+					<Link to="/ManageUserRole">
+					<Tooltip title="Add User" placement="right">
+					<IconButton className="addUserButton">
+					<PersonAddIcon  />
+					</IconButton>
+					</Tooltip>
+					</Link>
 				</div>				
 				<CustomTable 
 					headers={headers}

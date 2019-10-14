@@ -118,6 +118,7 @@ class EditUserRoles extends Component {
 		});
 		
 		userRoleList.splice(index, 1, {...listItem, allowed_role_list});
+		console.log(userRoleList,"userRoleList");
 		this.setState({userRoleList});
 	};
 
@@ -198,6 +199,7 @@ class EditUserRoles extends Component {
 			}
 
 		});
+		// console.log("this.props.selectedUser.email_id", this.props.selectedUser)
 		const payload = {
 			'org_id': this.props.currentOrg.org_id,
 			//'user_id': this.props.selectedUser.user_id,
