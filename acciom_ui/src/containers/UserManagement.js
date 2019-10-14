@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { ListGroup,Table, Button, Col } from 'react-bootstrap';
 import { getOrganizationUsersList,addOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
 import  RoleListItemContainer  from './RoleListItemContainer';
-import CustomPaginationActionsTable from '../components/Tables';
+
 import GroupIcon from '@material-ui/icons/Group';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import CustomTable from '../components/Table/CustomTable'
@@ -71,13 +71,14 @@ class UserManagement extends Component {
 						email: user.email,
 						action: (
 							<Link to={`/edit_user_role/${user.user_id}`}>
-								<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'15px'}} />
+								<EditIcon fontSize="small" className="editicon2" style={{color:"#696969" ,marginRight:'35px'}} />
 							</Link>	
 						)
 					})
 				})
+			
 			}
-	
+			
 		return (
 			<div id="userManagement">
 				<div>
@@ -113,6 +114,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => ({
 	getOrganizationUsersList: (data) => dispatch(getOrganizationUsersList(data)),
-	// addOrganizationUsersList:(data) =>dispatch(addOrganizationUsersList(data))
+
+
 });
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserManagement));

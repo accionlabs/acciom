@@ -1287,6 +1287,7 @@ body,html{
 }
 /* common table css  */
 
+
 .commonTableHead{
     vertical-align: middle;
     background-color: #BD4951;
@@ -1321,6 +1322,7 @@ body,html{
     color: #fff !important;
     font-weight: bold !important;
     font-size: 13px !important;
+    padding-right: 8px !important
 }
 
 .commonTableData{
@@ -1328,6 +1330,7 @@ body,html{
     font-size: 13px !important;
     font-family:  Open sans !important;
     padding: 1px 50px 3px 11px !important;
+
     /* line-height: 10px !important; */
 }
 
@@ -1347,6 +1350,12 @@ body,html{
     padding: 3px 6px 6px 10px !important;
     font-family: Open sans !important;
     font-weight: 300 !important;
+
+    line-height: 20px !important;
+}
+.commonTableCellBorder{
+    border-bottom: none !important;
+
     line-height: 0px !important;
     font-size: 13px !important;
 }

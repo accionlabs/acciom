@@ -27,6 +27,8 @@ import ChangeOrganisation from '../components/ChangeOrganisation'
 import { logoutFromPortal } from '../actions/loginActions';
 import { showOrgChangePage } from '../actions/appActions';
 import logo from '../assets/images/logo.png';
+import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 const drawerWidth = 240;
 
@@ -304,7 +306,23 @@ function NavigationBar(props) {
 						</ListItemIcon>
 						<Link to={'/user_management'} id="dashbcolor"  className = {classes.startup}>Manage Users</Link>
 						</MenuItem>
+						<MenuItem>
+						<ListItemIcon>
+							<Link to={'/projects'}>
+							<SpeakerNotesIcon/>
+							</Link>
+						</ListItemIcon>
+						<Link to={'/projects'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
+						</MenuItem>
+						<MenuItem>
+						<ListItemIcon>
+							<Link to={'/organization'}>
 						
+							<AssignmentIcon/>
+							</Link>
+						</ListItemIcon>
+						<Link to={'/organization'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
+						</MenuItem>
 					</MenuList>
 				</List>
 			</Drawer>

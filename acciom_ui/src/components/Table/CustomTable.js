@@ -33,9 +33,12 @@ const getSorting = (order, orderBy) => {
 }
   
 const searchingFor = (search,headers) => {
+
     return function(sortData){
+   
       return headers.some(data => {
-        return sortData[data.id].toLowerCase().includes(search.toLowerCase());
+      
+        return sortData[data.id] !== null && sortData[data.id].toLowerCase().includes(search.toLowerCase());
       });
     }
 }
@@ -47,6 +50,12 @@ const styles = theme => ({
     },
     tableWrapper: {
       overflowX: 'auto'
+    },
+    table: {
+      minWidth: 900,
+    
+     
+     
     },
   
   });
@@ -99,6 +108,7 @@ class CustomTable extends React.Component {
             search = {search}
             />
             <div className={classes.tableWrapper}>
+              <Table className={classes.table} aria-labelledby="tableTitle" size='medium'>
               <TableHeader 
                 headers={headers}
                 handleSort={this.handleSort}
@@ -118,6 +128,7 @@ class CustomTable extends React.Component {
                 headers = {headers}
                 searchingFor={searchingFor}
               />
+              </Table>
             </div>
             <TablePagination
               rowsPerPageOptions={[10,15,20,25]}
