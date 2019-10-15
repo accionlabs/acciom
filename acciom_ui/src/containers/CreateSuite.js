@@ -32,6 +32,7 @@ const useStyles = theme => ({
         maxWidth: '11vw',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+        cursor:'pointer',
     },
     tablecellDropDown:{ 
         maxWidth: '11vw'
@@ -181,22 +182,22 @@ export class CreateSuite extends Component {
     showData = (val,index) =>{
         switch(index){
             case 2:
-            return val?<div>{val}</div>:<div>Description</div>
+            return val?<div>{val}</div>:<div style={{color:'#C6C6C6'}}>Type here...</div>
             break;
             case 5:
-            return val?<div>{val}</div>:<div>Source Table</div>
+            return val?<div>{val}</div >:<div style={{color:'#C6C6C6'}}>Type here...</div>
             break;
             case 6:
-            return val?<div>{val}</div>:<div>Target Table</div>
+            return val?<div>{val}</div>:<div style={{color:'#C6C6C6'}}>Type here...</div>
             break;
             case 7:
-            return val?<div>{val}</div>:<div>Columns</div>
+            return val?<div>{val}</div >:<div style={{color:'#C6C6C6'}}>Type here...</div>
             break
             case 8:
-            return val?<div>{val}</div>:<div>Source Query</div>
+            return val?<div>{val}</div>:<div style={{color:'#C6C6C6'}}>Type here...</div>
             break;
             case 9:
-            return val?<div>{val}</div>:<div>Target Query</div>
+            return val?<div>{val}</div>:<div style={{color:'#C6C6C6'}}>Type here...</div>
             break;
             default:
             break
