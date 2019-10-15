@@ -10,15 +10,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import LaunchIcon from '@material-ui/icons/Launch';
 import Select from 'react-select';
-import { Input } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
-
-
 import { getallClassNames,SubmitTestSuiteData } from '../actions/dbDetailsActions';
-
-import RenderManageConnectionDialog from '../components/renderManageConnectionDialog';
+import { 
+	getAllConnections
+} from '../actions/testSuiteListActions';
 
 const useStyles = theme => ({
     root: {
@@ -51,23 +48,15 @@ const useStyles = theme => ({
     }
   });
 
-  const data = {'test_case_class':null,
-  'test_description':null,
+  const data = {'test_case_class':"",
+  'test_description':"",
       "source_db_existing_connection":"",
-      "source_db_type":null,
-      "source_db_name":null,
-      "source_db_server":null,
-      "source_db_username":null,
     "target_db_existing_connection":"",
-      "target_db_type":null,
-      "target_db_name":null,
-      "target_db_server":null,
-      "target_db_username":null,
-  "source_table":"Customer_Account",
-  "target_table":"Customer_Account",
-  "columns":"null",
-  "source_query":"select count(*) from Customer_Account",
-  "target_query":"select count(*) from Customer_Account"
+  "source_table":"",
+  "target_table":"",
+  "columns":"",
+  "source_query":"",
+  "target_query":""
   }
 
 export class CreateSuite extends Component {
@@ -79,18 +68,19 @@ export class CreateSuite extends Component {
             show_input:'a,b',
             suiteName:'',
             selectedDBType:1,
+            isTestClassSelected:true,
             suiteData : [
                 data
             ],
             Connection:{}	
         };
-        this.onYesBtnClickHandler = this.onYesBtnClickHandler.bind(this)
-        this.getConnectionData = this.getConnectionData.bind(this)
     }
   
 
     componentDidMount(){
         this.props.getallClassNames()
+        this.props.getAllConnections(this.props.currentProject.project_id)
+
     }
     static getDerivedStateFromProps = (nextProps, prevState) => {
         let newState = prevState;
@@ -145,65 +135,6 @@ export class CreateSuite extends Component {
         }
 
     }
-    showDialog = (index,v_index) =>{
-        switch(v_index){
-            case 3:
-            const temp_SuiteData= [...this.state.suiteData]
-            let Connection = temp_SuiteData[index]
-            Connection['source_db_existing_connection'] = ''
-            Connection['source_db_type'] = ''
-            Connection['source_db_name'] = ''
-            Connection['source_db_server'] = ''
-            Connection['source_db_username'] = ''
-            Connection['type'] = "src"
-            Connection["index"] = index
-            this.setState({showManageConnectionPopUp:true,Connection:Connection})
-            break;
-            case 4:
-            const temp_SuiteData_target= [...this.state.suiteData]
-            let Connection_target = temp_SuiteData_target[index]
-            Connection_target['target_db_existing_connection'] = ''
-            Connection_target['target_db_type'] = ''
-            Connection_target['target_db_name'] = ''
-            Connection_target['target_db_server'] = ''
-            Connection_target['target_db_username'] = ''
-            Connection_target['type'] = "target"
-            Connection_target["index"] = index
-            this.setState({showManageConnectionPopUp:true,Connection:Connection_target})
-            break;
-            default:
-            break;
-        }
-    }
-    hideConfirmationopup = (child_data) =>{
-        this.setState({showManageConnectionPopUp:child_data})
-    }
-    onYesBtnClickHandler = (child_data) => {
-        this.setState({showManageConnectionPopUp:child_data})
-    }
-    getConnectionData = (data) =>{
-        switch(data.type){
-            case "src":
-            const temp =[...this.state.suiteData]
-            const src_connection  =temp[data.index]
-            src_connection['source_db_existing_connection'] = data.source_db_connection_id
-            src_connection['source_db_type'] = data.source_db_type
-            src_connection['source_db_name'] = data.source_db_name
-            src_connection['source_db_server'] = data.source_db_server
-            src_connection["source_db_username"] = data.source_db_username
-            this.setState({temp:src_connection}) 
-            case "target":
-            const temp_tar = [...this.state.suiteData]
-            const target_connection = temp_tar[data.index]
-            target_connection['target_db_existing_connection'] = data.source_db_connection_id
-            target_connection['target_db_type'] = data.source_db_type
-            target_connection['target_db_name'] = data.source_db_name
-            target_connection['target_db_server'] = data.source_db_server
-            target_connection["target_db_username"] = data.source_db_username
-            this.setState({temp_tar:target_connection})
-
-        }
-    }
     renderDBTypes = () =>{
         const options = this.props.classNameList.map((item) =>{
             const key = Object.keys(item)[0][0]
@@ -214,7 +145,7 @@ export class CreateSuite extends Component {
     handleDBTypeChange = (item,index)=>{
         const temp =[...this.state.suiteData]
         temp[index]['test_case_class'] = item.value
-        this.setState({suiteData:temp})
+        this.setState({suiteData:temp,isTestClassSelected:false})
     }
     deleteRow = (index)=>{
         const temp =[...this.state.suiteData]
@@ -222,7 +153,59 @@ export class CreateSuite extends Component {
         this.setState({suiteData:temp})
 
     }
+    renderExistingDBTypes = () =>{
+        const options = this.props.allConnections.map((item,key) => {
+            return { value: item.db_connection_id, label:item.db_connection_name} ;
+        });
+        return options;
+    }
+    handleExistingDBTypeChange = (index,item,v_index) =>{
+        console.log(index,item,v_index)
+        switch(v_index){
+            case 3:
+            const temp =[...this.state.suiteData]
+            const src_connection =temp[index]
+            src_connection['source_db_existing_connection']= item.value
+            this.setState({temp:src_connection})
+            break;
+            case 4:
+            const temp_tar =[...this.state.suiteData]
+            const tar_connection =temp_tar[index]
+            tar_connection['target_db_existing_connection']= item.value
+            this.setState({temp_tar:src_connection})
+            break;
+        }
+        console.log(this.state)
+    }
+
+    showData = (val,index) =>{
+        switch(index){
+            case 2:
+            return val?<div>{val}</div>:<div>Description</div>
+            break;
+            case 5:
+            return val?<div>{val}</div>:<div>Source Table</div>
+            break;
+            case 6:
+            return val?<div>{val}</div>:<div>Target Table</div>
+            break;
+            case 7:
+            return val?<div>{val}</div>:<div>Columns</div>
+            break
+            case 8:
+            return val?<div>{val}</div>:<div>Source Query</div>
+            break;
+            case 9:
+            return val?<div>{val}</div>:<div>Target Query</div>
+            break;
+            default:
+            break
+        }
+    }
     renderData = (classes) =>{
+   
+        
+       
         {
             return this.state.suiteData.map((eachrow,index) =>(  
 
@@ -236,26 +219,35 @@ export class CreateSuite extends Component {
                     options= { this.renderDBTypes() }
                     /></TableCell>
                 }
-                {this.splitAndMatch(index,2)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,2)}>{eachrow.test_description}</TableCell>:
-                <TableCell className={classes.tablecell}><TextField  multiline={true}  value={eachrow.test_description} onChange={()=> this.handleChange(event,index,2) }/></TableCell>}              
+                {this.splitAndMatch(index,2)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,2)}>{this.showData(eachrow.test_description,2)}</TableCell>:
+                <TableCell className={classes.tablecell}><TextField disabled={this.state.isTestClassSelected} multiline={true}  value={eachrow.test_description} onChange={()=> this.handleChange(event,index,2) }/></TableCell>}              
+                <TableCell ><Select 
+                    theme={theme => ({ ...theme, borderRadius: 5, colors: { ...theme.colors, primary25: '#f4cdd0', primary: '#dee0e2',primary50: '#dee0e2' }, })}
+                    value={this.state.source_db_existing_connection}
+                    onChange={ (item) => this.handleExistingDBTypeChange(index,item,3) }
+                    options= { this.renderExistingDBTypes() }
+                    /> </TableCell>
+
+                <TableCell> <Select 
+                    theme={theme => ({ ...theme, borderRadius: 5, colors: { ...theme.colors, primary25: '#f4cdd0', primary: '#dee0e2',primary50: '#dee0e2' }, })}
+                    value={this.state.target_db_existing_connection}
+                    onChange={ (item) => this.handleExistingDBTypeChange(index,item,4) }
+                    options= { this.renderExistingDBTypes() }/>
+                </TableCell>        
+                {this.splitAndMatch(index,5)?<TableCell className={classes.tablecell}  onClick= {() =>this.switchstate(index,5)}>{this.showData(eachrow.source_table,5)} </TableCell>:
+                <TableCell  className={classes.tablecell}><TextField  disabled={this.state.isTestClassSelected}  multiline={true} value={eachrow.source_table}  onChange={()=> this.handleChange(event,index,5)} style={{width:"10vw"}} /></TableCell>}   
                 
-                <TableCell  onClick={(e) => {this.showDialog(index,3)}} className={classes.tablepopup} style={{maxwidth:"6vw"}}><LaunchIcon/></TableCell>
-                <TableCell onClick={(e) => {this.showDialog(index,4)}} className={classes.tablepopup} style={{maxwidth:"6vw"}}><LaunchIcon/></TableCell>
+                {this.splitAndMatch(index,6)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,6)}>{this.showData(eachrow.target_table,6)}</TableCell>:
+                <TableCell className={classes.tablecell}><TextField  disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_table} onChange={()=> this.handleChange(event,index,6)} style={{width:"10vw"}} /></TableCell>}            
                 
-                {this.splitAndMatch(index,5)?<TableCell className={classes.tablecell}  onClick= {() =>this.switchstate(index,5)}>{eachrow.source_table}</TableCell>:
-                <TableCell  className={classes.tablecell}><TextField   multiline={true} value={eachrow.source_table}  onChange={()=> this.handleChange(event,index,5)} style={{width:"10vw"}} /></TableCell>}   
+                {this.splitAndMatch(index,7)?<TableCell  className={classes.tablepopup} onClick= {() =>this.switchstate(index,7)}>{this.showData(eachrow.columns,7)}</TableCell>: 
+                <TableCell className={classes.tablepopup}><TextField disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.columns} onChange={()=> this.handleChange(event,index,7)} style={{maxwidth:"8vw"}}/></TableCell>}            
                 
-                {this.splitAndMatch(index,6)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,6)}>{eachrow.target_table}</TableCell>:
-                <TableCell className={classes.tablecell}><TextField  multiline={true} value={eachrow.target_table} onChange={()=> this.handleChange(event,index,6)} style={{width:"10vw"}} /></TableCell>}            
-                
-                {this.splitAndMatch(index,7)?<TableCell  className={classes.tablepopup} onClick= {() =>this.switchstate(index,7)}>{eachrow.columns}</TableCell>: 
-                <TableCell className={classes.tablepopup}><TextField multiline={true} value={eachrow.columns} onChange={()=> this.handleChange(event,index,7)} style={{maxwidth:"8vw"}}/></TableCell>}            
-                
-                {this.splitAndMatch(index,8)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,8)}>{eachrow.source_query}</TableCell>:
-                <TableCell className={classes.tablecell}><TextField multiline={true} value={eachrow.source_query} onChange={()=> this.handleChange(event,index,8)} style={{maxwidth:"10vw"}} /></TableCell>}            
-                
-                {this.splitAndMatch(index,9)?<TableCell className={classes.tablecell}  onClick= {() =>this.switchstate(index,9)}>{eachrow.target_query}</TableCell>:
-                <TableCell ><TextField multiline={true} value={eachrow.target_query} onChange={()=> this.handleChange(event,index,9)} style={{width:"10vw"}} /></TableCell>}
+                {this.splitAndMatch(index,8)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,8)}>{this.showData(eachrow.source_query,8)}</TableCell>:
+                <TableCell className={classes.tablecell}><TextField disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.source_query} onChange={()=> this.handleChange(event,index,8)} style={{maxwidth:"10vw"}} /></TableCell>}            
+                  
+                {this.splitAndMatch(index,9)?<TableCell className={classes.tablecell}  onClick= {() =>this.switchstate(index,9)}>{this.showData(eachrow.target_query,9)}</TableCell>:
+                <TableCell ><TextField disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_query} onChange={()=> this.handleChange(event,index,9)} style={{width:"10vw"}} /></TableCell>}
                 <TableCell className={classes.tablepopup}><i className='fas fa-minus-circle minusCircle minuscirclecolor' onClick={() => this.deleteRow(index)}></i></TableCell>
               </TableRow>
               
@@ -265,27 +257,18 @@ export class CreateSuite extends Component {
    
     addRow (){
        this.setState({
-          suiteData:[...this.state.suiteData,{'test_case_class':null,
+          suiteData:[...this.state.suiteData,{'test_case_class':"",
           'test_description':"",
               "source_db_existing_connection":"",
-              "source_db_type":null,
-              "source_db_name":null,
-              "source_db_server":null,
-              "source_db_username":null,
             "target_db_existing_connection":"",
-              "target_db_type":null,
-              "target_db_name":null,
-              "target_db_server":null,
-              "target_db_username":null,
           "source_table":"",
-          "target_table":"Customer_Account",
-          "columns":"null",
-          "source_query":"select count(*) from Customer_Account",
-          "target_query":"select count(*) from Customer_Account"
+          "target_table":"",
+          "columns":"",
+          "source_query":"",
+          "target_query":""
           }] 
        },()=>{
        })
-       console.log(this.state)
     }
     handleSuiteNameChange = (e)=>{
         this.setState({suiteName:e.target.value})
@@ -298,9 +281,8 @@ export class CreateSuite extends Component {
         return stateData.some(this.ValidFields)
     }
     ValidFields = (item) =>{
-        return (item.test_description && item.source_table && item.target_table && (item.source_db_existing_connection || item.source_db_type) && (item.target_db_existing_connection || item.target_db_type))
+        return (item.test_description && item.source_table && item.target_table && (item.source_db_existing_connection) && (item.target_db_existing_connection))
     }
-
     
     handleTestSuiteUploadClick = () =>{
         const temp_SuiteData=[]
@@ -317,7 +299,7 @@ export class CreateSuite extends Component {
             UploadBody.suite_name=this.state.suiteName
             UploadBody.project_id = this.props.currentProject.project_id
             UploadBody.test_case_detail = temp_SuiteData
-       
+        console.log(UploadBody)
         this.props.SubmitTestSuiteData(JSON.stringify(UploadBody))
     }
 
@@ -353,17 +335,6 @@ export class CreateSuite extends Component {
                 </Paper>
                 <div><i className='fas fa-plus-circle plusCircle minuscirclecolor'  onClick={() => this.addRow()}></i>
             </div>  
-
-            { 
-					this.state.showManageConnectionPopUp ?
-                        <RenderManageConnectionDialog
-                        connectionDetail ={this.state.Connection}
-                         onYesBtnClickHandler={ this.onYesBtnClickHandler}
-                         ConnectionData =  {this.getConnectionData}
-                         currentProject={this.props.currentProject}
-                         ></RenderManageConnectionDialog>
-						: null
-			}
             </div>
         )}}
 
@@ -372,15 +343,19 @@ const mapStateToProps = (state) => {
 	return {
 		classNameList: state.dbDetailsData.classNameList?state.dbDetailsData.classNameList: [],
         currentProject: state.appData.currentProject,
+       
         redirectToSuiteList: state.testSuiteUploadData.redirectToSuiteList,
         testSuites: state.testSuites.testSuiteList? state.testSuites.testSuiteList: [],
-
+        dbDetailsList: state.dbDetailsData.dbDetailsList?state.dbDetailsData.dbDetailsList: [],
+        allConnections : state.testSuites.connectionsList && 
+		state.testSuites.connectionsList.allConnections? state.testSuites.connectionsList.allConnections : [],
 
 	};
 };
 const mapDispatchToProps = dispatch => ({
     getallClassNames: () => dispatch(getallClassNames()),
-    SubmitTestSuiteData: (data) =>dispatch(SubmitTestSuiteData(data))
+    SubmitTestSuiteData: (data) =>dispatch(SubmitTestSuiteData(data)),
+    getAllConnections: (data) => dispatch(getAllConnections(data)),
 });
 CreateSuite.propTypes = {
     classes: PropTypes.object.isRequired,

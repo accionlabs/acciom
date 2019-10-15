@@ -2,17 +2,36 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 import '../css/Db-ui-styles.css';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
-import LaunchIcon from '@material-ui/icons/Launch';
+import { withStyles } from '@material-ui/core/styles';
 
+import LaunchIcon from '@material-ui/icons/Launch';
 import Table from '@material-ui/core/Table';
 import Checkbox from '@material-ui/core/Checkbox';
+
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 import { 
 	getTestCaseDetailBySuiteId,
 } from '../actions/testSuiteListActions';
 
 
+const useStyles = theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'nowrap',
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    maxWidth:'10vw',
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  }
+});
 
 export class EditTestCase extends Component {
     constructor (props) {
@@ -21,17 +40,6 @@ export class EditTestCase extends Component {
 			
 		};
     }
-     useStyles = makeStyles(theme => ({
-        root: {
-          width: '100%',
-          marginTop: theme.spacing(3),
-          overflowX: 'auto',
-        },
-        table: {
-          minWidth: 650,
-        },
-      }));
-
     componentDidMount () {
 		const suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
         console.log(suite_id)
@@ -39,22 +47,26 @@ export class EditTestCase extends Component {
          
   }
   
-  renderData = (SuiteData)=>{
+  renderData = (SuiteData,classes)=>{
     {
       const	suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
       console.log(SuiteData[suite_id])
       if (!SuiteData[suite_id]) return null;
       return SuiteData[suite_id].map(eachrow =>(
         <tr className="table-create-suite-row">
-                <td>{eachrow.case_id}  <Checkbox
+                <td><Checkbox
         value="checkedC"
         inputProps={{
           'aria-label': 'uncontrolled-checkbox',
         }}
       /></td>
                 <td>{eachrow.case_name}</td>
-                <td ><LaunchIcon onClick={() => this.EditTestConnection()}/></td>
-                <td  ><LaunchIcon/></td>
+                <td className={classes.formControl}>
+        <Select value={10}
+        inputProps={{
+          name: 'age',
+          id: 'age-simple'}}/> </td>
+                <td  > <Select/></td>
                 <td  > {eachrow.source_table}</td>
                 <td  >{eachrow.target_table}</td>
                 <td  >{eachrow.test_description}</td>
@@ -67,12 +79,12 @@ export class EditTestCase extends Component {
     
 
     render() {
+      const { classes } = this.props;
         return (
             <div>
                 <h2 className="main_titles">EditTestCase :  </h2>
                 {/* <Button className="button-colors" bsStyle="primary"><div className="create-suite"> Clone</div></Button> */}
                <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Clone</div></Button>
-               <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Create Suite</div></Button>
 
                <Button className="button-colors savebtn" bsStyle="primary"> <div className="create-suite">Save</div></Button>
                <Table responsive className="manage-db-table">
@@ -90,7 +102,7 @@ export class EditTestCase extends Component {
 						</tr>
 					</thead>
 					<tbody className="table_body">
-                    {this.renderData(this.props.suiteData)}
+                    {this.renderData(this.props.suiteData,classes)}
 					</tbody>
 				</Table>
                 </div>
@@ -108,4 +120,4 @@ getTestCaseDetailBySuiteId : (suite_id,bool) => dispatch(getTestCaseDetailBySuit
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditTestCase);
+export default connect(mapStateToProps, mapDispatchToProps)( withStyles(useStyles)(EditTestCase));

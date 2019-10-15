@@ -16,7 +16,7 @@ export class ViewSuite extends Component {
     
 
     componentDidMount(){
-        console.log("dsdsdsds",this.props.currentProject)
+        console.log(this.props.currentProject)
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -30,12 +30,13 @@ export class ViewSuite extends Component {
        return suiteList.map((item,index)=>{
         return (
             <tr key={index}>
-                <td>{item.test_suite_id}</td>
+            
                 <td>{item.test_suite_name}</td>
                 <td>{item.created_at}</td>
                 <td>
                     
-                <Link to={`/edit_test_case/${item.test_suite_id}`}><EditIcon fontSize="small"  style={{color:"#696969"}} /></Link>
+                {/* <Link to={`/edit_test_case/${item.test_suite_id}`}> */}
+                <EditIcon fontSize="small"  style={{color:"#696969"}} />
                 <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} />
                 </td>
             </tr>	
@@ -59,7 +60,7 @@ export class ViewSuite extends Component {
 				<Table responsive className="manage-db-table">
 					<thead className="table_head">
 						<tr>
-							<th>Suite ID</th>
+						
 							<th>Suite Name</th>
 							<th>Uploaded at</th>
 							<th>Actions</th>
