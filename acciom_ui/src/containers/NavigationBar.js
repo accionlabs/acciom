@@ -310,9 +310,9 @@ function NavigationBar(props) {
 						</MenuItem>
 						<MenuItem>
 						<ListItemIcon>
-							<Link to={'/view_suites'}>
+							<Link  id="dashbcolor" className = {classes.startup} to={'/view_suites'}>
 						
-							<ChromeReaderModeIcon fontSize="large"/>
+							<ChromeReaderModeIcon  fontSize="large"/>
 							</Link>
 						</ListItemIcon>
 						<Link to={'/view_suites'} id="dashbcolor"  className = {classes.startup}>Manage Suites</Link>

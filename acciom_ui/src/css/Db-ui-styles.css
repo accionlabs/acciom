@@ -1396,4 +1396,8 @@ body,html{
 }
 .mandatory{
     color: rgb(245, 96, 106);
+    font-size: 14px;
+}
+.AddSuiteLayout{
+    margin-bottom: 35px;
 }

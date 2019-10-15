@@ -13,8 +13,9 @@ import Paper from '@material-ui/core/Paper';
 import Select from 'react-select';
 import { TextField } from '@material-ui/core';
 import { getallClassNames,SubmitTestSuiteData } from '../actions/dbDetailsActions';
-import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
+import PlusCircle from '@material-ui/icons/AddCircle';
+import MinusCircle from '@material-ui/icons/RemoveCircle';
 
 import { 
 	getAllConnections
@@ -261,7 +262,14 @@ export class CreateSuite extends Component {
                 {this.splitAndMatch(index,9)?<TableCell className={classes.tablecell}  onClick= {() =>this.switchstate(index,9)}>{this.showData(eachrow.target_query,9)}</TableCell>:
                 <TableCell ><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_query} onChange={()=> this.handleChange(event,index,9)} style={{width:"11vw"}} /></TableCell>}
                 
-            <TableCell className={classes.tablepopup}>{this.showMinus()?<IconButton size = "small"><i className='fas fa-minus-circle minusCircle minuscirclecolor' onClick={() => this.deleteRow(index)}></i></IconButton>:""}</TableCell>
+                <TableCell className={classes.tablepopup}>
+                    {this.showMinus()?
+                        <IconButton  onClick={() => this.deleteRow(index)}>
+                            <MinusCircle />
+                        </IconButton>
+                        :""
+                    }
+                </TableCell>
               </TableRow>
               
             ))
@@ -291,7 +299,7 @@ export class CreateSuite extends Component {
     }
     ValidRows(){
         const stateData = [...this.state.suiteData]
-        return stateData.some(this.ValidFields)
+        return stateData.every(this.ValidFields)
     }
     ValidFields = (item) =>{
         return (item.test_description && item.source_table && item.target_table && (item.source_db_existing_connection) && (item.target_db_existing_connection))
@@ -321,20 +329,21 @@ export class CreateSuite extends Component {
        const showAddBtn = !this.ValidRows()
         const { classes } = this.props;
         return(
-            <div>
-                <h3 className="usermanagetitle main_titles">Create Suite</h3>
-                <input className="suite-txt" type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/>
-				<Button className="button-create" bsStyle="primary" disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button>
+            <div className="AddSuiteLayout">
+                <i class="fa fa-th fa-lg" aria-hidden="true"></i>
+				<label className="db_page_title main_titles">Create Suite</label><br/>
+                <span style={{display:'inline'}}><input className="suite-txt" type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/></span>
+				<span style={{display:'inline'}}><Button className="button-create" bsStyle="primary" disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>
                 <Paper className={classes.root}>
                 <Table className={classes.table}>
                 <TableHead className={classes.tablehead}>
                 <TableRow>
-							<TableCell className={classes.tablecell}><span className="mandatory">Test class</span></TableCell>
-							<TableCell className={classes.tablecell}><span className="mandatory">Description</span> </TableCell>
-							<TableCell className={classes.tablecell}><span className="mandatory">Source Connection</span> </TableCell>
-							<TableCell className={classes.tablecell}><span className="mandatory">Target Connection</span> </TableCell>
-                            <TableCell className={classes.tablecell}><span className="mandatory">Source Table</span> </TableCell>
-                            <TableCell className={classes.tablecell}><span className="mandatory">Target Table</span> </TableCell>
+							<TableCell className={classes.tablecell}>Test class<span className="mandatory">*</span></TableCell>
+							<TableCell className={classes.tablecell}>Description<span className="mandatory">*</span> </TableCell>
+							<TableCell className={classes.tablecell}>Source Connection<span className="mandatory">*</span> </TableCell>
+							<TableCell className={classes.tablecell}>Target Connection<span className="mandatory">*</span> </TableCell>
+                            <TableCell className={classes.tablecell}>Source Table<span className="mandatory">*</span> </TableCell>
+                            <TableCell className={classes.tablecell}>Target Table<span className="mandatory">*</span> </TableCell>
                             <TableCell className={classes.tablecell}>Columns </TableCell>
                             <TableCell className={classes.tablecell}>Source query </TableCell>
                             <TableCell className={classes.tablecell}>Target query </TableCell>
@@ -348,8 +357,8 @@ export class CreateSuite extends Component {
 				</Table>
                 </Paper>
                 <div>
-                <IconButton disabled={showAddBtn} size = "small"className={classes.minusbtn} >
-                    <i className='fas fa-plus-circle plusCircle minuscirclecolor' onClick={() => this.addRow()}></i>
+                    <IconButton disabled={showAddBtn} onClick={() => this.addRow()} >
+                        <PlusCircle  />
                     </IconButton>
             </div>  
             </div>

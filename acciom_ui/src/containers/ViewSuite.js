@@ -52,6 +52,7 @@ export class ViewSuite extends Component {
         return (
                 <div className="viewDbDetailsForm">
 				<div className='btnContainer'>
+                <i class="fa fa-th fa-lg" aria-hidden="true"></i>
 				<label className="db_page_title main_titles">Manage Test Suites</label>
 					<div className='project-switch'><Button className="button-colors" bsStyle="primary" onClick={ (e) => this.handleSwitchProject()}>Switch Project</Button> </div>
                     <div className='project-switch'>
