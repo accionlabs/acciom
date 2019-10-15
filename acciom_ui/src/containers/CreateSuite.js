@@ -203,10 +203,14 @@ export class CreateSuite extends Component {
             break
         }
     }
+    showMinus = () =>{
+        console.log((this.state.suiteData).length)
+        if ((this.state.suiteData).length !=1){
+            return true
+        }
+    
+    }
     renderData = (classes) =>{
-   
-        
-       
         {
             return this.state.suiteData.map((eachrow,index) =>(  
 
@@ -221,7 +225,7 @@ export class CreateSuite extends Component {
                     /></TableCell>
                 }
                 {this.splitAndMatch(index,2)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,2)}>{this.showData(eachrow.test_description,2)}</TableCell>:
-                <TableCell className={classes.tablecell}><TextField disabled={this.state.isTestClassSelected} multiline={true}  value={eachrow.test_description} onChange={()=> this.handleChange(event,index,2) }/></TableCell>}              
+                <TableCell className={classes.tablecell}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true}  value={eachrow.test_description} onChange={()=> this.handleChange(event,index,2) }/></TableCell>}              
                 <TableCell ><Select 
                     theme={theme => ({ ...theme, borderRadius: 5, colors: { ...theme.colors, primary25: '#f4cdd0', primary: '#dee0e2',primary50: '#dee0e2' }, })}
                     value={this.state.source_db_existing_connection}
@@ -236,20 +240,21 @@ export class CreateSuite extends Component {
                     options= { this.renderExistingDBTypes() }/>
                 </TableCell>        
                 {this.splitAndMatch(index,5)?<TableCell className={classes.tablecell}  onClick= {() =>this.switchstate(index,5)}>{this.showData(eachrow.source_table,5)} </TableCell>:
-                <TableCell  className={classes.tablecell}><TextField  disabled={this.state.isTestClassSelected}  multiline={true} value={eachrow.source_table}  onChange={()=> this.handleChange(event,index,5)} style={{width:"10vw"}} /></TableCell>}   
+                <TableCell  className={classes.tablecell}><TextField autoFocus={true} disabled={this.state.isTestClassSelected}  multiline={true} value={eachrow.source_table}  onChange={()=> this.handleChange(event,index,5)} style={{width:"10vw"}} /></TableCell>}   
                 
                 {this.splitAndMatch(index,6)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,6)}>{this.showData(eachrow.target_table,6)}</TableCell>:
-                <TableCell className={classes.tablecell}><TextField  disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_table} onChange={()=> this.handleChange(event,index,6)} style={{width:"10vw"}} /></TableCell>}            
+                <TableCell className={classes.tablecell}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_table} onChange={()=> this.handleChange(event,index,6)} style={{width:"11vw"}} /></TableCell>}            
                 
                 {this.splitAndMatch(index,7)?<TableCell  className={classes.tablepopup} onClick= {() =>this.switchstate(index,7)}>{this.showData(eachrow.columns,7)}</TableCell>: 
-                <TableCell className={classes.tablepopup}><TextField disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.columns} onChange={()=> this.handleChange(event,index,7)} style={{maxwidth:"8vw"}}/></TableCell>}            
+                <TableCell className={classes.tablepopup}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.columns} onChange={()=> this.handleChange(event,index,7)} style={{maxwidth:"8vw"}}/></TableCell>}            
                 
                 {this.splitAndMatch(index,8)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,8)}>{this.showData(eachrow.source_query,8)}</TableCell>:
-                <TableCell className={classes.tablecell}><TextField disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.source_query} onChange={()=> this.handleChange(event,index,8)} style={{maxwidth:"10vw"}} /></TableCell>}            
+                <TableCell className={classes.tablecell}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.source_query} onChange={()=> this.handleChange(event,index,8)} style={{maxwidth:"11vw"}} /></TableCell>}            
                   
                 {this.splitAndMatch(index,9)?<TableCell className={classes.tablecell}  onClick= {() =>this.switchstate(index,9)}>{this.showData(eachrow.target_query,9)}</TableCell>:
-                <TableCell ><TextField disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_query} onChange={()=> this.handleChange(event,index,9)} style={{width:"10vw"}} /></TableCell>}
-                <TableCell className={classes.tablepopup}><i className='fas fa-minus-circle minusCircle minuscirclecolor' onClick={() => this.deleteRow(index)}></i></TableCell>
+                <TableCell ><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_query} onChange={()=> this.handleChange(event,index,9)} style={{maxwidth:"10vw"}} /></TableCell>}
+                
+            <TableCell className={classes.tablepopup}>{this.showMinus()?<i className='fas fa-minus-circle minusCircle minuscirclecolor' onClick={() => this.deleteRow(index)}></i>:""}</TableCell>
               </TableRow>
               
             ))
@@ -316,12 +321,12 @@ export class CreateSuite extends Component {
                 <Table className={classes.table}>
                 <TableHead className={classes.tablehead}>
                 <TableRow>
-							<TableCell className={classes.tablecell}>Test class</TableCell>
-							<TableCell className={classes.tablecell}>Description </TableCell>
-							<TableCell className={classes.tablecell}>Source Connection </TableCell>
-							<TableCell className={classes.tablecell}>Target Connection </TableCell>
-                            <TableCell className={classes.tablecell}>Source Table </TableCell>
-                            <TableCell className={classes.tablecell}>Target Table </TableCell>
+							<TableCell className={classes.tablecell}><span className="mandatory">Test class*</span></TableCell>
+							<TableCell className={classes.tablecell}><span className="mandatory">Description*</span> </TableCell>
+							<TableCell className={classes.tablecell}><span className="mandatory">Source Connection*</span> </TableCell>
+							<TableCell className={classes.tablecell}><span className="mandatory">Target Connection*</span> </TableCell>
+                            <TableCell className={classes.tablecell}><span className="mandatory">Source Table*</span> </TableCell>
+                            <TableCell className={classes.tablecell}><span className="mandatory">Target Table*</span> </TableCell>
                             <TableCell className={classes.tablecell}>Columns </TableCell>
                             <TableCell className={classes.tablecell}>Source query </TableCell>
                             <TableCell className={classes.tablecell}>Target query </TableCell>
