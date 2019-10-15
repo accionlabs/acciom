@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-	
+import { Link } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -335,6 +336,7 @@ function ControlledExpansionPanels({ testSuites, allCases, projectId, getAllConn
 							<Typography className={(expanded === testSuite.test_suite_id ? (classes.headingActive2) : classes.manageConnection)}><span onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={e => handleManageConnection(e, testSuite.test_suite_id)}>Manage Connections</span></Typography>
 							<Typography className={(expanded === testSuite.test_suite_id ? (classes.headingActive3) : classes.suiteID)}>SuiteID: {testSuite.test_suite_id}</Typography>
 							<Typography className={(expanded === testSuite.test_suite_id ? (classes.headingActive4) : classes.secondaryHeading)}>Uploaded at:  {testSuite.created_at}</Typography>
+							
 							<i className="far fa-play-circle statusPlayIcon playicon" onMouseOver={e => onHover(e)} onMouseOut={e => onHout(e)} onClick={(e) => runTestSuite(e, testSuite.test_suite_id)} aria-hidden="true"></i>
 						</ExpansionPanelSummary>
 

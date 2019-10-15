@@ -8,7 +8,13 @@ import {
 	REDIRECT_TO_VIEW_DB_PAGE_COMPLETE,
 	DELETE_DB_DETAILS_SUCCESS,
 	UPLOAD_TESTCASES_SUCCESS,
-	RESET_SELECTED_DB_DETAILS
+	RESET_SELECTED_DB_DETAILS,
+	DB_TYPE_DETAILS_SUCCESS,
+	DB_TYPE_DETAILS_ERROR,
+	CLASS_NAME_DETAILS_SUCCESS,
+	CLASS_NAME_DETAILS_ERROR,
+	
+
 
 } from '../constants/ActionTypes';
 
@@ -16,7 +22,10 @@ const initialState = {
 	dbDetailsList: [],
 	selectedDbDetails: null, 
 	refreshDBDetails: false,
-	redirectToViewDBPage: false
+	redirectToViewDBPage: false,
+	dbTypeList:[],
+	classNameList:[],
+
 };
 
 const dbDetailsData = (state = initialState, action) => {
@@ -67,6 +76,29 @@ const dbDetailsData = (state = initialState, action) => {
 			...state,
 			selectedDbDetails: null
 		}
+	case DB_TYPE_DETAILS_SUCCESS:
+	return {
+		...state,
+		dbTypeList:action.response.data.data
+	}
+	case DB_TYPE_DETAILS_ERROR:
+	return {
+		...state,
+		dbTypeList:[]
+	}
+	case CLASS_NAME_DETAILS_SUCCESS:
+	return{
+		...state,
+		classNameList:action.response.data.data
+	}
+	case CLASS_NAME_DETAILS_ERROR:
+	return{
+		...state,
+		classNameList:[]
+
+	}
+	
+	
 	
 	default:
 		return state;

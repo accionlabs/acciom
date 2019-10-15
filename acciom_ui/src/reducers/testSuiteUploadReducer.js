@@ -9,7 +9,9 @@ import {
 	ON_SHEET_NAME_CHANGE,
 	RESET_DATA_FOR_CASE_PAGE,
 	RESET_DATA_FOR_SHEET_PAGE,
-	GET_ALL_TEST_SUITES_SUCCESS
+	GET_ALL_TEST_SUITES_SUCCESS,
+	SUBMIT_SUITE_NAME_SUCCESS,
+	SUBMIT_SUITE_NAME_ERROR
 } from '../constants/ActionTypes';
 
 const initialState = {
@@ -148,6 +150,13 @@ const testSuiteUploadData = (state = initialState, action) => {
 			...state,
 			moveToSelectCasePage: false
 		};
+	case SUBMIT_SUITE_NAME_SUCCESS:
+		return {
+			...state,
+			redirectToSuiteList: true
+
+
+		}
 
 	default:
 		return state;
