@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Panel, Table, Button, Modal} from 'react-bootstrap';
 import { getAllTestSuites } from '../actions/testSuiteListActions';
 import EditIcon from '@material-ui/icons/Edit';
+import { showProjectSwitchPage } from '../actions/appActions';
 import DeleteIcon from '@material-ui/icons/Delete';
 export class ViewSuite extends Component {
     constructor(props) {
@@ -44,6 +45,9 @@ export class ViewSuite extends Component {
        })
     };
 
+    handleSwitchProject = () => {
+		this.props.showProjectSwitchPage(true);
+	};
     render() {
         return (
                 <div className="viewDbDetailsForm">
@@ -84,7 +88,8 @@ const mapStateToProps = (state) => {
 	};
 };
 const mapDispatchToProps = dispatch => ({
-    getAllTestSuites: (data) => dispatch(getAllTestSuites(data))	
+    getAllTestSuites: (data) => dispatch(getAllTestSuites(data)),
+    showProjectSwitchPage: (data) => dispatch(showProjectSwitchPage(data)),
 });
 
 

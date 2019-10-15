@@ -13,6 +13,9 @@ import Paper from '@material-ui/core/Paper';
 import Select from 'react-select';
 import { TextField } from '@material-ui/core';
 import { getallClassNames,SubmitTestSuiteData } from '../actions/dbDetailsActions';
+import AddIcon from '@material-ui/icons/Add';
+import IconButton from '@material-ui/core/IconButton';
+
 import { 
 	getAllConnections
 } from '../actions/testSuiteListActions';
@@ -46,6 +49,10 @@ const useStyles = theme => ({
     tablehead:{
         verticalAlign: 'middle',
         color: '#fff',
+    },
+    minusbtn:{
+        margin: theme.spacing(1),
+        marginBottom:"40px"
     }
   });
 
@@ -246,15 +253,15 @@ export class CreateSuite extends Component {
                 <TableCell className={classes.tablecell}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_table} onChange={()=> this.handleChange(event,index,6)} style={{width:"11vw"}} /></TableCell>}            
                 
                 {this.splitAndMatch(index,7)?<TableCell  className={classes.tablepopup} onClick= {() =>this.switchstate(index,7)}>{this.showData(eachrow.columns,7)}</TableCell>: 
-                <TableCell className={classes.tablepopup}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.columns} onChange={()=> this.handleChange(event,index,7)} style={{maxwidth:"8vw"}}/></TableCell>}            
+                <TableCell className={classes.tablepopup}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.columns} onChange={()=> this.handleChange(event,index,7)} style={{width:"8vw"}}/></TableCell>}            
                 
                 {this.splitAndMatch(index,8)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,8)}>{this.showData(eachrow.source_query,8)}</TableCell>:
-                <TableCell className={classes.tablecell}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.source_query} onChange={()=> this.handleChange(event,index,8)} style={{maxwidth:"11vw"}} /></TableCell>}            
+                <TableCell className={classes.tablecell}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.source_query} onChange={()=> this.handleChange(event,index,8)} style={{width:"11vw"}} /></TableCell>}            
                   
                 {this.splitAndMatch(index,9)?<TableCell className={classes.tablecell}  onClick= {() =>this.switchstate(index,9)}>{this.showData(eachrow.target_query,9)}</TableCell>:
-                <TableCell ><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_query} onChange={()=> this.handleChange(event,index,9)} style={{maxwidth:"10vw"}} /></TableCell>}
+                <TableCell ><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_query} onChange={()=> this.handleChange(event,index,9)} style={{width:"11vw"}} /></TableCell>}
                 
-            <TableCell className={classes.tablepopup}>{this.showMinus()?<i className='fas fa-minus-circle minusCircle minuscirclecolor' onClick={() => this.deleteRow(index)}></i>:""}</TableCell>
+            <TableCell className={classes.tablepopup}>{this.showMinus()?<IconButton size = "small"><i className='fas fa-minus-circle minusCircle minuscirclecolor' onClick={() => this.deleteRow(index)}></i></IconButton>:""}</TableCell>
               </TableRow>
               
             ))
@@ -311,6 +318,7 @@ export class CreateSuite extends Component {
 
     render(){
        const checkValid = this.SuiteNameValid() ||  !this.ValidRows()
+       const showAddBtn = !this.ValidRows()
         const { classes } = this.props;
         return(
             <div>
@@ -321,12 +329,12 @@ export class CreateSuite extends Component {
                 <Table className={classes.table}>
                 <TableHead className={classes.tablehead}>
                 <TableRow>
-							<TableCell className={classes.tablecell}><span className="mandatory">Test class*</span></TableCell>
-							<TableCell className={classes.tablecell}><span className="mandatory">Description*</span> </TableCell>
-							<TableCell className={classes.tablecell}><span className="mandatory">Source Connection*</span> </TableCell>
-							<TableCell className={classes.tablecell}><span className="mandatory">Target Connection*</span> </TableCell>
-                            <TableCell className={classes.tablecell}><span className="mandatory">Source Table*</span> </TableCell>
-                            <TableCell className={classes.tablecell}><span className="mandatory">Target Table*</span> </TableCell>
+							<TableCell className={classes.tablecell}><span className="mandatory">Test class</span></TableCell>
+							<TableCell className={classes.tablecell}><span className="mandatory">Description</span> </TableCell>
+							<TableCell className={classes.tablecell}><span className="mandatory">Source Connection</span> </TableCell>
+							<TableCell className={classes.tablecell}><span className="mandatory">Target Connection</span> </TableCell>
+                            <TableCell className={classes.tablecell}><span className="mandatory">Source Table</span> </TableCell>
+                            <TableCell className={classes.tablecell}><span className="mandatory">Target Table</span> </TableCell>
                             <TableCell className={classes.tablecell}>Columns </TableCell>
                             <TableCell className={classes.tablecell}>Source query </TableCell>
                             <TableCell className={classes.tablecell}>Target query </TableCell>
@@ -339,7 +347,10 @@ export class CreateSuite extends Component {
 					</TableBody>
 				</Table>
                 </Paper>
-                <div><i className='fas fa-plus-circle plusCircle minuscirclecolor'  onClick={() => this.addRow()}></i>
+                <div>
+                <IconButton disabled={showAddBtn} size = "small"className={classes.minusbtn} >
+                    <i className='fas fa-plus-circle plusCircle minuscirclecolor' onClick={() => this.addRow()}></i>
+                    </IconButton>
             </div>  
             </div>
         )}}
