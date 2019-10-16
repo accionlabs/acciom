@@ -2,7 +2,7 @@ import React from "react";
 import {Button, Modal} from 'react-bootstrap';
 import Tooltip from '@material-ui/core/Tooltip';
 import { TextField } from '@material-ui/core';
-import { DELETE, ADD, PROJNAME, PROJDESC, PROJNAMEINFO, PROJDESCINFO, TOOLTIP_TITLE, TOOLTIP_DESC, TEXTBOX_NAME,TEXTBOX_DESC, PROJECTS, ORGDESC,DELETEMSG, PROJECTITLE, TITLE, PROJECTDESC, ORGTITLE, ORJDESC, ORGNAME, DELETEORG, ORGANIZATION } from "../../constants/FieldNameConstants";
+import { DELETE, ADD, PROJNAME, PROJDESC, PROJNAMEINFO, PROJDESCINFO, TOOLTIP_TITLE, TOOLTIP_DESC, TEXTBOX_NAME,TEXTBOX_DESC, PROJECTS,DELETEMSG, TITLE, ORJDESC, ORGNAME, DELETEORG, ADDORGANIZATION, ADDPROJECT } from "../../constants/FieldNameConstants";
 
 const customModal =(props)=>{
 
@@ -14,7 +14,7 @@ const customModal =(props)=>{
         id={PROJNAMEINFO}
         label={currentPage===PROJECTS?PROJNAME:ORGNAME}
         margin="normal"
-        style ={{marginLeft:'20px'}}
+        style ={{marginLeft:'20px',marginTop:'-13px'}}
         onChange ={props.onTextFieldHandler}
         value ={projectNameAdd}
         name={TEXTBOX_NAME}
@@ -27,7 +27,7 @@ const customModal =(props)=>{
         id={PROJNAMEINFO}
         label={currentPage===PROJECTS?PROJNAME:ORGNAME}
         margin="normal"
-        style ={{marginLeft:'20px'}}
+        style ={{marginLeft:'20px',marginTop:'-13px'}}
         onChange ={props.onTextFieldHandler}
         value ={projectNameAdd}
         name={TEXTBOX_NAME}
@@ -40,7 +40,7 @@ const customModal =(props)=>{
         <TextField
         id={PROJDESCINFO}
         label={currentPage===PROJECTS?PROJDESC:ORJDESC}
-        style ={{marginLeft:'20px'}}
+        style ={{marginLeft:'20px',marginTop:'-13px'}}
         margin="normal"
         onChange ={props.onTextFieldHandler}
         name={TEXTBOX_DESC}
@@ -55,7 +55,7 @@ const customModal =(props)=>{
     <TextField
     id={PROJDESCINFO}
     label={currentPage===PROJECTS?PROJDESC:ORJDESC}
-    style ={{marginLeft:'20px'}}
+    style ={{marginLeft:'20px',marginTop:'-13px'}}
     margin="normal"
     onChange ={props.onTextFieldHandler}
     name={TEXTBOX_DESC}
@@ -66,20 +66,24 @@ const customModal =(props)=>{
     return (
         <Modal show={true} className="deleteconfirmpopupbox" bsSize="medium">
             <Modal.Header className="popboxheader">
-                <Modal.Title className="sub_title">
-                {variant ===DELETE?TITLE: (variant ===ADD && currentPage===PROJECTS)?PROJECTITLE:ORGTITLE}
+                {/* <Modal.Title className="sub_title"> */}
+                <Modal.Title className={variant ===DELETE?"sub_title":'sub_title_add'}>
+                {variant ===DELETE?TITLE: (variant ===ADD && currentPage===PROJECTS)?ADDPROJECT:ADDORGANIZATION}
                 </Modal.Title>
             </Modal.Header>
-
-            <Modal.Body >
-                <div className="deleteconfirmpopupfieldtext">
-               
-                  {(variant ===DELETE && currentPage===PROJECTS)?DELETEMSG:
-                    (variant ===DELETE && currentPage===ORGANIZATION)?DELETEORG:
-                    (variant ===ADD && currentPage===PROJECTS)?PROJECTDESC:
-                    ORGDESC}
-                  </div>
-            </Modal.Body>
+      
+         <Modal.Body >
+         {variant ==DELETE?
+         <div className="deleteconfirmpopupfieldtext">
+        
+                    {currentPage===PROJECTS?DELETEMSG:
+                DELETEORG
+            }
+           </div>:null
+         }
+     </Modal.Body>
+      
+         
             {
                 variant ===ADD?
                 <div>
@@ -97,7 +101,7 @@ const customModal =(props)=>{
                 </Button>
                 <Button className="onDeleteDbNoBtnClick nobtnbgcolor" 
                 onClick={variant ===DELETE?onNoBtnClicked:onSaveBtnClicked}>
-                {variant ===DELETE?'No':'Save'}
+                {variant ===DELETE?'No':'Add'}
                     </Button>
             </Modal.Footer>
         </Modal>

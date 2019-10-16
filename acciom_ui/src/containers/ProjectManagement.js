@@ -277,7 +277,6 @@ class ProjectManagement extends Component {
 					editIdx ={this.state.editIdx}
 					projectNameValue ={this.state.projectName}
 					projectDescriptionValue ={this.state.projectDescription}
-					
 					handleChange ={this.handleChangeHandler}
 				    />
 				 { 

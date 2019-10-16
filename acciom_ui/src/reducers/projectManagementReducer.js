@@ -22,9 +22,9 @@ const initialState = {
 const projectManagementData = (state = initialState, action) => {
     switch (action.type) {
 		
-	
-
-        case GET_PROJECT_LIST_SUCCESS:
+		case DELETE_PROJECT_LIST_SUCCESS:
+							
+		case GET_PROJECT_LIST_SUCCESS:
 			
                 return {
                     ...state,
@@ -40,11 +40,7 @@ const projectManagementData = (state = initialState, action) => {
 					   return{
 							...state
 						}
-						case DELETE_PROJECT_LIST_SUCCESS:
-							console.log('Delete reducer',action);
-							return{
-								...state
-							}
+						
 		
                 default:
 		return state;

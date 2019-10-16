@@ -19,6 +19,13 @@ body,html{
     color: #69717D !important;
     font-size: 15px;
     font-weight: bold;
+
+}
+.sub_title_add{
+    color: #69717D !important;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 24px;
 }
 
 .other-titles{
@@ -1485,4 +1492,7 @@ body,html{
 }
 .AddSuiteLayout{
     margin-bottom: 35px;
+}
+.backbutton_colors_project{
+    margin-top: -33px;
 }
