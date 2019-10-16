@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button,  Modal, ButtonGroup, DropdownButton, Item , MenuItem as MenuItemBS  } from 'react-bootstrap';
-
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -20,15 +20,13 @@ import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Icon from '@material-ui/core/Icon';
-
+import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 import ChangeOrganisation from '../components/ChangeOrganisation'
 import { logoutFromPortal } from '../actions/loginActions';
 import { showOrgChangePage } from '../actions/appActions';
 import logo from '../assets/images/logo.png';
 import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 
 const drawerWidth = 240;
 
@@ -166,6 +164,9 @@ const getLoginOptions = (props, classes) => {
 					</MenuItemBS>
 					<MenuItemBS eventKey="6">
 						<span id="logoutLink" className={classes.loginbtn} onClick={(event) => { event.preventDefault(); props.logoutFromPortal() }}>Logout</span>
+					</MenuItemBS>
+					<MenuItemBS eventKey="1" className={classes.width}>
+						<Link to="/create_suite"  className={classes.width}>create suite</Link>
 					</MenuItemBS>
 				</DropdownButton>
 			</div>
@@ -306,6 +307,15 @@ function NavigationBar(props) {
 							</Link>
 						</ListItemIcon>
 						<Link to={'/user_management'} id="dashbcolor"  className = {classes.startup}>Manage Users</Link>
+						</MenuItem>
+						<MenuItem>
+						<ListItemIcon>
+							<Link  id="dashbcolor" className = {classes.startup} to={'/view_suites'}>
+						
+							<ChromeReaderModeIcon  fontSize="large"/>
+							</Link>
+						</ListItemIcon>
+						<Link to={'/view_suites'} id="dashbcolor"  className = {classes.startup}>Manage Suites</Link>
 						</MenuItem>
 						<MenuItem>
 						<ListItemIcon>

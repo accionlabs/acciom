@@ -161,7 +161,8 @@ class ProjectAPI(Resource):
         if user_obj.is_super_admin == True or user_org_role:
             # Storing all active projects in a list
             list_of_active_project_obj = Project.query.filter_by(
-                org_id=get_project_data['org_id'], is_deleted=False).all()
+                org_id=get_project_data['org_id'], is_deleted=False).order_by(
+                Project.project_id).all()
             if not list_of_active_project_obj:
                 return api_response(False,
                                     APIMessages.NO_RESOURCE.format('Project'),
@@ -185,7 +186,7 @@ class ProjectAPI(Resource):
                     each_project.project_id)
             list_of_active_project_obj = Project.query.filter(
                 Project.project_id.in_(active_project),
-                Project.is_deleted == False).all()
+                Project.is_deleted == False).order_by(Project.project_id).all()
             projects_to_return = project_detail(list_of_active_project_obj,
                                                 user_org_role)
             return api_response(

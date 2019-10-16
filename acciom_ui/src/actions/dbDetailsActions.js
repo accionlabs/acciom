@@ -15,7 +15,15 @@ import {
 	DELETE_DB_DETAILS_SUCCESS,
 	DELETE_DB_DETAILS_ERROR,
 	REDIRECT_TO_VIEW_DB_PAGE_COMPLETE,
-	RESET_SELECTED_DB_DETAILS
+	RESET_SELECTED_DB_DETAILS,
+	DB_TYPE_DETAILS_SUCCESS,
+	DB_TYPE_DETAILS_ERROR,
+	CLASS_NAME_DETAILS_SUCCESS,
+	CLASS_NAME_DETAILS_ERROR,
+	SUBMIT_SUITE_NAME_SUCCESS,
+	SUBMIT_SUITE_NAME_ERROR,
+	GET_ALL_TEST_SUITES_SUCCESS,
+
 } from '../constants/ActionTypes'; 
 
 export const redirectToViewDbPageComplete = error => {
@@ -117,3 +125,46 @@ export const deleteDBDetails = (data) => {
 		})
 	};		
 };
+
+export const getAllDBTypes = () =>{
+	return {
+		types:[
+			'',
+			DB_TYPE_DETAILS_SUCCESS,
+			DB_TYPE_DETAILS_ERROR
+		],
+		callAPI: () =>fetch(`${BASE_URL}/supported-database-type`,{
+			method:'get',
+			headers
+		})
+	}
+}
+
+export const getallClassNames = () =>{
+	return {
+		types:[
+			'',
+			CLASS_NAME_DETAILS_SUCCESS,
+			CLASS_NAME_DETAILS_ERROR
+		],
+		callAPI: () =>fetch(`${BASE_URL}/supported-test-class-type`,{
+			method:'get',
+			headers
+		})
+	}
+}
+
+export const SubmitTestSuiteData = (formData) =>{
+	return {
+		types:[
+			'',
+			SUBMIT_SUITE_NAME_SUCCESS,
+			SUBMIT_SUITE_NAME_ERROR
+		],
+		callAPI: () =>fetch(`${BASE_URL}/add-test-suite-manually`,{
+			method:'post',
+			headers,
+			body: formData
+		})
+	}
+}
