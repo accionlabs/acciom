@@ -80,9 +80,7 @@ function callAPIMiddleware({ dispatch, getState }) {
 							if (response.success) {
 								toast.success(response.message);
 							} else {
-								if (response.message.length > 0) {
-									toast.warn(response.message);
-								}
+								toast.warn(response.message);
 							}
 						} 
 						dispatch(

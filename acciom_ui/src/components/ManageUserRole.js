@@ -67,7 +67,7 @@ class ManageUserRole extends Component{
 	}
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
-		if (nextProps.redirectToUserMgmtEdit) {
+		if (nextProps.redirectToUserMgmtEdit && nextProps.emailUserID !== "show") {
 			nextProps.history.push(`/edit_user_role/${nextProps.emailUserID}`);
 		}
 		if (nextProps.emailUserID === "show") {
@@ -239,11 +239,6 @@ class ManageUserRole extends Component{
 				</li>
 			);
 		});
-		// roleElements.push(
-		// 	<ManageUserRoleListContainer
-			
-		// 	/>
-		// )
 		return roleElements;
 	};
 	onSaveUserRoles = () => {
