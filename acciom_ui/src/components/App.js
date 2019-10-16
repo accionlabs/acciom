@@ -15,6 +15,10 @@ import ForgotPassword from './ForgotPassword';
 import AuthToken from './AuthToken';
 import ChangePasswordComponent from './ChangePassword';
 import EditUserRoles from '../containers/EditUserRoles';
+import EditTestCase from '../containers/EditTestCase';
+import ViewSuite from '../containers/ViewSuite';
+import CreateSuite from '../containers/CreateSuite';
+
 import ProjectManagement from '../containers/ProjectManagement';
 import ManageUserRole from './ManageUserRole'
 
@@ -69,6 +73,9 @@ const App = (props) => (
 				<PrivateRoute path="/projects" authTokenExpired={props.authTokenExpired} component={ProjectManagement} />
 				<PrivateRoute path="/organization" authTokenExpired={props.authTokenExpired} component={ProjectManagement} />
 				<PrivateRoute path="/edit_user_role/:id" authTokenExpired={props.authTokenExpired} component={EditUserRoles} />
+				<PrivateRoute path="/edit_test_case/:suite_id" authTokenExpired={props.authTokenExpired} component={EditTestCase} /> 
+				<PrivateRoute path="/create_suite" authTokenExpired={props.authTokenExpired} component={CreateSuite} /> 
+				<PrivateRoute path = "/view_suites" authTokenExpired={props.authTokenExpired} component={ViewSuite}/>
 				<PrivateRoute path="/ManageUserRole" authTokenExpired={props.authTokenExpired} component={ManageUserRole} />
 
 			</Content>
