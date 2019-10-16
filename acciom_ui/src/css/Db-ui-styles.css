@@ -1394,7 +1394,6 @@ body,html{
     
 
 }
-<<<<<<< HEAD
 .backbutton_colors_project{
     background-color: #69717D !important;
     color: #fff;
@@ -1403,12 +1402,11 @@ body,html{
     text-align: center;
     width: 127px;
     height: 31px;
-=======
+}
 .mandatory{
     color: rgb(245, 96, 106);
     font-size: 14px;
 }
 .AddSuiteLayout{
     margin-bottom: 35px;
->>>>>>> develop
 }
