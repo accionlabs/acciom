@@ -5,11 +5,13 @@ import { connect } from 'react-redux';
 import { ListGroup,Table, Button, Col } from 'react-bootstrap';
 import { getOrganizationUsersList,addOrganizationUsersList, retriveUserRoleByUserId } from '../actions/userManagementActions';
 import  RoleListItemContainer  from './RoleListItemContainer';
-
 import GroupIcon from '@material-ui/icons/Group';
-
 import CustomTable from '../components/Table/CustomTable'
 import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+
 const styles = theme => ({
 	textField:{
 		float:'right',
@@ -82,8 +84,14 @@ class UserManagement extends Component {
 				<div>
 					<GroupIcon className="manageUsersIcon" />
 					&nbsp; &nbsp;
-					<label className="main_titles" > Manage Users</label>
-					<Link to="/ManageUserRole"><Button className="backbutton_colors addUserButton">Add User</Button></Link>				
+					<label className="main_titles" >Manage Users</label>
+					<Link to="/ManageUserRole">
+					<Tooltip title="Add User" placement="right">
+					<IconButton className="addUserButton">
+					<PersonAddIcon  />
+					</IconButton>
+					</Tooltip>
+					</Link>
 				</div>				
 				<CustomTable 
 					headers={headers}
