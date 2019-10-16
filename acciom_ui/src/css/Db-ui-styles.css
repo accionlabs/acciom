@@ -1329,3 +1329,12 @@ body,html{
     
 
 }
+.backbutton_colors_project{
+    background-color: #69717D !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 127px;
+    height: 31px;
+}

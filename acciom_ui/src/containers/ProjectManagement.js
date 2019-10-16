@@ -9,8 +9,10 @@ import CheckIcon from '@material-ui/icons/Check';
 import Clear from '@material-ui/icons/Clear';
 import CustomTable from '../components/Table/CustomTable'
 import CustomModal from '../components/CommonModal/CustomModal';
-import {getProjectList,updateProjectList,deleteProjectDetails} from '../actions/projectManagementActions';
-import { PROJECTS, ORGANIZATION, PROJECTNAME, PROJECTDESCRIPTION, PROJNAME, DESCRIPTION, SMALL, ACTION, } from '../constants/FieldNameConstants';
+import {getProjectList,updateProjectList,deleteProjectDetails,addToProjectList} from '../actions/projectManagementActions';
+import { PROJECTS, ORGANIZATION, PROJECTNAME, PROJECTDESCRIPTION, PROJNAME, DESCRIPTION, SMALL, ACTION, ADDPROJECT, ADDORGANIZATION, DELETEMSG, TITLE, DELETE, PROJECTITLE, PROJECTDESC, ADD, TEXTBOX_NAME, TEXTBOX_DESC} from '../constants/FieldNameConstants';
+import { Button,Modal} from 'react-bootstrap';
+
 
 const styles = theme => ({
 
@@ -98,7 +100,58 @@ class ProjectManagement extends Component {
 			}
 
 		}
+		hideUserInfoPopUp=()=>{
+			this.setState({showAddConfirmationDialog:false,projectNameAdd:'',projectDescriptionAdd:''});
+		}
+		validateConditions =()=>{
+			const {projectNameAdd ,projectDescriptionAdd} =this.state;
+			
+			if(projectNameAdd.length>0 && projectDescriptionAdd.length>0){
+				return true
+               }
+			return false
+		}
+		handleAddButtonHandler=()=>{
+		
+			this.setState({showAddConfirmationDialog:true});
+		}
+		cancelBtnClicked=()=>{
+			this.hideUserInfoPopUp();
+           }
+		saveBtnClicked=()=>{
+		
+			let addToProjectDetails = {};
 
+			addToProjectDetails={
+				project_name:this.state.projectNameAdd,
+				project_description:this.state.projectDescriptionAdd,
+				org_id:this.props.currentOrg.org_id
+			};
+		
+
+			if(this.validateConditions()){
+				this.props.addToProjectList(JSON.stringify(addToProjectDetails));
+				this.hideUserInfoPopUp();
+				location.reload(true);
+                 }
+	
+		}
+		textFieldHandler=()=>{
+  
+			if(event.target.name ===TEXTBOX_NAME){
+			
+			 this.setState({projectNameAdd:event.target.value})
+		
+			}
+			
+		   else if(event.target.name ===TEXTBOX_DESC){
+		
+			this.setState({projectDescriptionAdd:event.target.value})
+		
+			}
+			
+		  }
+	
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 	
 		if (!prevState.isOrganisationInitialised && 
@@ -130,11 +183,15 @@ class ProjectManagement extends Component {
 			  ],
 			  location:PROJECTS,
 			  showDeleteConfirmationDialog: false,
+			  showAddConfirmationDialog: false,
 			  deleteConnectionID: null,
 			  editIdx:-1,
 			  projectList:[],
 			  projectName:'',
-			  projectDescription:''
+			  projectDescription:'',
+			  projectNameAdd:'',
+			  projectDescriptionAdd:'',
+
 			
 		};
 	}
@@ -143,10 +200,12 @@ class ProjectManagement extends Component {
 		
 		const { headers , projectList} = this.state;
 		const {classes} =this.props;
-		
+		let currentButtonName =ADDPROJECT
 		let currentHeader =<h1 style ={{paddingLeft:"10px"}}>Project Management</h1>;
 		if(this.state.location == ORGANIZATION){
 		  currentHeader =<h1 style ={{paddingLeft:"10px"}}>Organization Management</h1>;
+	      currentButtonName =ADDORGANIZATION;
+
 		}
 
 		const projectModifyData=[];
@@ -202,7 +261,9 @@ class ProjectManagement extends Component {
 			&nbsp; &nbsp;
 				
 					<label className="main_titles" >{currentHeader}</label>
-
+					<Button 
+					className="backbutton_colors_project addUserButton"
+					onClick={this.handleAddButtonHandler}>{currentButtonName}</Button>
 				</div>
 			
 				  	<CustomTable 
@@ -219,8 +280,22 @@ class ProjectManagement extends Component {
 					this.state.showDeleteConfirmationDialog ?
 						<CustomModal
 						  onYesBtnClicked={this.onYesBtnClickHandler}
-						  onNoBtnClicked={this.onNoBtnClickHandler}/>
+						  onNoBtnClicked={this.onNoBtnClickHandler}
+						  currentPage ={this.state.location} 
+					      variant ={DELETE}
+						   />
 						: null
+				}
+			
+				{
+                  this.state.showAddConfirmationDialog? <CustomModal
+				   projectNameAdd={this.state.projectNameAdd}
+				   projectDescriptionAdd={this.state.projectDescriptionAdd}
+				   onCancelBtnClicked ={this.cancelBtnClicked}
+				   onSaveBtnClicked ={this.saveBtnClicked}
+				   onTextFieldHandler={this.textFieldHandler} 
+				   currentPage ={this.state.location}   
+				   variant ={ADD}/>:null
 				}
 				
 			</div>
@@ -242,6 +317,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => ({
 	getProjectList: (data) => dispatch(getProjectList(data)),
 	updateProjectList:(data)=>dispatch(updateProjectList(data)),
+	addToProjectList:(data)=>dispatch(addToProjectList(data)),
 	deleteProjectDetails: (data) => dispatch(deleteProjectDetails(data))
 });
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(ProjectManagement));

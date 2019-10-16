@@ -4,7 +4,9 @@ import {
 	DELETE_PROJECT_LIST_SUCCESS,
 	DELETE_PROJECT_LIST_ERROR,
 	UPDATE_PROJECT_LIST_SUCCESS,
-	UPDATE_PROJECT_LIST_ERROR} from "../constants/ActionTypes";
+	UPDATE_PROJECT_LIST_ERROR,
+	ADD_PROJECT_LIST_SUCCESS,
+	ADD_PROJECT_LIST_ERROR} from "../constants/ActionTypes";
     import {  BASE_URL, headers} from './appActions';
 export const getProjectList = (orgId) => {
     
@@ -37,8 +39,27 @@ return{
 
 	}) 
 
+   }
 }
-}
+export const addToProjectList=(data)=>{
+
+	return{
+		types:[
+			'',
+			ADD_PROJECT_LIST_SUCCESS,
+			ADD_PROJECT_LIST_ERROR
+	
+		],
+		callAPI:() => fetch(`${BASE_URL}/project`,{
+			method: 'post',
+			headers,
+			body: data
+	
+		}) 
+	
+	   }
+	}
+
 export const deleteProjectDetails = (data) => {
 
 	return {
