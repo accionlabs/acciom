@@ -53,7 +53,6 @@ class RoleListItemContainer extends Component {
 
 	getRolesByOrgRProject = (selectedOrgProject) => {
 		if (this.props.orgProjectRolesList.hasOwnProperty(selectedOrgProject.value)) return;
-
 		if (selectedOrgProject.roleType ===  roleTypes.ORGANIZATION ) {
 			this.props.getRolesByOrgId(selectedOrgProject.uid, selectedOrgProject.value);
 		} else if (selectedOrgProject.roleType ===  roleTypes.PROJECT ) {
@@ -65,11 +64,11 @@ class RoleListItemContainer extends Component {
 		if (selectedOrgProject === this.props.selectedOrgProject) {
 			return;
 		};
-		this.props.onOrgProjectChange(this.props.index, selectedOrgProject);
+		this.props.onOrgProjectChange(this.props.index, selectedOrgProject, this.props.category);
 	};
 
 	handleRoleChange = (roles) => {
-		this.props.onRoleChange(this.props.index, roles);
+		this.props.onRoleChange(this.props.index, roles, this.props.category);
 	};
 
 	addRow = () => {
@@ -98,7 +97,6 @@ class RoleListItemContainer extends Component {
 					options= { this.props.orgProjectList }
 					styles={styles}
 				/>
-
 				<Select
 					className='multiSelect'
 					isMulti='true'

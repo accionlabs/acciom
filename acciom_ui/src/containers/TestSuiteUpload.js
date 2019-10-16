@@ -152,6 +152,7 @@ class TestSuiteUpload extends React.Component {
 		const body = this.getPostFilePayloadData(this.testSuiteFile, this.selectedSheet, selectedTestCases, suiteName, mode, projectId);
 		
 		this.props.uploadTestCases(body);
+		this.props.getAllTestSuites(projectId);
 		// this.props.getAllDBDetails(projectId);
 		// console.log("this.props.getalldbdetails=============>",this.props.getAllDBDetails);
 	};

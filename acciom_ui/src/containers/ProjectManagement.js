@@ -198,12 +198,13 @@ class ProjectManagement extends Component {
 		
 	render() {
 		
-		const { headers , projectList} = this.state;
+
+		const { headers , projectList,isEditable} = this.state;
 		const {classes} =this.props;
 		let currentButtonName =ADDPROJECT
-		let currentHeader =<h1 style ={{paddingLeft:"10px"}}>Project Management</h1>;
+		let currentHeader =<label>Project Management</label>;
 		if(this.state.location == ORGANIZATION){
-		  currentHeader =<h1 style ={{paddingLeft:"10px"}}>Organization Management</h1>;
+		  currentHeader =<label>Organization Management</label>;
 	      currentButtonName =ADDORGANIZATION;
 
 		}
@@ -257,13 +258,16 @@ class ProjectManagement extends Component {
 
 			<div>
 				<div>
-					<GroupIcon className={classes.IconClass}/>
+				<GroupIcon className=" organizationManagementIcon" />
 			&nbsp; &nbsp;
+
 				
-					<label className="main_titles" >{currentHeader}</label>
+					<label className="main_titles projectManagementMargin" >{currentHeader}</label>
 					<Button 
 					className="backbutton_colors_project addUserButton"
 					onClick={this.handleAddButtonHandler}>{currentButtonName}</Button>
+
+
 				</div>
 			
 				  	<CustomTable 
