@@ -9,60 +9,58 @@ const customModal =(props)=>{
     const { classes,projectNameAdd,projectDescriptionAdd,variant,projectDescription,onYesBtnClicked,onCancelBtnClicked,onNoBtnClicked,onSaveBtnClicked,currentPage } = props;
     
     let projectNameValue =(   <Tooltip title={TOOLTIP_TITLE}>
-    <TextField
-     id={PROJNAMEINFO}
-     placeholder={currentPage===PROJECTS?PROJNAME:ORGNAME}
-     type="search"
-     style ={{marginLeft:'20px'}}
-     margin="normal"
-     onChange ={props.onTextFieldHandler}
-     value ={projectNameAdd}
-     name={TEXTBOX_NAME}
-     />
 
-     </Tooltip>);
-      if(projectNameAdd.length>0){
-        projectNameValue=(
-        <TextField
+     <TextField
         id={PROJNAMEINFO}
-        placeholder={currentPage===PROJECTS?PROJNAME:ORGNAME}
-        type="search"
-        style ={{marginLeft:'20px'}}
+        label={currentPage===PROJECTS?PROJNAME:ORGNAME}
         margin="normal"
+        style ={{marginLeft:'20px'}}
         onChange ={props.onTextFieldHandler}
         value ={projectNameAdd}
         name={TEXTBOX_NAME}
-        />
-
-      )
+      />
+     </Tooltip>);
+      if(projectNameAdd.length>0){
+        projectNameValue=(
+       
+       <TextField
+        id={PROJNAMEINFO}
+        label={currentPage===PROJECTS?PROJNAME:ORGNAME}
+        margin="normal"
+        style ={{marginLeft:'20px'}}
+        onChange ={props.onTextFieldHandler}
+        value ={projectNameAdd}
+        name={TEXTBOX_NAME}
+      />
+       )
     }
     let projectDescriptionValue =(
         <Tooltip title ={TOOLTIP_DESC}>
-      <TextField
+        
+        <TextField
         id={PROJDESCINFO}
-        placeholder={currentPage===PROJECTS?PROJDESC:ORJDESC}
-        type="search"
+        label={currentPage===PROJECTS?PROJDESC:ORJDESC}
         style ={{marginLeft:'20px'}}
         margin="normal"
         onChange ={props.onTextFieldHandler}
         name={TEXTBOX_DESC}
         value ={projectDescriptionAdd}
-      />  
+      />
         </Tooltip>
        
       );
       if(projectDescriptionAdd.length>0){
         projectDescriptionValue= 
-        <TextField
-        id={PROJDESCINFO}
-        placeholder={currentPage===PROJECTS?PROJDESC:ORJDESC}
-        type="search"
-        style ={{marginLeft:'20px'}}
-        margin="normal"
-        onChange ={props.onTextFieldHandler}
-        name={TEXTBOX_DESC}
-        value ={projectDescriptionAdd}
-    />  
+    
+    <TextField
+    id={PROJDESCINFO}
+    label={currentPage===PROJECTS?PROJDESC:ORJDESC}
+    style ={{marginLeft:'20px'}}
+    margin="normal"
+    onChange ={props.onTextFieldHandler}
+    name={TEXTBOX_DESC}
+    value ={projectDescriptionAdd}
+  /> 
 
     }
     return (
