@@ -97,11 +97,11 @@ class ProjectManagement extends Component {
 	render() {
 		
 		const { isEditable,headers } = this.state;
-		const {projectList,classes} =this.props;
+		const {projectList,classes} = this.props;
 		
-		let currentHeader =<h1 style ={{paddingLeft:"10px"}}>Project Management</h1>;
+		let currentHeader =<label>Project Management</label>;
 		if(this.state.location =='organization'){
-		  currentHeader =<h1 style ={{paddingLeft:"10px"}}>Organization Management</h1>
+		  currentHeader =<label>Organization Management</label>
 		}
 
 		const projectModifyData=[];
@@ -136,9 +136,9 @@ class ProjectManagement extends Component {
 		return (
 			<div>
 				<div>
-				<GroupIcon className={classes.IconClass}/>
+				<GroupIcon className=" organizationManagementIcon" />
 			&nbsp; &nbsp;
-			<label className="main_titles" >{currentHeader}</label>
+			<label className="main_titles projectManagementMargin" >{currentHeader}</label>
 
 				</div>
 			

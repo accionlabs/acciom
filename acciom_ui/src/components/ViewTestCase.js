@@ -168,7 +168,7 @@ class TestCaseDetails extends React.Component {
 												</td>
 												<td>
 													<FormGroup>
-														<FormControl type="textbox" name="sourceTable"  value={this.state.formData.sourceTable} maxlength ="50" onChange={this.handleInputChange}/>
+														<FormControl type="textbox" className="sourceTableEditbox" name="sourceTable"  value={this.state.formData.sourceTable} maxlength ="50" onChange={this.handleInputChange}/>
 													</FormGroup>
 												</td>
 											</tr>

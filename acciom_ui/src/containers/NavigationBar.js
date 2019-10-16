@@ -309,7 +309,7 @@ function NavigationBar(props) {
 						<MenuItem>
 						<ListItemIcon>
 							<Link to={'/projects'}>
-							<SpeakerNotesIcon/>
+							<SpeakerNotesIcon className="projectManagementNavIcon" />
 							</Link>
 						</ListItemIcon>
 						<Link to={'/projects'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
@@ -318,7 +318,7 @@ function NavigationBar(props) {
 						<ListItemIcon>
 							<Link to={'/organization'}>
 						
-							<AssignmentIcon/>
+							<AssignmentIcon className="projectManagementNavIcon" />
 							</Link>
 						</ListItemIcon>
 						<Link to={'/organization'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>

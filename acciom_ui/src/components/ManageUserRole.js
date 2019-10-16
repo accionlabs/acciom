@@ -6,6 +6,7 @@ import { emailExsistingVerify, addUserOnload, updateUserRoles } from '../actions
 import { roleTypes } from '../reducers/userManagementReducer';
 import RoleListItemContainer from '../containers/RoleListItemContainer';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+// import Paper from '@material-ui/core/Paper';
 
 
 const formatOrgProjectList = (currentOrg, projectList) => {
@@ -31,6 +32,9 @@ class ManageUserRole extends Component{
 		const userRoleList = [].concat(
 			[{ id: Math.floor(Math.random()*1000000), allowed_role_list: [], roleType: roleTypes.NEW }]
 		);
+		const orgRoleList = [].concat(
+			[{ id: Math.floor(Math.random()*1000000), allowed_role_list: [], roleType: roleTypes.NEW }]
+		);
 		//const orgProjectList = formatOrgProjectList(props.currentOrg, props.projectList);
         this.state = {
             email: "",
@@ -39,19 +43,14 @@ class ManageUserRole extends Component{
 			orgProjectList: [],
 			firstname: "",
 			lastname: "",
-			
-            
+			orgRoleList: orgRoleList,
+			showPermission: false,
 		}
 		this.handleInputChange = this.handleInputChange.bind(this)
 	}
 	
     emailVerify = () => {
 		const { email } = this.state;
-		// const isValid = this.validate();
-		// console.log("onClick", email);
-		// if (isValid) {
-		// 	console.log(this.state);
-		// }
 		this.props.emailExsistingVerify(email);
     }
 
@@ -59,9 +58,7 @@ class ManageUserRole extends Component{
         event.preventDefault()
         this.setState({
             [event.target.name]: event.target.value
-        },()=>{
-			console.log(this.state,"this......")
-		})
+        })
 
 	}
 	
@@ -72,6 +69,10 @@ class ManageUserRole extends Component{
     static getDerivedStateFromProps = (nextProps, prevState) => {
 		if (nextProps.redirectToUserMgmtEdit) {
 			nextProps.history.push(`/edit_user_role/${nextProps.emailUserID}`);
+		}
+		if (nextProps.emailUserID === "show") {
+			const showPermission = true;
+			return { ...prevState, showPermission };
 		} 
 		if (nextProps.currentOrg && nextProps.projectList) {
 			const orgProjectList = formatOrgProjectList(nextProps.currentOrg, nextProps.projectList);
@@ -80,14 +81,47 @@ class ManageUserRole extends Component{
 		return prevState;
 	};
 
-	
 	renderUserRoles = () => {
-		let element = null;
+		let element = []; 
 		if (this.state.userRoleList.length > 0) {
-			element = this.getRoleItemComponent(this.state.userRoleList);
+			element.push(
+				(
+				<li className="listDots">
+					<div>
+						<span className="projectLabel ">
+							Organisation
+						</span>
+						<span className="projectLabel">
+							Roles
+						</span>
+					</div>
+				</li>
+				)
+			);
+			element.push(
+				this.getRoleItemComponent(this.state.orgRoleList,"ORGANIZATION")
+			);
+			element.push(
+				(
+				<li className="listDots">
+					<div>
+						<span className="projectLabel">
+							Project
+						</span>
+						<span className="projectLabel">
+							Roles
+						</span>
+					</div>
+				</li>
+				)
+			);
+			element.push(
+				this.getRoleItemComponent(this.state.userRoleList,"PROJECT")
+			)
+			// element = this.getRoleItemComponent(this.state.userRoleList,"PROJECT");
 			if (element.length > 0) {
 				element.push(
-					(<div class='footer'>
+					(<div className='footer'>
 						<Link to={`/user_management`}>
 							<Button type="button" className="userbackbtn adduserBackButton" bsStyle="primary">Back To User List</Button>
 						</Link>
@@ -114,37 +148,66 @@ class ManageUserRole extends Component{
 		this.setState({userRoleList});
 	};
 
-	onOrgProjectChange = (index, selectedOrgProject) => {
-		const userRoleList = [...this.state.userRoleList];
-		userRoleList.splice(index, 1, 
-			{	
-				id: selectedOrgProject.value, 
-				roleType: selectedOrgProject.roleType, 
-				uid: selectedOrgProject.uid,  
-				allowed_role_list:[]
-			}
-		);
+	onOrgProjectChange = (index, selectedOrgProject, category) => {
+		if(category === 'PROJECT'){
+			const userRoleList = [...this.state.userRoleList];
+			userRoleList.splice(index, 1, 
+				{	
+					id: selectedOrgProject.value, 
+					roleType: selectedOrgProject.roleType, 
+					uid: selectedOrgProject.uid,  
+					allowed_role_list:[]
+				}
+			);
 		this.setState({userRoleList});
+		}else{
+			const orgRoleList = [...this.state.orgRoleList];
+			orgRoleList.splice(index, 1, 
+				{	
+					id: selectedOrgProject.value, 
+					roleType: selectedOrgProject.roleType, 
+					uid: selectedOrgProject.uid,  
+					allowed_role_list:[]
+				}
+			);
+			this.setState({orgRoleList});
+		}
 	};
 
-	onRoleChange = (index, roles) => {
-		const userRoleList = [...this.state.userRoleList];
-		const listItem = userRoleList[index];
-		const allowed_role_list = roles.map((role) =>{
-			return role.value;
-		});
-		userRoleList.splice(index, 1, {...listItem, allowed_role_list});
-		this.setState({userRoleList});
+	onRoleChange = (index, roles, category) => {
+		if(category === 'PROJECT'){
+			const userRoleList = [...this.state.userRoleList];
+			const listItem = userRoleList[index];
+
+			const allowed_role_list = roles.map((role) =>{
+				return role.value;
+			});
+			
+			userRoleList.splice(index, 1, {...listItem, allowed_role_list});
+			this.setState({userRoleList});
+		}else{
+			const orgRoleList = [...this.state.orgRoleList];
+			const listItem = orgRoleList[index];
+
+			const allowed_role_list = roles.map((role) =>{
+				return role.value;
+			});
+			
+			orgRoleList.splice(index, 1, {...listItem, allowed_role_list});
+			this.setState({orgRoleList});
+		}
+		
 	};
 
 	getSelectedOrgProject = (id) => {
 		return getObjFromList(this.state.orgProjectList, 'value', id);
 	};
 
-    getRoleItemComponent = (list) => {
+    getRoleItemComponent = (list,type) => {
 		let roleElements = [];
 		const count = list.length;
-
+		const projectList = this.state.orgProjectList.filter((e) => e.roleType === type );
+		
 		roleElements = list.map((item, index) => {
 			let showAdd = false;
 			let showDelete = true;
@@ -154,7 +217,8 @@ class ManageUserRole extends Component{
 			if (count-1 === index) {
 				showAdd = true;
 			}
-			
+			if(type === 'ORGANIZATION')
+			showAdd = false;
 			return (
 				<li key={`${item.roleType}${index}`} className="listDots">
 					<RoleListItemContainer 
@@ -164,17 +228,22 @@ class ManageUserRole extends Component{
 						showDeleteBtn={(!showDelete && list.length === 1)? false : true }
 						index={index} 
 						roleType={item.roleType}
-						orgProjectList = {this.state.orgProjectList}
-						selectedOrgProject = { getObjFromList(this.state.orgProjectList, 'value', item.id) }
+						orgProjectList = {projectList}
+						selectedOrgProject = { getObjFromList(projectList, 'value', item.id) }
 						id={item.id}
 						selectedRoles = {item.allowed_role_list}
 						onOrgProjectChange = {this.onOrgProjectChange}
 						onRoleChange = {this.onRoleChange}
+						category={type}
 					/>
 				</li>
 			);
 		});
-
+		// roleElements.push(
+		// 	<ManageUserRoleListContainer
+			
+		// 	/>
+		// )
 		return roleElements;
 	};
 	onSaveUserRoles = () => {
@@ -194,10 +263,11 @@ class ManageUserRole extends Component{
 			}
 
 		});
-		console.log(this.state.email,"this.state.email");
+
 		const payload = {
+			'first_name': this.state.firstname,
+			'last_name' : this.state.lastname,
 			'org_id': this.props.currentOrg.org_id,
-			//'user_id': this.props.selectedUser.user_id,
 			'email_id': this.state.email,
 			'project_role_list': projectRoleList,
 			'org_allowed_role_list': orgAllowedRoleList
@@ -207,6 +277,7 @@ class ManageUserRole extends Component{
 
     render(){
         return(
+			// <Paper>
             <div>
 				<table>
 					<tr>
@@ -222,21 +293,18 @@ class ManageUserRole extends Component{
                     <td><input className="editRoleFnameLabel" type="text" name="firstname" onChange={this.handleInputChange}></input></td>
                     <td className="sub_title userRoleLname">Last Name:</td>
                     <td><input className="editRoleLanameLabel" type="text" name="lastname" onChange={this.handleInputChange}></input></td>
-                    
+                    <td><label className="emailRoleLabel sub_title">Email:</label></td>
+					<td><input className="emailEditBox" type="email" onChange={this.handleInputChange}  name="email"></input></td>
                 </tr>
 				<tr>
-				<td>
-                    <label className="emailRoleLabel sub_title">Email:</label>
-                    </td>
-                    <td><input className="editRoleLabel" type="email" pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" onChange={this.handleInputChange}  name="email"></input></td>
 					<td><button className="button-colors verifyButtons" disabled={!this.state.firstname || !this.state.lastname || !this.state.email} onClick={() => this.emailVerify()}>Verify</button></td>
 				</tr>
             </table>
-
-            <div className="rolesborder">
-				{ this.renderUserRoles() }
+			<div className="rolesborder">
+				{ this.state.showPermission && this.renderUserRoles() }
 			</div>
             </div>
+			// </Paper>
             
         );
     }

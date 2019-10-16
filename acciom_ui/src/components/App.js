@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, BrowserRouter as Router, Redirect  } from 'react-router-dom';
 import styled from 'styled-components';
-
 import Startup from '../containers/Startup';
 import TestSuiteUpload from '../containers/TestSuiteUpload';
 import Dashboard from '../containers/Dashboard';
@@ -16,9 +15,7 @@ import ForgotPassword from './ForgotPassword';
 import AuthToken from './AuthToken';
 import ChangePasswordComponent from './ChangePassword';
 import EditUserRoles from '../containers/EditUserRoles';
-
 import ProjectManagement from '../containers/ProjectManagement';
-
 import ManageUserRole from './ManageUserRole'
 
 

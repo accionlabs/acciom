@@ -41,7 +41,6 @@ class RoleListItemContainer extends Component {
 			if (nextProps.orgProjectRolesList.hasOwnProperty(nextProps.selectedOrgProject.value)) {
 				const rolesList = formatRoleListData(nextProps.orgProjectRolesList[nextProps.selectedOrgProject.value]);
 				const selectedRoles = getSelectedRoleItems(rolesList, nextProps.selectedRoles);
-				console.log(nextProps.selectedRoles, rolesList,"selectedRoles");
 				return {
 					...prevState,
 					rolesList,
@@ -54,7 +53,6 @@ class RoleListItemContainer extends Component {
 
 	getRolesByOrgRProject = (selectedOrgProject) => {
 		if (this.props.orgProjectRolesList.hasOwnProperty(selectedOrgProject.value)) return;
-
 		if (selectedOrgProject.roleType ===  roleTypes.ORGANIZATION ) {
 			this.props.getRolesByOrgId(selectedOrgProject.uid, selectedOrgProject.value);
 		} else if (selectedOrgProject.roleType ===  roleTypes.PROJECT ) {
@@ -66,12 +64,11 @@ class RoleListItemContainer extends Component {
 		if (selectedOrgProject === this.props.selectedOrgProject) {
 			return;
 		};
-		this.props.onOrgProjectChange(this.props.index, selectedOrgProject);
+		this.props.onOrgProjectChange(this.props.index, selectedOrgProject, this.props.category);
 	};
 
 	handleRoleChange = (roles) => {
-		this.props.onRoleChange(this.props.index, roles);
-		console.log("4444",this.props.index, roles)
+		this.props.onRoleChange(this.props.index, roles, this.props.category);
 	};
 
 	addRow = () => {
@@ -100,7 +97,6 @@ class RoleListItemContainer extends Component {
 					options= { this.props.orgProjectList }
 					styles={styles}
 				/>
-
 				<Select
 					className='multiSelect'
 					isMulti='true'
@@ -125,7 +121,6 @@ class RoleListItemContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-	console.log("state",state);
 	return {
 		orgProjectRolesList: state.userManagementData.orgProjectRolesList,
 	};
