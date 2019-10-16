@@ -81,7 +81,18 @@ export class CreateSuite extends Component {
             suiteData : [
                 data
             ],
-            Connection:{}	
+            Connection:{},
+            Headers : [
+                {label: 'Test class','required':true },
+                {label: 'Description','required':true },
+                {label: 'Source Connection','required':true},
+                {label: 'Target Connection','required':true},
+                {label: 'Source Table' ,'required':true},
+                {label: 'Target Table','required':true },
+                {label: 'Columns','required':false },
+                {label: 'Source query' ,'required':false},
+                {label: 'Target query','required':false }
+			  ]	
         };
     }
   
@@ -221,7 +232,6 @@ export class CreateSuite extends Component {
     renderData = (classes) =>{
         {
             return this.state.suiteData.map((eachrow,index) =>(  
-
                 <TableRow className="table-create-suite-row">
                 {
                     <TableCell className="DropDown-SelectClass">
@@ -323,11 +333,21 @@ export class CreateSuite extends Component {
         console.log(UploadBody)
         this.props.SubmitTestSuiteData(JSON.stringify(UploadBody))
     }
+    showHeader = (classes) =>{
+        let test =[];
+        test=this.state.Headers.map((item,key)=>{
+        return(
+        !item.required?<TableCell className={classes.tablecell}>{item.label}</TableCell>:
+        <TableCell className={classes.tablecell}>{item.label}<span className="mandatory">*</span></TableCell>
+        )})
+        return test
+    }
 
     render(){
        const checkValid = this.SuiteNameValid() ||  !this.ValidRows()
        const showAddBtn = !this.ValidRows()
         const { classes } = this.props;
+        
         return(
             <div className="AddSuiteLayout">
                 <i class="fa fa-th fa-lg" aria-hidden="true"></i>
@@ -338,18 +358,8 @@ export class CreateSuite extends Component {
                 <Table className={classes.table}>
                 <TableHead className={classes.tablehead}>
                 <TableRow>
-							<TableCell className={classes.tablecell}>Test class<span className="mandatory">*</span></TableCell>
-							<TableCell className={classes.tablecell}>Description<span className="mandatory">*</span> </TableCell>
-							<TableCell className={classes.tablecell}>Source Connection<span className="mandatory">*</span> </TableCell>
-							<TableCell className={classes.tablecell}>Target Connection<span className="mandatory">*</span> </TableCell>
-                            <TableCell className={classes.tablecell}>Source Table<span className="mandatory">*</span> </TableCell>
-                            <TableCell className={classes.tablecell}>Target Table<span className="mandatory">*</span> </TableCell>
-                            <TableCell className={classes.tablecell}>Columns </TableCell>
-                            <TableCell className={classes.tablecell}>Source query </TableCell>
-                            <TableCell className={classes.tablecell}>Target query </TableCell>
-                            <TableCell className={classes.tablecell}>  </TableCell>
-
-                </TableRow>
+                    {this.showHeader(classes)}
+                    </TableRow>
                 </TableHead>
 					<TableBody className="table_body-new-suite">
                     {this.renderData( classes )}
@@ -369,7 +379,6 @@ const mapStateToProps = (state) => {
 	return {
 		classNameList: state.dbDetailsData.classNameList?state.dbDetailsData.classNameList: [],
         currentProject: state.appData.currentProject,
-       
         redirectToSuiteList: state.testSuiteUploadData.redirectToSuiteList,
         testSuites: state.testSuites.testSuiteList? state.testSuites.testSuiteList: [],
         dbDetailsList: state.dbDetailsData.dbDetailsList?state.dbDetailsData.dbDetailsList: [],

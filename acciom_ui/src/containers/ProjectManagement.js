@@ -135,7 +135,6 @@ class ProjectManagement extends Component {
 			  projectList:[],
 			  projectName:'',
 			  projectDescription:''
-			
 		};
 	}
 		
@@ -163,7 +162,6 @@ class ProjectManagement extends Component {
 								fontSize={SMALL}
 								className="editicon2" 
 								style={{color:"#696969" ,marginRight:'8px'}} 
-							
 								onClick ={() =>{this.editHandler(index);}}
 							/>
 					  <DeleteIcon 
@@ -191,8 +189,7 @@ class ProjectManagement extends Component {
 				});
 
 			});
-            
-		}
+			}
 
 		return (
 
@@ -212,7 +209,6 @@ class ProjectManagement extends Component {
 					editIdx ={this.state.editIdx}
 					projectNameValue ={this.state.projectName}
 					projectDescriptionValue ={this.state.projectDescription}
-					
 					handleChange ={this.handleChangeHandler}
 				    />
 				 { 
