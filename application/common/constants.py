@@ -84,7 +84,7 @@ class APIMessages:
     ORG_PROJECT_REQUIRED = "Either of Organization or Project ID is mandatory"
     ONLY_ORG_OR_PROJECT = "Pass only Organization or Project ID"
     PERMISSION_LIST = "permission_id_list should not be blank"
-    NO_ROLES = ""
+    NO_ROLES = "There are No Roles associated with given Organization"
     ONLY_USER_OR_EMAIL = "Pass only User id or Email"
     DB_NOT_EXIST = "Database does not exist"
     PROJECT_CONTAIN_SUITE_NOT_EXIST = "Invalid Test Suite"
