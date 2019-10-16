@@ -271,7 +271,7 @@ class UserRoleAPI(Resource):
                 User.email.ilike(get_role_api_parser['email_id']),
                 User.is_deleted == False).first()
             if not valid_user:
-                return api_response(False, APIMessages.NO_ROLES,
+                return api_response(True, APIMessages.NO_ROLES,
                                     STATUS_OK)
 
         if get_role_api_parser['org_id'] and valid_user.user_id:
@@ -305,7 +305,7 @@ class UserRoleAPI(Resource):
                         each_user_org_role.role_id)
             if not (result_dict['org_allowed_role_list'] or result_dict[
                 'project_role_list']):
-                return api_response(False, APIMessages.NO_ROLES,
+                return api_response(True, APIMessages.NO_ROLES,
                                     STATUS_OK)
 
             result_dict['user_id'] = valid_user.user_id
