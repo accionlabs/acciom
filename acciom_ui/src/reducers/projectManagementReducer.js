@@ -23,8 +23,9 @@ const projectManagementData = (state = initialState, action) => {
     switch (action.type) {
 		
 		case DELETE_PROJECT_LIST_SUCCESS:
-							
+		
 		case GET_PROJECT_LIST_SUCCESS:
+			
 			
                 return {
                     ...state,
