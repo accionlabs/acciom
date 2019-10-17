@@ -261,7 +261,11 @@ export class CreateSuite extends Component {
                 <TableCell  className={classes.tablecell}><TextField autoFocus={true} disabled={this.state.isTestClassSelected}  multiline={true} value={eachrow.source_table}  onChange={()=> this.handleChange(event,index,5)} style={{width:"10vw"}} /></TableCell>}   
                 
                 {this.splitAndMatch(index,6)?<TableCell  className={classes.tablecell} onClick= {() =>this.switchstate(index,6)}>{this.showData(eachrow.target_table,6)}</TableCell>:
-                <TableCell className={classes.tablecell}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_table} onChange={()=> this.handleChange(event,index,6)} style={{width:"11vw"}} /></TableCell>}            
+                <TableCell className={classes.tablecell}>
+                <TextField autoFocus={true}
+                error={!eachrow.target_table.trim()}
+                helperText={'Table cannot have space!'}
+                disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.target_table} onChange={()=> this.handleChange(event,index,6)} style={{width:"11vw"}} /></TableCell>}            
                 
                 {this.splitAndMatch(index,7)?<TableCell  className={classes.tablepopup} onClick= {() =>this.switchstate(index,7)}>{this.showData(eachrow.columns,7)}</TableCell>: 
                 <TableCell className={classes.tablepopup}><TextField autoFocus={true} disabled={this.state.isTestClassSelected} multiline={true} value={eachrow.columns} onChange={()=> this.handleChange(event,index,7)} style={{width:"8vw"}}/></TableCell>}            
