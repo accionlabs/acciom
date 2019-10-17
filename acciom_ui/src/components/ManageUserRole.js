@@ -6,7 +6,9 @@ import { emailExsistingVerify, addUserOnload, updateUserRoles } from '../actions
 import { roleTypes } from '../reducers/userManagementReducer';
 import RoleListItemContainer from '../containers/RoleListItemContainer';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-// import Paper from '@material-ui/core/Paper';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+
 
 
 const formatOrgProjectList = (currentOrg, projectList) => {
@@ -66,6 +68,8 @@ class ManageUserRole extends Component{
 		this.props.addUserOnload();
 	}
 
+	
+
     static getDerivedStateFromProps = (nextProps, prevState) => {
 		if (nextProps.redirectToUserMgmtEdit && nextProps.emailUserID !== "show") {
 			nextProps.history.push(`/edit_user_role/${nextProps.emailUserID}`);
@@ -91,7 +95,7 @@ class ManageUserRole extends Component{
 						<span className="projectLabel ">
 							Organisation
 						</span>
-						<span className="projectLabel">
+						<span className="projectRoleLabel">
 							Roles
 						</span>
 					</div>
@@ -108,7 +112,7 @@ class ManageUserRole extends Component{
 						<span className="projectLabel">
 							Project
 						</span>
-						<span className="projectLabel">
+						<span className="projectRoleLabel">
 							Roles
 						</span>
 					</div>
@@ -123,7 +127,7 @@ class ManageUserRole extends Component{
 				element.push(
 					(<div className='footer'>
 						<Link to={`/user_management`}>
-							<Button type="button" className="userbackbtn adduserBackButton" bsStyle="primary">Back To User List</Button>
+							<Button type="button" className="userBackButton adduserBackButton" bsStyle="primary">Back To User List</Button>
 						</Link>
 						<Button type="button" className="button-colors adduserSaveButton" bsStyle="primary" onClick={(e) => {this.onSaveUserRoles()}}>Save</Button>
 					</div>)
@@ -179,7 +183,7 @@ class ManageUserRole extends Component{
 			const userRoleList = [...this.state.userRoleList];
 			const listItem = userRoleList[index];
 
-			const allowed_role_list = roles.map((role) =>{
+			const allowed_role_list = roles.target.value.map((role) =>{
 				return role.value;
 			});
 			
@@ -189,7 +193,7 @@ class ManageUserRole extends Component{
 			const orgRoleList = [...this.state.orgRoleList];
 			const listItem = orgRoleList[index];
 
-			const allowed_role_list = roles.map((role) =>{
+			const allowed_role_list = roles.target.value.map((role) =>{
 				return role.value;
 			});
 			
@@ -272,7 +276,7 @@ class ManageUserRole extends Component{
 
     render(){
         return(
-			// <Paper>
+			
             <div>
 				<table>
 					<tr>
@@ -282,24 +286,53 @@ class ManageUserRole extends Component{
 						<td><div className="main_titles manageUserRoleTitles">Manage User Role</div></td>
 					</tr>
 				</table>
+				<Paper className="addUserPaper">
             <table>
                 <tr>
-                    <td className="sub_title userRoleFname">First Name:</td>
-                    <td><input className="editRoleFnameLabel" type="text" name="firstname" onChange={this.handleInputChange}></input></td>
-                    <td className="sub_title userRoleLname">Last Name:</td>
-                    <td><input className="editRoleLanameLabel" type="text" name="lastname" onChange={this.handleInputChange}></input></td>
-                    <td><label className="emailRoleLabel sub_title">Email:</label></td>
-					<td><input className="emailEditBox" type="email" onChange={this.handleInputChange}  name="email"></input></td>
+					<td>
+					<TextField
+						className="editRoleFnameLabel"
+						name="firstname"
+						label="First Name"
+						value={this.state.firstname}
+						onChange = {this.handleInputChange}
+						margin="normal"
+					/>
+					</td>
+                    <td><TextField
+						className="editRoleLanameLabel"
+						id="standard-name"
+						name="lastname"
+						label="Last Name"
+						value={this.state.lastname}
+						onChange = {this.handleInputChange}
+						margin="normal"
+					/>
+					</td>
+                    <td>
+					<TextField
+						className="emailEditBox"
+						name="email"
+						label="Email"
+						value={this.state.email}
+						onChange = {this.handleInputChange}
+						margin="normal"
+					/>
+					</td>
+					<td>
+					<td><button className="button-colors verifyButtons"  onClick={() => this.emailVerify()}>Verify</button></td>
+
+					</td>
                 </tr>
 				<tr>
-					<td><button className="button-colors verifyButtons" disabled={!this.state.firstname || !this.state.lastname || !this.state.email} onClick={() => this.emailVerify()}>Verify</button></td>
 				</tr>
             </table>
 			<div className="rolesborder">
 				{ this.state.showPermission && this.renderUserRoles() }
 			</div>
+			</Paper>
             </div>
-			// </Paper>
+		
             
         );
     }

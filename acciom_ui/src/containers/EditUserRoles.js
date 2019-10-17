@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button } from 'react-bootstrap';
+// import { Button } from 'react-bootstrap';
 import { retriveUserRoleByUserId, updateUserRoles } from '../actions/userManagementActions';
 import { roleTypes } from '../reducers/userManagementReducer';
 import RoleListItemContainer from './RoleListItemContainer';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 const formatOrgProjectList = (currentOrg, projectList) => {
 	const orgList = [{
@@ -138,7 +140,7 @@ class EditUserRoles extends Component {
 			const userRoleList = [...this.state.userRoleList];
 			const listItem = userRoleList[index];
 
-			const allowed_role_list = roles.map((role) =>{
+			const allowed_role_list = roles.target.value.map((role) =>{
 				return role.value;
 			});
 			
@@ -148,7 +150,7 @@ class EditUserRoles extends Component {
 			const orgRoleList = [...this.state.orgRoleList];
 			const listItem = orgRoleList[index];
 
-			const allowed_role_list = roles.map((role) =>{
+			const allowed_role_list = roles.target.value.map((role) =>{
 				return role.value;
 			});
 			
@@ -212,7 +214,7 @@ class EditUserRoles extends Component {
 						<span className="projectLabel">
 							Organisation
 						</span>
-						<span className="projectLabel">
+						<span className="projectRoleLabel">
 							Roles
 						</span>
 					</div>
@@ -229,7 +231,7 @@ class EditUserRoles extends Component {
 						<span className="projectLabel">
 							Project
 						</span>
-						<span className="projectLabel">
+						<span className="projectRoleLabel">
 							Roles
 						</span>
 					</div>
@@ -244,9 +246,9 @@ class EditUserRoles extends Component {
 				element.push(
 					(<div class='footer'>
 						<Link to={`/user_management`}>
-							<Button type="button" className="userbackbtn" bsStyle="primary">Back To User List</Button>
+							<button type="button" className="editUserRoleBackbtn backbutton_colors" bsStyle="primary">Back To User List</button>
 						</Link>
-						<Button type="button" className="button-colors" bsStyle="primary" onClick={(e) => {this.onSaveUserRoles()}}>Save</Button>
+						<button type="button" className="editRolesaveButton button-colors" bsStyle="primary" onClick={(e) => {this.onSaveUserRoles()}}>Save</button>
 					</div>)
 				);
 			}
@@ -285,6 +287,7 @@ class EditUserRoles extends Component {
 		return (
 			
 			<div id="editUserRoles">
+				<PersonAddIcon className="editRoleEditIcon" />
 				<h3 className="usermanagetitle main_titles">Manage User Role</h3>
 				<Paper className="editRolePaper">
 				<div className = "DescriptionHeader sub_title submailtitle" className="maillabel sub_title">Email:</div>
