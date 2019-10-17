@@ -30,6 +30,8 @@ export const TOOLTIP_TITLE='Enter the Project Name';
 export const TOOLTIP_DESC='Enter the Project Description';
 export const TEXTBOX_NAME='projectNameAdd';
 export const TEXTBOX_DESC='projectDescriptionAdd';
+// ==============index.js File
+export const POP_UP_SUCCESS_MESSAGE='Project is Successfully Created';
 
 
 
