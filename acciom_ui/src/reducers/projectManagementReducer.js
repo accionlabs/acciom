@@ -45,7 +45,7 @@ const projectManagementData = (state = initialState, action) => {
 							refreshProjectDetails:true
 						}
 						case DELETE_PROJECT_LIST_SUCCESS:
-			console.log('Delete reducer',action.response);
+			
 			return{
 				...state,
 				refreshProjectDetails:true
