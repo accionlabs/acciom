@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, BrowserRouter as Router, Redirect  } from 'react-router-dom';
 import styled from 'styled-components';
-
 import Startup from '../containers/Startup';
 import TestSuiteUpload from '../containers/TestSuiteUpload';
 import Dashboard from '../containers/Dashboard';
@@ -21,7 +20,6 @@ import ViewSuite from '../containers/ViewSuite';
 import CreateSuite from '../containers/CreateSuite';
 
 import ProjectManagement from '../containers/ProjectManagement';
-
 import ManageUserRole from './ManageUserRole'
 
 

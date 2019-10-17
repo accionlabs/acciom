@@ -100,7 +100,7 @@ class CustomTable extends React.Component {
       const {classes, headers, bodyData, actionLabel,editIdx,handleChange,projectNameValue,projectDescriptionValue} = this.props;
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
-          <Paper className={classes.root}>
+          <Paper className="commonTablePaperMargin">
             <Table size='medium'>
             <TableToolbar
             handleSearch = {this.handleSearch}

@@ -153,12 +153,12 @@ class CaseLogDetails extends React.Component {
 								</td>
 							</tr>
 							<tr>
-									{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span><label className="sub_title checkresultlabel testViewDataLabel">Result: </label>
-									<label className="testViewDataLabel nullCheckResultLabel">
-									{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
-									</label></span>
-									}
-									</tr>
+								{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span><label className="sub_title checkresultlabel testViewDataLabel">Result: </label>
+								<label className="testViewDataLabel nullCheckResultLabel">
+								{this.handleMessage(this.props.TestCaseLogDetails.Execution_status, this.props.testCaseName)} 
+								</label></span>
+								}
+								</tr>
 							<tr>
 								{this.props.TestCaseLogDetails.Execution_status !== 'error' && <span>
 								<Table size="sm" className="executionLog executionTableLog">
