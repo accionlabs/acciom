@@ -17,19 +17,21 @@ const initialState = {
 	userProjectRoleList: [],
 	userNewRoleList: [],
 	selectedUser: null,
-	redirectToUserMgmtHome: false
+	redirectToUserMgmtHome: false,
+	refreshProjectDetails:false
 };
 const projectManagementData = (state = initialState, action) => {
     switch (action.type) {
 		
-		case DELETE_PROJECT_LIST_SUCCESS:
+		
 		
 		case GET_PROJECT_LIST_SUCCESS:
 			
 			
                 return {
                     ...state,
-                    projectUserList: action.response.data.projects_under_organization.project_details,
+					projectUserList: action.response.data.projects_under_organization.project_details,
+					refreshProjectDetails:false
 				}
 				case UPDATE_PROJECT_LIST_SUCCESS :
 				
@@ -39,9 +41,15 @@ const projectManagementData = (state = initialState, action) => {
 					case ADD_PROJECT_LIST_SUCCESS:
 						
 					   return{
-							...state
+							...state,
+							refreshProjectDetails:true
 						}
-						
+						case DELETE_PROJECT_LIST_SUCCESS:
+			console.log('Delete reducer',action.response);
+			return{
+				...state,
+				refreshProjectDetails:true
+			}
 		
                 default:
 		return state;

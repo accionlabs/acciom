@@ -12,6 +12,7 @@ import CustomModal from '../components/CommonModal/CustomModal';
 import {getProjectList,updateProjectList,deleteProjectDetails,addToProjectList} from '../actions/projectManagementActions';
 import { PROJECTS, ORGANIZATION, PROJECTNAME, PROJECTDESCRIPTION, PROJNAME, DESCRIPTION, SMALL, ACTION, ADDPROJECT, ADDORGANIZATION, DELETEMSG, TITLE, DELETE, PROJECTITLE, PROJECTDESC, ADD, TEXTBOX_NAME, TEXTBOX_DESC} from '../constants/FieldNameConstants';
 import { Button,Modal} from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 
 const styles = theme => ({
@@ -24,7 +25,7 @@ const styles = theme => ({
 
 class ProjectManagement extends Component {
 	componentDidMount(){
-    
+		
 		const location=window.location.href;
 
 		if(location.includes(PROJECTS)){
@@ -47,7 +48,7 @@ class ProjectManagement extends Component {
 			          };
                       this.props.deleteProjectDetails(connectionId);
 		              this.hideConfirmationopup();
-	  	              location.reload(true);
+				
 		       }
 
 		onNoBtnClickHandler=()=>{
@@ -67,6 +68,7 @@ class ProjectManagement extends Component {
 		}
 
 		saveDataHandler=(index)=>{	
+		
 			const localProjectListHandler = [...this.state.projectList];
 		
 			localProjectListHandler[index].project_name = this.state.projectName;
@@ -79,9 +81,11 @@ class ProjectManagement extends Component {
 				project_description:localProjectListHandler[index].project_description,
 				project_id:localProjectListHandler[index].project_id
 			};
-	
-	 		this.props.updateProjectList(JSON.stringify(upDateProjectDetails));
-			this.setState({editIdx:-1});	
+	if(localProjectListHandler[index].project_name.length >0 && localProjectListHandler[index].project_description.length>0){
+		this.props.updateProjectList(JSON.stringify(upDateProjectDetails));
+		this.setState({editIdx:-1});
+	}
+	 			
 		}
 
 		clearDataHandler = () =>{
@@ -103,7 +107,16 @@ class ProjectManagement extends Component {
 		hideUserInfoPopUp=()=>{
 			this.setState({showAddConfirmationDialog:false,projectNameAdd:'',projectDescriptionAdd:''});
 		}
-		validateConditions =()=>{
+	
+		handleAddButtonHandler=()=>{
+		
+			this.setState({showAddConfirmationDialog:true});
+		}
+		cancelBtnClicked=()=>{
+			this.hideUserInfoPopUp();
+		   }
+		   
+		   validateConditions =()=>{
 			const {projectNameAdd ,projectDescriptionAdd} =this.state;
 			
 			if(projectNameAdd.length>0 && projectDescriptionAdd.length>0){
@@ -111,13 +124,6 @@ class ProjectManagement extends Component {
                }
 			return false
 		}
-		handleAddButtonHandler=()=>{
-		
-			this.setState({showAddConfirmationDialog:true});
-		}
-		cancelBtnClicked=()=>{
-			this.hideUserInfoPopUp();
-           }
 		saveBtnClicked=()=>{
 		
 			let addToProjectDetails = {};
@@ -132,8 +138,13 @@ class ProjectManagement extends Component {
 			if(this.validateConditions()){
 				this.props.addToProjectList(JSON.stringify(addToProjectDetails));
 				this.hideUserInfoPopUp();
-				location.reload(true);
-                 }
+			
+			
+
+			}
+				       
+				
+			
 	
 		}
 		textFieldHandler=()=>{
@@ -154,23 +165,29 @@ class ProjectManagement extends Component {
 	
 	static getDerivedStateFromProps = (nextProps, prevState) => {
 	
-		if (!prevState.isOrganisationInitialised && 
-			nextProps.isOrganisationInitialised > 0) {
-				
+	if(nextProps.refreshProjectDetails){
+	
+		nextProps.getProjectList(nextProps.currentOrg.org_id);
+		return {
+			prevState
+		};
+	}
+	if(nextProps.projectUserList.length === 0){
+		if (nextProps.currentOrg ? nextProps.currentOrg.org_id : false) {
 			nextProps.getProjectList(nextProps.currentOrg.org_id);
-			if(prevState.projectList!== nextProps.projectList){
-				return {
-					...prevState,
-					projectList: nextProps.projectList
-				      };
-
-			}
-		
+			return {
+				prevState
+			};
 		}
-		return ({
+	}
+	if(prevState.projectUserList!== nextProps.projectUserList){
+			return {
+				...prevState,
+				projectList: nextProps.projectUserList
+				};
+
+		}
 		
-			isOrganisationInitialised: nextProps.isOrganisationInitialised
-		});
 	}
 
 	constructor(props) {
@@ -240,7 +257,8 @@ class ProjectManagement extends Component {
 						<Fragment>
 							<CheckIcon
 						  style={{color:"#696969" ,marginRight:'8px'}} 
-						  onClick ={()=>this.saveDataHandler(index)}/> 
+                          onClick ={()=>this.saveDataHandler(index)}
+						  /> 
 						  <Clear
 						   fontSize={SMALL}
 						   style={{color:"#696969",marginRight:'8px'}} 
@@ -253,10 +271,11 @@ class ProjectManagement extends Component {
 			});
             
 		}
-
+        
 		return (
 
 			<div>
+		
 				<div>
 				<GroupIcon className=" organizationManagementIcon" />
 			&nbsp; &nbsp;
@@ -297,9 +316,11 @@ class ProjectManagement extends Component {
 				   onCancelBtnClicked ={this.cancelBtnClicked}
 				   onSaveBtnClicked ={this.saveBtnClicked}
 				   onTextFieldHandler={this.textFieldHandler} 
-				   currentPage ={this.state.location}   
+				   currentPage ={this.state.location}  
+				   validateFields ={this.validateConditions()} 
 				   variant ={ADD}/>:null
 				}
+				
 				
 			</div>
 		);
@@ -311,9 +332,8 @@ const mapStateToProps = (state) => {
 	return {
 		currentOrg: state.appData.currentOrg,
 		projectUserList:state.projectManagementData.projectUserList,
-		orgUserList: state.userManagementData.orgUserList? state.userManagementData.orgUserList: [],
-		projectList: state.appData.projectList? state.appData.projectList: [],
-		isOrganisationInitialised: state.appData.isOrganisationInitialised
+		isOrganisationInitialised: state.appData.isOrganisationInitialised,
+		refreshProjectDetails:state.projectManagementData.refreshProjectDetails
 	};
 };
 
