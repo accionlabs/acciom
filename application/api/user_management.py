@@ -407,3 +407,28 @@ def create_new_user(email_id, **kwargs):
         is_verified=kwargs['is_verified'])
     new_user_record.save_to_db()
     return new_user_record.user_id
+
+
+class UserProfileAPI(Resource):
+    """ API to return current user details."""
+
+    @token_required
+    def get(self, session):
+        """
+        To return current user details.
+
+        Args:
+            session (object): Session Object
+
+        Returns: Standard API Response with message(returns message saying
+        success), data and http status code.
+        """
+        current_user_obj = User.query.filter(
+            User.user_id == session.user_id).first()
+        user_dict = {}
+        user_dict["email_id"] = current_user_obj.email
+        user_dict["first_name"] = current_user_obj.first_name
+        user_dict["last_name"] = current_user_obj.last_name
+        return api_response(True,
+                            APIMessages.SUCCESS,
+                            STATUS_CREATED, user_dict)
