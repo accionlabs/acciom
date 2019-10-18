@@ -90,6 +90,7 @@ function callAPIMiddleware({ dispatch, getState }) {
 									toast.warn(response.message);
 								}
 							
+								toast.warn(response.message);
 							}
 						
 						} 
