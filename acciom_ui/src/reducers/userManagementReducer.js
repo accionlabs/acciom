@@ -8,6 +8,7 @@ import {
 	DELETE_USERS_FROM_TABLE,
 	ADD_USER_ROLES_SUCCESS,
 	EMAIL_VERIFY_SUCCESS,
+	EMAIL_VERIFY_ERROR,
 	ADD_USER_ONLOAD
 
 } from '../constants/ActionTypes';
@@ -92,7 +93,7 @@ const userManagementData = (state = initialState, action) => {
 		return {
 			...state,
 			redirectToUserMgmtEdit: action.response.success,
-			emailUserID: action.response.data.user_id ? action.response.data.user_id: '',
+			emailUserID: action.response.data.user_id ? action.response.data.user_id: 'show',
 		};
 
 	case ADD_USER_ONLOAD:

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button } from 'react-bootstrap';
+// import { Button } from 'react-bootstrap';
 import { retriveUserRoleByUserId, updateUserRoles } from '../actions/userManagementActions';
 import { roleTypes } from '../reducers/userManagementReducer';
 import RoleListItemContainer from './RoleListItemContainer';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 const formatOrgProjectList = (currentOrg, projectList) => {
 	const orgList = [{
@@ -30,6 +33,7 @@ class EditUserRoles extends Component {
 		this.state = {
 			selectedUser: null,
 			userRoleList: [],
+			orgRoleList:[],
 			orgProjectList: []
 		};
 	}
@@ -47,15 +51,19 @@ class EditUserRoles extends Component {
 			const orgProjectList = formatOrgProjectList(nextProps.currentOrg, nextProps.projectList);
 
 			let userRoleList = [];
-
+			let orgRoleList = [];
 			// organization roles
 			if (nextProps.selectedUser.org_allowed_role_list.length > 0) {
-				userRoleList = [{
+				orgRoleList = [{
 					id: `o_${nextProps.currentOrg.org_id}`, 
 					allowed_role_list: nextProps.selectedUser.org_allowed_role_list, 
 					roleType: roleTypes.ORGANIZATION,
 					uid: nextProps.currentOrg.org_id
 				}];
+			}else{
+				orgRoleList = [].concat(
+					[{ id: Math.floor(Math.random()*1000000), allowed_role_list: [], roleType: roleTypes.NEW }]
+				);
 			}
 
 			// project roles
@@ -69,12 +77,17 @@ class EditUserRoles extends Component {
 					};
 				});
 				userRoleList = userRoleList.concat(userProjectRoleList);
+			}else{
+				userRoleList = [].concat(
+					[{ id: Math.floor(Math.random()*1000000), allowed_role_list: [], roleType: roleTypes.NEW }]
+				);
 			}
-			
+
 			return {
 				...prevState,
 				selectedUser: nextProps.selectedUser,
 				userRoleList,
+				orgRoleList,
 				orgProjectList
 			};
 		}
@@ -96,39 +109,65 @@ class EditUserRoles extends Component {
 		this.setState({userRoleList});
 	};
 
-	onOrgProjectChange = (index, selectedOrgProject) => {
-		const userRoleList = [...this.state.userRoleList];
-		userRoleList.splice(index, 1, 
-			{	
-				id: selectedOrgProject.value, 
-				roleType: selectedOrgProject.roleType, 
-				uid: selectedOrgProject.uid,  
-				allowed_role_list:[]
-			}
-		);
+	onOrgProjectChange = (index, selectedOrgProject, category) => {
+		if(category === 'PROJECT'){
+			const userRoleList = [...this.state.userRoleList];
+			userRoleList.splice(index, 1, 
+				{	
+					id: selectedOrgProject.value, 
+					roleType: selectedOrgProject.roleType, 
+					uid: selectedOrgProject.uid,  
+					allowed_role_list:[]
+				}
+			);
 		this.setState({userRoleList});
+		}else{
+			const orgRoleList = [...this.state.orgRoleList];
+			orgRoleList.splice(index, 1, 
+				{	
+					id: selectedOrgProject.value, 
+					roleType: selectedOrgProject.roleType, 
+					uid: selectedOrgProject.uid,  
+					allowed_role_list:[]
+				}
+			);
+			this.setState({orgRoleList});
+		}
 	};
 
-	onRoleChange = (index, roles) => {
-		const userRoleList = [...this.state.userRoleList];
-		const listItem = userRoleList[index];
+	onRoleChange = (index, roles, category) => {
+		if(category === 'PROJECT'){
+			const userRoleList = [...this.state.userRoleList];
+			const listItem = userRoleList[index];
 
-		const allowed_role_list = roles.map((role) =>{
-			return role.value;
-		});
+			const allowed_role_list = roles.target.value.map((role) =>{
+				return role.value;
+			});
+			
+			userRoleList.splice(index, 1, {...listItem, allowed_role_list});
+			this.setState({userRoleList});
+		}else{
+			const orgRoleList = [...this.state.orgRoleList];
+			const listItem = orgRoleList[index];
+
+			const allowed_role_list = roles.target.value.map((role) =>{
+				return role.value;
+			});
+			
+			orgRoleList.splice(index, 1, {...listItem, allowed_role_list});
+			this.setState({orgRoleList});
+		}
 		
-		userRoleList.splice(index, 1, {...listItem, allowed_role_list});
-		this.setState({userRoleList});
 	};
 
 	getSelectedOrgProject = (id) => {
 		return getObjFromList(this.state.orgProjectList, 'value', id);
 	};
 
-	getRoleItemComponent = (list) => {
+	getRoleItemComponent = (list,type) => {
 		let roleElements = [];
 		const count = list.length;
-
+		const projectList = this.state.orgProjectList.filter((e) => e.roleType === type );
 		roleElements = list.map((item, index) => {
 			let showAdd = false;
 			let showDelete = true;
@@ -138,6 +177,8 @@ class EditUserRoles extends Component {
 			if (count-1 === index) {
 				showAdd = true;
 			}
+			if(type === 'ORGANIZATION')
+				showAdd = false;
 
 			return (
 				<li key={`${item.roleType}${index}`}>
@@ -148,12 +189,13 @@ class EditUserRoles extends Component {
 						showDeleteBtn={(!showDelete && list.length === 1)? false : true }
 						index={index} 
 						roleType={item.roleType}
-						orgProjectList = {this.state.orgProjectList}
-						selectedOrgProject = { getObjFromList(this.state.orgProjectList, 'value', item.id) }
+						orgProjectList = {projectList}
+						selectedOrgProject = { getObjFromList(projectList, 'value', item.id) }
 						id={item.id}
 						selectedRoles = {item.allowed_role_list}
 						onOrgProjectChange = {this.onOrgProjectChange}
 						onRoleChange = {this.onRoleChange}
+						category={type}
 					/>
 				</li>
 			);
@@ -163,16 +205,50 @@ class EditUserRoles extends Component {
 	};
 
 	renderUserRoles = () => {
-		let element = null; 
+		let element = []; 
 		if (this.state.userRoleList.length > 0) {
-			element = this.getRoleItemComponent(this.state.userRoleList);
+			element.push(
+				(
+				<li>
+					<div>
+						<span className="projectLabel">
+							Organisation
+						</span>
+						<span className="projectRoleLabel">
+							Roles
+						</span>
+					</div>
+				</li>
+				)
+			);
+			element.push(
+				this.getRoleItemComponent(this.state.orgRoleList,"ORGANIZATION")
+			);
+			element.push(
+				(
+				<li>
+					<div>
+						<span className="projectLabel">
+							Project
+						</span>
+						<span className="projectRoleLabel">
+							Roles
+						</span>
+					</div>
+				</li>
+				)
+			);
+			element.push(
+				this.getRoleItemComponent(this.state.userRoleList,"PROJECT")
+			)
+			// element = this.getRoleItemComponent(this.state.userRoleList);
 			if (element.length > 0) {
 				element.push(
 					(<div class='footer'>
 						<Link to={`/user_management`}>
-							<Button type="button" className="userbackbtn" bsStyle="primary">Back To User List</Button>
+							<button type="button" className="editUserRoleBackbtn backbutton_colors" bsStyle="primary">Back To User List</button>
 						</Link>
-						<Button type="button" className="button-colors" bsStyle="primary" onClick={(e) => {this.onSaveUserRoles()}}>Save</Button>
+						<button type="button" className="editRolesaveButton button-colors" bsStyle="primary" onClick={(e) => {this.onSaveUserRoles()}}>Save</button>
 					</div>)
 				);
 			}
@@ -186,18 +262,17 @@ class EditUserRoles extends Component {
 		const projectRoleList = [];
 		let orgAllowedRoleList = []; 
 		this.state.userRoleList.forEach((item) => {
-			if (item.roleType === roleTypes.PROJECT) {
 				projectRoleList.push(
 					{
 						'project_id': item.uid,
 						'allowed_role_list': item.allowed_role_list
 					}
 				);
-			} else if (item.roleType === roleTypes.ORGANIZATION) {
-				orgAllowedRoleList = orgAllowedRoleList.concat([...item.allowed_role_list]);
-			}
-
 		});
+		this.state.orgRoleList.forEach((item) => {
+			orgAllowedRoleList = orgAllowedRoleList.concat([...item.allowed_role_list]);
+		});
+
 		const payload = {
 			'org_id': this.props.currentOrg.org_id,
 			//'user_id': this.props.selectedUser.user_id,
@@ -210,8 +285,11 @@ class EditUserRoles extends Component {
 	
 	render() {
 		return (
+			
 			<div id="editUserRoles">
+				<PersonAddIcon className="editRoleEditIcon" />
 				<h3 className="usermanagetitle main_titles">Manage User Role</h3>
+				<Paper className="editRolePaper">
 				<div className = "DescriptionHeader sub_title submailtitle" className="maillabel sub_title">Email:</div>
 				<div className="maillabel1 other-titles">{this.props.selectedUser? this.props.selectedUser.email_id: ''}</div>
 				<table>
@@ -223,12 +301,14 @@ class EditUserRoles extends Component {
 				</tr>
 				</table>
 				{/* <div className="maillabel1 other-titles"></div> */}
-				<h5 className="userroles sub_title">Roles</h5>
+				{/* <h5 className="userroles sub_title">Roles</h5> */}
 				<div className="rolesborder">
 				{ this.renderUserRoles() }
 				</div>
+				</Paper>
 
 			</div>
+		
 		);
 	 }
 }

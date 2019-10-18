@@ -20,6 +20,7 @@ class User(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     password_hash = db.Column(db.TEXT, nullable=False)
+    asset = db.Column(JSON, nullable=True)
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
     is_super_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
@@ -51,7 +52,7 @@ class Organization(db.Model):
     __tablename__ = 'organization'
     org_id = db.Column(db.Integer, primary_key=True)
     org_name = db.Column(db.String(50), nullable=False)
-    org_description = db.Column(db.Text, nullable = True)
+    org_description = db.Column(db.Text, nullable=True)
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
@@ -61,7 +62,7 @@ class Organization(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def __init__(self, org_name,org_description, owner_id):
+    def __init__(self, org_name, org_description, owner_id):
         self.org_name = org_name
         self.org_description = org_description
         self.owner_id = owner_id
@@ -71,7 +72,7 @@ class Project(db.Model):
     __tablename__ = 'project'
     project_id = db.Column(db.Integer, primary_key=True)
     project_name = db.Column(db.String(50), nullable=False)
-    project_description = db.Column(db.Text, nullable = True)
+    project_description = db.Column(db.Text, nullable=True)
     org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=False,
                        index=True)
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
@@ -83,7 +84,7 @@ class Project(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def __init__(self, project_name, project_description,org_id, owner_id):
+    def __init__(self, project_name, project_description, org_id, owner_id):
         self.project_name = project_name
         self.project_description = project_description
         self.org_id = org_id
@@ -435,6 +436,7 @@ class Session(db.Model):
         """
         db.session.delete(self)
         db.session.commit()
+
 
 class Query(db.Model):
     __tablename__ = 'query'

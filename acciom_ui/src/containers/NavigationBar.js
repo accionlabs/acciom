@@ -159,7 +159,6 @@ const getLoginOptions = (props, classes) => {
 					</MenuItemBS>
 					
 					<MenuItemBS eventKey="4">
-						{/* <Link to="/change_password">Change Password</Link> */}
 						<span id="change_organisation" onClick={(event) => { handleShowOrg(props, true);}}>Change Organisation</span>
 					</MenuItemBS>
 					<MenuItemBS eventKey="6">
@@ -323,7 +322,7 @@ function NavigationBar(props) {
 						<MenuItem>
 						<ListItemIcon>
 							<Link to={'/projects'}>
-							<SpeakerNotesIcon/>
+							<SpeakerNotesIcon className="projectManagementNavIcon" />
 							</Link>
 						</ListItemIcon>
 						<Link to={'/projects'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
@@ -332,7 +331,7 @@ function NavigationBar(props) {
 						<ListItemIcon>
 							<Link to={'/organization'}>
 						
-							<AssignmentIcon/>
+							<AssignmentIcon className="projectManagementNavIcon" />
 							</Link>
 						</ListItemIcon>
 						<Link to={'/organization'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
