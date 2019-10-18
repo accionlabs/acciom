@@ -567,9 +567,8 @@ body,html{
 }
 
 .editUserRoleBackbtn{
-    float: right;
     border: none !important;
-    margin-left: 11px;
+    margin-left: 748px;
 }
 
 .userbackbtn:hover,
@@ -1298,8 +1297,10 @@ body,html{
 }
 
 .editUserProjectSelect{
+    color: #69717D !important;
     margin-left: 15px;
     width: 30%;
+    font-family: Open sans !important;
 }
 
 .editUserRoleSelect{
@@ -1309,7 +1310,17 @@ body,html{
 
 .roleChip{
     height: 20px !important;
+    font-family: Open sans !important;
 }
+
+.MuiMenuItem-root{
+    font-family: Open sans !important;
+    color: #69717D !important;
+}
+
+/* .MuiMenuItem-root:hover{
+    background-color: #BD4951 !important;
+} */
 
 .projectRoleLabel{
     margin-left: 71px;
@@ -1323,14 +1334,14 @@ body,html{
 }
 
 .adduserBackButton{
-    float: right;
     padding-left: 7px;
+    margin-left: 779px;
 }
 
 .adduserSaveButton{
-    margin-top: 10px;
+    margin-top: -31px;
     float: right;
-    margin-right: 10px;
+    margin-right: 60px;
 }
 
 .verifyButtons:disabled{
@@ -1344,6 +1355,10 @@ body,html{
     color: #69717D;
     margin-top: 0px !important;
     margin-bottom: 0px !important;
+}
+
+.lnameMargin{
+    font-weight: 300 !important;
 }
 
 .editRoleLanameLabel{
