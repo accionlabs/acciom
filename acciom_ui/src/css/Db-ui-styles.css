@@ -1497,8 +1497,75 @@ body,html{
 .AddSuiteLayout{
     margin-bottom: 35px;
 }
+.userAccount{
+    position:absolute;
+    margin-left: 2px;
+}
+.user_profile_heading{
+    margin-left: 35px;
+    font-size: 35px;
+    color: #69717D;
+    font-weight: bold;
+}
+.upload_user_picture{
+  margin-top: 23px;
+}
+.set_default_organization{
+    margin-top: 20px;
+    margin-left: 8px;
+}
+.select_organization_default{
+    width:290px;
+    margin-left: 8px;
+}
+.userProfileFname{
+    padding-left: 231px;
+    padding-top: 21px;
+    color: #69717D;
+    font-size: 21px;
+    font-family: Open sans;
+    font-weight: 500 ;
+}
+.userProfileLname{
+    padding-left: 231px;
+    padding-top: 21px;
+    color: #69717D;
+    font-size: 21px;
+    font-family: Open sans;
+    font-weight: 500 ;
+}
+.userProfileEmail{
+    padding-left: 231px;
+    padding-top: 21px;
+    color: #69717D;
+    font-size: 21px;
+    font-family: Open sans;
+    font-weight: 500 ;
+}
+.userProfileFnameLabel{
+    width: 544px;
+    padding-left: 90px;
+}
+.userProfileLnameLabel{
+    width: 544px;
+    margin-left: 188px;
+    padding-left: 100px;
+}
+.userProfileEmailLabel{
+    width: 544px;
+    margin-left: 188px;
+}
+.border_user_profile{
+    margin-left:150px;
+    margin-right: 50px;
+    margin-top: 40px;
+    height: 550px;
+}
 
-
+.submit_button_user_profile{
+    margin-left: 789px;
+    margin-top: 20px;
+}
 
 .addUserPaper{
     margin-top: 22px;
@@ -1521,5 +1588,6 @@ body,html{
     margin-left: 15px;
     color: #000 !important;
 }
+
 
 
