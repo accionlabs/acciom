@@ -7,7 +7,7 @@ import { PROJECTNAME } from '../../constants/FieldNameConstants';
 
 function TableListBody(props) {
     const {page, rowsPerPage, orderBy, order, search, bodyData, headers, stableSort, getSorting, searchingFor,editIdx,handleChange,projectNameValue,projectDescriptionValue } = props;
-  
+
     return(
 
         <TableBody className="commonTableBody">
@@ -17,8 +17,9 @@ function TableListBody(props) {
             .filter(searchingFor(search,headers))
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
              .map((item,index) => {
-               
-                    const currentlyEditing =editIdx===index
+               let currentIndex =rowsPerPage*page+index;
+                    const currentlyEditing =editIdx===currentIndex
+                  
                   
                     return(
                 <TableRow  tabIndex={-1} key={index} >

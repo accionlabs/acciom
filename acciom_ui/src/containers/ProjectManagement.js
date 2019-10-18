@@ -9,8 +9,11 @@ import CheckIcon from '@material-ui/icons/Check';
 import Clear from '@material-ui/icons/Clear';
 import CustomTable from '../components/Table/CustomTable'
 import CustomModal from '../components/CommonModal/CustomModal';
-import {getProjectList,updateProjectList,deleteProjectDetails} from '../actions/projectManagementActions';
-import { PROJECTS, ORGANIZATION, PROJECTNAME, PROJECTDESCRIPTION, PROJNAME, DESCRIPTION, SMALL, ACTION, } from '../constants/FieldNameConstants';
+import {getProjectList,updateProjectList,deleteProjectDetails,addToProjectList} from '../actions/projectManagementActions';
+import { PROJECTS, ORGANIZATION, PROJECTNAME, PROJECTDESCRIPTION, PROJNAME, DESCRIPTION, SMALL, ACTION, ADDPROJECT, ADDORGANIZATION, DELETEMSG, TITLE, DELETE, PROJECTITLE, PROJECTDESC, ADD, TEXTBOX_NAME, TEXTBOX_DESC} from '../constants/FieldNameConstants';
+import { Button,Modal} from 'react-bootstrap';
+import { toast } from 'react-toastify';
+
 
 const styles = theme => ({
 
@@ -22,7 +25,7 @@ const styles = theme => ({
 
 class ProjectManagement extends Component {
 	componentDidMount(){
-    
+		
 		const location=window.location.href;
 
 		if(location.includes(PROJECTS)){
@@ -45,7 +48,7 @@ class ProjectManagement extends Component {
 			          };
                       this.props.deleteProjectDetails(connectionId);
 		              this.hideConfirmationopup();
-	  	              location.reload(true);
+				
 		       }
 
 		onNoBtnClickHandler=()=>{
@@ -65,6 +68,7 @@ class ProjectManagement extends Component {
 		}
 
 		saveDataHandler=(index)=>{	
+		
 			const localProjectListHandler = [...this.state.projectList];
 		
 			localProjectListHandler[index].project_name = this.state.projectName;
@@ -77,9 +81,11 @@ class ProjectManagement extends Component {
 				project_description:localProjectListHandler[index].project_description,
 				project_id:localProjectListHandler[index].project_id
 			};
-	
-	 		this.props.updateProjectList(JSON.stringify(upDateProjectDetails));
-			this.setState({editIdx:-1});	
+	if(localProjectListHandler[index].project_name.length >0 && localProjectListHandler[index].project_description.length>0){
+		this.props.updateProjectList(JSON.stringify(upDateProjectDetails));
+		this.setState({editIdx:-1});
+	}
+	 			
 		}
 
 		clearDataHandler = () =>{
@@ -98,26 +104,90 @@ class ProjectManagement extends Component {
 			}
 
 		}
-
-	static getDerivedStateFromProps = (nextProps, prevState) => {
+		hideUserInfoPopUp=()=>{
+			this.setState({showAddConfirmationDialog:false,projectNameAdd:'',projectDescriptionAdd:''});
+		}
 	
-		if (!prevState.isOrganisationInitialised && 
-			nextProps.isOrganisationInitialised > 0) {
-				
-			nextProps.getProjectList(nextProps.currentOrg.org_id);
-			if(prevState.projectList!== nextProps.projectList){
-				return {
-					...prevState,
-					projectList: nextProps.projectList
-				      };
+		handleAddButtonHandler=()=>{
+		
+			this.setState({showAddConfirmationDialog:true});
+		}
+		cancelBtnClicked=()=>{
+			this.hideUserInfoPopUp();
+		   }
+		   
+		   validateConditions =()=>{
+			const {projectNameAdd ,projectDescriptionAdd} =this.state;
+			
+			if(projectNameAdd.length>0 && projectDescriptionAdd.length>0){
+				return true
+               }
+			return false
+		}
+		saveBtnClicked=()=>{
+		
+			let addToProjectDetails = {};
+
+			addToProjectDetails={
+				project_name:this.state.projectNameAdd,
+				project_description:this.state.projectDescriptionAdd,
+				org_id:this.props.currentOrg.org_id
+			};
+		
+
+			if(this.validateConditions()){
+				this.props.addToProjectList(JSON.stringify(addToProjectDetails));
+				this.hideUserInfoPopUp();
+			
+			
 
 			}
-		
+				       
+				
+			
+	
 		}
-		return ({
+		textFieldHandler=()=>{
+  
+			if(event.target.name ===TEXTBOX_NAME){
+			
+			 this.setState({projectNameAdd:event.target.value})
 		
-			isOrganisationInitialised: nextProps.isOrganisationInitialised
-		});
+			}
+			
+		   else if(event.target.name ===TEXTBOX_DESC){
+		
+			this.setState({projectDescriptionAdd:event.target.value})
+		
+			}
+			
+		  }
+	
+	static getDerivedStateFromProps = (nextProps, prevState) => {
+	
+	if(nextProps.refreshProjectDetails){
+	
+		nextProps.getProjectList(nextProps.currentOrg.org_id);
+		return {
+			prevState
+		};
+	}
+	if(nextProps.projectUserList.length === 0){
+		if (nextProps.currentOrg ? nextProps.currentOrg.org_id : false) {
+			nextProps.getProjectList(nextProps.currentOrg.org_id);
+			return {
+				prevState
+			};
+		}
+	}
+	if(prevState.projectUserList!== nextProps.projectUserList){
+			return {
+				...prevState,
+				projectList: nextProps.projectUserList
+				};
+
+		}
+		
 	}
 
 	constructor(props) {
@@ -130,23 +200,30 @@ class ProjectManagement extends Component {
 			  ],
 			  location:PROJECTS,
 			  showDeleteConfirmationDialog: false,
+			  showAddConfirmationDialog: false,
 			  deleteConnectionID: null,
 			  editIdx:-1,
 			  projectList:[],
 			  projectName:'',
-			  projectDescription:''
+			  projectDescription:'',
+			  projectNameAdd:'',
+			  projectDescriptionAdd:'',
+
 			
 		};
 	}
 		
 	render() {
 		
-		const { isEditable,headers } = this.state;
-		const {projectList,classes} = this.props;
-		
+
+		const { headers , projectList,isEditable} = this.state;
+		const {classes} =this.props;
+		let currentButtonName =ADDPROJECT
 		let currentHeader =<label>Project Management</label>;
-		if(this.state.location =='organization'){
-		  currentHeader =<label>Organization Management</label>
+		if(this.state.location == ORGANIZATION){
+		  currentHeader =<label>Organization Management</label>;
+	      currentButtonName =ADDORGANIZATION;
+
 		}
 
 		const projectModifyData=[];
@@ -180,7 +257,8 @@ class ProjectManagement extends Component {
 						<Fragment>
 							<CheckIcon
 						  style={{color:"#696969" ,marginRight:'8px'}} 
-						  onClick ={()=>this.saveDataHandler(index)}/> 
+                          onClick ={()=>this.saveDataHandler(index)}
+						  /> 
 						  <Clear
 						   fontSize={SMALL}
 						   style={{color:"#696969",marginRight:'8px'}} 
@@ -193,14 +271,21 @@ class ProjectManagement extends Component {
 			});
             
 		}
-
+        
 		return (
 
 			<div>
+		
 				<div>
 				<GroupIcon className=" organizationManagementIcon" />
 			&nbsp; &nbsp;
-			<label className="main_titles projectManagementMargin" >{currentHeader}</label>
+
+				
+					<label className="main_titles projectManagementMargin" >{currentHeader}</label>
+					<Button 
+					className="backbutton_colors_project addUserButton"
+					onClick={this.handleAddButtonHandler}>{currentButtonName}</Button>
+
 
 				</div>
 			
@@ -211,16 +296,31 @@ class ProjectManagement extends Component {
 					editIdx ={this.state.editIdx}
 					projectNameValue ={this.state.projectName}
 					projectDescriptionValue ={this.state.projectDescription}
-					
 					handleChange ={this.handleChangeHandler}
 				    />
 				 { 
 					this.state.showDeleteConfirmationDialog ?
 						<CustomModal
 						  onYesBtnClicked={this.onYesBtnClickHandler}
-						  onNoBtnClicked={this.onNoBtnClickHandler}/>
+						  onNoBtnClicked={this.onNoBtnClickHandler}
+						  currentPage ={this.state.location} 
+					      variant ={DELETE}
+						   />
 						: null
 				}
+			
+				{
+                  this.state.showAddConfirmationDialog? <CustomModal
+				   projectNameAdd={this.state.projectNameAdd}
+				   projectDescriptionAdd={this.state.projectDescriptionAdd}
+				   onCancelBtnClicked ={this.cancelBtnClicked}
+				   onSaveBtnClicked ={this.saveBtnClicked}
+				   onTextFieldHandler={this.textFieldHandler} 
+				   currentPage ={this.state.location}  
+				   validateFields ={this.validateConditions()} 
+				   variant ={ADD}/>:null
+				}
+				
 				
 			</div>
 		);
@@ -232,15 +332,15 @@ const mapStateToProps = (state) => {
 	return {
 		currentOrg: state.appData.currentOrg,
 		projectUserList:state.projectManagementData.projectUserList,
-		orgUserList: state.userManagementData.orgUserList? state.userManagementData.orgUserList: [],
-		projectList: state.appData.projectList? state.appData.projectList: [],
-		isOrganisationInitialised: state.appData.isOrganisationInitialised
+		isOrganisationInitialised: state.appData.isOrganisationInitialised,
+		refreshProjectDetails:state.projectManagementData.refreshProjectDetails
 	};
 };
 
 const mapDispatchToProps = dispatch => ({
 	getProjectList: (data) => dispatch(getProjectList(data)),
 	updateProjectList:(data)=>dispatch(updateProjectList(data)),
+	addToProjectList:(data)=>dispatch(addToProjectList(data)),
 	deleteProjectDetails: (data) => dispatch(deleteProjectDetails(data))
 });
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(ProjectManagement));

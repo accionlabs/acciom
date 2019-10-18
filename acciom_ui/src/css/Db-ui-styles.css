@@ -19,6 +19,13 @@ body,html{
     color: #69717D !important;
     font-size: 15px;
     font-weight: bold;
+
+}
+.sub_title_add{
+    color: #69717D !important;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 24px;
 }
 
 .other-titles{
@@ -1473,6 +1480,15 @@ body,html{
     padding-top: 20px;
     padding-bottom: 52px;
 }
+.backbutton_colors_project{
+    background-color: #69717D !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 127px;
+    height: 31px;
+}
 
 .mandatory{
     color: rgb(245, 96, 106);
@@ -1481,6 +1497,8 @@ body,html{
 .AddSuiteLayout{
     margin-bottom: 35px;
 }
+
+
 
 .addUserPaper{
     margin-top: 22px;
@@ -1503,4 +1521,5 @@ body,html{
     margin-left: 15px;
     color: #000 !important;
 }
+
 
