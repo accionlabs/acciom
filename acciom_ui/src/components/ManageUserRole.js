@@ -9,8 +9,6 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 
-
-
 const formatOrgProjectList = (currentOrg, projectList) => {
 	const orgList = [{
 		value: `o_${currentOrg.org_id}`, 
@@ -47,13 +45,23 @@ class ManageUserRole extends Component{
 			lastname: "",
 			orgRoleList: orgRoleList,
 			showPermission: false,
+			disableEmail: false,
 		}
 		this.handleInputChange = this.handleInputChange.bind(this)
 	}
 	
     emailVerify = () => {
-		const { email } = this.state;
-		this.props.emailExsistingVerify(email);
+		const { email, disableEmail } = this.state;
+		if (disableEmail){
+			this.setState({
+				disableEmail: false
+			})
+		} else {
+			this.setState({
+				disableEmail: true
+			})
+			this.props.emailExsistingVerify(email);
+		}
     }
 
     handleInputChange = (event) => {
@@ -69,7 +77,6 @@ class ManageUserRole extends Component{
 	}
 
 	
-
     static getDerivedStateFromProps = (nextProps, prevState) => {
 		if (nextProps.redirectToUserMgmtEdit && nextProps.emailUserID !== "show") {
 			nextProps.history.push(`/edit_user_role/${nextProps.emailUserID}`);
@@ -207,6 +214,15 @@ class ManageUserRole extends Component{
 		return getObjFromList(this.state.orgProjectList, 'value', id);
 	};
 
+	validateFields = () => {
+		const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		if (this.state.firstname && this.state.firstname && this.state.email && re.test(String(this.state.email).toLowerCase()))
+		{
+			return false;
+		}
+		return true;
+	};
+
     getRoleItemComponent = (list,type) => {
 		let roleElements = [];
 		const count = list.length;
@@ -250,17 +266,16 @@ class ManageUserRole extends Component{
 		const projectRoleList = [];
 		let orgAllowedRoleList = []; 
 		this.state.userRoleList.forEach((item) => {
-			if (item.roleType === roleTypes.PROJECT) {
-				projectRoleList.push(
-					{
-						'project_id': item.uid,
-						'allowed_role_list': item.allowed_role_list
-					}
-				);
-			} else if (item.roleType === roleTypes.ORGANIZATION) {
-				orgAllowedRoleList = orgAllowedRoleList.concat([...item.allowed_role_list]);
-			}
+			projectRoleList.push(
+				{
+					'project_id': item.uid,
+					'allowed_role_list': item.allowed_role_list
+				}
+			);
+		});
 
+		this.state.orgRoleList.forEach((item) => {
+			orgAllowedRoleList = orgAllowedRoleList.concat([...item.allowed_role_list]);
 		});
 
 		const payload = {
@@ -275,6 +290,7 @@ class ManageUserRole extends Component{
 	};
 
     render(){
+		const { showPermission, disableEmail } = this.state;
         return(
 			
             <div>
@@ -290,6 +306,7 @@ class ManageUserRole extends Component{
             <table>
                 <tr>
 					<td>
+					
 					<TextField
 						className="editRoleFnameLabel"
 						name="firstname"
@@ -297,6 +314,7 @@ class ManageUserRole extends Component{
 						value={this.state.firstname}
 						onChange = {this.handleInputChange}
 						margin="normal"
+						disabled={disableEmail}
 					/>
 					</td>
                     <td><TextField
@@ -307,6 +325,7 @@ class ManageUserRole extends Component{
 						value={this.state.lastname}
 						onChange = {this.handleInputChange}
 						margin="normal"
+						disabled={disableEmail}
 					/>
 					</td>
                     <td>
@@ -317,23 +336,22 @@ class ManageUserRole extends Component{
 						value={this.state.email}
 						onChange = {this.handleInputChange}
 						margin="normal"
+						disabled={disableEmail}
 					/>
 					</td>
 					<td>
-					<td><button className="button-colors verifyButtons"  onClick={() => this.emailVerify()}>Verify</button></td>
-
+						<button className="button-colors verifyButtons"  disabled={this.validateFields()} 
+						onClick={() => this.emailVerify()}>{disableEmail ? 'Edit' : 'Verify'}</button>
 					</td>
                 </tr>
 				<tr>
 				</tr>
             </table>
 			<div className="rolesborder">
-				{ this.state.showPermission && this.renderUserRoles() }
+				{ showPermission && disableEmail && this.renderUserRoles() }
 			</div>
 			</Paper>
             </div>
-		
-            
         );
     }
 }
