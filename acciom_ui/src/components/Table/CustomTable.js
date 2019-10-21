@@ -96,27 +96,10 @@ class CustomTable extends React.Component {
     handleSearch=(event)=>{
       this.setState({search:event.target.value})
     }
-    valueTobePassed=()=>{
-      const {headers,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue} =this.props;
-      if(headers.id ===PROJECTNAME){
-        return  projectNameValue
-
-      }
-      if(headers.id ===PROJECTDESCRIPTION){
-        return  projectDescriptionValue
-
-      }
-      if(headers.id ===ORGANIZATIONNAME){
-        return  orgNameValue
-
-      }
-      return orgDescriptionValue
-      
    
-    }
 
     render(){
-      const {classes, headers, bodyData, actionLabel,editIdx,handleChange} = this.props;
+      const {classes, headers, bodyData, actionLabel,editIdx,handleChange,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue} = this.props;
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
           <Paper className="commonTablePaperMargin">
@@ -148,7 +131,10 @@ class CustomTable extends React.Component {
                 searchingFor={searchingFor}
                 editIdx={editIdx}
                 handleChange={handleChange}
-                valueTobePassed ={this.valueTobePassed}
+                projectNameValue={projectNameValue}
+                projectDescriptionValue={projectDescriptionValue}
+                orgNameValue={orgNameValue}
+                orgDescriptionValue={orgDescriptionValue}
                 />
               </Table>
             </div>

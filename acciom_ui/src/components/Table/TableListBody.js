@@ -6,7 +6,7 @@ import { TextField } from '@material-ui/core';
 import { PROJECTNAME, PROJECTDESCRIPTION, ORGANIZATIONNAME } from '../../constants/FieldNameConstants';
 
 function TableListBody(props) {
-    const {page, rowsPerPage, orderBy, order, search, bodyData, headers, stableSort, getSorting, searchingFor,editIdx,handleChange,valueTobePassed } = props;
+    const {page, rowsPerPage, orderBy, order, search, bodyData, headers, stableSort, getSorting, searchingFor,editIdx,handleChange,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue } = props;
 
     return(
 
@@ -32,7 +32,8 @@ function TableListBody(props) {
                             <TextField
                             name ={header.id}
                             onChange={(e) =>handleChange(e)}
-                             value ={valueTobePassed()}
+                            value={header.id === PROJECTNAME ? projectNameValue :(header.id===PROJECTDESCRIPTION)? projectDescriptionValue:
+                                (header.id===ORGANIZATIONNAME)?orgNameValue:orgDescriptionValue}
                             />:item[header.id]}
                         </TableCell>
                   )})}
