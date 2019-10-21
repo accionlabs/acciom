@@ -130,7 +130,7 @@ class APIMessages:
     USER_DETAILS_UPDATED = "User details Updated Successfully"
     ORG_DELETED = "Organization Deleted Successfully"
     DELETE_ORG_FALSE = "Organization cannot be deleted"
-    SET_SUCCESS = "Default Organization and Projet set Successfully"
+    SET_SUCCESS = "Default Organization and Project set Successfully"
     PASS_FIRST_NAME = "Please Pass First Name"
     PASS_LAST_NAME = "Please Pass Last Name"
 
