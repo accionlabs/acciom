@@ -7,7 +7,7 @@ import { PROJECTNAME, PROJECTDESCRIPTION, ORGANIZATIONNAME } from '../../constan
 
 function TableListBody(props) {
     const {page, rowsPerPage, orderBy, order, search, bodyData, headers, stableSort, getSorting, searchingFor,editIdx,handleChange,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue } = props;
-       console.log('Props value in Body',orgNameValue);
+    
     return(
 
         <TableBody className="commonTableBody">

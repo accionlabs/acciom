@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import {getDetailsOrganizationList,addToOrganizationList,updateOrganizationList} from '../actions/organizationManagementActions';
-import { ORGANIZATIONNAME, ORGANIZATIONDESCRIPTION, ORGNAME, DESCRIPTION, ACTION, SMALL, ADDORGANIZATION, ADD, ORGANIZATION, ORG_TEXTBOX_NAME, ORG_TEXTBOX_DESC } from '../constants/FieldNameConstants';
+import {getDetailsOrganizationList,addToOrganizationList,updateOrganizationList,deleteOrganizationDetails} from '../actions/organizationManagementActions';
+import { ORGANIZATIONNAME, ORGANIZATIONDESCRIPTION, ORGNAME, DESCRIPTION, ACTION, SMALL, ADDORGANIZATION, ADD, ORGANIZATION, ORG_TEXTBOX_NAME, ORG_TEXTBOX_DESC, DELETE } from '../constants/FieldNameConstants';
 import CustomTable from '../components/Table/CustomTable';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -74,7 +74,7 @@ class OrganizationManagement extends Component {
         
         this.setState({editIdx:index});
             const localOrgList = [...this.state.orgUserList];
-            console.log('Local org list name',localOrgList[index].org_name);
+        
 		
 			this.setState({organizationName:localOrgList[index].org_name});
             this.setState({organizationDescription:localOrgList[index].org_description});
@@ -116,25 +116,48 @@ this.setState({editIdx:-1});
     }
     handleChangeHandler=(event)=>{
         if(event.target.name ===ORGANIZATIONNAME){
-            console.log('Name change');
-        
-            this.setState({organizationName:event.target.value});
+          
+        this.setState({organizationName:event.target.value});
         }
         else if(event.target.name ===ORGANIZATIONDESCRIPTION){
-            console.log('Description Change');
-            
+     
             this.setState({organizationDescription:event.target.value});
         }
 
     }
+  
     clearDataHandler=()=>{
         
 			this.setState({editIdx:-1});
     }
+
+    deleteItemHandler = (deleteOrgId)=>{	 
+        this.setState({showDeleteConfirmationDialog:true, deleteConnectionID:deleteOrgId});
+    }
+
+    onYesBtnClickHandler=()=>{
+        const organisationId = {
+				 
+            rowconnectionID: this.state.deleteConnectionID
+            };
+        
+            this.props.deleteOrganizationDetails(organisationId);
+        
+        this.hideConfirmationopup();
+    }
+
+    onNoBtnClickHandler=()=>{
+      
+        this.hideConfirmationopup();
+
+     }
+     hideConfirmationopup = () => {
+        this.setState({showDeleteConfirmationDialog: false ,deleteConnectionID:null});
+    }
     static getDerivedStateFromProps = (nextProps, prevState) => {
        
         if(nextProps.refreshOrganizationDetails){
-            console.log('In static');
+         
 	
             nextProps.getDetailsOrganizationList();
             return {
@@ -174,7 +197,9 @@ this.setState({editIdx:-1});
               organizationName:'',
               organizationDescription:'',
               location:ORGANIZATION,
-              editIdx:-1
+              editIdx:-1,
+              showDeleteConfirmationDialog:false,
+              deleteConnectionID:null
 
         }
     }
@@ -201,7 +226,7 @@ this.setState({editIdx:-1});
 							  className="cursorhover" 
 							  fontSize={SMALL}
 							  style={{color:"#696969",marginRight:'8px'}} 
-							  onClick ={() =>{this.deleteItemHandler(project.project_id);}}
+							  onClick ={() =>{this.deleteItemHandler(org.org_id);}}
 							   />
 
 						</Fragment>
@@ -254,6 +279,17 @@ this.setState({editIdx:-1});
 				  orgDescriptionValue ={this.state.organizationDescription}
                   handleChange ={this.handleChangeHandler}
                   /> 
+                  	 { 
+					this.state.showDeleteConfirmationDialog ?
+						<CustomModal
+						  onYesBtnClicked={this.onYesBtnClickHandler}
+						  onNoBtnClicked={this.onNoBtnClickHandler}
+						  currentPage ={this.state.location} 
+					      variant ={DELETE}
+						   />
+						: null
+				}
+			
                   	{
                   this.state.showAddConfirmationDialog? 
                   <CustomModal
@@ -282,6 +318,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps =dispatch=>({
     getDetailsOrganizationList: (data) => dispatch(getDetailsOrganizationList(data)),
     addToOrganizationList:(data)=>dispatch(addToOrganizationList(data)),
-    updateOrganizationList:(data)=>dispatch(updateOrganizationList(data))
+    updateOrganizationList:(data)=>dispatch(updateOrganizationList(data)),
+    deleteOrganizationDetails:(data)=>dispatch(deleteOrganizationDetails(data)),
+   
 })
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(OrganizationManagement));
