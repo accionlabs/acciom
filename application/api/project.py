@@ -2,7 +2,7 @@
 from flask_restful import Resource, reqparse
 
 from application.common.api_permission import PROJECT_POST, \
-    PROJECT_PUT
+    PROJECT_PUT, PROJECT_DELETE
 from application.common.common_exception import GenericBadRequestException, \
     ResourceNotAvailableException
 from application.common.constants import APIMessages
@@ -200,7 +200,6 @@ class ProjectAPI(Resource):
 
         Args:
             session(object): User session
-            project_id: project_id to be deleted
 
         Returns: Standard API Response with HTTP status code
 
@@ -222,7 +221,7 @@ class ProjectAPI(Resource):
                                 APIMessages.NO_RESOURCE.format('Project'),
                                 STATUS_UNAUTHORIZED)
         check_permission(user_object=session.user,
-                         list_of_permissions=PROJECT_PUT,
+                         list_of_permissions=PROJECT_DELETE,
                          project_id=get_project_data["project_id"],
                          org_id=project_obj.org_id)
         test_suite_obj = TestSuite.query.filter_by(

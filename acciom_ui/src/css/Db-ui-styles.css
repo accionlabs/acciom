@@ -6,7 +6,7 @@ body,html{
     display: inline-block;
     width: 40%;
     color: #69717D !important;
-    text-align: center;
+    margin-left: 15px;
     padding-top: 19px;
 }
 .main_titles{
@@ -19,6 +19,13 @@ body,html{
     color: #69717D !important;
     font-size: 15px;
     font-weight: bold;
+
+}
+.sub_title_add{
+    color: #69717D !important;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 24px;
 }
 
 .other-titles{
@@ -529,24 +536,39 @@ body,html{
 }
 
 .usermanagetitle{
-    color: #69717D;
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 1px;
-    margin-left: 16px;
+    margin-top: -24px;
+    margin-left: 31px;
+
 }
 
-.userbackbtn{
+.userBackButton{
     background-color: #69717D !important;
     border-color: #69717D;
     color: #fff;
-    font-size: 13px;
+    font-size: 13px !important;
     border-radius: 3px;
     text-align: center;
     width: 121px;
     height: 31px;
-    margin-right: 8px !important;
-    padding: 0;
+    margin-right: 61px !important;
+    margin-top: 10px !important;
+}
+
+.editRolesaveButton{
+    float: right;
+    border: none;
+
+}
+
+.editRoleEditIcon{
+    margin-left: -2px;
+    margin-top: 2px;
+    color: #69717D;
+}
+
+.editUserRoleBackbtn{
+    border: none !important;
+    margin-left: 748px;
 }
 
 .userbackbtn:hover,
@@ -564,8 +586,15 @@ body,html{
     color: #69717D !important;
 }
 
-.plusCircle{
-    margin-top: 16px;
+.addProjectPlusIcon{
+    margin-top: 10px !important;
+    margin-left: 15px !important;
+    background-color: #BD4951 !important;
+    font-size: 12px !important;
+    border-radius: 3px;
+    text-align: center;
+    color: #fff !important;
+    height: 30px;
 }
 
 .button-colors{
@@ -1259,87 +1288,85 @@ body,html{
     padding-left: 8px;
 }
 
-.emailRoleLabel{
-    margin-top: 16px;
-    margin-left: 33px;
-    font-weight: 300;
-    padding: 6px;
-   
+.emailEditBox{
+    margin-left: 100px !important;
+    width: 94%;
+    color: #69717D;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
 
-.emailEditBox{
-    margin-top: 8px;
-    width: 250px;
-    height: 30px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    float: left;
-    margin-left: 5px;
-    padding: 4px;
-    
+.editUserProjectSelect{
+    color: #69717D !important;
+    margin-left: 15px;
+    width: 30%;
+    font-family: Open sans !important;
+}
+
+.editUserRoleSelect{
+    margin-left: 179px;
+    width: 40%;
+}
+
+.roleChip{
+    height: 20px !important;
+    font-family: Open sans !important;
+}
+
+.MuiMenuItem-root{
+    font-family: Open sans !important;
+    color: #69717D !important;
+}
+
+/* .MuiMenuItem-root:hover{
+    background-color: #BD4951 !important;
+} */
+
+.projectRoleLabel{
+    margin-left: 71px;
+    color: #69717D;
 }
 
 .verifyButtons{
-    margin-top: 11px;
+    margin-top: 27px;
     border: 0px !important;
-    margin-left: 96px;
+    margin-left: 150px;
 }
 
 .adduserBackButton{
-    margin-top: 11px;
-    margin-left: 94px;
+    padding-left: 7px;
+    margin-left: 779px;
 }
 
 .adduserSaveButton{
-    margin-top: 10px;
+    margin-top: -31px;
+    float: right;
+    margin-right: 60px;
 }
 
 .verifyButtons:disabled{
     background-color: rgb(226, 152, 152) !important;
 }
 
-.userRoleFname{
-    float: left;
-    margin-top: 23px;
-    font-weight: 300;
-    width: 100px;
-}
-
-.userRoleLname{
-    float: right;
-    margin-left: 50px;
-    margin-bottom: 2px;
-    font-weight: 300;
-    width: 100px;
-}
 
 .editRoleFnameLabel{
-    width: 250px;
-    height: 30px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    margin-left: -122px;
-    margin-top: 18px;
-    padding: 6px;
-    
-}
-
-
-.editRoleLanameLabel{
-    width: 250px;
-    height: 30px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    margin-top: 11px;
-    margin-left: -6px;
-    padding: 6px;
+    width: 110%;
+    margin-left: 10px !important;
+    color: #69717D;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
 
 .lnameMargin{
-    color: #69717D;
-    margin-left: 10px;
-    font-weight: 300;
-    font-size: 13px;
+    font-weight: 300 !important;
+}
+
+.editRoleLanameLabel{
+    width: 103%;
+    margin-left: 63px !important;
+    color: #69717D !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
 
 .addUserBackButton{
@@ -1351,7 +1378,7 @@ body,html{
 .listDots{
     list-style: none;
     list-style: none;
-    margin-left: 80px !important;
+    margin-left: -5px !important;
     margin-top: 15px !important;
 }
 
@@ -1466,8 +1493,16 @@ body,html{
 .editRolePaper{
     margin-top: 32px;
     padding-top: 20px;
-    padding-bottom: 33px;
-    background-color: #EAEBED !important;
+    padding-bottom: 52px;
+}
+.backbutton_colors_project{
+    background-color: #69717D !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 127px;
+    height: 31px;
 }
 
 .mandatory{
@@ -1477,3 +1512,97 @@ body,html{
 .AddSuiteLayout{
     margin-bottom: 35px;
 }
+.userAccount{
+    position:absolute;
+    margin-left: 2px;
+}
+.user_profile_heading{
+    margin-left: 35px;
+    font-size: 35px;
+    color: #69717D;
+    font-weight: bold;
+}
+.upload_user_picture{
+  margin-top: 23px;
+}
+.set_default_organization{
+    margin-top: 20px;
+    margin-left: 8px;
+}
+.select_organization_default{
+    width:290px;
+    margin-left: 8px;
+}
+.userProfileFname{
+    padding-left: 231px;
+    padding-top: 21px;
+    color: #69717D;
+    font-size: 21px;
+    font-family: Open sans;
+    font-weight: 500 ;
+}
+.userProfileLname{
+    padding-left: 231px;
+    padding-top: 21px;
+    color: #69717D;
+    font-size: 21px;
+    font-family: Open sans;
+    font-weight: 500 ;
+}
+.userProfileEmail{
+    padding-left: 231px;
+    padding-top: 21px;
+    color: #69717D;
+    font-size: 21px;
+    font-family: Open sans;
+    font-weight: 500 ;
+}
+.userProfileFnameLabel{
+    width: 544px;
+    padding-left: 90px;
+}
+.userProfileLnameLabel{
+    width: 544px;
+    margin-left: 188px;
+    padding-left: 100px;
+}
+.userProfileEmailLabel{
+    width: 544px;
+    margin-left: 188px;
+}
+.border_user_profile{
+    margin-left:150px;
+    margin-right: 50px;
+    margin-top: 40px;
+    height: 550px;
+}
+
+.submit_button_user_profile{
+    margin-left: 789px;
+    margin-top: 20px;
+}
+
+.addUserPaper{
+    margin-top: 22px;
+    width: 107%;
+    padding-left: 10px;
+    padding-bottom: 61px;
+    padding-top: 15px;
+}
+
+.userRoleChangeSelect{
+    display: inline-block;
+    width: 40%;
+    margin-left: 15px;
+    color: #000 !important;
+}
+
+.multiuserRoleChangeSelect{
+    display: inline-block;
+    width: 40%;
+    margin-left: 15px;
+    color: #000 !important;
+}
+
+
+

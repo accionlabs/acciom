@@ -4,6 +4,7 @@ import logger from 'redux-logger';
 
 import rootReducer from '../reducers';
 import { authenticationExpired } from '../actions/appActions';
+import { POP_UP_SUCCESS_MESSAGE } from '../constants/FieldNameConstants';
 
 const hasStandardErrorStatus = (status) => {
 	return ((status >= 300 && status <= 307) || 
@@ -76,13 +77,39 @@ function callAPIMiddleware({ dispatch, getState }) {
 						}
 
 					} else {
+						
+						
 						if (response.data && Object.keys(response.data).length === 0 && response.message) {
+							
 							if (response.success) {
+							
 								toast.success(response.message);
 							} else {
+								if (response.message.length > 0) {
+								
+									toast.warn(response.message);
+								}
+							
 								toast.warn(response.message);
 							}
+						
 						} 
+						else{
+							if(response.success ===false){
+								
+								toast.error(response.message);
+							}
+						
+							  else{
+								if(response.message ===POP_UP_SUCCESS_MESSAGE){
+								
+									toast.success(response.message);
+								}
+								
+							    }
+							
+							
+						}
 						dispatch(
 							Object.assign({}, payload, {
 								response,
