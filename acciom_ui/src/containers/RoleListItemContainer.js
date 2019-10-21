@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import Select from 'react-select';
 import { connect } from 'react-redux'; 
 import { getRolesByProjectId, getRolesByOrgId } from '../actions/userManagementActions';
 import { roleTypes } from '../reducers/userManagementReducer';
@@ -7,8 +6,6 @@ import Select from '@material-ui/core/Select';
 import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-
-
 
 const formatRoleListData = (rolesList) => {
 	let formatedList = [];
@@ -95,46 +92,44 @@ class RoleListItemContainer extends Component {
 			  color: state.isSelected ? "black" : null
 			})
 		};
-		
+
 		return (
 			<div>
 				<Select
-						className="editUserProjectSelect"
-						value = {this.props.selectedOrgProject}
-						onChange = { (item) => this.handleOrgProjectChange(item) }
-						>
-							{this.props.orgProjectList.map((data, index) => (
-								<MenuItem key={index} value={data}>{ data.label }</MenuItem>
-							))}
-						
+					className="editUserProjectSelect"
+					value = {this.props.selectedOrgProject}
+					onChange = { (item) => this.handleOrgProjectChange(item) }
+					>
+					{this.props.orgProjectList.map((data, index) => (
+						<MenuItem key={index} value={data}>{ data.label }</MenuItem>
+					))}					
 				</Select>
 				<Select
-						className="editUserRoleSelect"
-						multiple
-						value={this.state.selectedRoles}
-						onChange={ (item) => this.handleRoleChange(item)}
-						renderValue={() => (
-							<div>
-							{this.state.selectedRoles.map((value, index) => (
-								<Chip  className="roleChip" key={index} label={value.label} />
-							))}
-							</div>
-						)}
-						>
-						{this.state.rolesList.map((data,index) => (
-							<MenuItem key={index} value={data}>
-							{data.label}
-							</MenuItem>
+					className="editUserRoleSelect"
+					multiple
+					value={this.state.selectedRoles}
+					onChange={ (item) => this.handleRoleChange(item)}
+					renderValue={() => (
+						<div>
+						{this.state.selectedRoles.map((value, index) => (
+							<Chip  className="roleChip" key={index} label={value.label} />
 						))}
+						</div>
+					)}
+					>
+					{this.state.rolesList.map((data,index) => (
+						<MenuItem key={index} value={data}>
+						{data.label}
+						</MenuItem>
+					))}
 				</Select>
-
 				{ this.props.showDeleteBtn ? 
 					<i className='fas fa-minus-circle minusCircle minuscirclecolor' onClick={() => this.deleteRow(this.props.roleType, this.props.index)}></i>
 					: null
 				}
 				<br/>
 				{ this.props.showAddBtn ? 
-					<Button variant="contained" className="addProjectPlusIcon" onClick={() => this.addRow()}><i className='fas fa-plus-circle' ></i>&nbsp;Add</Button>
+					<Button variant="contained" className="addProjectPlusIcon" onClick={() => this.addRow()}><i className='fas fa-plus-circle' ></i>&nbsp;&nbsp;Add</Button>
 					: null
 				}
 			</div>

@@ -294,14 +294,12 @@ class EditUserRoles extends Component {
 				<div className="maillabel1 other-titles">{this.props.selectedUser? this.props.selectedUser.email_id: ''}</div>
 				<table>
 				<tr>
-					<td><div className="sub_title usernamelabel">First Name: 
+					<td><div className="sub_title usernamelabel">First Name:&nbsp;&nbsp;
 					<label className="lnameMargin">{this.props.selectedUser? this.props.selectedUser.first_name: ''}</label></div></td>
-				<td><div className="sub_title lastNameLabel">Last Name: 
+				<td><div className="sub_title lastNameLabel">Last Name:&nbsp;&nbsp;
 				<label className="lnameMargin">{this.props.selectedUser? this.props.selectedUser.last_name: ''}</label></div></td>
 				</tr>
 				</table>
-				{/* <div className="maillabel1 other-titles"></div> */}
-				{/* <h5 className="userroles sub_title">Roles</h5> */}
 				<div className="rolesborder">
 				{ this.renderUserRoles() }
 				</div>

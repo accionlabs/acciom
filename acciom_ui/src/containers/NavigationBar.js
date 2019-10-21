@@ -167,6 +167,9 @@ const getLoginOptions = (props, classes) => {
 					<MenuItemBS eventKey="1" className={classes.width}>
 						<Link to="/create_suite"  className={classes.width}>create suite</Link>
 					</MenuItemBS>
+					<MenuItemBS eventKey="8" className={classes.width}>
+						<Link to="/user_profile"  className={classes.width}>User Profile</Link>
+					</MenuItemBS>
 				</DropdownButton>
 			</div>
 			);
