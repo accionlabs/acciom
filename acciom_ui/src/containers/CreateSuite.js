@@ -1,7 +1,8 @@
     import React, { Component } from 'react'
     import { connect } from 'react-redux';
     import '../css/Db-ui-styles.css';
-    import Button from '@material-ui/core/Button';
+    // import Button from '@material-ui/core/Button';
+    import {Button} from 'react-bootstrap';
 
     import { Link } from 'react-router-dom';
 
@@ -489,11 +490,11 @@
                     <i class="fa fa-th fa-lg" aria-hidden="true"></i>
                     <label className="db_page_title main_titles">Create Suite</label><br/>
                     <span style={{display:'block'}}><input style={{width:"250px"}} type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/></span>
-                    <span style={{display:'inline'}}><Link to="/view_suites"><Button className={[classes.but,classes.Backbut]} > Back</Button></Link></span>
-                    <span style={{marginLeft:"5px",display:'inline'}}><Button className={[classes.but,classes.Uploadbut]} disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>
-
+                    <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create back-btn" bsStyle="primary"> Back</Button></Link></span>
+                    {/* <span style={{marginLeft:"5px",display:'inline'}}><Button className={[classes.but,classes.Uploadbut]} disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span> */}
+                    <span style={{marginLeft:"5px",display:'inline'}}><Button className="button-create" bsStyle="primary" disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>
                     {this.isNameAlreadyExist &&
-							<span style={{color:"red", paddingLeft:"10px"}}>Test suite Name already exist</span>
+							<span style={{color:"red", paddingLeft:"10px",display:'inline'}}>Test suite Name already exist</span>
 						}
                     <Paper className={classes.root}>
                         <Table className={classes.table}>
