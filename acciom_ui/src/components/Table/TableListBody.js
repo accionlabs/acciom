@@ -3,11 +3,11 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { TextField } from '@material-ui/core';
-import { PROJECTNAME } from '../../constants/FieldNameConstants';
+import { PROJECTNAME, PROJECTDESCRIPTION, ORGANIZATIONNAME } from '../../constants/FieldNameConstants';
 
 function TableListBody(props) {
-    const {page, rowsPerPage, orderBy, order, search, bodyData, headers, stableSort, getSorting, searchingFor,editIdx,handleChange,projectNameValue,projectDescriptionValue } = props;
-
+    const {page, rowsPerPage, orderBy, order, search, bodyData, headers, stableSort, getSorting, searchingFor,editIdx,handleChange,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue } = props;
+       console.log('Props value in Body',orgNameValue);
     return(
 
         <TableBody className="commonTableBody">
@@ -32,8 +32,10 @@ function TableListBody(props) {
                             <TextField
                             name ={header.id}
                             onChange={(e) =>handleChange(e)}
-                            value={header.id === PROJECTNAME ? projectNameValue : projectDescriptionValue}
-  
+                           
+                            
+                            value={header.id === PROJECTNAME ? projectNameValue :(header.id===PROJECTDESCRIPTION)? projectDescriptionValue:
+                                (header.id===ORGANIZATIONNAME)?orgNameValue:orgDescriptionValue}
                             />:item[header.id]}
                         </TableCell>
                   )})}
@@ -51,5 +53,10 @@ function TableListBody(props) {
             }
         </TableBody>
     )
+}
+TableListBody.defaultProps = {
+    orgNameValue: '',
+    orgDescriptionValue: '',
+   
 }
 export default (TableListBody);

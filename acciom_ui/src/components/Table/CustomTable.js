@@ -97,7 +97,7 @@ class CustomTable extends React.Component {
     }
 
     render(){
-      const {classes, headers, bodyData, actionLabel,editIdx,handleChange,projectNameValue,projectDescriptionValue} = this.props;
+      const {classes, headers, bodyData, actionLabel,editIdx,handleChange,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue} = this.props;
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
           <Paper className="commonTablePaperMargin">
@@ -131,6 +131,8 @@ class CustomTable extends React.Component {
                 handleChange={handleChange}
                 projectNameValue={projectNameValue}
                 projectDescriptionValue={projectDescriptionValue}
+                orgNameValue={orgNameValue}
+                orgDescriptionValue={orgDescriptionValue}
               
               />
               </Table>
