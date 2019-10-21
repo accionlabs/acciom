@@ -7,6 +7,7 @@ import {
     UPDATE_ORGANIZATION_LIST_ERROR,
     DELETE_ORGANIZATION_LIST_SUCCESS,
     DELETE_PROJECT_LIST_ERROR} from "../constants/ActionTypes";
+
     const initialState = {
         organizationUserList:[],
         refreshOrganizationDetails:false

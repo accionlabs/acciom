@@ -138,10 +138,10 @@ this.setState({editIdx:-1});
     onYesBtnClickHandler=()=>{
         const organisationId = {
 				 
-            rowconnectionID: this.state.deleteConnectionID
+            org_id: this.state.deleteConnectionID
             };
-        
-            this.props.deleteOrganizationDetails(organisationId);
+            
+            this.props.deleteOrganizationDetails(JSON.stringify(organisationId));
         
         this.hideConfirmationopup();
     }

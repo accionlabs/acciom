@@ -36,6 +36,7 @@ export const ORG_TEXTBOX_NAME='organizationNameAdd';
 export const ORG_TEXTBOX_DESC='organizationNameDesc';
 // ==============index.js File
 export const POP_UP_SUCCESS_MESSAGE='Project is Successfully Created';
+export const POP_UP_ORG_SUCCESS_MSG='Organization is Successfully Created';
 // ======================Organization Management.js File
 export const ORGANIZATIONNAME='org_name';
 export const ORGANIZATIONDESCRIPTION ='org_description';

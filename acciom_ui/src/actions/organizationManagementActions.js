@@ -67,7 +67,7 @@ export const addToOrganizationList=(data)=>{
 		}
 		
 		export const deleteOrganizationDetails = (data) => {
-
+       
 			return {
 				types: [
 					'',
