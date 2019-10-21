@@ -6,6 +6,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { Table } from '@material-ui/core';
+import { PROJECTNAME, PROJECTDESCRIPTION, ORGANIZATIONNAME } from '../../constants/FieldNameConstants';
 
 
 const desc = (a, b, orderBy) => {
@@ -95,9 +96,27 @@ class CustomTable extends React.Component {
     handleSearch=(event)=>{
       this.setState({search:event.target.value})
     }
+    valueTobePassed=()=>{
+      const {headers,projectNameValue,projectDescriptionValue,orgNameValue} =this.props;
+      if(headers.id ===PROJECTNAME){
+        return  projectNameValue
+
+      }
+      if(headers.id ===PROJECTDESCRIPTION){
+        return  projectDescriptionValue
+
+      }
+      if(headers.id ===ORGANIZATIONNAME){
+        return  orgNameValue
+
+      }
+      return orgDescriptionValue
+      
+   
+    }
 
     render(){
-      const {classes, headers, bodyData, actionLabel,editIdx,handleChange,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue} = this.props;
+      const {classes, headers, bodyData, actionLabel,editIdx,handleChange} = this.props;
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
           <Paper className="commonTablePaperMargin">
@@ -129,12 +148,8 @@ class CustomTable extends React.Component {
                 searchingFor={searchingFor}
                 editIdx={editIdx}
                 handleChange={handleChange}
-                projectNameValue={projectNameValue}
-                projectDescriptionValue={projectDescriptionValue}
-                orgNameValue={orgNameValue}
-                orgDescriptionValue={orgDescriptionValue}
-              
-              />
+                valueTobePassed ={this.valueTobePassed}
+                />
               </Table>
             </div>
             <TablePagination
