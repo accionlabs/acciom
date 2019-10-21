@@ -97,7 +97,7 @@ class CustomTable extends React.Component {
       this.setState({search:event.target.value})
     }
     valueTobePassed=()=>{
-      const {headers,projectNameValue,projectDescriptionValue,orgNameValue} =this.props;
+      const {headers,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue} =this.props;
       if(headers.id ===PROJECTNAME){
         return  projectNameValue
 
