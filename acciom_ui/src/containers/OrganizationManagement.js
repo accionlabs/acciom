@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import {getDetailsOrganizationList,addToOrganizationList,updateOrganizationList,deleteOrganizationDetails} from '../actions/organizationManagementActions';
-import { ORGANIZATIONNAME, ORGANIZATIONDESCRIPTION, ORGNAME, DESCRIPTION, ACTION, SMALL, ADDORGANIZATION, ADD, ORGANIZATION, ORG_TEXTBOX_NAME, ORG_TEXTBOX_DESC, DELETE } from '../constants/FieldNameConstants';
+import { ORGANIZATIONNAME, ORGANIZATIONDESCRIPTION, ORGNAME, DESCRIPTION, ACTION, SMALL, ADDORGANIZATION, ADD, ORGANIZATION, ORG_TEXTBOX_NAME, ORG_TEXTBOX_DESC, DELETE, ORJDESCTEXT } from '../constants/FieldNameConstants';
 import CustomTable from '../components/Table/CustomTable';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -11,6 +11,7 @@ import Clear from '@material-ui/icons/Clear';
 import GroupIcon from '@material-ui/icons/Group';
 import { Button} from 'react-bootstrap';
 import CustomModal from '../components/CommonModal/CustomModal';
+import { toast } from 'react-toastify';
 
 
 const styles = theme => ({
@@ -96,21 +97,21 @@ class OrganizationManagement extends Component {
             org_id:localOrgListHandler[index].org_id
         };
         if(localOrgListHandler[index].org_description.length ==0){
-        
-            toast.error(PROJDESCTEXT);
+      
+            toast.error(ORJDESCTEXT);
             
         }
         else 
         if(localOrgListHandler[index].org_name.length ==0){
-            toast.error(PROJNAMETEXT);
-
+          
+            toast.error(ORJNAMETEXT);
         }
         
 if(localOrgListHandler[index].org_name.length >0 && localOrgListHandler[index].org_description.length>0){
     this.props.updateOrganizationList(JSON.stringify(upDateOrgDetails));
-    
+    this.setState({editIdx:-1});
 }
-this.setState({editIdx:-1});
+
 
              
     }

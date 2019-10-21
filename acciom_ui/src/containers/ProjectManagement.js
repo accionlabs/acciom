@@ -94,9 +94,10 @@ class ProjectManagement extends Component {
 			
 	if(localProjectListHandler[index].project_name.length >0 && localProjectListHandler[index].project_description.length>0){
 		this.props.updateProjectList(JSON.stringify(upDateProjectDetails));
+		this.setState({editIdx:-1});
 		
 	}
-	this.setState({editIdx:-1});
+	
 	
 	 			
 		}
