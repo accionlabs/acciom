@@ -268,14 +268,9 @@ class ProjectManagement extends Component {
 				});
 
 			});
-<<<<<<< HEAD
-			}
-
-=======
             
 		}
         
->>>>>>> develop
 		return (
 
 			<div>

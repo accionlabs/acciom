@@ -1,7 +1,10 @@
     import React, { Component } from 'react'
     import { connect } from 'react-redux';
     import '../css/Db-ui-styles.css';
-    import {Button} from 'react-bootstrap';
+    import Button from '@material-ui/core/Button';
+
+    import { Link } from 'react-router-dom';
+
     import { withStyles } from '@material-ui/core/styles';
     import PropTypes from 'prop-types';
     import Table from '@material-ui/core/Table';
@@ -11,17 +14,19 @@
     import TableRow from '@material-ui/core/TableRow';
     import Paper from '@material-ui/core/Paper';
     import { TextField } from '@material-ui/core';
-    import { getallClassNames,SubmitTestSuiteData } from '../actions/dbDetailsActions';
     import IconButton from '@material-ui/core/IconButton';
     import PlusCircle from '@material-ui/icons/AddCircle';
     import MinusCircle from '@material-ui/icons/RemoveCircle';
     import EditRounded from '@material-ui/icons/EditRounded';
-    import { ISSPACE } from '../constants/FieldNameConstants';
-    import QueryModal from '../components/QueryModal';
     import MenuItem from '@material-ui/core/MenuItem';
     import Select from '@material-ui/core/Select';
-
-
+    
+    import { ISSPACE } from '../constants/FieldNameConstants';
+    import QueryModal from '../components/QueryModal';
+    import { getallClassNames,SubmitTestSuiteData } from '../actions/dbDetailsActions';
+    import { 
+        getAllTestSuites,
+    } from '../actions/testSuiteListActions';
     import { 
         getAllConnections
     } from '../actions/testSuiteListActions';
@@ -60,6 +65,23 @@
             margin: theme.spacing(1),
             marginBottom:"40px"
         },
+        but:{
+           
+            borderColor: '#BD4951 !important',
+            color: 'white',
+            fontSize: '13px',
+            borderRadius: '3px',
+            textAlign: 'center',
+            width:' 121px',
+            height:'31px',
+            marginTop:'10px',
+        },
+        Backbut:{
+            backgroundColor: '#BD4951 !important',
+        },
+        Uploadbut:{
+            backgroundColor:'rgb(156, 157, 160);'
+        }
         
     });
 
@@ -108,6 +130,7 @@
             this.props.getallClassNames()
             this.props.getAllConnections(this.props.currentProject.project_id)  
             console.log(this.state) 
+            this.props.getAllTestSuites(this.props.currentProject.project_id)
         }
         
         static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -439,18 +462,36 @@
             )})
             return test
         }
+        checkNameAlreadyExist = (testSuites,displayName) => {
+			let isNameAlreadyExist = false;
+			for(let data of testSuites ){
+				if(data.test_suite_name === displayName){
+					isNameAlreadyExist = true;
+					break;
+				}
+			}
+			return isNameAlreadyExist;
+		}
 
         render(){
         const checkValid = this.SuiteNameValid() ||  !this.ValidRows() || this.ValidTable()
         const showAddBtn = !this.ValidRows()
+        let testSuites = this.props.testSuites;
+        this.isNameAlreadyExist = this.checkNameAlreadyExist(testSuites,this.state.suiteName);
+
             const { classes } = this.props;
             
             return(
                 <div className="AddSuiteLayout">
                     <i class="fa fa-th fa-lg" aria-hidden="true"></i>
                     <label className="db_page_title main_titles">Create Suite</label><br/>
-                    <span style={{display:'inline'}}><input className="suite-txt" type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/></span>
-                    <span style={{display:'inline'}}><Button className="button-create" bsStyle="primary" disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>
+                    <span style={{display:'block'}}><input style={{width:"250px"}} type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/></span>
+                    <span style={{display:'inline'}}><Link to="/view_suites"><Button className={[classes.but,classes.Backbut]} > Back</Button></Link></span>
+                    <span style={{marginLeft:"5px",display:'inline'}}><Button className={[classes.but,classes.Uploadbut]} disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>
+
+                    {this.isNameAlreadyExist &&
+							<span style={{color:"red", paddingLeft:"10px"}}>Test suite Name already exist</span>
+						}
                     <Paper className={classes.root}>
                         <Table className={classes.table}>
                             <TableHead className={classes.tablehead}>
@@ -493,12 +534,16 @@
             dbDetailsList: state.dbDetailsData.dbDetailsList?state.dbDetailsData.dbDetailsList: [],
             allConnections : state.testSuites.connectionsList && 
             state.testSuites.connectionsList.allConnections? state.testSuites.connectionsList.allConnections : [],
+            testSuites: state.testSuites.testSuiteList? state.testSuites.testSuiteList: [],
+
         };
     };
     const mapDispatchToProps = dispatch => ({
         getallClassNames: () => dispatch(getallClassNames()),
         SubmitTestSuiteData: (data) =>dispatch(SubmitTestSuiteData(data)),
         getAllConnections: (data) => dispatch(getAllConnections(data)),
+        getAllTestSuites  : (data)=> dispatch(getAllTestSuites(data)),
+
     });
     CreateSuite.propTypes = {
         classes: PropTypes.object.isRequired,

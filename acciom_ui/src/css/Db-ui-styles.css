@@ -616,7 +616,8 @@ body,html{
     text-align: center;
     width: 121px;
     height:31px;
-    margin-left: 5px;
+    margin-top:10px;
+    /* margin-left: 5px; */
 }
 
 .backbutton_colors{
