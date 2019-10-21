@@ -75,6 +75,9 @@
             width:' 121px',
             height:'31px',
             marginTop:'10px',
+            "&:disabled": {
+                cursor: "not-allowed"
+              }
         },
         Backbut:{
             backgroundColor: '#BD4951 !important',
