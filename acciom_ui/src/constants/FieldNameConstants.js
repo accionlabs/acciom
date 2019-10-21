@@ -9,4 +9,8 @@ export const DESCRIPTION='Description';
 export const SMALL ='small';  
 export const ACTION='Action';
 
+// ======================== CREATE SUITE CONSTANTS
+export const ISSPACE=(/\s/)
+// (/\s/*[a-z]+/\s/[a-z]+/\s/*)/\s/
+
 
