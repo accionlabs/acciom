@@ -608,6 +608,17 @@ body,html{
     height: 31px;
 }
 .button-create{
+    background-color: #6A6E7D !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height:31px;
+    margin-top:10px;
+    /* margin-left: 5px; */
+}
+.back-btn{
     background-color: #BD4951 !important;
     border-color: #BD4951 !important;
     color: #fff;
@@ -616,7 +627,6 @@ body,html{
     text-align: center;
     width: 121px;
     height:31px;
-    margin-left: 5px;
 }
 
 .backbutton_colors{

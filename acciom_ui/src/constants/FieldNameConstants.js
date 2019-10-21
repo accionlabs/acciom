@@ -35,4 +35,8 @@ export const POP_UP_SUCCESS_MESSAGE='Project is Successfully Created';
 
 
 
+// ======================== CREATE SUITE CONSTANTS
+export const ISSPACE=(/\s/)
+// (/\s/*[a-z]+/\s/[a-z]+/\s/*)/\s/
+
 
