@@ -32,7 +32,7 @@ const customModal =(props)=>{
         onChange ={props.onTextFieldHandler}
         name={currentPage===PROJECTS?PRJ_TEXTBOX_DESC:ORG_TEXTBOX_DESC}
         value ={currentPage===PROJECTS?projectDescriptionAdd:organizationDescriptionAdd}
-        organizationDescriptionAdd
+        // organizationDescriptionAdd
       />
      
        
