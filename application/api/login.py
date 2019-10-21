@@ -4,16 +4,17 @@ from flask_restful import Resource
 from flask_restful import reqparse
 from sqlalchemy.exc import SQLAlchemyError
 
+from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
 from application.common.response import (api_response, STATUS_BAD_REQUEST,
-                                         STATUS_CREATED, STATUS_SERVER_ERROR,STATUS_OK)
+                                         STATUS_CREATED, STATUS_SERVER_ERROR,
+                                         STATUS_OK)
 from application.common.token import (login_required, token_required,
                                       generate_auth_token)
 from application.common.utils import (send_reset_email, verify_reset_token)
 from application.common.utils import validate_empty_fields
 from application.common.utils import (verify_hash, generate_hash)
 from application.model.models import (User, PersonalToken)
-from application.common.common_exception import ResourceNotAvailableException
 from index import db
 
 
@@ -21,8 +22,18 @@ class Login(Resource):
     @login_required
     def post(self, user_detail):
         token = generate_auth_token(user_detail)
-        data = {"token": token}
-
+        if user_detail.asset == None:
+            default_org_id = None
+            default_project_id = None
+        else:
+            default_org_id = user_detail.asset.get("default_org_id",
+                                                   None)
+            default_project_id = user_detail.asset.get(
+                "default_project_id", None)
+        data = {"token": token,
+                "default_org_id": default_org_id,
+                "default_project_id": default_project_id
+                }
         return api_response(True, "success", 200, data)
 
 
@@ -290,7 +301,7 @@ class GetToken(Resource):
                                 data={})
         user_id = session.user_id
         personal_token_obj = PersonalToken(user_id, token,
-                                        token_generation_data['message'])
+                                           token_generation_data['message'])
         personal_token_obj.save_to_db()
         payload = {"personal_access_token": token}
         return api_response(
@@ -311,32 +322,33 @@ class GetToken(Resource):
         PersonalToken associated with the user
         """
         user_id = session.user_id
-        token_objects = PersonalToken.query.filter_by(user_id = user_id,
-        is_deleted=False).all()
-        token_list=[]
+        token_objects = PersonalToken.query.filter_by(user_id=user_id,
+                                                      is_deleted=False).all()
+        token_list = []
         if not token_objects:
             raise ResourceNotAvailableException('Token')
         else:
             for each_token in token_objects:
-                token_list.append({"token_id":each_token.personal_token_id,
-                "token_note":each_token.note,
-                "created_at":each_token.created_at.strftime(
-                "%Y-%m-%d %H:%M:%S")})
-        payload = {"tokens":token_list}
+                token_list.append({"token_id": each_token.personal_token_id,
+                                   "token_note": each_token.note,
+                                   "created_at": each_token.created_at.strftime(
+                                       "%Y-%m-%d %H:%M:%S")})
+        payload = {"tokens": token_list}
         return api_response(
             True, APIMessages.SUCCESS,
             STATUS_OK, payload)
-    
+
     @token_required
     def delete(self, session):
         get_token_id = reqparse.RequestParser()
         get_token_id.add_argument('token_id', required=True,
-                                        type=int,
-                                        location='args')
+                                  type=int,
+                                  location='args')
         user_id = session.user_id
         token_id = get_token_id.parse_args()
-        token_obj = PersonalToken.query.filter_by(personal_token_id = token_id['token_id'],
-        user_id = user_id, is_deleted=False).first()
+        token_obj = PersonalToken.query.filter_by(
+            personal_token_id=token_id['token_id'],
+            user_id=user_id, is_deleted=False).first()
         if not token_obj:
             raise ResourceNotAvailableException('Token')
         else:
@@ -345,5 +357,3 @@ class GetToken(Resource):
         return api_response(
             True, APIMessages.TOKEN_DELETED.format(token_obj.note),
             STATUS_OK, STATUS_CREATED)
-
-

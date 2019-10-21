@@ -7,7 +7,8 @@ from flask_restful import reqparse, Resource
 from application.common.api_permission import USER_API_GET, USER_ROLE_API_GET, \
     USER_ROLE_API_DELETE
 from application.common.common_exception import (ResourceNotAvailableException,
-                                                 GenericBadRequestException)
+                                                 GenericBadRequestException,
+                                                 IllegalArgumentException)
 from application.common.constants import APIMessages
 from application.common.constants import GenericStrings
 from application.common.response import (api_response, STATUS_OK,
@@ -410,12 +411,13 @@ def create_new_user(email_id, **kwargs):
 
 
 class UserProfileAPI(Resource):
-    """ API to return current user details."""
+    """ API to handle GET,PUT calls for getting and updating current user
+    details."""
 
     @token_required
     def get(self, session):
         """
-        To return current user details.
+        Method to return current user details.
 
         Args:
             session (object): Session Object
@@ -423,12 +425,92 @@ class UserProfileAPI(Resource):
         Returns: Standard API Response with message(returns message saying
         success), data and http status code.
         """
-        current_user_obj = User.query.filter(
-            User.user_id == session.user_id).first()
         user_dict = {}
-        user_dict["email_id"] = current_user_obj.email
-        user_dict["first_name"] = current_user_obj.first_name
-        user_dict["last_name"] = current_user_obj.last_name
+        user_dict["email_id"] = session.user.email
+        user_dict["first_name"] = session.user.first_name
+        user_dict["last_name"] = session.user.last_name
         return api_response(True,
                             APIMessages.SUCCESS,
                             STATUS_CREATED, user_dict)
+
+    @token_required
+    def put(self, session):
+        """
+        Method to update user details into the DB.
+
+        Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message user details
+            updated successfully), data and http status code.
+        """
+
+        user_parser = reqparse.RequestParser(bundle_errors=True)
+        user_parser.add_argument('first_name', type=str)
+        user_parser.add_argument('last_name', type=str)
+        user_details = user_parser.parse_args()
+        for key, value in dict(user_details).items():
+            if value == None:
+                del user_details[key]
+        for key, value in dict(user_details).items():
+            user_details[key] = value.strip()
+        current_user_obj = User.query.filter(
+            User.user_id == session.user_id).first()
+        for key, value in user_details.items():
+            if key == "first_name":
+                if value == "":
+                    return api_response(False, APIMessages.PASS_FIRST_NAME,
+                                        STATUS_BAD_REQUEST)
+                if len(value) > 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
+                current_user_obj.first_name = value
+            if key == "last_name":
+                if value == "":
+                    return api_response(False, APIMessages.PASS_LAST_NAME,
+                                        STATUS_BAD_REQUEST)
+                if len(value) > 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
+                current_user_obj.last_name = value
+        current_user_obj.save_to_db()
+        return api_response(
+            True, APIMessages.USER_DETAILS_UPDATED, STATUS_CREATED)
+
+
+class DefaultProjectOrg(Resource):
+    """ API to handle PUT call,to update default project and organization"""
+
+    @token_required
+    def put(self, session):
+        """
+        Method to update default project and organization in user table.
+
+        Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message default
+            organization and project set successfully), data and http
+            status code.
+        """
+
+        project_parser = reqparse.RequestParser(bundle_errors=True)
+        project_parser.add_argument('project_id', type=int, required=True)
+        project_details = project_parser.parse_args()
+        project_obj = Project.query.filter(
+            Project.project_id == project_details["project_id"],
+            Project.is_deleted == False).first()
+        if not project_obj:
+            raise ResourceNotAvailableException("Project")
+        current_user_obj = User.query.filter(
+            User.user_id == session.user_id).first()
+        default_org_project = {}
+        default_org_project["default_org_id"] = project_obj.org_id
+        default_org_project["default_project_id"] = project_details[
+            "project_id"]
+        current_user_obj.asset = default_org_project
+        current_user_obj.save_to_db()
+        return api_response(
+            True, APIMessages.SET_SUCCESS, STATUS_CREATED)

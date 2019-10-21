@@ -127,6 +127,12 @@ class APIMessages:
     TEST_CASE_ADDED = "Test Case Added Successfully"
     PASS_TABLES = "Table names are Compulsory"
     PASS_TEST_CASE_CLASS = "Please provide Test Class Name"
+    USER_DETAILS_UPDATED = "User details Updated Successfully"
+    ORG_DELETED = "Organization Deleted Successfully"
+    DELETE_ORG_FALSE = "Organization cannot be deleted"
+    SET_SUCCESS = "Default Organization and Project set Successfully"
+    PASS_FIRST_NAME = "Please Pass First Name"
+    PASS_LAST_NAME = "Please Pass Last Name"
 
 
 class GenericStrings:
