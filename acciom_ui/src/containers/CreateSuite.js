@@ -21,7 +21,8 @@
     import EditRounded from '@material-ui/icons/EditRounded';
     import MenuItem from '@material-ui/core/MenuItem';
     import Select from '@material-ui/core/Select';
-    
+    import Tooltip from '@material-ui/core/Tooltip';
+
     import { ISSPACE } from '../constants/FieldNameConstants';
     import QueryModal from '../components/QueryModal';
     import { getallClassNames,SubmitTestSuiteData } from '../actions/dbDetailsActions';
@@ -85,6 +86,9 @@
         },
         Uploadbut:{
             backgroundColor:'rgb(156, 157, 160);'
+        },
+        customWidth:{
+            maxWidth: 500,
         }
         
     });
@@ -355,19 +359,18 @@
                             disabled={!this.state.suiteData[index]['test_case_class']}
                              value={eachrow.source_table} 
                             placeholder="source table"
-                            error={(ISSPACE).test(eachrow.source_table)}
-                            helperText={(ISSPACE).test(eachrow.source_table)?"Table cannot have space":""}
+                            error={(ISSPACE).test((eachrow.source_table).trim())}
+                            helperText={(ISSPACE).test((eachrow.source_table).trim())?"Table cannot have space":""}
                             onChange={()=> this.handleChange(event,index,5)}  />
                         </TableCell>  
                         
                         
                         <TableCell className={classes.tablecell}>
                             <TextField autoFocus={true}
-                            error={(ISSPACE).test(eachrow.target_table)}
+                            error={(ISSPACE).test((eachrow.target_table).trim())}
                             placeholder="target table"
                             disabled={!this.state.suiteData[index]['test_case_class']}
-                            helperText={(ISSPACE).test(eachrow.target_table)?"Table cannot have space":""}
-                        
+                            helperText={(ISSPACE).test((eachrow.target_table).trim())?"Table cannot have space":""}
                               value={eachrow.target_table}
                             onChange={()=> this.handleChange(event,index,6)}  />
                         </TableCell>
@@ -379,19 +382,23 @@
                         
                         
                         <TableCell className={classes.tablecell}>
+                        <Tooltip className={ classes.customWidth } title={this.showData(eachrow.source_query,8)} aria-label="add">
                         <EditRounded onClick={(e) => {this.showDialog(index,8)}}/>
-                        <div className={classes.tablepopup} style={{textDecoration:"underline", color:"blue", cursor:"pointer"}} onClick={(e) => {this.showDialog(index,8)}}>{this.showData(eachrow.source_query,8)}</div>
-
+                        </Tooltip>
+                        {/* <div className={classes.tablepopup} style={{textDecoration:"underline", color:"blue", cursor:"pointer"}} onClick={(e) => {this.showDialog(index,8)}}>{this.showData(eachrow.source_query,8)}</div> */}
+                        
                         </TableCell>           
                         
                         <TableCell className={classes.tablecell}>
+                        <Tooltip title={this.showData(eachrow.source_query,9)} className={classes.customWidth } aria-label="add">
                             <EditRounded onClick={(e) => {this.showDialog(index,9)}}/>
-                            <div className={classes.tablepopup} style={{textDecoration:"underline", color:"blue", cursor:"pointer"}} onClick={(e) => {this.showDialog(index,9)}}>{this.showData(eachrow.target_query,9)}</div>
-
+                            {/* <div className={classes.tablepopup} style={{textDecoration:"underline", color:"blue", cursor:"pointer"}} onClick={(e) => {this.showDialog(index,9)}}>{this.showData(eachrow.target_query,9)}</div> */}
+                            </Tooltip>
                           </TableCell>
                         
                         <TableCell className={classes.tablepopup}>
                             {this.showMinus()?
+                            
                                 <IconButton  onClick={() => this.deleteRow(index)}>
                                     <MinusCircle />
                                 </IconButton>
@@ -489,13 +496,12 @@
                 <div className="AddSuiteLayout">
                     <i class="fa fa-th fa-lg" aria-hidden="true"></i>
                     <label className="db_page_title main_titles">Create Suite</label><br/>
-                    <span style={{display:'block'}}><input style={{width:"250px"}} type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/></span>
+                    <span style={{display:'block'}}><TextField style={{width:"250px"}} 
+                     error={this.isNameAlreadyExist}
+                     helperText={this.isNameAlreadyExist?"Suite Name already Exists":""}
+                    type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/></span>
                     <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create back-btn" bsStyle="primary"> Back</Button></Link></span>
-                    {/* <span style={{marginLeft:"5px",display:'inline'}}><Button className={[classes.but,classes.Uploadbut]} disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span> */}
                     <span style={{marginLeft:"5px",display:'inline'}}><Button className="button-create" bsStyle="primary" disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>
-                    {this.isNameAlreadyExist &&
-							<span style={{color:"red", paddingLeft:"10px",display:'inline'}}>Test suite Name already exist</span>
-						}
                     <Paper className={classes.root}>
                         <Table className={classes.table}>
                             <TableHead className={classes.tablehead}>
