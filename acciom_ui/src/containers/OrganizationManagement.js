@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import {getDetailsOrganizationList,addToOrganizationList,updateOrganizationList,deleteOrganizationDetails} from '../actions/organizationManagementActions';
-import { ORGANIZATIONNAME, ORGANIZATIONDESCRIPTION, ORGNAME, DESCRIPTION, ACTION, SMALL, ADDORGANIZATION, ADD, ORGANIZATION, ORG_TEXTBOX_NAME, ORG_TEXTBOX_DESC, DELETE, ORJDESCTEXT } from '../constants/FieldNameConstants';
+import { ORGANIZATIONNAME, ORGANIZATIONDESCRIPTION, ORGNAME, DESCRIPTION, ACTION, SMALL, ADDORGANIZATION, ADD, ORGANIZATION, ORG_TEXTBOX_NAME, ORG_TEXTBOX_DESC, DELETE, ORJDESCTEXT, ORJNAMETEXT } from '../constants/FieldNameConstants';
 import CustomTable from '../components/Table/CustomTable';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -77,8 +77,10 @@ class OrganizationManagement extends Component {
             const localOrgList = [...this.state.orgUserList];
         
 		
-			this.setState({organizationName:localOrgList[index].org_name});
+            this.setState({organizationName:localOrgList[index].org_name});
+            this.setState({organizationNameInitialValue:localOrgList[index].org_name});
             this.setState({organizationDescription:localOrgList[index].org_description});
+            this.setState({organizationDescriptionInitialValue:localOrgList[index].org_description});
          
 
     }
@@ -88,7 +90,7 @@ class OrganizationManagement extends Component {
     
         localOrgListHandler[index].org_name = this.state.organizationName;
         localOrgListHandler[index].org_description = this.state.organizationDescription;
-    
+      
         let upDateOrgDetails = {};
 
         upDateOrgDetails={
@@ -99,12 +101,13 @@ class OrganizationManagement extends Component {
         if(localOrgListHandler[index].org_description.length ==0){
       
             toast.error(ORJDESCTEXT);
-            
+           
         }
         else 
         if(localOrgListHandler[index].org_name.length ==0){
           
             toast.error(ORJNAMETEXT);
+
         }
         
 if(localOrgListHandler[index].org_name.length >0 && localOrgListHandler[index].org_description.length>0){
@@ -116,19 +119,33 @@ if(localOrgListHandler[index].org_name.length >0 && localOrgListHandler[index].o
              
     }
     handleChangeHandler=(event)=>{
-        if(event.target.name ===ORGANIZATIONNAME){
+       
+            if(event.target.name ===ORGANIZATIONNAME  ){
           
-        this.setState({organizationName:event.target.value});
-        }
-        else if(event.target.name ===ORGANIZATIONDESCRIPTION){
-     
-            this.setState({organizationDescription:event.target.value});
-        }
+                this.setState({organizationName:event.target.value});
+                }
+                else if(event.target.name ===ORGANIZATIONDESCRIPTION ){
+             
+                    this.setState({organizationDescription:event.target.value});
+                }
 
     }
   
-    clearDataHandler=()=>{
-        
+    clearDataHandler=(index)=>{
+        const clearOrgListHandler = [...this.state.orgUserList];
+    
+        clearOrgListHandler[index].org_name = this.state.organizationName;
+        clearOrgListHandler[index].org_description = this.state.organizationDescription;
+      
+        if(clearOrgListHandler[index].org_description.length ==0){
+            clearOrgListHandler[index].org_description=this.state.organizationDescriptionInitialValue;
+            this.setState({organizationDescription:clearOrgListHandler[index].org_description});
+        }
+      if(clearOrgListHandler[index].org_name.length ==0){
+        clearOrgListHandler[index].org_name=this.state.organizationNameInitialValue;
+        this.setState({organizationName:  clearOrgListHandler[index].org_name})
+
+      }
 			this.setState({editIdx:-1});
     }
 
@@ -200,6 +217,8 @@ if(localOrgListHandler[index].org_name.length >0 && localOrgListHandler[index].o
               location:ORGANIZATION,
               editIdx:-1,
               showDeleteConfirmationDialog:false,
+              organizationDescriptionInitialValue:'',
+              organizationNameInitialValue:'',
               deleteConnectionID:null
 
         }
@@ -242,7 +261,7 @@ if(localOrgListHandler[index].org_name.length >0 && localOrgListHandler[index].o
 						  <Clear
 						   fontSize={SMALL}
 						   style={{color:"#696969",marginRight:'8px'}} 
-                           onClick={()=>this.clearDataHandler()}
+                           onClick={()=>this.clearDataHandler(index)}
                         />
 						</Fragment>
 

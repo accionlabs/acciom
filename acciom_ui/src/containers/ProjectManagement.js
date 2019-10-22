@@ -64,7 +64,10 @@ class ProjectManagement extends Component {
 			const localProjectList = [...this.state.projectList];
 		
 			this.setState({projectName:localProjectList[index].project_name});
+			this.setState({projectNameInitialValue:localProjectList[index].project_name});
 			this.setState({projectDescription:localProjectList[index].project_description});
+			this.setState({projectDescriptionInitialValue:localProjectList[index].project_description});
+		
 		}
 
 		saveDataHandler=(index)=>{	
@@ -84,12 +87,13 @@ class ProjectManagement extends Component {
 			if(localProjectListHandler[index].project_description.length ==0){
 			
 				toast.error(PROJDESCTEXT);
+			
 				
 			}
 			else 
 			if(localProjectListHandler[index].project_name.length ==0){
 				toast.error(PROJNAMETEXT);
-
+				
 			}
 			
 	if(localProjectListHandler[index].project_name.length >0 && localProjectListHandler[index].project_description.length>0){
@@ -99,10 +103,25 @@ class ProjectManagement extends Component {
 	}
 	
 	
+	
 	 			
 		}
 
-		clearDataHandler = () =>{
+		clearDataHandler = (index) =>{
+			const clearProjectListHandler = [...this.state.projectList];
+    
+			clearProjectListHandler[index].project_name = this.state.projectName;
+			clearProjectListHandler[index].project_description = this.state.projectDescription;
+		  
+			if(clearProjectListHandler[index].project_description.length ==0){
+				clearProjectListHandler[index].project_description=this.state.projectDescriptionInitialValue;
+				this.setState({organizationDescription:clearProjectListHandler[index].project_description});
+			}
+		  if(clearProjectListHandler[index].project_name.length ==0){
+			clearProjectListHandler[index].project_name=this.state.projectNameInitialValue;
+			this.setState({organizationName: clearProjectListHandler[index].project_name})
+	
+		  }
 
 			this.setState({editIdx:-1});	
 		}
@@ -219,6 +238,8 @@ class ProjectManagement extends Component {
 			  projectDescription:'',
 			  projectNameAdd:'',
 			  projectDescriptionAdd:'',
+			  projectDescriptionInitialValue:'',
+			  projectNameInitialValue:''
 
 			
 		};
@@ -273,7 +294,7 @@ class ProjectManagement extends Component {
 						  <Clear
 						   fontSize={SMALL}
 						   style={{color:"#696969",marginRight:'8px'}} 
-						   onClick={()=>this.clearDataHandler()}/>
+						   onClick={()=>this.clearDataHandler(index)}/>
 						</Fragment>
 
 					)
