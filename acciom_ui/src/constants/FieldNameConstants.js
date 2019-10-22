@@ -49,4 +49,8 @@ export const ORJNAMETEXT='Organization Name cannot be blank';
 
 
 
+// ======================== CREATE SUITE CONSTANTS
+export const ISSPACE=(/\s/)
+// (/\s/*[a-z]+/\s/[a-z]+/\s/*)/\s/
+
 

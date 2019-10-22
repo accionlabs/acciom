@@ -11,6 +11,9 @@ class Startup extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state ={}
+		if (this.props.currentProject) {
+			this.props.getAllTestSuites(this.props.currentProject.project_id);
+		}
 	}
 	// componentDidMount() {
 	// }

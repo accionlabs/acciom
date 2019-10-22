@@ -91,7 +91,7 @@ const testSuites = (state = initialState, action) => {
 			...state,
 			connectionsList : { 
 				...state.connectionsList,
-				allConnections: action.response.data.all_connections
+				allConnections: action.response.data.all_connections,
 			}
 		};
 

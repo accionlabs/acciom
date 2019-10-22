@@ -272,7 +272,6 @@ class ProjectManagement extends Component {
 								fontSize={SMALL}
 								className="editicon2" 
 								style={{color:"#696969" ,marginRight:'8px'}} 
-							
 								onClick ={() =>{this.editHandler(index);}}
 							/>
 					  <DeleteIcon 
