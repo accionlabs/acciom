@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from sqlalchemy.dialects.postgresql import JSON
@@ -97,6 +96,7 @@ class Role(db.Model):
     org_id = db.Column(db.ForeignKey('organization.org_id'), nullable=False,
                        index=True)
     role_name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text, nullable=True)
     owner_id = db.Column(db.ForeignKey('user.user_id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     modified_at = db.Column(db.DateTime, default=datetime.now)
