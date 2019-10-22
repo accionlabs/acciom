@@ -530,6 +530,7 @@ class PermissionDetail(Resource):
         Returns: Standard API Response with message(returns message saying
         success), data and http status code.
         """
+        # TODO : Add Check Permission and give proper permissions.
         permission_dict = {}
         all_permissions = db.session.query(
             Permission.permission_name).distinct().all()
