@@ -304,6 +304,7 @@ function NavigationBar(props) {
 							</Link>
 						</ListItemIcon>
 						<Link to={'/user_management'} id="dashbcolor"  className = {classes.startup}>Manage Users</Link>
+						<Link to={'/query_analyser'} id="dashbcolor"  className = {classes.startup}>QA</Link>
 						</MenuItem>
 						
 					</MenuList>

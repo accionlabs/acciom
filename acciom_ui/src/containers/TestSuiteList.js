@@ -74,8 +74,7 @@ const useStyles = makeStyles(theme => ({
 		
 		
 	},
-
-
+	
 	headingActive2:{
 		fontSize: theme.typography.pxToRem(13),
 		fontWeight: 'bold',

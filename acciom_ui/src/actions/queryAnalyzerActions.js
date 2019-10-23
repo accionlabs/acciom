@@ -3,7 +3,10 @@ import { BASE_URL, headers, TIMEOUT } from './appActions';
     GET_SELECTED_DATABASE_TYPE_SUCCESS,
 	GET_SELECTED_DATABASE_TYPE_ERROR,
 	RUN_QUERY_SUCCESS,
-	RUN_QUERY_ERROR
+	RUN_QUERY_ERROR,
+	GET_QUERY_ANALYSER_TABLE_DATA_SUCCESS,
+    GET_QUERY_ANALYSER_TABLE_DATA_ERROR
+	
 } from "../constants/ActionTypes";
 
 export const getSelectedDatabaseType = () => {
@@ -20,8 +23,7 @@ export const getSelectedDatabaseType = () => {
 	};
 };
 export const runQuery = (body) => {
-	console.log("@@@@@@@@@@@@@@@@@@@@")
-	// console.log("body.project_id====>",body.project_id)
+	// projectId= body.project_id;
     return {
 		types: [
             '',
@@ -31,8 +33,21 @@ export const runQuery = (body) => {
 		callAPI: () => fetch(`${BASE_URL}/query-analyser`, {
 			method: 'post',
             headers,
-            body
-		
+			body
 		})
 	};
-};
+}
+export const getTableData = (projectId) => {
+	// projectId= body.project_id;
+    return {
+		types: [
+            '',
+            GET_QUERY_ANALYSER_TABLE_DATA_SUCCESS,
+			GET_QUERY_ANALYSER_TABLE_DATA_ERROR
+		],
+		callAPI: () => fetch(`${BASE_URL}/query-analyser?project_id=${projectId}`, {
+			method: 'get',
+            headers
+		})
+	};
+}

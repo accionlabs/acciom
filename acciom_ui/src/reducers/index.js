@@ -7,6 +7,7 @@ import loginData from './loginReducer';
 import dashboardData from './dashboardReducer';
 import dbDetailsData from './dbDetailsReducer';
 import userManagementData from './userManagementReducer';
+import runQuery from './queryAnalyzerReducer'
 
 const rootReducer = combineReducers({
 	appData,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
 	testSuites,
 	testSuiteUploadData,
 	dbDetailsData,
-	userManagementData
+	userManagementData,
+	runQuery
 });
 
 export default rootReducer;

@@ -1,10 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import TableToolbar from './Table/TableToolbar';
 import TableHeader from './Table/TableHeader';
 import TableListBody from './Table/TableListBody';
 import TablePagination from '@material-ui/core/TablePagination';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { getSelectedDatabaseType,runQuery,getTableData } from '../actions/queryAnalyzerActions';
+import { 
+	getAllConnections, 
+} from '../actions/testSuiteListActions';
 
 const desc = (a, b, orderBy) => {
     if (b[orderBy] < a[orderBy]) {
@@ -41,7 +46,9 @@ const searchingFor = (search,headers) => {
 
 const styles = theme => ({
     root: {
-      marginTop: theme.spacing.unit * 3,
+      marginTop: '0px',
+      marginBottom: '20px'
+      // marginTop: theme.spacing.unit * 3,
     },
     tableWrapper: {
       overflowX: 'auto'
@@ -60,7 +67,7 @@ class QueryAnalyzerTable extends React.Component {
           search:'',      
         };
     }
-
+      
     handleSort = (property) => {
       const orderBy = property;
       let order = 'desc';
@@ -84,18 +91,29 @@ class QueryAnalyzerTable extends React.Component {
     handleSearch=(event)=>{
       this.setState({search:event.target.value})
     }
+    getTableData=()=>{
+      let querybody = {
+        'project_id':this.props.currentProject.project_id,
+        'connection_id':this.state.db_connection_id,
+        'query':this.state.query_text
+    }
+    this.props.getTableData(querybody.project_id);
+    }
 
     render(){
       const {classes, headers, bodyData, actionLabel} = this.props;
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
-          <Paper className={classes.root}>
+          <Paper className={classes.root} onTableClose={this.props.onTableClose}>
+            {/* <button className='queryAnalDeleteTableBtn'>X</button>
+            <button className='queryAnalExportBtn'>Export</button>
+            <button className='queryAnalExportPopUp' onClick={this.handleDialogBox}>Query</button> */}
             <TableToolbar
             handleSearch = {this.handleSearch}
             handleClear = {this.handleClear}
             search = {search}
             />
-            
+                        
             <div className={classes.tableWrapper}>
               <TableHeader 
                 headers={headers}
@@ -136,5 +154,23 @@ class QueryAnalyzerTable extends React.Component {
         )
     }
 }
+const mapStateToProps = (state) => {
+  return {
 
-export default withStyles(styles)(QueryAnalyzerTable);
+  allConnections : state.testSuites.connectionsList.allConnections? state.testSuites.connectionsList.allConnections : [],
+      currentProject : state.appData.currentProject,
+      currentOrg: state.appData.currentOrg,
+  orgUserList: state.userManagementData.orgUserList? state.userManagementData.orgUserList: [],
+  projectList: state.appData.projectList? state.appData.projectList: [],
+      isOrganisationInitialised: state.appData.isOrganisationInitialised,
+      
+    };
+};
+
+const mapDispatchToProps = dispatch => ({
+  getQueryAnalyzerDetails: (data) => dispatch(getQueryAnalyzerDetails(data)),
+  getTableData:(data) =>dispatch(getTableData(data)),
+  getAllConnections:(data) =>dispatch(getAllConnections(data)),
+ })
+
+ export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(QueryAnalyzerTable));

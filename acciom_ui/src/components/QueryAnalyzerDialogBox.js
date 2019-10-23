@@ -1,4 +1,5 @@
 import React ,{ Component} from 'react';
+import { Panel, Table, Button, Modal} from 'react-bootstrap';
 
 let dialogStyles ={
     width: '500px',
@@ -30,10 +31,18 @@ let dialogCloseButtonStyles={
  export default class QueryAnalyzerDialogBox extends Component {
      render() {
          let dialog = (
-            <div style={dialogStyles}>
-                <button style={dialogCloseButtonStyles} onClick={this.props.onDialogBoxClose}>X</button>
-                <div>{this.props.children}</div>
-            </div>
+            <Modal show={true} className="deleteconfirmpopupbox" bsSize="medium">
+				<Modal.Header className="popboxheader">
+					
+				</Modal.Header>
+
+				<Modal.Body >
+					<div className="deleteconfirmpopupfieldtext">{this.props.children}</div>
+				</Modal.Body>
+                <Modal.Footer>
+                        <button style={dialogCloseButtonStyles} onClick={this.props.onDialogBoxClose}>X</button>
+                </Modal.Footer>
+			</Modal>
          );
          if(this.props.isDialogOpen){
              dialog=null
@@ -45,3 +54,8 @@ let dialogCloseButtonStyles={
          )
      }
  }
+
+//  <div style={dialogStyles}>
+//                 <button style={dialogCloseButtonStyles} onClick={this.props.onDialogBoxClose}>X</button>
+//                 <div>{this.props.children}</div>
+//             </div>

@@ -4627,7 +4627,7 @@ html
 
 .queryAnalyzer{
     width: 600px;
-    margin-left: 30px
+    margin-left: 5px
     
 }
 .runQuery{
@@ -4641,14 +4641,27 @@ html
     
 }
 .queryAnalExportBtn{
-    display: inline-block;
-    background-color: #BD4951;
-    color: white;
-    /* float: left; */
-    margin-left: 450px
+    display: inline-block; 
+    background-color: #BD4951 !important;
+    border-color: #BD4951 !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height: 31px;
+    margin-left: 300px
 }
 .queryAnalExportPopUp{
     display: inline-block;
+    background-color: #fff !important;
+    border-color: #BD4951 !important;
+    color: #BD4951;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height: 31px;
    
 }
 .queryAnalConnectionDropdown{
@@ -4680,11 +4693,13 @@ html
 }
 .query{
     display: inline-block;
-    font-size: 20px
+    font-size: 20px;
+    margin-top: 10px
 }
-.dropdown{
+.dropdownQueryAnalyser{
     display: inline-block;
-    margin-left: 239px;
+    margin-left: 250px;
+    margin-top: 10px
 }
 .textarea{
     display: inline-block;
