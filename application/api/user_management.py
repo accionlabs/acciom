@@ -535,7 +535,7 @@ class PermissionDetail(Resource):
         all_permissions = db.session.query(
             Permission.permission_name).distinct().all()
         permission_list = [permission for permission, in all_permissions]
-        permission_dict["all_permissions"] = permission_list
+        permission_dict["permissions"] = permission_list
         return api_response(True,
                             APIMessages.SUCCESS,
                             STATUS_CREATED, permission_dict)
