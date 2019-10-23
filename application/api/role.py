@@ -251,9 +251,7 @@ class RoleAPI(Resource):
                 role_obj.description = value
             if key == 'permission_id_list':
                 for each_permission_by_user in value:
-                    if each_permission_by_user in permission_id_in_table:
-                        pass
-                    else:
+                    if each_permission_by_user not in permission_id_in_table:
                         add_role_permission = RolePermission(
                             org_id=role_obj.org_id,
                             role_id=role_obj.role_id,
@@ -261,9 +259,8 @@ class RoleAPI(Resource):
                             owner_id=session.user_id)
                         add_role_permission.save_to_db()
                 for each_permission_in_table in permission_id_in_table:
-                    if each_permission_in_table in value:
-                        pass
-                    else:
+                    if each_permission_in_table not in value:
+                        # TODO: Delete the permission which is not given by user
                         pass
         role_obj.save_to_db()
         return api_response(

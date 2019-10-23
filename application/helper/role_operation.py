@@ -22,6 +22,7 @@ def retrieve_roles_under_org(org_id, permission_id_list):
         RolePermission.role_id == Role.role_id).filter(
         Role.org_id == org_id).all()
     all_roles = []
+    # TODO: Improve the code by removing hard-coded index
     # converting list of tuples to list of list
     for each_role in all_roles_obj:
         each_role = list(each_role)
