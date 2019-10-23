@@ -447,8 +447,8 @@ class UserProfileAPI(Resource):
         """
 
         user_parser = reqparse.RequestParser(bundle_errors=True)
-        user_parser.add_argument('first_name', type=str)
-        user_parser.add_argument('last_name', type=str)
+        user_parser.add_argument('first_name', type=str, location='json')
+        user_parser.add_argument('last_name', type=str, location='json')
         user_details = user_parser.parse_args()
         for key, value in dict(user_details).items():
             if value == None:
