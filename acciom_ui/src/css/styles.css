@@ -29,6 +29,12 @@ html
     margin-top: -10px;
     margin-bottom: 10px;
 }
+/* .viewDbDetailsForm #createsuite {
+    float: right;
+    margin-top: -10px;
+    margin-bottom: 12px;
+} */
+
 
 .logheaderborder{
     border: none;
@@ -3554,7 +3560,9 @@ html
        background-position: 10px 10px !important
    }
    #password {
-       background-position: 10px -53px !important
+       background-position: 10px -53px !important;
+       border: 1px solid #ccc;
+       border-radius: 3px;
    }
    .login_content form div a {
        font-size: 12px;

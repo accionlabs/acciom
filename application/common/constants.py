@@ -4,7 +4,7 @@
 class APIMessages:
     """Messages to be sent in API Responses."""
 
-    EMPTY_FIELD = "{} field cannot be blank"
+    EMPTY_FIELD = "{} cannot be blank"
     USER_EXISTS = "User with Email ID {} already exists"
     VERIFY_EMAIL = "Please verify your Email Address"
     USER_CREATED = "User Created with Email ID {}"
@@ -127,6 +127,16 @@ class APIMessages:
     TEST_CASE_ADDED = "Test Case Added Successfully"
     PASS_TABLES = "Table names are Compulsory"
     PASS_TEST_CASE_CLASS = "Please provide Test Class Name"
+    USER_DETAILS_UPDATED = "User details Updated Successfully"
+    ORG_DELETED = "Organization Deleted Successfully"
+    DELETE_ORG_FALSE = "Organization cannot be deleted"
+    SET_SUCCESS = "Default Organization and Project set Successfully"
+    PASS_FIRST_NAME = "Please Pass First Name"
+    PASS_LAST_NAME = "Please Pass Last Name"
+    ROLE_NAME_CANNOT_BLANK = "Role Name cannot be Blank"
+    ROLE_DESCRIPTION_CANNOT_BLANK = "Role Description cannot be Blank"
+    ROLE_UPDATED = "Role Updtaed Successfully"
+
 
 class GenericStrings:
     """Class to store generic strings that are referenced in code."""

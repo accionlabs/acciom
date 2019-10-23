@@ -5,6 +5,9 @@ import TableListBody from './TableListBody';
 import TablePagination from '@material-ui/core/TablePagination';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { Table } from '@material-ui/core';
+import { PROJECTNAME, PROJECTDESCRIPTION, ORGANIZATIONNAME } from '../../constants/FieldNameConstants';
+
 
 const desc = (a, b, orderBy) => {
     if (b[orderBy] < a[orderBy]) {
@@ -31,9 +34,12 @@ const getSorting = (order, orderBy) => {
 }
   
 const searchingFor = (search,headers) => {
+
     return function(sortData){
+   
       return headers.some(data => {
-        return sortData[data.id].toLowerCase().includes(search.toLowerCase());
+      
+        return sortData[data.id] !== null && sortData[data.id].toLowerCase().includes(search.toLowerCase());
       });
     }
 }
@@ -45,6 +51,12 @@ const styles = theme => ({
     },
     tableWrapper: {
       overflowX: 'auto'
+    },
+    table: {
+      minWidth: 900,
+    
+     
+     
     },
   
   });
@@ -84,12 +96,14 @@ class CustomTable extends React.Component {
     handleSearch=(event)=>{
       this.setState({search:event.target.value})
     }
+   
 
     render(){
-      const {classes, headers, bodyData, actionLabel} = this.props;
+      const {classes, headers, bodyData, actionLabel,editIdx,handleChange,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue} = this.props;
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
-          <Paper className={classes.root}>
+          <Paper className="commonTablePaperMargin">
+            <Table size='medium'>
             <TableToolbar
             handleSearch = {this.handleSearch}
             handleClear = {this.handleClear}
@@ -97,6 +111,7 @@ class CustomTable extends React.Component {
             />
             
             <div className={classes.tableWrapper}>
+              <Table className={classes.table} aria-labelledby="tableTitle" size='medium'>
               <TableHeader 
                 headers={headers}
                 handleSort={this.handleSort}
@@ -115,7 +130,14 @@ class CustomTable extends React.Component {
                 getSorting = {getSorting}
                 headers = {headers}
                 searchingFor={searchingFor}
-              />
+                editIdx={editIdx}
+                handleChange={handleChange}
+                projectNameValue={projectNameValue}
+                projectDescriptionValue={projectDescriptionValue}
+                orgNameValue={orgNameValue}
+                orgDescriptionValue={orgDescriptionValue}
+                />
+              </Table>
             </div>
             <TablePagination
               rowsPerPageOptions={[10,15,20,25]}
@@ -132,6 +154,7 @@ class CustomTable extends React.Component {
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
+          </Table>
           </Paper>
         )
     }

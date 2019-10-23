@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, BrowserRouter as Router, Redirect  } from 'react-router-dom';
 import styled from 'styled-components';
-
 import Startup from '../containers/Startup';
 import TestSuiteUpload from '../containers/TestSuiteUpload';
 import Dashboard from '../containers/Dashboard';
@@ -16,8 +15,18 @@ import ForgotPassword from './ForgotPassword';
 import AuthToken from './AuthToken';
 import ChangePasswordComponent from './ChangePassword';
 import EditUserRoles from '../containers/EditUserRoles';
+
 import QueryAnalyzer from '../containers/QueryAnalyzer';
+
+import EditTestCase from '../containers/EditTestCase';
+import ViewSuite from '../containers/ViewSuite';
+import CreateSuite from '../containers/CreateSuite';
+import UserProfile from '../containers/UserProfile';
+
+import ProjectManagement from '../containers/ProjectManagement';
 import ManageUserRole from './ManageUserRole'
+import OrganizationManagement from '../containers/OrganizationManagement';
+
 
 const RootContainer = styled.div`
 	font-size: 0.8rem;	
@@ -66,8 +75,15 @@ const App = (props) => (
 				<PrivateRoute path="/change_password" authTokenExpired={props.authTokenExpired} component={ChangePasswordComponent} />
 				<PrivateRoute path="/access_token" authTokenExpired={props.authTokenExpired} component={AuthToken} />
 				<PrivateRoute path="/user_management" authTokenExpired={props.authTokenExpired} component={UserManagement} />
+				<PrivateRoute path="/projects" authTokenExpired={props.authTokenExpired} component={ProjectManagement} />
+			    <PrivateRoute path="/organization" authTokenExpired={props.authTokenExpired} component={OrganizationManagement} />
 				<PrivateRoute path="/edit_user_role/:id" authTokenExpired={props.authTokenExpired} component={EditUserRoles} />
 				<PrivateRoute path="/query_analyzer" authTokenExpired={props.authTokenExpired} component={QueryAnalyzer} />
+				<PrivateRoute path="/edit_test_case/:suite_id" authTokenExpired={props.authTokenExpired} component={EditTestCase} /> 
+				<PrivateRoute path="/create_suite" authTokenExpired={props.authTokenExpired} component={CreateSuite} /> 
+				<PrivateRoute path = "/view_suites" authTokenExpired={props.authTokenExpired} component={ViewSuite}/>
+				<PrivateRoute path="/ManageUserRole" authTokenExpired={props.authTokenExpired} component={ManageUserRole} />
+				<PrivateRoute path="/user_profile" authTokenExpired={props.authTokenExpired} component={UserProfile} />
 				
 
 			</Content>

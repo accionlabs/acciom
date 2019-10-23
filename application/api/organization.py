@@ -6,11 +6,12 @@ from datetime import timedelta
 from flask_restful import Resource, reqparse
 
 from application.common.api_permission import ORGANIZATION_API_PUT, \
-    DASH_BOARD_STATUS_GET
+    DASH_BOARD_STATUS_GET, ORG_DELETE
 from application.common.common_exception import ResourceNotAvailableException
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_CREATED,
-                                         STATUS_OK, STATUS_FORBIDDEN)
+                                         STATUS_OK, STATUS_FORBIDDEN,
+                                         STATUS_UNAUTHORIZED)
 from application.common.response import api_response
 from application.common.token import token_required
 from application.helper.permission_check import check_permission
@@ -72,13 +73,13 @@ class OrganizationAPI(Resource):
         update_org_parser = reqparse.RequestParser(bundle_errors=True)
         update_org_parser.add_argument(
             'org_id', help=APIMessages.PARSER_MESSAGE,
-            required=True, type=int)
+            required=True, type=int, location='json')
         update_org_parser.add_argument(
             'org_name', help=APIMessages.PARSER_MESSAGE,
-            required=True, type=str)
+            required=True, type=str, location='json')
         update_org_parser.add_argument(
             'org_description', help=APIMessages.PARSER_MESSAGE,
-            required=True, type=str)
+            required=True, type=str, location='json')
 
         update_org_data = update_org_parser.parse_args()
         user_obj = User.query.filter_by(user_id=session.user_id,
@@ -109,18 +110,22 @@ class OrganizationAPI(Resource):
         Returns: Standard API Response with HTTP status code
         """
         # Storing all active projects in a list
-        org_id_from_org_role = db.session.query(UserOrgRole.org_id).filter(
-            UserOrgRole.user_id == session.user_id).distinct().all()
-        org_id_in_org_role = [org_id for org_id, in org_id_from_org_role]
-        org_id_from_project_role = db.session.query(
-            UserProjectRole.org_id).filter(
-            UserProjectRole.user_id == session.user_id).distinct().all()
-        org_id_in_project_role = [org_id for org_id, in
-                                  org_id_from_project_role]
-        active_org = org_id_in_org_role + org_id_in_project_role
-        list_of_active_orgs = Organization.query.filter(
-            Organization.org_id.in_(set(active_org)),
-            Organization.is_deleted == False).all()
+        if session.user.is_super_admin:
+            list_of_active_orgs = Organization.query.filter(
+                Organization.is_deleted == False).all()
+        else:
+            org_id_from_org_role = db.session.query(UserOrgRole.org_id).filter(
+                UserOrgRole.user_id == session.user_id).distinct().all()
+            org_id_in_org_role = [org_id for org_id, in org_id_from_org_role]
+            org_id_from_project_role = db.session.query(
+                UserProjectRole.org_id).filter(
+                UserProjectRole.user_id == session.user_id).distinct().all()
+            org_id_in_project_role = [org_id for org_id, in
+                                      org_id_from_project_role]
+            active_org = org_id_in_org_role + org_id_in_project_role
+            list_of_active_orgs = Organization.query.filter(
+                Organization.org_id.in_(set(active_org)),
+                Organization.is_deleted == False).all()
         if not list_of_active_orgs:
             return api_response(
                 False, APIMessages.NO_RESOURCE.format('Organization'),
@@ -135,6 +140,64 @@ class OrganizationAPI(Resource):
         return api_response(
             True, APIMessages.SUCCESS, STATUS_OK,
             {"organization_details": org_details_to_return})
+
+    @token_required
+    def delete(self, session):
+        """
+        DELETE call to delete organization details.
+
+        Args:
+            session(object): User session
+
+        Returns: Standard API Response with HTTP status code
+
+        """
+        projects = []
+        user_associated = []
+        get_org_parser = reqparse.RequestParser()
+        get_org_parser.add_argument(
+            'org_id', help=APIMessages.PARSER_MESSAGE,
+            required=True, type=int)
+        get_org_data = get_org_parser.parse_args()
+        org_obj = Organization.query.filter_by(
+            org_id=get_org_data['org_id'],
+            is_deleted=False).first()
+        if not org_obj:
+            return api_response(False,
+                                APIMessages.NO_RESOURCE.format('Organization'),
+                                STATUS_UNAUTHORIZED)
+        check_permission(user_object=session.user,
+                         list_of_permissions=ORG_DELETE,
+                         org_id=get_org_data['org_id'])
+        project_obj = Project.query.filter_by(
+            org_id=get_org_data["org_id"], is_deleted=False).order_by(
+            Project.project_id).all()
+        user_org_role_obj = UserOrgRole.query.filter_by(
+            org_id=get_org_data["org_id"]).distinct(
+            UserOrgRole.user_id).with_entities(
+            UserOrgRole.user_id).all()
+        if not project_obj and not user_org_role_obj:
+            org_obj.is_deleted = True
+            org_obj.save_to_db()
+            return api_response(
+                True, APIMessages.ORG_DELETED, STATUS_OK)
+        else:
+            for each_obj in project_obj:
+                projects.append(
+                    {"project_id": each_obj.project_id,
+                     "project_name": each_obj.project_name})
+            user_obj_list = User.query.filter(
+                User.user_id.in_(user_org_role_obj)).order_by(
+                User.user_id).all()
+            for each_user in user_obj_list:
+                user_associated.append({"user_id": each_user.user_id,
+                                        "email_id": each_user.email})
+            return api_response(
+                False, APIMessages.DELETE_ORG_FALSE, STATUS_OK, {
+                    "org_id": get_org_data['org_id'],
+                    "project_name": org_obj.org_name,
+                    "associated_project": projects,
+                    "asociated_users": user_associated})
 
 
 class DashBoardStatus(Resource):

@@ -26,7 +26,7 @@ import Search from '@material-ui/icons/Search';
 import EnhancedTableHead from './TableHead';
 import { Modal,Button} from 'react-bootstrap';
 import { connect } from 'react-redux';
-import {deleteUsersFromTable,addUsersRole } from '../actions/userManagementActions';
+import {deleteUsersFromTable,addUsersRole } from '../../actions/userManagementActions';
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {

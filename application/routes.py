@@ -9,7 +9,8 @@ from application.api.connectiondetail import (SelectConnection, DbConnection,
 from application.api.dashboard import SideBarMenu
 from application.api.data_quality_index import (ProjectDQI, OrganizationDQI,
                                                 ProjectDQIHistory)
-from application.api.dbdetail import DbDetails, SupportedDBTypes
+from application.api.dbdetail import DbDetails, SupportedDBTypes, \
+    SupportedTestClasses
 from application.api.login import (Login, LogOut, AddUser, ForgotPassword,
                                    ForgotPasswordVerifyToken, ResetPassword,
                                    GetToken, ChangePassword)
@@ -24,7 +25,9 @@ from application.api.testsuite import (TestSuiteAPI, TestCaseLogDetail,
                                        ExportTestLog, TestCaseLogAPI,
                                        AddTestSuiteManually,
                                        CreateNewTestSuite)
-from application.api.user_management import UserAPI, UserRoleAPI
+from application.api.user_management import (UserAPI, UserRoleAPI,
+                                             UserProfileAPI, DefaultProjectOrg,
+                                             PermissionDetail)
 from application.common.common_exception import (UnauthorizedException,
                                                  ResourceNotAvailableException,
                                                  GenericBadRequestException,
@@ -140,3 +143,7 @@ api.add_resource(CreateNewTestSuite, '/api/create-new-test-suite')
 api.add_resource(SupportedDBTypes, '/api/supported-database-type')
 api.add_resource(QueryAnalyser, '/api/query-analyser')
 api.add_resource(QueryExporter, '/api/query-exporter')
+api.add_resource(SupportedTestClasses, '/api/supported-test-class-type')
+api.add_resource(UserProfileAPI, '/api/user-profile')
+api.add_resource(DefaultProjectOrg, '/api/default-project-org')
+api.add_resource(PermissionDetail, '/api/permission')

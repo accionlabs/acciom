@@ -7,7 +7,8 @@ from flask_restful import reqparse, Resource
 from application.common.api_permission import USER_API_GET, USER_ROLE_API_GET, \
     USER_ROLE_API_DELETE
 from application.common.common_exception import (ResourceNotAvailableException,
-                                                 GenericBadRequestException)
+                                                 GenericBadRequestException,
+                                                 IllegalArgumentException)
 from application.common.constants import APIMessages
 from application.common.constants import GenericStrings
 from application.common.response import (api_response, STATUS_OK,
@@ -17,7 +18,7 @@ from application.common.utils import generate_hash
 from application.helper.permission_check import (check_valid_id_passed_by_user,
                                                  check_permission)
 from application.model.models import (UserOrgRole, UserProjectRole, User,
-                                      Project, Role, Session)
+                                      Project, Role, Session, Permission)
 from index import db
 
 
@@ -230,6 +231,7 @@ class UserRoleAPI(Resource):
 
         Returns: Standard API Response with HTTP status code
         """
+        # TODO: Need to reduce DB hit
         parser = reqparse.RequestParser()
         parser.add_argument('org_id',
                             help=APIMessages.PARSER_MESSAGE,
@@ -242,6 +244,7 @@ class UserRoleAPI(Resource):
                             required=False, type=str, location='args')
         get_role_api_parser = parser.parse_args()
         result_dict = {}
+
         # Checking if User Id or Email Id is mandatorily passed
         if not get_role_api_parser['user_id'] and \
                 not get_role_api_parser['email_id']:
@@ -249,35 +252,36 @@ class UserRoleAPI(Resource):
                                 STATUS_BAD_REQUEST)
         if get_role_api_parser['user_id'] and get_role_api_parser['email_id']:
             raise GenericBadRequestException(APIMessages.ONLY_USER_OR_EMAIL)
-        # Storing user id if user id is passed
-        user_id = get_role_api_parser['user_id'] \
-            if get_role_api_parser['user_id'] else None
+
         # checking if User Id is valid
+        valid_org, valid_project, valid_user = None, None, None
         if get_role_api_parser['user_id']:
-            check_valid_id_passed_by_user(
+            valid_org, valid_project, valid_user = check_valid_id_passed_by_user(
                 org_id=get_role_api_parser['org_id'],
                 user_id=get_role_api_parser['user_id'])
         check_permission(user_object=session.user,
                          list_of_permissions=USER_ROLE_API_GET,
                          org_id=get_role_api_parser["org_id"])
+
         # Get user Id based on email Id passed
         if get_role_api_parser['email_id'] and \
                 not get_role_api_parser['user_id']:
-            check_valid_id_passed_by_user(org_id=get_role_api_parser['org_id'])
-            user_record = User.query.filter(
+            valid_org, valid_project, valid_user = check_valid_id_passed_by_user(
+                org_id=get_role_api_parser['org_id'])
+            valid_user = User.query.filter(
                 User.email.ilike(get_role_api_parser['email_id']),
                 User.is_deleted == False).first()
-            if not user_record:
-                raise ResourceNotAvailableException("User")
-            user_id = user_record.user_id
-            result_dict['email_id'] = user_record.email
-        if get_role_api_parser['org_id'] and user_id:
+            if not valid_user:
+                return api_response(True, APIMessages.NO_ROLES,
+                                    STATUS_OK)
+
+        if get_role_api_parser['org_id'] and valid_user.user_id:
             # Get Project Role list
             project_role_list = list()
             temp_dict = {}
             user_project_roles = UserProjectRole.query.filter_by(
                 org_id=get_role_api_parser['org_id'],
-                user_id=user_id).all()
+                user_id=valid_user.user_id).all()
             for each_project_role in user_project_roles:
                 if each_project_role.project_id not in temp_dict.keys():
                     # Add a key with value as role_id
@@ -293,23 +297,25 @@ class UserRoleAPI(Resource):
             # Get Org Roles
             user_org_roles = UserOrgRole.query.filter_by(
                 org_id=get_role_api_parser['org_id'],
-                user_id=user_id).all()
+                user_id=valid_user.user_id).all()
             result_dict['is_org_user'] = True if user_org_roles else False
             result_dict['org_allowed_role_list'] = []
             if user_org_roles:
                 for each_user_org_role in user_org_roles:
                     result_dict['org_allowed_role_list'].append(
                         each_user_org_role.role_id)
-            # Get User email
-            if get_role_api_parser['user_id'] and \
-                    not get_role_api_parser['email_id']:
-                user_detail = User.query.filter_by(
-                    user_id=get_role_api_parser['user_id'],
-                    is_deleted=False).first()
-                result_dict['email_id'] = user_detail.email
-                result_dict['first_name'] = user_detail.first_name
-                result_dict['last_name'] = user_detail.last_name
+            if not (result_dict['org_allowed_role_list'] or result_dict[
+                'project_role_list']):
+                return api_response(True, APIMessages.NO_ROLES,
+                                    STATUS_OK)
+
+            result_dict['user_id'] = valid_user.user_id
+            result_dict['email_id'] = valid_user.email
+            result_dict['first_name'] = valid_user.first_name
+            result_dict['last_name'] = valid_user.last_name
+            result_dict['user_id'] = valid_user.user_id
             result_dict['org_id'] = get_role_api_parser['org_id']
+
             return api_response(True, APIMessages.SUCCESS, STATUS_OK,
                                 result_dict)
 
@@ -402,3 +408,134 @@ def create_new_user(email_id, **kwargs):
         is_verified=kwargs['is_verified'])
     new_user_record.save_to_db()
     return new_user_record.user_id
+
+
+class UserProfileAPI(Resource):
+    """ API to handle GET,PUT calls for getting and updating current user
+    details."""
+
+    @token_required
+    def get(self, session):
+        """
+        Method to return current user details.
+
+        Args:
+            session (object): Session Object
+
+        Returns: Standard API Response with message(returns message saying
+        success), data and http status code.
+        """
+        user_dict = {}
+        user_dict["email_id"] = session.user.email
+        user_dict["first_name"] = session.user.first_name
+        user_dict["last_name"] = session.user.last_name
+        return api_response(True,
+                            APIMessages.SUCCESS,
+                            STATUS_CREATED, user_dict)
+
+    @token_required
+    def put(self, session):
+        """
+        Method to update user details into the DB.
+
+        Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message user details
+            updated successfully), data and http status code.
+        """
+
+        user_parser = reqparse.RequestParser(bundle_errors=True)
+        user_parser.add_argument('first_name', type=str, location='json')
+        user_parser.add_argument('last_name', type=str, location='json')
+        user_details = user_parser.parse_args()
+        for key, value in dict(user_details).items():
+            if value == None:
+                del user_details[key]
+        for key, value in dict(user_details).items():
+            user_details[key] = value.strip()
+        current_user_obj = User.query.filter(
+            User.user_id == session.user_id).first()
+        for key, value in user_details.items():
+            if key == "first_name":
+                if value == "":
+                    return api_response(False, APIMessages.PASS_FIRST_NAME,
+                                        STATUS_BAD_REQUEST)
+                if len(value) > 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
+                current_user_obj.first_name = value
+            if key == "last_name":
+                if value == "":
+                    return api_response(False, APIMessages.PASS_LAST_NAME,
+                                        STATUS_BAD_REQUEST)
+                if len(value) > 50:
+                    raise IllegalArgumentException(
+                        APIMessages.INVALID_LENGTH.format("50"))
+                current_user_obj.last_name = value
+        current_user_obj.save_to_db()
+        return api_response(
+            True, APIMessages.USER_DETAILS_UPDATED, STATUS_CREATED)
+
+
+class DefaultProjectOrg(Resource):
+    """ API to handle PUT call,to update default project and organization"""
+
+    @token_required
+    def put(self, session):
+        """
+        Method to update default project and organization in user table.
+
+        Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message default
+            organization and project set successfully), data and http
+            status code.
+        """
+
+        project_parser = reqparse.RequestParser(bundle_errors=True)
+        project_parser.add_argument('project_id', type=int, required=True)
+        project_details = project_parser.parse_args()
+        project_obj = Project.query.filter(
+            Project.project_id == project_details["project_id"],
+            Project.is_deleted == False).first()
+        if not project_obj:
+            raise ResourceNotAvailableException("Project")
+        current_user_obj = User.query.filter(
+            User.user_id == session.user_id).first()
+        default_org_project = {}
+        default_org_project["default_org_id"] = project_obj.org_id
+        default_org_project["default_project_id"] = project_details[
+            "project_id"]
+        current_user_obj.asset = default_org_project
+        current_user_obj.save_to_db()
+        return api_response(
+            True, APIMessages.SET_SUCCESS, STATUS_CREATED)
+
+
+class PermissionDetail(Resource):
+    """ API to handle GET call for getting all permission names."""
+
+    @token_required
+    def get(self, session):
+        """
+        Method to return all permission names.
+
+        Args:
+            session (object): Session Object
+
+        Returns: Standard API Response with message(returns message saying
+        success), data and http status code.
+        """
+        # TODO : Add Check Permission and give proper permissions.
+        permission_dict = {}
+        all_permissions = db.session.query(
+            Permission.permission_name).distinct().all()
+        permission_list = [permission for permission, in all_permissions]
+        permission_dict["permissions"] = permission_list
+        return api_response(True,
+                            APIMessages.SUCCESS,
+                            STATUS_CREATED, permission_dict)
