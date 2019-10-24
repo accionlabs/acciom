@@ -7,16 +7,18 @@ from application.common.api_permission import ROLE_API_POST, ROLE_API_GET, \
 from application.common.common_exception import GenericBadRequestException
 from application.common.constants import APIMessages
 from application.common.response import (STATUS_CREATED,
-                                         STATUS_OK, STATUS_BAD_REQUEST)
+                                         STATUS_OK, STATUS_BAD_REQUEST,
+                                         STATUS_FORBIDDEN)
 from application.common.response import api_response
 from application.common.token import token_required
 from application.common.utils import validate_empty_fields
 from application.helper.permission_check import check_permission
 from application.helper.permission_check import check_valid_id_passed_by_user
 from application.helper.role_operation import retrieve_roles_under_org, \
-    retrive_roles_by_role_id
+    retrive_role_with_permissions_by_role_id
 from application.model.models import (Project, Role, Permission,
-                                      RolePermission, UserOrgRole)
+                                      RolePermission, UserOrgRole,
+                                      UserProjectRole)
 from index import db
 
 
@@ -195,7 +197,16 @@ class RoleAPI(Resource):
             check_permission(user_object=session.user,
                              list_of_permissions=ROLE_API_GET,
                              org_id=role_obj.org_id)
-            payload = retrive_roles_by_role_id(get_role_data['role_id'])
+            if not (session.user.is_super_admin or
+                    UserOrgRole.query.filter(user_id=session.user_id,
+                                             org_id=role_obj.org_id).first() or
+                    UserProjectRole.query.filter(
+                        user_id=session.user_id,
+                        org_id=role_obj.org_id).first()):
+                return api_response(False, APIMessages.FORBIDDEN,
+                                    STATUS_FORBIDDEN)
+            payload = retrive_role_with_permissions_by_role_id(
+                role_obj)
         if payload:
             return api_response(True, APIMessages.SUCCESS, STATUS_OK,
                                 {'roles': payload})

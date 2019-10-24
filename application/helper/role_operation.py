@@ -69,7 +69,7 @@ def retrieve_roles_under_org(org_id, permission_id_list):
     return roles
 
 
-def retrive_roles_by_role_id(role_id):
+def retrive_role_with_permissions_by_role_id(role_obj):
     """
      Method to give roles details based on role_id.
 
@@ -79,7 +79,6 @@ def retrive_roles_by_role_id(role_id):
     Returns:
          Returns dictionary with role details.
     """
-    role_obj = Role.query.filter_by(role_id=role_id).first()
     main_dic = {}
     main_dic["role_id"] = role_obj.role_id
     main_dic["role_name"] = role_obj.role_name
@@ -89,7 +88,7 @@ def retrive_roles_by_role_id(role_id):
         Permission.description).distinct().all()
     role_permission = set()
     role_permissions_obj = RolePermission.query.filter_by(
-        org_id=role_obj.org_id, role_id=role_id).all()
+        org_id=role_obj.org_id, role_id=role_obj.role_id).all()
     for each_role_permission_obj in role_permissions_obj:
         role_permission.add(each_role_permission_obj.permission_id)
     permissions = []
