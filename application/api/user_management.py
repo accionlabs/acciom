@@ -12,7 +12,8 @@ from application.common.common_exception import (ResourceNotAvailableException,
 from application.common.constants import APIMessages
 from application.common.constants import GenericStrings
 from application.common.response import (api_response, STATUS_OK,
-                                         STATUS_CREATED, STATUS_BAD_REQUEST)
+                                         STATUS_CREATED, STATUS_BAD_REQUEST,
+                                         STATUS_FORBIDDEN)
 from application.common.token import (token_required)
 from application.common.utils import generate_hash
 from application.helper.permission_check import (check_valid_id_passed_by_user,
@@ -504,6 +505,13 @@ class DefaultProjectOrg(Resource):
             Project.is_deleted == False).first()
         if not project_obj:
             raise ResourceNotAvailableException("Project")
+        if not (session.user.is_super_admin or UserOrgRole.query.filter_by(
+                user_id=session.user_id,
+                org_id=project_obj.org_id).first() or UserProjectRole.query.filter_by(
+            user_id=session.user_id,
+            project_id=project_details['project_id']).first()):
+            return api_response(False, APIMessages.FORBIDDEN,
+                                STATUS_FORBIDDEN)
         current_user_obj = User.query.filter(
             User.user_id == session.user_id).first()
         default_org_project = {}
