@@ -123,7 +123,6 @@ def save_file_to_db(current_user, project_id, data, file):
                         "test_desc": temp_test_dict[
                             current_app.config.get('DESCRIPTION')][
                             each_row]}
-            
             temp = TestCase(test_suite_id=temp_file.test_suite_id,
                             owner_id=current_user,
                             test_case_class=SupportedTestClass().
