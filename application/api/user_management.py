@@ -254,9 +254,9 @@ class UserRoleAPI(Resource):
             raise GenericBadRequestException(APIMessages.ONLY_USER_OR_EMAIL)
 
         # checking if User Id is valid
-        valid_org, valid_project, valid_user = None, None, None
+        valid_org, valid_project, valid_user, valid_role = None, None, None, None
         if get_role_api_parser['user_id']:
-            valid_org, valid_project, valid_user = check_valid_id_passed_by_user(
+            valid_org, valid_project, valid_user, valid_role = check_valid_id_passed_by_user(
                 org_id=get_role_api_parser['org_id'],
                 user_id=get_role_api_parser['user_id'])
         check_permission(user_object=session.user,
@@ -266,7 +266,7 @@ class UserRoleAPI(Resource):
         # Get user Id based on email Id passed
         if get_role_api_parser['email_id'] and \
                 not get_role_api_parser['user_id']:
-            valid_org, valid_project, valid_user = check_valid_id_passed_by_user(
+            valid_org, valid_project, valid_user, valid_role = check_valid_id_passed_by_user(
                 org_id=get_role_api_parser['org_id'])
             valid_user = User.query.filter(
                 User.email.ilike(get_role_api_parser['email_id']),
@@ -532,9 +532,21 @@ class PermissionDetail(Resource):
         """
         # TODO : Add Check Permission and give proper permissions.
         permission_dict = {}
+        permission_list = []
         all_permissions = db.session.query(
-            Permission.permission_name).distinct().all()
-        permission_list = [permission for permission, in all_permissions]
+            Permission.permission_id, Permission.permission_name,
+            Permission.description).distinct().all()
+        for each_permission in all_permissions:
+            each_permission_dict = {}
+            each_permission_dict["permission_id"] = each_permission._asdict()[
+                "permission_id"]
+            each_permission_dict["permission_name"] = \
+                each_permission._asdict()[
+                    "permission_name"]
+            each_permission_dict["permission_description"] = \
+                each_permission._asdict()[
+                    "description"]
+            permission_list.append(each_permission_dict)
         permission_dict["permissions"] = permission_list
         return api_response(True,
                             APIMessages.SUCCESS,
