@@ -87,7 +87,6 @@ def retrive_roles_by_role_id(role_id):
     all_permissions = db.session.query(
         Permission.permission_id, Permission.permission_name,
         Permission.description).distinct().all()
-
     role_permission = set()
     role_permissions_obj = RolePermission.query.filter_by(
         org_id=role_obj.org_id, role_id=role_id).all()
@@ -95,14 +94,17 @@ def retrive_roles_by_role_id(role_id):
         role_permission.add(each_role_permission_obj.permission_id)
     permissions = []
     for each_all_permissions in all_permissions:
-        if each_all_permissions[0] in role_permission:
+        if each_all_permissions._asdict()["permission_id"] in role_permission:
             is_selected = True
         else:
             is_selected = False
         each_permission = {}
-        each_permission["permission_id"] = each_all_permissions[0]
-        each_permission["permission_name"] = each_all_permissions[1]
-        each_permission["permission_description"] = each_all_permissions[2]
+        each_permission["permission_id"] = each_all_permissions._asdict()[
+            "permission_id"]
+        each_permission["permission_name"] = each_all_permissions._asdict()[
+            "permission_name"]
+        each_permission["permission_description"] = \
+            each_all_permissions._asdict()["description"]
         each_permission["is_selected"] = is_selected
         permissions.append(each_permission)
     main_dic["permissions"] = permissions
