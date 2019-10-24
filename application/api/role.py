@@ -13,7 +13,8 @@ from application.common.token import token_required
 from application.common.utils import validate_empty_fields
 from application.helper.permission_check import check_permission
 from application.helper.permission_check import check_valid_id_passed_by_user
-from application.helper.role_operation import retrieve_roles_under_org
+from application.helper.role_operation import retrieve_roles_under_org, \
+    retrive_roles_by_role_id
 from application.model.models import (Project, Role, Permission,
                                       RolePermission, UserOrgRole)
 from index import db
@@ -119,15 +120,31 @@ class RoleAPI(Resource):
         get_role_parser.add_argument(
             'project_id', help=APIMessages.PARSER_MESSAGE,
             type=str, location='args')
+        get_role_parser.add_argument(
+            'role_id', help=APIMessages.PARSER_MESSAGE,
+            type=str, location='args')
         get_role_data = get_role_parser.parse_args()
         payload = None
-        # Check if either Org Id or Project is passed
-        if not get_role_data['org_id'] and not get_role_data['project_id']:
-            raise GenericBadRequestException(APIMessages.ORG_PROJECT_REQUIRED)
+        # Check if either Org Id or Project Id or Role Id is passed
+        if not get_role_data['org_id'] and not get_role_data[
+            'project_id'] and not get_role_data['role_id']:
+            raise GenericBadRequestException(
+                APIMessages.ORG_PROJECT_ROLE_REQUIRED)
+        if get_role_data['org_id'] and get_role_data['project_id'] and \
+                get_role_data['role_id']:
+            raise GenericBadRequestException(
+                APIMessages.ONLY_ORG_OR_PROJECT_OR_ROLE)
         if get_role_data['org_id'] and get_role_data['project_id']:
-            raise GenericBadRequestException(APIMessages.ONLY_ORG_OR_PROJECT)
-
-        if get_role_data['org_id'] and not get_role_data['project_id']:
+            raise GenericBadRequestException(
+                APIMessages.ONLY_ORG_OR_PROJECT_OR_ROLE)
+        if get_role_data['org_id'] and get_role_data['role_id']:
+            raise GenericBadRequestException(
+                APIMessages.ONLY_ORG_OR_PROJECT_OR_ROLE)
+        if get_role_data['project_id'] and get_role_data['role_id']:
+            raise GenericBadRequestException(
+                APIMessages.ONLY_ORG_OR_PROJECT_OR_ROLE)
+        if get_role_data['org_id'] and not get_role_data['project_id'] and not \
+                get_role_data['role_id']:
             # get all roles based on org_id
             # TODO: Returns roles with permission not exceeding the User's
             #  permissions
@@ -147,7 +164,8 @@ class RoleAPI(Resource):
             permission_id_list = [permission for permission, in permissions]
             payload = retrieve_roles_under_org(get_role_data['org_id'],
                                                permission_id_list)
-        if get_role_data['project_id'] and not get_role_data['org_id']:
+        if get_role_data['project_id'] and not get_role_data['org_id'] and not \
+                get_role_data["role_id"]:
             check_valid_id_passed_by_user(
                 project_id=get_role_data['project_id'])
 
@@ -169,6 +187,15 @@ class RoleAPI(Resource):
             permission_id_list = [permission for permission, in permissions]
             payload = retrieve_roles_under_org(project_obj.org_id,
                                                permission_id_list)
+        if get_role_data['role_id'] and not get_role_data['org_id'] and not \
+                get_role_data["project_id"]:
+            check_valid_id_passed_by_user(role_id=get_role_data['role_id'])
+            role_obj = Role.query.filter_by(
+                role_id=get_role_data["role_id"]).first()
+            check_permission(user_object=session.user,
+                             list_of_permissions=ROLE_API_GET,
+                             org_id=role_obj.org_id)
+            payload = retrive_roles_by_role_id(get_role_data['role_id'])
         if payload:
             return api_response(True, APIMessages.SUCCESS, STATUS_OK,
                                 {'roles': payload})
@@ -235,7 +262,9 @@ class RoleAPI(Resource):
                          list_of_permissions=ROLE_API_PUT,
                          org_id=role_obj.org_id)
         role_permission = RolePermission.query.filter(
-            RolePermission.role_id == role_obj.role_id).all()
+            RolePermission.org_id == role_obj.org_id,
+            RolePermission.role_id == role_obj.role_id,
+        ).all()
         permission_id_in_table = set()
         for each_role in role_permission:
             permission_id_in_table.add(each_role.permission_id)
@@ -261,7 +290,10 @@ class RoleAPI(Resource):
                 for each_permission_in_table in permission_id_in_table:
                     if each_permission_in_table not in value:
                         # TODO: Delete the permission which is not given by user
-                        pass
+                        role_permission_obj = RolePermission.query.filter_by(
+                            org_id=role_obj.org_id, role_id=role_obj.role_id,
+                            permission_id=each_permission_in_table).first()
+                        role_permission_obj.delete_from_db()
         role_obj.save_to_db()
         return api_response(
             True, APIMessages.ROLE_UPDATED, STATUS_CREATED)

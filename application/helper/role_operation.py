@@ -67,3 +67,43 @@ def retrieve_roles_under_org(org_id, permission_id_list):
         role_dic["permissions"] = permission_list
         roles.append((role_dic))
     return roles
+
+
+def retrive_roles_by_role_id(role_id):
+    """
+     Method to give roles details based on role_id.
+
+    Args:
+        role_id(int):role id passed by user.
+
+    Returns:
+         Returns dictionary with role details.
+    """
+    role_obj = Role.query.filter_by(role_id=role_id).first()
+    main_dic = {}
+    main_dic["role_id"] = role_obj.role_id
+    main_dic["role_name"] = role_obj.role_name
+    main_dic["role_description"] = role_obj.description
+    all_permissions = db.session.query(
+        Permission.permission_id, Permission.permission_name,
+        Permission.description).distinct().all()
+
+    role_permission = set()
+    role_permissions_obj = RolePermission.query.filter_by(
+        org_id=role_obj.org_id, role_id=role_id).all()
+    for each_role_permission_obj in role_permissions_obj:
+        role_permission.add(each_role_permission_obj.permission_id)
+    permissions = []
+    for each_all_permissions in all_permissions:
+        if each_all_permissions[0] in role_permission:
+            is_selected = True
+        else:
+            is_selected = False
+        each_permission = {}
+        each_permission["permission_id"] = each_all_permissions[0]
+        each_permission["permission_name"] = each_all_permissions[1]
+        each_permission["permission_description"] = each_all_permissions[2]
+        each_permission["is_selected"] = is_selected
+        permissions.append(each_permission)
+    main_dic["permissions"] = permissions
+    return main_dic
