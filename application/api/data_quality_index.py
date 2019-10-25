@@ -380,7 +380,7 @@ def get_project_dqi(project_id, start_date=None, end_date=None):
         TestCaseLog.modified_at >= start_date,
         TestCaseLog.modified_at <= end_date,
         TestCaseLog.dqi_percentage != None).join(
-        TestCase, and_(TestCaseLog.test_case_id == TestCase.test_case_id, TestCase.is_deleted == False)).join(
+        TestCase, TestCaseLog.test_case_id == TestCase.test_case_id).join(
         TestSuite, TestCase.test_suite_id == TestSuite.test_suite_id).join(
         Project, TestSuite.project_id == Project.project_id).filter(
         Project.project_id == project_id).all()
