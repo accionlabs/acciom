@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import testSuites from './testSuitesReducer';
-
 import appData from './appReducer';
 import testSuiteUploadData from './testSuiteUploadReducer';
 import loginData from './loginReducer';
@@ -9,6 +8,7 @@ import dbDetailsData from './dbDetailsReducer';
 import userManagementData from './userManagementReducer';
 import projectManagementData from './projectManagementReducer';
 import organizationManagementData from './organizationManagementReducer';
+import roleManagementData from './roleManagementReducer';
 
 const rootReducer = combineReducers({
 	appData,
@@ -19,7 +19,8 @@ const rootReducer = combineReducers({
 	dbDetailsData,
 	userManagementData,
 	projectManagementData,
-	organizationManagementData
+	organizationManagementData,
+	roleManagementData
 });
 
 export default rootReducer;

@@ -85,11 +85,12 @@ class OrganizationManagement extends Component {
 
     }
     saveDataHandler=(index)=>{	
+        const {organizationName,organizationNameInitialValue,organizationDescription,organizationDescriptionInitialValue}=this.state;
 		
         const localOrgListHandler = [...this.state.orgUserList];
     
-        localOrgListHandler[index].org_name = this.state.organizationName;
-        localOrgListHandler[index].org_description = this.state.organizationDescription;
+        localOrgListHandler[index].org_name = organizationName;
+        localOrgListHandler[index].org_description = organizationDescription;
       
         let upDateOrgDetails = {};
 
@@ -109,8 +110,12 @@ class OrganizationManagement extends Component {
             toast.error(ORJNAMETEXT);
 
         }
+        if((organizationNameInitialValue===organizationName)&&(organizationDescriptionInitialValue===organizationDescription)){
+            this.setState({editIdx:-1});
+        }
         
-if(localOrgListHandler[index].org_name.length >0 && localOrgListHandler[index].org_description.length>0){
+if((localOrgListHandler[index].org_name.length >0 &&  organizationNameInitialValue!==organizationName)
+   ||(localOrgListHandler[index].org_description.length>0 && organizationDescriptionInitialValue !==organizationDescription )){
     this.props.updateOrganizationList(JSON.stringify(upDateOrgDetails));
     this.setState({editIdx:-1});
 }

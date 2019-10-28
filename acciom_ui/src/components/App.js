@@ -23,6 +23,9 @@ import UserProfile from '../containers/UserProfile';
 import ProjectManagement from '../containers/ProjectManagement';
 import ManageUserRole from './ManageUserRole'
 import OrganizationManagement from '../containers/OrganizationManagement';
+import RoleManagement from '../containers/RoleManagement';
+import ManageRoles from './ManageRoles';
+
 
 
 const RootContainer = styled.div`
@@ -53,7 +56,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 )
   
 const App = (props) => (
+	
 	<RootContainer>
+	
 		<Router>
 			<Sidebar>
 				<NavigationBar />
@@ -74,12 +79,15 @@ const App = (props) => (
 				<PrivateRoute path="/user_management" authTokenExpired={props.authTokenExpired} component={UserManagement} />
 				<PrivateRoute path="/projects" authTokenExpired={props.authTokenExpired} component={ProjectManagement} />
 			    <PrivateRoute path="/organization" authTokenExpired={props.authTokenExpired} component={OrganizationManagement} />
+				<PrivateRoute path="/manageRole" authTokenExpired={props.authTokenExpired} component={RoleManagement} />
 				<PrivateRoute path="/edit_user_role/:id" authTokenExpired={props.authTokenExpired} component={EditUserRoles} />
 				<PrivateRoute path="/edit_test_case/:suite_id" authTokenExpired={props.authTokenExpired} component={EditTestCase} /> 
 				<PrivateRoute path="/create_suite" authTokenExpired={props.authTokenExpired} component={CreateSuite} /> 
 				<PrivateRoute path = "/view_suites" authTokenExpired={props.authTokenExpired} component={ViewSuite}/>
 				<PrivateRoute path="/ManageUserRole" authTokenExpired={props.authTokenExpired} component={ManageUserRole} />
 				<PrivateRoute path="/user_profile" authTokenExpired={props.authTokenExpired} component={UserProfile} />
+				<PrivateRoute  path="/manage_role/:id" authTokenExpired={props.authTokenExpired} component={ManageRoles} />
+
 				
 
 			</Content>
@@ -94,3 +102,4 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(App);
+

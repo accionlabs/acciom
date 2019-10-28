@@ -1614,6 +1614,39 @@ body,html{
     margin-left: 15px;
     color: #000 !important;
 }
+.rolenamelabel {
+    margin-top: 18px !important; 
+    margin-bottom: 10px;
+    /* margin-left: 19px; */
+    padding-left: 30px !important;
+    float:left;
+    width: 360px !important;
+}
 
+.roleDescLabel{
+    margin-top: 18px !important;
+    margin-bottom: 10px;
+    margin-left: 15px;
+    margin-right: -258px !important;
+    /* padding-right: 10px !important; */
+    float:right;
+    width:360px !important;
+}
+.manageRolePaper{
+    margin-top: 32px;
+    padding-top: 20px;
+    padding-bottom: 52px;
+    height:100%;
+}
+.labelClassName{
+    text-align: left;
+    margin-left: -332px !important;
+}
+.labelClassDesc{
+/* margin-right: 24px; */
+padding-right: 200px!important;
+    float:right
+
+}
 
 

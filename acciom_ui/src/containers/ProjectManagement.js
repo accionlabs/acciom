@@ -71,12 +71,13 @@ class ProjectManagement extends Component {
 		}
 
 		saveDataHandler=(index)=>{	
+			const{projectDescription,projectDescriptionInitialValue,projectName,projectNameInitialValue}=this.state;
 		
 			const localProjectListHandler = [...this.state.projectList];
 		
-			localProjectListHandler[index].project_name = this.state.projectName;
-			localProjectListHandler[index].project_description = this.state.projectDescription;
-		
+			localProjectListHandler[index].project_name = projectName;
+			localProjectListHandler[index].project_description = projectDescription;
+			
 			let upDateProjectDetails = {};
 
 			upDateProjectDetails={
@@ -95,8 +96,12 @@ class ProjectManagement extends Component {
 				toast.error(PROJNAMETEXT);
 				
 			}
+			if((projectNameInitialValue===projectName)&&(projectDescriptionInitialValue===projectDescription)){
+				this.setState({editIdx:-1});
+			}
 			
-	if(localProjectListHandler[index].project_name.length >0 && localProjectListHandler[index].project_description.length>0){
+	if((localProjectListHandler[index].project_name.length >0 && projectNameInitialValue!==projectName) 
+	|| (localProjectListHandler[index].project_description.length>0 && projectDescriptionInitialValue!==projectDescription)){
 		this.props.updateProjectList(JSON.stringify(upDateProjectDetails));
 		this.setState({editIdx:-1});
 		

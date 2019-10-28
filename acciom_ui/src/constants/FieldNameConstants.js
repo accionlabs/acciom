@@ -42,7 +42,18 @@ export const ORGANIZATIONNAME='org_name';
 export const ORGANIZATIONDESCRIPTION ='org_description';
 export const ORJDESCTEXT='Organization description cannot be blank';
 export const ORJNAMETEXT='Organization Name cannot be blank';
-
+// ======================Role Management.js File
+export const ROLEID ='role_name';
+export const ROLENAME='Role Name';
+export const ROLEDESCRIPTIONID ='role_description';
+export const ROLEDESCRIPTIONLABEL = 'Role Description'
+export const Permissions='Permissions';
+export const SAVE='Save';
+export const BACKBTNPAGE='Back To Role List';
+export const ROLEFIELD= 'Role Name';
+export const DESCRIPTIONFIELD='Role Description';
+export const ROLEDESCFIELD= 'Role Description cannot be empty';
+export const ROLENAMEFIELD ='Role Name cannot be empty';
 
 
 

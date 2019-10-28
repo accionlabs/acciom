@@ -42,10 +42,10 @@ class UserProfile extends Component{
 			return { value: item.org_id, label: item.org_name} ;
 		});
         return options;
-        console.log(options,"ddddd")
+   
 	};
 	handleOrgChange = (e) => {
-        console.log(e.target.value,"handleorgchane")
+      
 		this.setState({selectedOrgId: e.target.value});
     };
     renderProjectListOptions=()=>{
@@ -61,7 +61,7 @@ class UserProfile extends Component{
 
    
     render(){
-        console.log(this.renderOrgListOptions(),this.state.selectedOrgId,"this.renderOrgListOptions()this.renderOrgListOptions()")
+     
         return(
             <Paper className="border_user_profile">
                  <PersonIcon className="userAccount"/>
@@ -143,7 +143,7 @@ class UserProfile extends Component{
 }
 
 const mapStateToProps = (state) => {
-    console.log(state.appData,"dddd")
+    
 	return {
 		orgList: state.appData.organizationList,
         currentOrg: state.appData.currentOrg,
