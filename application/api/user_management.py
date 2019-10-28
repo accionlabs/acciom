@@ -12,13 +12,14 @@ from application.common.common_exception import (ResourceNotAvailableException,
 from application.common.constants import APIMessages
 from application.common.constants import GenericStrings
 from application.common.response import (api_response, STATUS_OK,
-                                         STATUS_CREATED, STATUS_BAD_REQUEST)
+                                         STATUS_CREATED, STATUS_BAD_REQUEST,
+                                         STATUS_FORBIDDEN)
 from application.common.token import (token_required)
 from application.common.utils import generate_hash
 from application.helper.permission_check import (check_valid_id_passed_by_user,
                                                  check_permission)
 from application.model.models import (UserOrgRole, UserProjectRole, User,
-                                      Project, Role, Session)
+                                      Project, Role, Session, Permission)
 from index import db
 
 
@@ -254,9 +255,9 @@ class UserRoleAPI(Resource):
             raise GenericBadRequestException(APIMessages.ONLY_USER_OR_EMAIL)
 
         # checking if User Id is valid
-        valid_org, valid_project, valid_user = None, None, None
+        valid_org, valid_project, valid_user, valid_role = None, None, None, None
         if get_role_api_parser['user_id']:
-            valid_org, valid_project, valid_user = check_valid_id_passed_by_user(
+            valid_org, valid_project, valid_user, valid_role = check_valid_id_passed_by_user(
                 org_id=get_role_api_parser['org_id'],
                 user_id=get_role_api_parser['user_id'])
         check_permission(user_object=session.user,
@@ -266,7 +267,7 @@ class UserRoleAPI(Resource):
         # Get user Id based on email Id passed
         if get_role_api_parser['email_id'] and \
                 not get_role_api_parser['user_id']:
-            valid_org, valid_project, valid_user = check_valid_id_passed_by_user(
+            valid_org, valid_project, valid_user, valid_role = check_valid_id_passed_by_user(
                 org_id=get_role_api_parser['org_id'])
             valid_user = User.query.filter(
                 User.email.ilike(get_role_api_parser['email_id']),
@@ -447,8 +448,8 @@ class UserProfileAPI(Resource):
         """
 
         user_parser = reqparse.RequestParser(bundle_errors=True)
-        user_parser.add_argument('first_name', type=str)
-        user_parser.add_argument('last_name', type=str)
+        user_parser.add_argument('first_name', type=str, location='json')
+        user_parser.add_argument('last_name', type=str, location='json')
         user_details = user_parser.parse_args()
         for key, value in dict(user_details).items():
             if value == None:
@@ -504,6 +505,13 @@ class DefaultProjectOrg(Resource):
             Project.is_deleted == False).first()
         if not project_obj:
             raise ResourceNotAvailableException("Project")
+        if not (session.user.is_super_admin or UserOrgRole.query.filter_by(
+                user_id=session.user_id,
+                org_id=project_obj.org_id).first() or UserProjectRole.query.filter_by(
+            user_id=session.user_id,
+            project_id=project_details['project_id']).first()):
+            return api_response(False, APIMessages.FORBIDDEN,
+                                STATUS_FORBIDDEN)
         current_user_obj = User.query.filter(
             User.user_id == session.user_id).first()
         default_org_project = {}
@@ -514,3 +522,40 @@ class DefaultProjectOrg(Resource):
         current_user_obj.save_to_db()
         return api_response(
             True, APIMessages.SET_SUCCESS, STATUS_CREATED)
+
+
+class PermissionDetail(Resource):
+    """ API to handle GET call for getting all permission names."""
+
+    @token_required
+    def get(self, session):
+        """
+        Method to return all permission names.
+
+        Args:
+            session (object): Session Object
+
+        Returns: Standard API Response with message(returns message saying
+        success), data and http status code.
+        """
+        # TODO : Add Check Permission and give proper permissions.
+        permission_dict = {}
+        permission_list = []
+        all_permissions = db.session.query(
+            Permission.permission_id, Permission.permission_name,
+            Permission.description).distinct().all()
+        for each_permission in all_permissions:
+            each_permission_dict = {}
+            each_permission_dict["permission_id"] = each_permission._asdict()[
+                "permission_id"]
+            each_permission_dict["permission_name"] = \
+                each_permission._asdict()[
+                    "permission_name"]
+            each_permission_dict["permission_description"] = \
+                each_permission._asdict()[
+                    "description"]
+            permission_list.append(each_permission_dict)
+        permission_dict["permissions"] = permission_list
+        return api_response(True,
+                            APIMessages.SUCCESS,
+                            STATUS_CREATED, permission_dict)

@@ -81,8 +81,8 @@ class APIMessages:
     TEST_SUITE_NAME_ALREADY_PRESENT = "Test Suite Name already exist"
     QUALITY_SUITE = "Quality Suite"
     NO_DB_ID = "No Active Database Connections"
-    ORG_PROJECT_REQUIRED = "Either of Organization or Project ID is mandatory"
-    ONLY_ORG_OR_PROJECT = "Pass only Organization or Project ID"
+    ORG_PROJECT_ROLE_REQUIRED = "Either of Organization or Project ID or Role ID is mandatory"
+    ONLY_ORG_OR_PROJECT_OR_ROLE = "Pass only Organization or Project ID or Role ID"
     PERMISSION_LIST = "permission_id_list should not be blank"
     NO_ROLES = "There are No Roles associated with given Organization"
     ONLY_USER_OR_EMAIL = "Pass only User id or Email"
@@ -133,6 +133,9 @@ class APIMessages:
     SET_SUCCESS = "Default Organization and Project set Successfully"
     PASS_FIRST_NAME = "Please Pass First Name"
     PASS_LAST_NAME = "Please Pass Last Name"
+    ROLE_NAME_CANNOT_BLANK = "Role Name cannot be Blank"
+    ROLE_DESCRIPTION_CANNOT_BLANK = "Role Description cannot be Blank"
+    ROLE_UPDATED = "Role Updtaed Successfully"
 
 
 class GenericStrings:
