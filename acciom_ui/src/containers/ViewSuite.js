@@ -36,8 +36,9 @@ export class ViewSuite extends Component {
                 <td>{item.created_at}</td>
                 <td>
                     
-                {/* <Link to={`/edit_test_case/${item.test_suite_id}`}> */}
+                <Link to={`/edit_test_case/${item.test_suite_id}`}>
                 <EditIcon fontSize="small"  style={{color:"#696969"}} />
+                </Link>
                 <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} />
                 </td>
             </tr>	
