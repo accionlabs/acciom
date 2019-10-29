@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {getRolesList,resetAllValueOfRole} from '../actions/roleManagementActions';
 import GroupIcon from '@material-ui/icons/Group';
 import { Button} from 'react-bootstrap';
-import { ROLENAME, ROLEID, ROLEDESCRIPTIONID, ROLEDESCRIPTIONLABEL, SMALL, ACTION } from '../constants/FieldNameConstants';
+import { ROLENAME, ROLEID, ROLEDESCRIPTIONID, ROLEDESCRIPTIONLABEL, SMALL, ACTION, ADD_ROLES, ROLE_MANAGEMENT } from '../constants/FieldNameConstants';
 import CustomTable from '../components/Table/CustomTable';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -20,7 +20,10 @@ const styles = theme => ({
 });
 
 class RoleManagement extends Component {
-
+    handleAddButtonHandler=()=>{
+     
+        this.props.history.push('/addRole');
+    }
     static getDerivedStateFromProps =(nextProps, prevState)=>{
       
         if(nextProps.roleList.length === 0){
@@ -55,10 +58,8 @@ class RoleManagement extends Component {
     };
 render(){
     const {headers,roleDetailsList}=this.state;
-    console.log('State value in role table',this.state);
-    console.log('Prop value in role table',this.props);
    
-    const roleModifyData=[];
+   const roleModifyData=[];
     if(roleDetailsList){
         roleDetailsList.forEach((role,index)=>{
             roleModifyData.push({
@@ -100,15 +101,16 @@ render(){
 
 				
                     <label className="main_titles projectManagementMargin" >
-                     Role Management
+                     {ROLE_MANAGEMENT}
                     </label>
-					<Button 
+                    <Button 
 					className="backbutton_colors_project addUserButton"
-					// onClick={this.handleAddButtonHandler}
+					onClick={this.handleAddButtonHandler}
                     >
-                    Add Roles
+                     {ADD_ROLES}
                     </Button>
-                    <CustomTable
+                  
+                  <CustomTable
                   headers={headers}
                   bodyData={roleModifyData}
                   actionLabel={ACTION}

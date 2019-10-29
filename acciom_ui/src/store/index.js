@@ -4,7 +4,7 @@ import logger from 'redux-logger';
 
 import rootReducer from '../reducers';
 import { authenticationExpired } from '../actions/appActions';
-import { POP_UP_SUCCESS_MESSAGE, POP_UP_ORG_SUCCESS_MSG } from '../constants/FieldNameConstants';
+import { POP_UP_SUCCESS_MESSAGE, POP_UP_ORG_SUCCESS_MSG, CREATE_ROLE_SUCCESS_MSG } from '../constants/FieldNameConstants';
 
 const hasStandardErrorStatus = (status) => {
 	return ((status >= 300 && status <= 307) || 
@@ -113,6 +113,11 @@ function callAPIMiddleware({ dispatch, getState }) {
 								else{
 									if(response.message ===POP_UP_ORG_SUCCESS_MSG){
 										toast.success(response.message);
+									}
+									else{
+										if(response.message===CREATE_ROLE_SUCCESS_MSG){
+											toast.success(response.message)
+										}
 									}
 								}
 								

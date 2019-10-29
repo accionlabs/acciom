@@ -5,7 +5,11 @@ import {
     GET_SELECTED_ROLE_ERROR ,
     UPDATE_ROLE_LIST_SUCCESS,
     UPDATE_ROLE_LIST_ERROR,
-    RESET_VALUES_ROLE
+    RESET_VALUES_ROLE,
+    GET_ALL_PERMISSIONS_SUCCESS,
+    GET_ALL_PERMISSIONS_ERROR,
+    CREATE_ROLE_SUCCESS,
+    CREATE_ROLE_ERROR
    } from "../constants/ActionTypes";
    import {  BASE_URL, headers} from './appActions';
 export const getRolesList = (orgId) => {
@@ -61,6 +65,48 @@ export const updateRoleList = (data) => {
             method: 'put',
             headers,
             body:data
+          
+        })
+     
+    };	
+}
+
+export const getAllPermissions = () => {
+   
+
+    return {
+        types: [
+            '',
+           GET_ALL_PERMISSIONS_SUCCESS,
+           GET_ALL_PERMISSIONS_ERROR
+        ],
+        
+        callAPI: () => fetch(`${BASE_URL}/permission`, {
+            method: 'get',
+            headers,
+        
+          
+        })
+     
+    };	
+}
+
+
+export const createRole = (data) => {
+   
+
+    return {
+        types: [
+            '',
+           CREATE_ROLE_SUCCESS,
+           CREATE_ROLE_ERROR
+        ],
+        
+        callAPI: () => fetch(`${BASE_URL}/role`, {
+            method: 'post',
+            headers,
+            body:data
+        
           
         })
      

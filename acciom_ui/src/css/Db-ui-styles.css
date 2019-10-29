@@ -1652,6 +1652,17 @@ body,html{
     height:100%;
 }
 
-
+.formStyle{
+    min-width: 120;
+    width:95%;
+    margin-top: 29px;
+    margin-left:20px !important;
+}
+.chipStyle{
+    display: flex;
+ }
+.singleChipStyle{
+ margin: 2px;
+}
 
 

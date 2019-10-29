@@ -19,12 +19,12 @@ import EditTestCase from '../containers/EditTestCase';
 import ViewSuite from '../containers/ViewSuite';
 import CreateSuite from '../containers/CreateSuite';
 import UserProfile from '../containers/UserProfile';
-
 import ProjectManagement from '../containers/ProjectManagement';
 import ManageUserRole from './ManageUserRole'
 import OrganizationManagement from '../containers/OrganizationManagement';
 import RoleManagement from '../containers/RoleManagement';
-import ManageRoles from './ManageRoles';
+import AddRole from '../containers/AddRole';
+import ManageRoles from '../containers/ManageRoles';
 
 
 
@@ -87,6 +87,7 @@ const App = (props) => (
 				<PrivateRoute path="/ManageUserRole" authTokenExpired={props.authTokenExpired} component={ManageUserRole} />
 				<PrivateRoute path="/user_profile" authTokenExpired={props.authTokenExpired} component={UserProfile} />
 				<PrivateRoute  path="/manage_role/:id" authTokenExpired={props.authTokenExpired} component={ManageRoles} />
+				<PrivateRoute path="/addRole" authTokenExpired={props.authTokenExpired} component={AddRole} />
 
 				
 
