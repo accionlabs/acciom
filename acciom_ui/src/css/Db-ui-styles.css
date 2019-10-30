@@ -616,6 +616,17 @@ body,html{
     height: 31px;
 }
 .button-create{
+    background-color: #6A6E7D !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height:31px;
+    margin-top:10px;
+    /* margin-left: 5px; */
+}
+.back-btn{
     background-color: #BD4951 !important;
     border-color: #BD4951 !important;
     color: #fff;
@@ -624,7 +635,6 @@ body,html{
     text-align: center;
     width: 121px;
     height:31px;
-    margin-left: 5px;
 }
 
 .backbutton_colors{
@@ -1538,6 +1548,7 @@ body,html{
     text-align: center;
     width: 127px;
     height: 31px;
+    margin-top: -33px;
 }
 
 .mandatory{
@@ -1670,3 +1681,61 @@ body,html{
     margin-left: 15px;
     color: #000 !important;
 }
+
+.manageRolePaper{
+    margin-top: 32px;
+    padding-top: 20px;
+    padding-bottom: 52px;
+    height:100%;
+}
+
+.formStyle{
+    min-width: 120;
+    width:95%;
+    margin-top: 34px !important;
+    margin-left:20px !important;
+}
+.chipStyle{
+    display: flex;
+ }
+.singleChipStyle{
+ margin: 2px;
+ }
+ .textFieldStyleName{
+     margin-left: 20px !important;
+     margin-top: 11px;
+     width: 45%;
+   
+ }
+ .textFieldStyleDesc{
+    margin-right: 20px;
+    margin-top: 11px;
+    width: 45%;
+    float: right;
+}
+.saveButton{
+    float: right;
+    padding-left: 8px !important;
+    margin-right: 24px !important;
+    margin-top:10px !important ;
+    margin-bottom: 10px !important;
+
+}
+
+.backButton{
+    float:right;
+    margin-right: 10px !important;
+    width: 130px !important;
+    margin-top:10px !important;
+    margin-bottom: 10px !important;
+
+}
+.inputLabel{
+    margin-bottom: 2px !important;
+    padding-bottom:3px !important;
+}
+
+
+
+
+

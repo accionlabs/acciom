@@ -56,11 +56,10 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
 
 
     onloadSaveValues(){
-        const currentOrg = { value: this.props.currentOrg.org_id, label: this.props.currentOrg.org_name };
-        this.setState({selectedOrgId: currentOrg.value});
-        const currentProject = { value: this.props.currentProject.project_id, label: this.props.currentProject.project_name };
-        this.setState({selectProjectId: currentProject.value},()=>{
-        });
+        if ( this.props.currentOrg) {
+            this.setState({selectedOrgId: this.props.currentOrg.org_id});
+            this.setState({selectProjectId: this.props.currentProject.project_id});
+        }
     }
 
 
@@ -68,6 +67,9 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
         if (nextProps.userProfiles.email_id !== prevState.profileDetails.email_id) {
 			const profileDetails = nextProps.userProfiles;
 			return { ...prevState, profileDetails };
+        }
+        if (nextProps.currentOrg ? nextProps.currentOrg.org_id !== prevState.selectedOrgId : false) {
+            return{...prevState, selectedOrgId: nextProps.currentOrg.org_id, selectProjectId: nextProps.currentProject.project_id};
         }
     }
 
@@ -78,7 +80,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
     
     renderOrgListOptions = () => {
 		const options = this.props.orgList.map((item) => {
-			return { value: item.org_id, label: item.org_name} ;
+			return { value: item.org_id, label: item.org_name};
 		});
         return options;
 	};
@@ -88,7 +90,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
     };
     renderProjectListOptions=()=>{
         const options = this.props.projectList.map((item, index) => {
-			return { value: item.project_id, label: item.project_name} ; 
+			return { value: item.project_id, label: item.project_name}; 
         });
 		return options;
     };
@@ -140,7 +142,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                         disabled = {profileDetails.email_id}
                         />
                         </td>
-                        <td><Button onClick={() => this.userProfileSubmit()} className="button-colors userSubmitButton">Submit</Button></td>
+                        <td><Button variant="contained" onClick={() => this.userProfileSubmit()} className="button-colors userSubmitButton">Submit</Button></td>
                     </tr>
                 </table>
                 <div>

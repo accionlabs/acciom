@@ -13,6 +13,8 @@ export const SMALL ='small';
 export const ACTION='Action';
 export const ADDPROJECT='Add Project';
 export const ADDORGANIZATION='Add Organization'; 
+export const PROJDESCTEXT='Project description cannot be blank';
+export const PROJNAMETEXT='Project Name cannot be blank';
 
 //===================Custom Modal -Constants
 export const DELETEMSG='Do you want to delete this Project?';
@@ -28,11 +30,45 @@ export const PROJDESCINFO= 'projectDescriptionInfo';
 export const PROJNAMEINFO='projectNameInfo';
 export const TOOLTIP_TITLE='Enter the Project Name';
 export const TOOLTIP_DESC='Enter the Project Description';
-export const TEXTBOX_NAME='projectNameAdd';
-export const TEXTBOX_DESC='projectDescriptionAdd';
+export const PRJ_TEXTBOX_NAME='projectNameAdd';
+export const PRJ_TEXTBOX_DESC='projectDescriptionAdd';
+export const ORG_TEXTBOX_NAME='organizationNameAdd';
+export const ORG_TEXTBOX_DESC='organizationNameDesc';
 // ==============index.js File
 export const POP_UP_SUCCESS_MESSAGE='Project is Successfully Created';
+export const POP_UP_ORG_SUCCESS_MSG='Organization is Successfully Created';
+// ======================Organization Management.js File
+export const ORGANIZATIONNAME='org_name';
+export const ORGANIZATIONDESCRIPTION ='org_description';
+export const ORJDESCTEXT='Organization description cannot be blank';
+export const ORJNAMETEXT='Organization Name cannot be blank';
+// ======================Role Management.js File
+export const ROLEID ='role_name';
+export const ROLENAME='Role Name';
+export const ROLEDESCRIPTIONID ='role_description';
+export const ROLEDESCRIPTIONLABEL = 'Role Description'
+export const Permissions='Permissions';
+export const SAVE='Save';
+export const BACKBTNPAGE='Back To Role List';
+export const ROLEFIELD= 'Role Name';
+export const DESCRIPTIONFIELD='Role Description';
+export const ROLEDESCFIELD= 'Role Description cannot be empty';
+export const ROLENAMEFIELD ='Role Name cannot be empty';
+export const ADD_ROLES= 'Add Roles';
+export const ROLE_MANAGEMENT='Role Management';
+export const DROPDOWN_POP_UP='Select a permission for the role';
+export const CREATE_ROLE_SUCCESS_MSG ="Role is Successfully Created";
+export const EDIT_ROLES ='Edit Roles';
+export const EDIT='EDIT';
 
 
+
+
+
+
+
+// ======================== CREATE SUITE CONSTANTS
+export const ISSPACE=(/\s/)
+// (/\s/*[a-z]+/\s/[a-z]+/\s/*)/\s/
 
 

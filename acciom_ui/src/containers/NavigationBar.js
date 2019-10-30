@@ -22,11 +22,13 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Icon from '@material-ui/core/Icon';
 import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
-import ChangeOrganisation from '../components/ChangeOrganisation'
 import { logoutFromPortal } from '../actions/loginActions';
 import { showOrgChangePage } from '../actions/appActions';
 import logo from '../assets/images/logo.png';
 import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
+import CallToActionTwoToneIcon from '@material-ui/icons/CallToActionTwoTone';
+import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
+
 
 const drawerWidth = 240;
 
@@ -163,9 +165,6 @@ const getLoginOptions = (props, classes) => {
 					</MenuItemBS>
 					<MenuItemBS eventKey="6">
 						<span id="logoutLink" className={classes.loginbtn} onClick={(event) => { event.preventDefault(); props.logoutFromPortal() }}>Logout</span>
-					</MenuItemBS>
-					<MenuItemBS eventKey="1" className={classes.width}>
-						<Link to="/create_suite"  className={classes.width}>create suite</Link>
 					</MenuItemBS>
 					<MenuItemBS eventKey="8" className={classes.width}>
 						<Link to="/user_profile"  className={classes.width}>User Profile</Link>
@@ -334,7 +333,17 @@ function NavigationBar(props) {
 							<AssignmentIcon className="projectManagementNavIcon" />
 							</Link>
 						</ListItemIcon>
-						<Link to={'/organization'} id="dashbcolor"  className = {classes.startup}>Manage Projects</Link>
+						<Link to={'/organization'} id="dashbcolor"  className = {classes.startup}>Manage Organisation</Link>
+						</MenuItem>
+						
+						<MenuItem>
+						<ListItemIcon>
+							<Link to={'/manageRole'}>
+						
+							<CollectionsBookmarkIcon className="projectManagementNavIcon" />
+							</Link>
+						</ListItemIcon>
+						<Link to={'/manageRole'} id="dashbcolor"  className = {classes.startup}>Manage Roles</Link>
 						</MenuItem>
 					</MenuList>
 				</List>
