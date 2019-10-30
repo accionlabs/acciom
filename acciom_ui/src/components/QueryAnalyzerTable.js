@@ -1,13 +1,15 @@
 import React from 'react';
-import TableToolbar from './TableToolbar';
-import TableHeader from './TableHeader';
-import TableListBody from './TableListBody';
+import { connect } from 'react-redux';
+import TableToolbar from './Table/TableToolbar';
+import TableHeader from './Table/TableHeader';
+import TableListBody from './Table/TableListBody';
 import TablePagination from '@material-ui/core/TablePagination';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import { Table } from '@material-ui/core';
-import { PROJECTNAME, PROJECTDESCRIPTION, ORGANIZATIONNAME } from '../../constants/FieldNameConstants';
-
+import { getSelectedDatabaseType,runQuery,getTableData } from '../actions/queryAnalyzerActions';
+import { 
+	getAllConnections, 
+} from '../actions/testSuiteListActions';
 
 const desc = (a, b, orderBy) => {
     if (b[orderBy] < a[orderBy]) {
@@ -34,12 +36,9 @@ const getSorting = (order, orderBy) => {
 }
   
 const searchingFor = (search,headers) => {
-
     return function(sortData){
-   
       return headers.some(data => {
-      
-        return sortData[data.id] !== null && sortData[data.id].toLowerCase().includes(search.toLowerCase());
+        return sortData[data.id].toLowerCase().includes(search.toLowerCase());
       });
     }
 }
@@ -47,21 +46,17 @@ const searchingFor = (search,headers) => {
 
 const styles = theme => ({
     root: {
-      marginTop: theme.spacing.unit * 3,
+      marginTop: '0px',
+      marginBottom: '20px'
+      // marginTop: theme.spacing.unit * 3,
     },
     tableWrapper: {
       overflowX: 'auto'
     },
-    table: {
-      minWidth: 900,
-    
-     
-     
-    },
   
   });
 
-class CustomTable extends React.Component {
+class QueryAnalyzerTable extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -72,7 +67,7 @@ class CustomTable extends React.Component {
           search:'',      
         };
     }
-
+      
     handleSort = (property) => {
       const orderBy = property;
       let order = 'desc';
@@ -96,22 +91,30 @@ class CustomTable extends React.Component {
     handleSearch=(event)=>{
       this.setState({search:event.target.value})
     }
-   
+    getTableData=()=>{
+      let querybody = {
+        'project_id':this.props.currentProject.project_id,
+        'connection_id':this.state.db_connection_id,
+        'query':this.state.query_text
+    }
+    this.props.getTableData(querybody.project_id);
+    }
 
     render(){
-      const {classes, headers, bodyData, actionLabel,editIdx,handleChange,projectNameValue,projectDescriptionValue,orgNameValue,orgDescriptionValue} = this.props;
+      const {classes, headers, bodyData, actionLabel} = this.props;
       const { order, orderBy, page, rowsPerPage, search } = this.state;
         return(
-          <Paper className="commonTablePaperMargin">
-            <Table size='medium'>
+          <Paper className={classes.root} onTableClose={this.props.onTableClose}>
+            {/* <button className='queryAnalDeleteTableBtn'>X</button>
+            <button className='queryAnalExportBtn'>Export</button>
+            <button className='queryAnalExportPopUp' onClick={this.handleDialogBox}>Query</button> */}
             <TableToolbar
             handleSearch = {this.handleSearch}
             handleClear = {this.handleClear}
             search = {search}
             />
-            
+                        
             <div className={classes.tableWrapper}>
-              <Table className={classes.table} aria-labelledby="tableTitle" size='medium'>
               <TableHeader 
                 headers={headers}
                 handleSort={this.handleSort}
@@ -130,14 +133,7 @@ class CustomTable extends React.Component {
                 getSorting = {getSorting}
                 headers = {headers}
                 searchingFor={searchingFor}
-                editIdx={editIdx}
-                handleChange={handleChange}
-                projectNameValue={projectNameValue}
-                projectDescriptionValue={projectDescriptionValue}
-                orgNameValue={orgNameValue}
-                orgDescriptionValue={orgDescriptionValue}
-                />
-              </Table>
+              />
             </div>
             <TablePagination
               rowsPerPageOptions={[10,15,20,25]}
@@ -154,10 +150,27 @@ class CustomTable extends React.Component {
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
-          </Table>
           </Paper>
         )
     }
 }
+const mapStateToProps = (state) => {
+  return {
 
-export default withStyles(styles)(CustomTable);
+  allConnections : state.testSuites.connectionsList.allConnections? state.testSuites.connectionsList.allConnections : [],
+      currentProject : state.appData.currentProject,
+      currentOrg: state.appData.currentOrg,
+  orgUserList: state.userManagementData.orgUserList? state.userManagementData.orgUserList: [],
+  projectList: state.appData.projectList? state.appData.projectList: [],
+      isOrganisationInitialised: state.appData.isOrganisationInitialised,
+      
+    };
+};
+
+const mapDispatchToProps = dispatch => ({
+  getQueryAnalyzerDetails: (data) => dispatch(getQueryAnalyzerDetails(data)),
+  getTableData:(data) =>dispatch(getTableData(data)),
+  getAllConnections:(data) =>dispatch(getAllConnections(data)),
+ })
+
+ export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(QueryAnalyzerTable));

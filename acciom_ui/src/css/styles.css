@@ -4632,3 +4632,93 @@ html
 .onDeleteDbNoBtnClick{
     width: 100px
 }
+
+.queryAnalyzer{
+    width: 600px;
+    margin-left: 5px
+    
+}
+.runQuery{
+    background-color: #BD4951;
+    color: white;
+    /* margin-top: 2px; */
+    margin-bottom: 2px
+}
+.queryAnalDeleteTableBtn{
+    display: inline-block;
+    
+}
+.queryAnalExportBtn{
+    display: inline-block; 
+    background-color: #BD4951 !important;
+    border-color: #BD4951 !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height: 31px;
+    margin-left: 300px
+}
+.queryAnalExportPopUp{
+    display: inline-block;
+    background-color: #fff !important;
+    border-color: #BD4951 !important;
+    color: #BD4951;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height: 31px;
+   
+}
+.queryAnalConnectionDropdown{
+    margin-left: 180px
+}
+.queryAnalTable{
+    margin-top: 20x
+}
+.queryAnalElemment{
+    margin-top: 50px
+}
+.queryAnalyzerDialogBox {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.7;
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+.queryAnalyzerDialogBoxContent{
+    width: 500px;
+    height: 300px;
+    background-color: white;
+    opacity: 1;
+
+}
+.query{
+    display: inline-block;
+    font-size: 20px;
+    margin-top: 10px
+}
+.dropdownQueryAnalyser{
+    display: inline-block;
+    margin-left: 250px;
+    margin-top: 10px
+}
+.textarea{
+    display: inline-block;
+    margin-top: 10px
+}
+.runQuery{
+    display: inline-block;
+    margin-top: 5px
+}
+.tableHeader{
+    display: inline-block;
+    margin-top: 15px
+}
+

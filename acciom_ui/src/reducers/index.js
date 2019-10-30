@@ -7,6 +7,7 @@ import loginData from './loginReducer';
 import dashboardData from './dashboardReducer';
 import dbDetailsData from './dbDetailsReducer';
 import userManagementData from './userManagementReducer';
+import runQuery from './queryAnalyzerReducer'
 import projectManagementData from './projectManagementReducer';
 import organizationManagementData from './organizationManagementReducer';
 
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
 	testSuiteUploadData,
 	dbDetailsData,
 	userManagementData,
+	runQuery,
 	projectManagementData,
 	organizationManagementData
 });
