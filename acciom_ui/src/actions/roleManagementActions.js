@@ -9,7 +9,9 @@ import {
     GET_ALL_PERMISSIONS_SUCCESS,
     GET_ALL_PERMISSIONS_ERROR,
     CREATE_ROLE_SUCCESS,
-    CREATE_ROLE_ERROR
+    CREATE_ROLE_ERROR,
+    DELETE_ROLE_SUCCESS,
+    DELETE_ROLE_ERROR
    } from "../constants/ActionTypes";
    import {  BASE_URL, headers} from './appActions';
 export const getRolesList = (orgId) => {
@@ -93,7 +95,6 @@ export const getAllPermissions = () => {
 
 
 export const createRole = (data) => {
-   
 
     return {
         types: [
@@ -106,6 +107,27 @@ export const createRole = (data) => {
             method: 'post',
             headers,
             body:data
+        
+          
+        })
+     
+    };	
+}
+
+export const deleteRoleList = (roleId) => {
+   
+
+    return {
+        types: [
+            '',
+           DELETE_ROLE_SUCCESS,
+           DELETE_ROLE_ERROR
+        ],
+        
+        callAPI: () => fetch(`${BASE_URL}/role?role_id=${roleId}`, {
+            method: 'delete',
+            headers,
+           
         
           
         })

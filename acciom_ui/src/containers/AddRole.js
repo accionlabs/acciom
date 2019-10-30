@@ -20,13 +20,11 @@ const formatRoleList=(permissionsList)=>{
 
 class AddRole extends Component {
     state={
-        initialRole: [],
         roleList:[],
         selectedRoles:[],
         textFieldName:'',
         textFieldDesc:'',
-        selectedIdValue:null
-    }
+      }
     goToBackBtnPage=()=>{
         this.props.history.push('/manageRole');
     
@@ -73,8 +71,8 @@ class AddRole extends Component {
             }
           }
           if(!this.validateConditions(permissionIdList)){
-          
-              this.props.createRole(JSON.stringify(saveFunctionalityDetails));
+             
+          this.props.createRole(JSON.stringify(saveFunctionalityDetails));
          }
         
     }
@@ -97,6 +95,7 @@ class AddRole extends Component {
         if(nextProps.refreshRoleDetails){
             nextProps.getRolesList(nextProps.currentOrg.org_id);
             nextProps.history.push('/manageRole');
+           
         }
       
         if(nextProps.allPermissionsDetail !==prevState.allPermissionsDetail && prevState.roleList.length==0){
@@ -114,6 +113,9 @@ class AddRole extends Component {
         }
        
 
+    }
+    componentWillUnmount(){
+        this.setState({textFieldName:'',textFieldDesc:'',selectedRoles:[]})
     }
     render(){
         const{ textFieldName,textFieldDesc,roleList,selectedRoles}=this.state;

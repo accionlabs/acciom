@@ -2,7 +2,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import {getRolesList,resetAllValueOfRole} from '../actions/roleManagementActions';
+import {getRolesList,resetAllValueOfRole,deleteRoleList} from '../actions/roleManagementActions';
 import GroupIcon from '@material-ui/icons/Group';
 import { Button} from 'react-bootstrap';
 import { ROLENAME, ROLEID, ROLEDESCRIPTIONID, ROLEDESCRIPTIONLABEL, SMALL, ACTION, ADD_ROLES, ROLE_MANAGEMENT } from '../constants/FieldNameConstants';
@@ -44,6 +44,12 @@ class RoleManagement extends Component {
     } 
 
     }
+
+    deleteItemHandler=(roleId)=>{
+   
+        this.props.deleteRoleList(roleId);
+
+    }
     componentWillUnmount(){
     
         this.props.resetAllValueOfRole();
@@ -81,7 +87,7 @@ render(){
                           className="cursorhover" 
                           fontSize={SMALL}
                           style={{color:"#696969",marginRight:'8px'}} 
-                        //   onClick ={() =>{this.deleteItemHandler(org.org_id);}}
+                          onClick ={() =>{this.deleteItemHandler(role.role_id);}}
                            />
 
                     </Fragment>
@@ -132,7 +138,8 @@ const mapStateToProps=(state)=>{
 };
 const mapDispatchToProps =dispatch=>({
     getRolesList: (data) => dispatch(getRolesList(data)),
-    resetAllValueOfRole:()=>dispatch(resetAllValueOfRole())
+    resetAllValueOfRole:()=>dispatch(resetAllValueOfRole()),
+    deleteRoleList:(data)=>dispatch(deleteRoleList(data))
 
   
 })

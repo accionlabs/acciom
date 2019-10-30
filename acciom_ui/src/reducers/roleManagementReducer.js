@@ -9,7 +9,9 @@ import {
     GET_ALL_PERMISSIONS_SUCCESS,
     GET_ALL_PERMISSIONS_ERROR,
     CREATE_ROLE_SUCCESS,
-    CREATE_ROLE_ERROR
+    CREATE_ROLE_ERROR,
+    DELETE_ROLE_SUCCESS,
+    DELETE_ROLE_ERROR
   } from "../constants/ActionTypes";
 
     const initialState = {
@@ -22,7 +24,7 @@ import {
         switch (action.type) {
             
            case  GET_ROLE_LIST_SUCCESS:
-           
+        
                return{
                    ...state,
                    roleList:action.response.data.roles,
@@ -51,6 +53,12 @@ import {
                         ...state,
                         refreshRoleDetails:true
                       } 
+                      case DELETE_ROLE_SUCCESS:
+                        return{
+                          ...state,
+                          refreshRoleDetails:true
+                        }
+                    
                   
               
               case RESET_VALUES_ROLE:

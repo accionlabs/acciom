@@ -20,7 +20,7 @@ const CommonForm =(props)=>{
        <Paper className="manageRolePaper">
          <TextField 
          label ={ROLEFIELD}
-         style ={{marginLeft:'20px',marginTop:'11px',width:'370px'}}
+         style ={{marginLeft:'20px',marginTop:'11px',width:'45%'}}
          value ={textFieldName}
          name={ROLEFIELD}
          onChange ={handleTextField}
@@ -28,14 +28,14 @@ const CommonForm =(props)=>{
 
        <TextField 
       label ={DESCRIPTIONFIELD}
-      style ={{marginRight:'20px',marginTop:'11px',width:'370px',float:'right'}}
+      style ={{marginRight:'20px',marginTop:'11px',width:'45%',float:'right'}}
       value ={textFieldDesc}
       name ={DESCRIPTIONFIELD}
       onChange ={handleTextField}
      />
   <FormControl className="formStyle">
       
-      <InputLabel htmlFor="select-multiple-checkbox" >{Permissions}</InputLabel>
+      <InputLabel style ={{marginBottom:'2px',paddingBottom:'3px'}}>{Permissions}</InputLabel>
       <Select
         multiple
         
@@ -58,14 +58,15 @@ const CommonForm =(props)=>{
         
       >
         {roleList.map((role,index) => (
-           
-            
-          <MenuItem key={index} value={role} style ={{color:'#ffc0cb '}}>
+        
+          <MenuItem key={index} 
+          value={role} 
+          style ={{color:'#ffc0cb '}}
+           >
        
           {role.label}
       
           </MenuItem>
-   
         ))}
       </Select>
     </FormControl>
