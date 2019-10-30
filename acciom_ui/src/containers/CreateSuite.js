@@ -306,7 +306,6 @@
             })
             return test  
         }
-
         renderData = (classes) =>{
             {
                 return this.state.suiteData.map((eachrow,index) =>(  

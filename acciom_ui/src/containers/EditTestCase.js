@@ -9,18 +9,18 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Table from '@material-ui/core/Table';
-
 import Select from '@material-ui/core/Select';
-
-
+import MenuItem from '@material-ui/core/MenuItem';
+import { TextField } from '@material-ui/core';
+import { ISSPACE } from '../constants/FieldNameConstants';
 
 import { 
   getTestCaseDetailBySuiteId,
   getTestCaseByTestCaseId, 
 
 } from '../actions/testSuiteListActions';
-import { array } from 'prop-types';
-import { typography } from '@material-ui/system';
+import { getallClassNames,SubmitTestSuiteData } from '../actions/dbDetailsActions';
+
 
 const useStyles = theme => ({
   root: {
@@ -99,50 +99,69 @@ export class EditTestCase extends Component {
         {label: 'Columns','required':false },
         {label: 'Source query' ,'required':false},
         {label: 'Target query','required':false }
-    ]
+    ],
+    isTestClassSelected:true,
+
 			
 		};
     }
     componentDidMount () {
-		const suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
+    const suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
+
         console.log(suite_id)
         this.props.getTestCaseDetailBySuiteId(suite_id,false)
-        console.log("state",this.state)
-
-
+        this.props.getallClassNames()
 
   }
   static getDerivedStateFromProps = (nextProps, prevState) => {
-    const s_id = nextProps.match.params.suite_id
-    console.log(s_id)
-    
-    console.log("116",nextProps.match.params.suite_id)
-    console.log("116",nextProps.suiteData[s_id])
-    const arr_temp = nextProps.suiteData[s_id]
-    console.log(arr_temp[0])
 
-
-    // this.props.getTestCaseByTestCaseId(this.state.CaseData_Description[0]['case_id']) 
     if(prevState.suiteData!== nextProps.suiteData){
-
+      const sid = parseInt(nextProps.match.params['suite_id'])
+      console.log(sid)
 			return {
 				...prevState,
-        CaseData_Description: nextProps.suiteData,
-        CaseData:nextProps.suiteData[nextProps.match.params.suite_id]
-				};
-    }
-
-    if(prevState.allCases !==nextProps.allCases){
-			return {
-				...prevState,
-				CaseData: nextProps.allCases.testCaseDetails
+        CaseData_Description: nextProps.suiteData[sid],
 				};
     }
   }
 
-  some_func = (data) =>{
-    console.log(data)
-  }
+  handleChange = (e,index,col_event) =>{
+    switch (col_event){
+        
+        case 2:
+            const temp_SuiteData_desc = [...this.state.CaseData_Description]
+            temp_SuiteData_desc[index]['case_name'] = e.target.value;
+            this.setState({suiteData:temp_SuiteData_desc})
+            break;
+        case 5:
+            const temp_SuiteData_table = [...this.state.CaseData_Description]
+            temp_SuiteData_table[index]['src_table'] = e.target.value;
+            this.setState({suiteData:temp_SuiteData_table})
+            break;
+        case 6:
+            const temp_SuiteData_table_tar = [...this.state.CaseData_Description]
+            temp_SuiteData_table_tar[index]['target_table'] = e.target.value;
+            this.setState({suiteData:temp_SuiteData_table_tar})
+            break;
+        case 7:
+            const temp_SuiteData_table_col = [...this.state.suiteData]
+            temp_SuiteData_table_col[index]['columns'] = e.target.value;
+            this.setState({suiteData:temp_SuiteData_table_col})
+            break;
+        case 8:
+            const temp_SuiteData_table_src_qry = [...this.state.suiteData]
+            temp_SuiteData_table_src_qry[index]['source_query'] = e.target.value;
+            this.setState({suiteData:temp_SuiteData_table_src_qry})
+            break;
+        case 9:
+            const temp_SuiteData_table_tar_qry = [...this.state.suiteData]
+            temp_SuiteData_table_tar_qry[index]['target_query'] = e.target.value;
+            this.setState({suiteData:temp_SuiteData_table_tar_qry})
+        default:
+
+    }
+}
+
 
   AddData(SuiteData){
     const description_Arr=[]
@@ -154,28 +173,72 @@ export class EditTestCase extends Component {
 
         this.setState({SuiteData:description_Arr})
   }
-  
+  showClass = (classNameList,classes) =>{
+    console.log(classNameList)
+    const test =  classNameList.map((item) =>{
+    const key = Object.keys(item)[0][0]
+      return ( <MenuItem value={item[key]['supported_test_class']}>
+      {item[key]['supported_test_class_display_name']} 
+      </MenuItem>)
+             
+      })
+      return test  
+  }
+  handleDBTypeChange = (index,e)=>{
+    console.log(index,e)
+    const temp =[...this.state.CaseData_Description]
+    temp[index]['test_class_name'] = e.target.value
+    this.setState({CaseData_Description:temp})
+}
   
   renderData = (SuiteData,classes)=>{
     {
       console.log("141",this.state)
 
       const	suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
-      if (!SuiteData[suite_id]) return null;
-      // this.AddData(SuiteData[suite_id])
-      
-      return this.state.CaseData.map(eachrow =>(
+      if (!SuiteData[suite_id]) return null;      
+      return this.state.CaseData_Description.map((eachrow,index) =>(
         <TableRow className="table-create-suite-row">
-
-                <TableCell>{eachrow.test_class_name}</TableCell>
-                <TableCell>{eachrow.case_name}</TableCell>
+                {
+                  <TableCell className="DropDown-SelectClass">
+                    <Select
+                      style={{width:'10vw'}}
+                      value="countcheck"
+                      onChange={(e)=>this.handleDBTypeChange(index,e) }> 
+                      {this.showClass(this.props.classNameList,classes)}
+                    </Select>
+                  </TableCell>
+                }
+                {
+                        <TableCell className={classes.tablecell}>
+                            <TextField autoFocus={true}
+                            className={classes.textField}
+                             placeholder="description" value={eachrow.case_name}
+                            onChange={()=> this.handleChange(event,index,2) }/>
+                        </TableCell>
+                }  
+                <TableCell></TableCell>
                 <TableCell> </TableCell>
-                <TableCell  > <Select/></TableCell>
-                <TableCell  > </TableCell>
-                <TableCell  ></TableCell>
+                {/* drop downs */}
+                <TableCell  className={classes.tablecell}>
+                            <TextField autoFocus={true} 
+                             value={eachrow.src_table} 
+                            placeholder="source table"
+                            error={(ISSPACE).test((eachrow.src_table).trim())}
+                            helperText={(ISSPACE).test((eachrow.src_table).trim())?"Table cannot have space":""}
+                            onChange={()=> this.handleChange(event,index,5)}  />
+                </TableCell> 
+                <TableCell  className={classes.tablecell}>
+                            <TextField autoFocus={true} 
+                             value={eachrow.target_table} 
+                            placeholder="source table"
+                            error={(ISSPACE).test((eachrow.target_table).trim())}
+                            helperText={(ISSPACE).test((eachrow.target_table).trim())?"Table cannot have space":""}
+                            onChange={()=> this.handleChange(event,index,6)}  />
+                </TableCell>  
                 <TableCell>  </TableCell>
-                <TableCell  ></TableCell> 
-                <TableCell  ></TableCell>
+                <TableCell  >{eachrow.src_query}</TableCell> 
+                <TableCell  >{eachrow.target_query}</TableCell>
               </TableRow>
       
       
@@ -191,16 +254,14 @@ export class EditTestCase extends Component {
     )})
     return test
 }
-
     render() {
       const { classes } = this.props;
         return (
             <div>
                 <h2 className="main_titles">EditTestCase :  </h2>
                 {/* <Button className="button-colors" bsStyle="primary"><div className="create-suite"> Clone</div></Button> */}
-               <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Clone</div></Button>
-
-               <Button className="button-colors savebtn" bsStyle="primary"> <div className="create-suite">Save</div></Button>
+              <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Clone</div></Button>
+              <Button className="button-colors savebtn" bsStyle="primary"> <div className="create-suite">Save</div></Button>
         <Paper className={classes.root}>
                         <Table className={classes.table}>
                             <TableHead className={classes.tablehead}>
@@ -220,13 +281,17 @@ export class EditTestCase extends Component {
 const mapStateToProps = (state) => {
   return {
         suiteData: state.testSuites.connectionsList? state.testSuites.connectionsList.allCases: {},
-        allCases: state.testSuites.testCase? state.testSuites.testCase: {}
+        allCases: state.testSuites.testCase? state.testSuites.testCase: {},
+        classNameList: state.dbDetailsData.classNameList?state.dbDetailsData.classNameList: [],
+
      };
 };
 
 const mapDispatchToProps = dispatch => ({
 getTestCaseDetailBySuiteId : (suite_id,bool) => dispatch(getTestCaseDetailBySuiteId(suite_id,bool)),
-getTestCaseByTestCaseId:(case_id) =>dispatch(getTestCaseByTestCaseId(case_id))
+getTestCaseByTestCaseId:(case_id) =>dispatch(getTestCaseByTestCaseId(case_id)),
+getallClassNames: () => dispatch(getallClassNames()),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)( withStyles(useStyles)(EditTestCase));
