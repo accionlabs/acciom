@@ -11,16 +11,16 @@ import organizationManagementData from './organizationManagementReducer';
 import roleManagementData from './roleManagementReducer';
 
 const rootReducer = combineReducers({
-	appData,
-	loginData,
-	dashboardData,
-	testSuites,
-	testSuiteUploadData,
-	dbDetailsData,
-	userManagementData,
-	projectManagementData,
-	organizationManagementData,
-	roleManagementData
+    appData,
+    loginData,
+    dashboardData,
+    testSuites,
+    testSuiteUploadData,
+    dbDetailsData,
+    userManagementData,
+    projectManagementData,
+    organizationManagementData,
+    roleManagementData
 });
 
 export default rootReducer;
