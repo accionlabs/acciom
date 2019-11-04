@@ -22,14 +22,15 @@ class UserProfile extends Component{
     constructor(props) {
 		super(props);
 		this.state = {
-            selectedOrgId: '',
-            selectProjectId:'',
+            selectedOrgId: null,
+            selectProjectId: null,
             profileDetails: {
                 email_id: '',
                 first_name: '',
-                last_name: ''
+                last_name: '',
+                default_org_id: '',
+                default_project_id: ''
             }
-
         };
 this.handleOrgChange = this.handleOrgChange.bind(this)
 	}
@@ -66,10 +67,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if (nextProps.userProfiles.email_id !== prevState.profileDetails.email_id) {
 			const profileDetails = nextProps.userProfiles;
-			return { ...prevState, profileDetails };
-        }
-        if (nextProps.currentOrg ? nextProps.currentOrg.org_id !== prevState.selectedOrgId : false) {
-            return{...prevState, selectedOrgId: nextProps.currentOrg.org_id, selectProjectId: nextProps.currentProject.project_id};
+            return { ...prevState, profileDetails };
         }
     }
 
@@ -95,8 +93,8 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
 		return options;
     };
     handleProjectChange =(e)=>{
+        this.setState({selectProjectId: e.target.value});
         this.props.userProfileDropdown(e.target.value);
-        
     };
 
     render(){
@@ -104,13 +102,16 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
         return(
             <div>
                 <table>
+                    <tbody>
                     <tr>
                         <td><PersonIcon className="userAccount"/></td>
                         <td><label className="main_titles userProfileTitle">User Profile</label></td>
                     </tr>
+                    </tbody>
                 </table>
             <Paper className="UserProfilePaper">
                 <table>
+                    <tbody>
                     <tr>
                         <td>
                         <TextField
@@ -139,14 +140,16 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
 						label="Email"
                         margin="normal"
                         value = {profileDetails.email_id}
-                        disabled = {profileDetails.email_id}
+                        disabled = {profileDetails.email_id || !profileDetails.email_id}
                         />
                         </td>
                         <td><Button variant="contained" onClick={() => this.userProfileSubmit()} className="button-colors userSubmitButton">Submit</Button></td>
                     </tr>
+                    </tbody>
                 </table>
                 <div>
                     <table>
+                        <tbody>
                         <tr>
                             <td><label className="userProfileLabel">Set Default Organization</label></td>
                             <td><label className="userProfileProjectLabel">Set Default Project</label></td>
@@ -155,7 +158,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                             <td>
                             <Select  
                             className="select_organization_default"
-                            value={this.state.selectedOrgId}
+                            value={this.state.selectedOrgId || profileDetails.default_org_id}
                             onChange={ (item) => this.handleOrgChange(item) }
                             >
                             {this.renderOrgListOptions().map((data, index) => (
@@ -166,7 +169,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                             <td>
                             <Select 
                             className="select_Project_default"
-                            value={this.state.selectProjectId}
+                            value={this.state.selectProjectId || profileDetails.default_project_id}
                             onChange={ (item) => this.handleProjectChange(item) }
                             >
                             {this.renderProjectListOptions().map((data, index) => (
@@ -175,6 +178,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                             </Select>
                             </td>
                         </tr>
+                        </tbody>
                     </table>
                 </div>
             </Paper>
