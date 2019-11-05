@@ -5,11 +5,9 @@ from threading import Lock
 
 from celery import Celery
 from flask import Flask
-from flask import request
 from flask_cors import CORS
 from flask_restful import Api
 from flask_socketio import SocketIO
-from flask_socketio import join_room, emit, Namespace
 from flask_sqlalchemy import SQLAlchemy
 
 thread_lock = Lock()
@@ -66,40 +64,7 @@ app.url_map.strict_slashes = False
 db = SQLAlchemy(app)
 api = Api(app)
 
-app.config['SECRET_KEY'] = 'mysecret'
 socketio = SocketIO(app, cors_allowed_origins="*",
-                    message_queue='amqp://guest@localhost//',
+                    message_queue=app.config['SOCKET_MESSAGE_QUEUE'],
                     async_mode='threading')
 celery = make_celery(app)
-
-
-def background_thread():
-    """Example of how to send server generated events to clients."""
-    count = 0
-    while True:
-        socketio.sleep(10)
-        count += 1
-        socketio.emit('my_response',
-                      {'data': 'Server generated event {}'.format(count),
-                       'count': count},
-                      namespace='/socketio')
-
-
-class MyNamespace(Namespace):
-    def on_join(self, message=None):
-        join_room(message['room'])
-        emit('my_response',
-             {'data': 'In rooms: ' + ', '.join(message['room'])})
-
-    def on_connect(self):
-        global thread
-        with thread_lock:
-            if thread is None:
-                thread = socketio.start_background_task(background_thread)
-        emit('my_response', {'data': 'Connected', 'count': 0})
-        socketio.emit('my_response',
-                      {'data': 'Client connected {}'.format(request.sid),
-                       'count': 0}, namespace='/event')
-
-
-socketio.on_namespace(MyNamespace('/socket'))

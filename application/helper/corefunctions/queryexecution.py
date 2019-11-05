@@ -2,6 +2,7 @@ from tempfile import NamedTemporaryFile
 
 from openpyxl import Workbook
 
+from application.common.constants import APIMessages
 from application.common.constants import ExecutionStatus
 
 
@@ -20,12 +21,12 @@ def query_exectuion(query, db_cursor):
     db_cursor_type = str(db_cursor)
 
     if "pymysql" in db_cursor_type and not 'limit' in query:
-        query = str(query).replace(';', ' limit 10;')
+        query = str(query).replace(';', APIMessages.LIMIT_TEN)
     elif "pyodbc" in db_cursor_type and not 'top' in query:
         index = query.index("select") + len("select")
-        query = query[:index] + " top 10" + query[index:]
+        query = query[:index] + APIMessages.TOP_TEN + query[index:]
     else:
-        query = str(query).replace(';', ' limit 10;')
+        query = str(query).replace(';', APIMessages.LIMIT_TEN)
 
     result_list = list()
     db_cursor.execute(query)
@@ -49,6 +50,15 @@ def query_exectuion(query, db_cursor):
 def query_exectuion_export(query, db_cursor, query_obj):
     if not ';' in query:
         query = str(query) + ';'
+    db_cursor_type = str(db_cursor)
+
+    if "pymysql" in db_cursor_type and not 'limit' in query:
+        query = str(query).replace(';', APIMessages.LIMIT_TENTHOUSAND)
+    elif "pyodbc" in db_cursor_type and not 'top' in query:
+        index = query.index("select") + len("select")
+        query = query[:index] + APIMessages.TOP_TENTHOUSAND + query[index:]
+    else:
+        query = str(query).replace(';', APIMessages.LIMIT_TENTHOUSAND)
 
     result_list = list()
     db_cursor.execute(query)

@@ -137,6 +137,10 @@ class APIMessages:
     ROLE_DESCRIPTION_CANNOT_BLANK = "Role Description cannot be Blank"
     ROLE_UPDATED = "Role Updtaed Successfully"
     ROLE_DELETED = "Role Deleted Successfully"
+    LIMIT_TEN = " limit 10;"
+    TOP_TEN = " top 10"
+    LIMIT_TENTHOUSAND = " limit 10000;"
+    TOP_TENTHOUSAND = " top 10000"
 
 
 class GenericStrings:
