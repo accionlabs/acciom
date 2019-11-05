@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect  } from 'react-redux';
-import { Button } from 'react-bootstrap';
+import Button from '@material-ui/core/Button';
 import { showProjectSwitchPage } from '../actions/appActions';
 import { getAllTestSuites } from '../actions/testSuiteListActions';
 import TestSuiteList from './TestSuiteList';
@@ -33,13 +33,13 @@ class Startup extends React.Component {
 				<FormatListBulletedIcon className="profileicon2" />
 					<h2 className="main_titles dataprofilingtitle">Data Profiling</h2>
 					<div className='project-switch'>
-						<Button className="button-colors switchprojectbtn" bsStyle="primary" onClick={ (e) => this.props.showProjectSwitchPage(true)}>Switch Project</Button> 
+						<Button className="button-colors switchprojectbtn" variant="contained" onClick={ (e) => this.props.showProjectSwitchPage(true)}>Switch Project</Button> 
 					</div>
 				</div>
 				<TestSuiteList />
 			</div>
 		);
-	 }
+	}
 }
 
 const mapStateToProps = (state) => {
