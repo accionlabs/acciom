@@ -136,6 +136,7 @@ class APIMessages:
     ROLE_NAME_CANNOT_BLANK = "Role Name cannot be Blank"
     ROLE_DESCRIPTION_CANNOT_BLANK = "Role Description cannot be Blank"
     ROLE_UPDATED = "Role Updtaed Successfully"
+    ROLE_DELETED = "Role Deleted Successfully"
 
 
 class GenericStrings:
