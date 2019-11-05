@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 import '../css/Db-ui-styles.css';
@@ -13,7 +13,9 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { TextField } from '@material-ui/core';
 import { ISSPACE } from '../constants/FieldNameConstants';
-
+import IconButton from '@material-ui/core/IconButton';
+import PlusCircle from '@material-ui/icons/AddCircle';
+import MinusCircle from '@material-ui/icons/RemoveCircle';
 import { 
   getTestCaseDetailBySuiteId,
   getTestCaseByTestCaseId, 
@@ -117,7 +119,6 @@ export class EditTestCase extends Component {
 
     if(prevState.suiteData!== nextProps.suiteData){
       const sid = parseInt(nextProps.match.params['suite_id'])
-      console.log(sid)
 			return {
 				...prevState,
         CaseData_Description: nextProps.suiteData[sid],
@@ -174,7 +175,6 @@ export class EditTestCase extends Component {
         this.setState({SuiteData:description_Arr})
   }
   showClass = (classNameList,classes) =>{
-    console.log(classNameList)
     const test =  classNameList.map((item) =>{
     const key = Object.keys(item)[0][0]
       return ( <MenuItem value={item[key]['supported_test_class']}>
@@ -190,15 +190,23 @@ export class EditTestCase extends Component {
     temp[index]['test_class_name'] = e.target.value
     this.setState({CaseData_Description:temp})
 }
-  
+deleteRow = (index)=>{
+  const temp =[...this.state.CaseData_Description]
+  temp[index]['is_deleted']=true
+  this.setState({CaseData_Description:temp})
+  console.log("199")
+  console.log(this.state)
+}
   renderData = (SuiteData,classes)=>{
     {
-      console.log("141",this.state)
-
       const	suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
       if (!SuiteData[suite_id]) return null;      
       return this.state.CaseData_Description.map((eachrow,index) =>(
         <TableRow className="table-create-suite-row">
+          { !Boolean(eachrow.is_deleted) ?
+          <Fragment>
+
+
                 {
                   <TableCell className="DropDown-SelectClass">
                     <Select
@@ -239,6 +247,17 @@ export class EditTestCase extends Component {
                 <TableCell>  </TableCell>
                 <TableCell  >{eachrow.src_query}</TableCell> 
                 <TableCell  >{eachrow.target_query}</TableCell>
+                 
+                <TableCell className={classes.tablepopup}>
+                           
+                            
+                                <IconButton onClick={() => this.deleteRow(index)}>
+                                    <MinusCircle />
+                                </IconButton>
+                  
+                        </TableCell>
+                        </Fragment>:null
+                      }
               </TableRow>
       
       
@@ -259,8 +278,6 @@ export class EditTestCase extends Component {
         return (
             <div>
                 <h2 className="main_titles">EditTestCase :  </h2>
-                {/* <Button className="button-colors" bsStyle="primary"><div className="create-suite"> Clone</div></Button> */}
-              <Button className="button-colors" bsStyle="primary"> <div className="create-suite">Clone</div></Button>
               <Button className="button-colors savebtn" bsStyle="primary"> <div className="create-suite">Save</div></Button>
         <Paper className={classes.root}>
                         <Table className={classes.table}>
@@ -274,6 +291,12 @@ export class EditTestCase extends Component {
                             </TableBody>
                         </Table>
                     </Paper>
+                    <div>
+                            <IconButton 
+                             >
+                                <PlusCircle  />
+                            </IconButton>
+                    </div>  
                 </div>
         )
     }
