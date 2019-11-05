@@ -123,6 +123,8 @@ def get_case_detail(suite_id):
                                                              APIMessages.NO_NAME_DEFINE),
                  'test_class_name': SupportedTestClass().get_test_class_display_name_by_id(
                      each_case.test_case_class),
+                "test_class":SupportedTestClass().get_test_class_name_by_id(
+                     each_case.test_case_class),
                  'test_class_id': each_case.test_case_class,
                  "source_db_connection_id": check_db_id(
                      each_case.test_case_detail.get(
@@ -137,6 +139,13 @@ def get_case_detail(suite_id):
                          'target_db_id')),
                  "target_db_connection_name": get_connection_name(
                      each_case.test_case_detail.get('target_db_id')),
+                     "src_table":get_table(each_case.test_case_detail['table'],'src'),
+                     "target_table":get_table(each_case.test_case_detail['table'],'tar'),
+                     "src_query":each_case.test_case_detail.get(
+                         'query',APIMessages.NO_NAME_DEFINE).get('sourceqry',APIMessages.NO_NAME_DEFINE),
+                    "target_query":each_case.test_case_detail.get(
+                         'query',APIMessages.NO_NAME_DEFINE).get('targetqry',APIMessages.NO_NAME_DEFINE),
+                    "columns":get_column(each_case.test_case_detail.get('column',""))
                  }
                 for each_case in suite_obj.test_case if
                 each_case.is_deleted == False]
@@ -144,3 +153,34 @@ def get_case_detail(suite_id):
                "suite_name": suite_obj.test_suite_name,
                "all_cases": all_case}
     return payload
+
+def get_table(table,origin):
+        if origin == 'src':
+            for k,v in table.items():
+                return k
+        elif origin == 'tar':
+            for k,v in table.items():
+                return v
+def get_column(column):
+    if column == {}:
+        column = ""
+    strcolumn = str(column)
+    strcolumnstrip1 = strcolumn.strip('{')
+    strcolumnstrip2 = strcolumnstrip1.strip('}')
+    if "," and ":" in strcolumnstrip2:
+        columnreplacecomma = strcolumnstrip2.replace(',', ';')
+        column = columnreplacecomma.replace("'", "")
+    elif ":" in strcolumnstrip2:
+        column = strcolumnstrip2.replace("'", "")
+    return column
+        
+
+        
+
+                            
+
+    
+    
+
+
+    
