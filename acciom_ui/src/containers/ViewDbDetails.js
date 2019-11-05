@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import { showProjectSwitchPage } from '../actions/appActions';
 import { getAllDBDetails, deleteDBDetails } from '../actions/dbDetailsActions';
 import EditIcon from '@material-ui/icons/Edit';
+import StorageIcon from '@material-ui/icons/Storage';
 import DeleteIcon from '@material-ui/icons/Delete';
 import '../css/Db-ui-styles.css';
 
@@ -98,7 +99,7 @@ class ViewDbDetails extends Component {
  		return (
 			<div className="viewDbDetailsForm">
 				<div className='btnContainer'>
-				<i class="fa fa-database" id="db_icon" aria-hidden="true"></i>
+				<StorageIcon className="manageDbIcon" />
 				<label className="db_page_title main_titles">Manage Database Connections</label>
 					<Button variant="contained" className="button-colors switchProjectButton"  onClick={ (e) => this.handleSwitchProject()}>Switch Project</Button>
 					<Link to={`/add_db_details`}>

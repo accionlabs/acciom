@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PersonIcon from '@material-ui/icons/Person';
-import { showOrgChangePage, updateSelectedOrganization, getProjectListByOrgId } from '../actions/appActions';
+import { showOrgChangePage, updateSelectedOrganization, getProjectListByOrgId, getProjectListByOrganaisationId } from '../actions/appActions';
 import { showProjectSwitchPage, updateSelectedProject } from '../actions/appActions';
 import { userProfilesDetailes, updateUserProfileNames,userProfileDropdown, clearUserData } from '../actions/userManagementActions';
 import Paper from '@material-ui/core/Paper';
@@ -84,7 +84,8 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
 	};
 	handleOrgChange = (e) => {
         this.setState({selectedOrgId: e.target.value});
-        this.props.getProjectListByOrgId(e.target.value);
+        this.props.getProjectListByOrganaisationId(e.target.value);
+
     };
     renderProjectListOptions=()=>{
         const options = this.props.projectList.map((item, index) => {
@@ -201,6 +202,9 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		updateSelectedOrganization: (data) => dispatch(updateSelectedOrganization(data)),
         getProjectListByOrgId: (data) => dispatch(getProjectListByOrgId(data)),
+
+        getProjectListByOrganaisationId: (data) => dispatch(getProjectListByOrganaisationId(data)),
+
         userProfilesDetailes: () => dispatch(userProfilesDetailes()),
         clearUserData: () => dispatch(clearUserData()),
         updateUserProfileNames: (data) => dispatch(updateUserProfileNames(data)),

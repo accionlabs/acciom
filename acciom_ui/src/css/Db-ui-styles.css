@@ -120,11 +120,18 @@ body,html{
     padding-left: 8px;
     padding-bottom: 10px;
 }
-#db_icon{
+.manageDbIcon{
     color: #69717D;
-    font-size: 20px;
-    margin-top:-2px;
-    margin-bottom: 10px; 
+    font-size: 25px !important;
+    margin-top: 3px;
+    margin-bottom: -4px;
+}
+
+.manageSuitIcon{
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 3px;
+    margin-bottom: -3px;
 }
 
 .cursorhover{
@@ -184,6 +191,7 @@ body,html{
 
 .ChevronLeftIconcolor{
     color: #fff !important;
+    margin-left: 2px;;
 }
 
 
@@ -639,6 +647,10 @@ body,html{
     height: 31px !important;
 }
 
+.addRoleIcon{
+    margin-bottom: 22px !important;
+}
+
 .update-data-profiling-title{
     margin-top: 1px;
     margin-left: 8px;
@@ -652,6 +664,7 @@ body,html{
     color: #69717D;
     margin-top: -10px;
     position: absolute;
+    font-size: 25px !important;
 }
 
 .tableheaderborder{
@@ -1092,9 +1105,9 @@ body,html{
 }
 
 .uploadicon{
-    font-size: 20px;
+    font-size: 25px !important;
     color: #69717D;
-    margin-top: -2px;
+    margin-bottom: -4px;
 }
 
 .updateandexcbtn{
@@ -1238,14 +1251,20 @@ body,html{
 .QLindex-title{
     margin-left: -41px;
     margin-top: -2px;
+    margin-bottom: 6px;
 }
 
-.QLicon{
+.QulityIndexIcon{
     color: #69717D;
-    font-size: 20px;
+    font-size: 25px !important;
     position: absolute;
     margin-left: -71px;
-    margin-top: 2px;
+    margin-top: -3px;
+}
+
+.naviQulityIndexIcon{
+    font-size: 30px !important;
+    margin-left: 4px;
 }
 
 .panelbg{
@@ -1302,6 +1321,17 @@ body,html{
 .addUserButton{
     float: right;
     margin-top: -10px !important;
+}
+
+.addRoleButton{
+    float: right;
+    margin-top: -42px !important;
+    text-transform: none !important;
+
+}
+
+.navIconPadding{
+    padding-top: 6px !important;
 }
 
 .manageUserRoleTitles{
@@ -1432,15 +1462,28 @@ body,html{
 }
 
 .organizationManagementIcon{
-    margin-left: -3px;
+    margin-left: -6px;
     color: #69717D;
     font-size: 25px !important;
     margin-top: 1px;
 }
 
+.organizationManageIcon{
+    color: #69717D;
+    font-size: 25px !important;
+    margin-left: -5px;
+    margin-top: -1px;
+}
+
 .projectManagementMargin{
     display: inherit;
-    margin-left: 32px;
+    margin-left: 25px;
+    margin-top: -28px;
+}
+
+.projectManagementMar{
+    display: inherit;
+    margin-left: 25px;
     margin-top: -28px;
 }
 
