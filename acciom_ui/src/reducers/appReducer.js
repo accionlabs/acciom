@@ -1,7 +1,8 @@
 import { 
 	GET_ORGANIZATION_LIST_SUCCESS, 
 	GET_ORGANIZATION_LIST_ERROR,
-	GET_PROJECT_LIST_BY_ORG_ID_SUCCESS, 
+	GET_PROJECT_LIST_BY_ORG_ID_SUCCESS,
+	GET_PROJECT_LIST_BY_ORGANAISATION_ID_SUCCESS,
 	SHOW_ORG_CHANGE_PAGE,
 	SWITCH_ORG_SUCCESS,
 	SWITCH_PROJECT_SUCCESS,
@@ -70,6 +71,13 @@ const appData = (state = initialState, action) => {
 			...state,
 			projectList: action.response.data.projects_under_organization.project_details,
 			currentProject: currentProject || action.response.data.projects_under_organization.project_details[0],
+			fetchProjectDetails: false
+		};
+
+	case GET_PROJECT_LIST_BY_ORGANAISATION_ID_SUCCESS:
+		return {
+			...state,
+			defaultProjectList: action.response.data.projects_under_organization.project_details,
 			fetchProjectDetails: false
 		};
 
