@@ -48,7 +48,9 @@ class ChangeOrganisation extends React.Component {
 				}
 			}
 			this.props.updateSelectedOrganization(selectedOrg);
+			if(this.props.getProjectListByOrgId){
 			this.props.getProjectListByOrgId(selectedOrg.org_id);
+		}
 		};
 
 		const styles = {
