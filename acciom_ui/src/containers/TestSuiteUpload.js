@@ -4,7 +4,7 @@ import XLSX from 'xlsx';
 import { Panel, Table, Tabs, Tab } from 'react-bootstrap';
 import { showProjectSwitchPage } from '../actions/appActions';
 import Button from '@material-ui/core/Button';
-// import { Link } from '@material-ui/core';
+import PublishIcon from '@material-ui/icons/Publish';
 import { 
 	onTestSuiteSheetSelect, 
 	testCaseSelectionChange, 
@@ -354,7 +354,7 @@ class TestSuiteUpload extends React.Component {
 			
 			<div id="suite-upload">
 				<div>
-					<i class="fa fa-upload upprofileicon uploadicon" aria-hidden="true"></i>
+					<PublishIcon className="uploadicon" />
 					<h4 className='pageTitle update-data-profiling-title main_titles'>Update Data Profiling</h4>
 					<Button variant="contained" className="button-colors brows-btn" onClick={ (e) => handleSwitchProject()}>Switch Project</Button>
 				</div>
