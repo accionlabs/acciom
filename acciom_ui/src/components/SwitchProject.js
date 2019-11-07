@@ -51,9 +51,9 @@ class SwitchProject extends React.Component {
 					break;
 				}
 			}
+			window.sessionStorage.setItem('current_project_id', selectedProject.project_id);
 			this.props.updateSelectedProject(selectedProject);
 		};
-
 		return (
 
 			<Modal id="orgChangeModal" show={this.props.isProjectSwitchPageVisible} 

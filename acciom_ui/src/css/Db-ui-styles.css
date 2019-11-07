@@ -340,22 +340,20 @@ body,html{
 .popboxfooter{
     border-top: none;
 }
-
-.nobtnbgcolor{
-    background-color: #69717D;
-    color: #fff;
-    border: #69717D;
-    font-size: 13px;
-    border-radius: 3px;
-    text-align: center;
-    width: 121px;
-    height: 31px;
+.rolesSaveButton{
+    float: right;
+    margin-top: 23px !important;
+    margin-right: 30px !important;
+    text-transform: none !important;
+    padding: 5px !important;
 }
 
-.nobtnbgcolor:hover,
-.nobtnbgcolor:active{
-    background-color: #69717D !important;
-    color: #fff !important; 
+.rolesBackButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    float: right;
+    margin-top: 23px !important;
+    margin-right: 11px !important;
 }
 
 .switchprojectpopbox{
@@ -1264,7 +1262,11 @@ body,html{
 
 .naviQulityIndexIcon{
     font-size: 30px !important;
-    margin-left: 4px;
+    margin-left: -6px;
+}
+
+.navSuitIconMargin{
+    margin-left: 4px !important;
 }
 
 .panelbg{
@@ -1710,6 +1712,10 @@ body,html{
     padding-top: 15px;
 }
 
+.addOrgAddButton:disabled{
+    background-color: #E29898 !important;
+}
+
 .userRoleChangeSelect{
     display: inline-block;
     width: 40%;
@@ -1727,7 +1733,7 @@ body,html{
 .manageRolePaper{
     margin-top: 32px;
     padding-top: 20px;
-    padding-bottom: 52px;
+    padding-bottom: 80px;
     height:100%;
 }
 
@@ -1750,7 +1756,7 @@ body,html{
    
  }
  .textFieldStyleDesc{
-    margin-right: 20px;
+    margin-right: 33px !important;
     margin-top: 11px;
     width: 45%;
     float: right;
@@ -1777,7 +1783,34 @@ body,html{
     padding-bottom:3px !important;
 }
 
+.addOrgCancelButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 9px !important;
+}
 
+.addOrgAddButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 16px !important;
+}
 
+.orgNameText{
+    width: 250px;
+}
 
+.orgDecText{
+    width: 274px;
+}
 
+.navMarginToolTip{
+    margin-left: 10px;
+}
+
+.userProfileBackButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    float: right;
+    margin-right: 46px !important;
+    margin-top: 9px !important;
+}

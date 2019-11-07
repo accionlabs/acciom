@@ -54,6 +54,10 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
         this.props.clearUserData();
     }
 
+    goToBackBtnPage = () => {
+        this.props.history.goBack();
+    };
+
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if (nextProps.userProfiles.email_id && (nextProps.userProfiles.email_id !== prevState.profileDetails.email_id)) {
 			const profileDetails = nextProps.userProfiles;
@@ -171,6 +175,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                         </tr>
                         </tbody>
                     </table>
+                    <Button onClick={this.goToBackBtnPage} variant="contained" className="userProfileBackButton backbutton_colors">Back</Button>
                 </div>
             </Paper>
             </div>
