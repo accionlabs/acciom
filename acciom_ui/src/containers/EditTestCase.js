@@ -18,6 +18,8 @@ import IconButton from '@material-ui/core/IconButton';
 import PlusCircle from '@material-ui/icons/AddCircle';
 import MinusCircle from '@material-ui/icons/RemoveCircle';
 import EditRounded from '@material-ui/icons/EditRounded';
+import { Link } from 'react-router-dom';
+
 import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
 
 import QueryModal from '../components/QueryModal';
@@ -26,6 +28,9 @@ import {
   getTestCaseByTestCaseId, 
 }
 from '../actions/testSuiteListActions';
+import { 
+  getAllTestSuites,
+} from '../actions/testSuiteListActions';
 import { 
   getAllConnections
 } from '../actions/testSuiteListActions';
@@ -120,12 +125,19 @@ export class EditTestCase extends Component {
             this.getConnectionData = this.getConnectionData.bind(this)
     }
     componentDidMount () {
+      this.props.getAllTestSuites(this.props.currentProject.project_id)
         const suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
         this.props.getTestCaseDetailBySuiteId(suite_id,false)
         this.props.getallClassNames()
         this.props.getAllConnections(this.props.currentProject.project_id)  
+
   }
   static getDerivedStateFromProps = (nextProps, prevState) => {
+    console.log("===========139",nextProps)
+    if (nextProps.redirectToSuiteList) {
+      nextProps.history.push('/startup'); 
+  } 
+
     if(prevState.firstLoad && prevState.suiteData!== nextProps.suiteData){
       const sid = parseInt(nextProps.match.params['suite_id'])
 			return {
@@ -134,9 +146,7 @@ export class EditTestCase extends Component {
         CaseData_Description: nextProps.suiteData[sid],
 				};
     }
-    else if (nextProps.redirectToSuiteList) {
-      nextProps.history.push('/startup'); 
-  } 
+   
   }
 
   handleChange = (e,index,col_event) =>{
@@ -144,7 +154,7 @@ export class EditTestCase extends Component {
         
         case 2:
             const temp_SuiteData_desc = [...this.state.CaseData_Description]
-            temp_SuiteData_desc[index]['case_name'] = e.target.value;
+            temp_SuiteData_desc[index]['test_description'] = e.target.value;
             this.setState({suiteData:temp_SuiteData_desc})
             break;
         case 5:
@@ -159,7 +169,7 @@ export class EditTestCase extends Component {
             break;
         case 7:
             const temp_SuiteData_table_col = [...this.state.CaseData_Description]
-            temp_SuiteData_table_col[index]['columns'] = e.target.value;
+            temp_SuiteData_table_col[index]['column'] = e.target.value;
             this.setState({suiteData:temp_SuiteData_table_col})
             break;
         case 8:
@@ -182,7 +192,7 @@ export class EditTestCase extends Component {
     const description_Arr=[]
     SuiteData.map((eachrow,key) =>{
           const temp_suite_obj={}
-          temp_suite_obj['test_description'] = eachrow.case_name
+          temp_suite_obj['test_description'] = eachrow.test_description
           description_Arr.push(temp_suite_obj)
         });
     this.setState({SuiteData:description_Arr})
@@ -208,7 +218,7 @@ deleteRow = (index)=>{
     temp.splice(index,1)
   }
   else{
-  temp[index]['is_deleted']=true
+  temp[index]['is_deleted']=1
   }
   this.setState({CaseData_Description:temp})
 }
@@ -290,12 +300,12 @@ onYesBtnClickHandler = (child_data) => {
 
       CaseData_Description_temp.push({
         'test_class':"",
-        'case_name':"",
+        'test_description':"",
         "source_db_connection_id":"",
         "target_db_connection_id":"",
         "src_table":"",
         "target_table":"",
-        "columns":"",
+        "column":"",
         "src_query":"",
         "target_query":""
       })
@@ -314,7 +324,7 @@ onYesBtnClickHandler = (child_data) => {
     TestCaseDataUpload.test_suite_id=this.state.suite_id
     TestCaseDataUpload.test_case_detail=this.state.CaseData_Description
     console.log("last step =============>",TestCaseDataUpload)
-    // this.props.SubmitTestSuiteData(JSON.stringify(TestCaseDataUpload))
+    this.props.SubmitTestSuiteData(JSON.stringify(TestCaseDataUpload))
   }
 
 
@@ -341,7 +351,7 @@ onYesBtnClickHandler = (child_data) => {
                   <TableCell className={classes.tablecell}>
                     <TextField autoFocus={true}
                             className={classes.textField}
-                            placeholder="description" value={eachrow.case_name}
+                            placeholder="description" value={eachrow.test_description}
                             onChange={()=> this.handleChange(event,index,2) }/>
                   </TableCell>
                 }  
@@ -380,7 +390,7 @@ onYesBtnClickHandler = (child_data) => {
                             onChange={()=> this.handleChange(event,index,6)}  />
                 </TableCell>  
                 <TableCell> 
-                <TextField autoFocus={true}  placeholder="column" value={eachrow.columns}
+                <TextField autoFocus={true}  placeholder="column" value={eachrow.column}
                     onChange={()=> this.handleChange(event,index,7)} />  
                   
                 </TableCell>
@@ -427,11 +437,9 @@ ValidRows(){
   if (this.state.CaseData_Description){
       return this.state.CaseData_Description.every(this.ValidFields)
   }
- 
-
 }
 ValidFields = (item) =>{
-  return item.case_name && item.src_table && item.target_table && item.source_db_connection_id && item.target_db_connection_id
+  return  item.test_description && item.src_table && item.target_table && item.source_db_connection_id && item.target_db_connection_id
 }
 showMinus = () =>{
   if ((this.state.CaseData_Description).length !=1){
@@ -448,9 +456,13 @@ showMinus = () =>{
         return (
             <div className="AddSuiteLayout">
                 <i class="fa fa-th fa-lg" aria-hidden="true"></i>
-                <label className="main_titles">EditTestCase:</label>
-              <Button className="button-colors savebtn" bsStyle="primary" disabled={checkValid}
-              onClick={ () => this.handleTestSuiteUploadClick()}>Save</Button>
+                <label className="main_titles">EditTestCase:</label><br/>
+              {/* <Button className="button-colors savebtn" bsStyle="primary" disabled={checkValid}
+              
+              onClick={ () => this.handleTestSuiteUploadClick()}>Save</Button> */}
+              <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create back-btn" bsStyle="primary"> Back</Button></Link></span>
+                    <span style={{marginLeft:"5px",display:'inline'}}><Button className="button-create" bsStyle="primary" 
+                    onClick={ () => this.handleTestSuiteUploadClick()} disabled={checkValid}>Save</Button></span>
         <Paper className={classes.root}>
                         <Table className={classes.table}>
                             <TableHead className={classes.tablehead}>
@@ -490,6 +502,7 @@ const mapStateToProps = (state) => {
         classNameList: state.dbDetailsData.classNameList?state.dbDetailsData.classNameList: [],
         allConnections : state.testSuites.connectionsList && 
             state.testSuites.connectionsList.allConnections? state.testSuites.connectionsList.allConnections : [],
+            redirectToSuiteList: state.testSuiteUploadData.redirectToSuiteList,
 
   };
 };
@@ -500,6 +513,8 @@ getTestCaseByTestCaseId:(case_id) =>dispatch(getTestCaseByTestCaseId(case_id)),
 getallClassNames: () => dispatch(getallClassNames()),
 getAllConnections: (data) => dispatch(getAllConnections(data)),
 SubmitTestSuiteData: (data) =>dispatch(SubmitTestCaseData(data)),
+getAllTestSuites  : (data)=> dispatch(getAllTestSuites(data)),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)( withStyles(useStyles)(EditTestCase));

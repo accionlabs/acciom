@@ -21,6 +21,7 @@ import {
 } from '../constants/ActionTypes';
 
 const initialState = {
+	redirectToSuiteList:false,
 	testSuiteList: [],
 	connectionsList:{
 	   showConnectionsDialog: false,
@@ -39,7 +40,8 @@ const initialState = {
 	eachTestCaseDetails: {},
 	showTestCaseEditEnabled: false,
 	refreshTestSuites: false,
-	showTestCaseViewEnabled: false
+	showTestCaseViewEnabled: false,
+	
 };
 
 const testSuites = (state = initialState, action) => {

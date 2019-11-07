@@ -145,6 +145,7 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
         
         static getDerivedStateFromProps = (nextProps, prevState) => {
             let newState = prevState;
+            console.log("===============148",nextProps)
             if (nextProps.redirectToSuiteList) {
 
                 nextProps.history.push('/startup');
