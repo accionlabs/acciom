@@ -130,7 +130,6 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
                 selectedDBType:1,
                 isTestClassSelected:true,
             };
-            console.log("datadata",data)
             this.onYesBtnClickHandler = this.onYesBtnClickHandler.bind(this)
             this.getConnectionData = this.getConnectionData.bind(this)
             this.baseState = this.state 
@@ -139,13 +138,11 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
         componentDidMount = () =>{
             this.props.getallClassNames()
             this.props.getAllConnections(this.props.currentProject.project_id)  
-            console.log(this.state) 
             this.props.getAllTestSuites(this.props.currentProject.project_id)
         }
         
         static getDerivedStateFromProps = (nextProps, prevState) => {
             let newState = prevState;
-            console.log("===============148",nextProps)
             if (nextProps.redirectToSuiteList) {
 
                 nextProps.history.push('/startup');
@@ -412,7 +409,6 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
         }
     
         addRow (){
-            console.log(this.state)
         this.setState({
             suiteData:[...this.state.suiteData,{'test_case_class':"",
                     'test_description':"",
@@ -426,9 +422,6 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
             }] 
         },()=>{
         })
-        console.log("428")
-        console.log(this.state)
-
         }
         handleSuiteNameChange = (e)=>{
             this.setState({suiteName:e.target.value})

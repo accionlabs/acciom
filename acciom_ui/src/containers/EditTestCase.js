@@ -133,7 +133,6 @@ export class EditTestCase extends Component {
 
   }
   static getDerivedStateFromProps = (nextProps, prevState) => {
-    console.log("===========139",nextProps)
     if (nextProps.redirectToSuiteList) {
       nextProps.history.push('/startup'); 
   } 
@@ -184,7 +183,6 @@ export class EditTestCase extends Component {
         default:
 
     }
-    console.log(this.state.CaseData_Description)
 }
 
 
@@ -207,7 +205,6 @@ export class EditTestCase extends Component {
       return test  
   }
   handleDBTypeChange = (index,e)=>{
-    console.log(index,e.target)
     const temp =[...this.state.CaseData_Description]
     temp[index]['test_class'] = e.target.value
     this.setState({CaseData_Description:temp})
@@ -294,8 +291,7 @@ onYesBtnClickHandler = (child_data) => {
   this.setState({showQueryModal:child_data})
 }
     addRow=()=>{
-      console.log("284")
-      console.log(this.state)
+      
       const CaseData_Description_temp = this.state.CaseData_Description.map(l => Object.assign({}, l));
 
       CaseData_Description_temp.push({
@@ -309,21 +305,17 @@ onYesBtnClickHandler = (child_data) => {
         "src_query":"",
         "target_query":""
       })
-      console.log("CaseData_Description",CaseData_Description_temp)
       this.setState({
         firstLoad:false,
         CaseData_Description:CaseData_Description_temp
     },()=>{
-      console.log("ffffffff",this.state.CaseData_Description);
     })
   }
 
   handleTestSuiteUploadClick = () =>{
-    console.log(this.state)
     const TestCaseDataUpload={}
     TestCaseDataUpload.test_suite_id=this.state.suite_id
     TestCaseDataUpload.test_case_detail=this.state.CaseData_Description
-    console.log("last step =============>",TestCaseDataUpload)
     this.props.SubmitTestSuiteData(JSON.stringify(TestCaseDataUpload))
   }
 
@@ -332,7 +324,6 @@ onYesBtnClickHandler = (child_data) => {
     {
       const	suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
       if (!SuiteData[suite_id]) return null;  
-      // console.log("220",this.state.CaseData_Description)    
       return this.state.CaseData_Description.map((eachrow,index) =>(
         <TableRow className="table-create-suite-row">
           { !Boolean(eachrow.is_deleted) ?
@@ -449,7 +440,6 @@ showMinus = () =>{
 
     render() {
       const { classes } = this.props;
-      console.log("sasas",this.state);
       const checkValid = !this.ValidRows()  
       const showAddBtn = !this.ValidRows()
 
