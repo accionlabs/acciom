@@ -142,6 +142,10 @@ const useStyles = makeStyles(theme => ({
 
 ));
 
+// componentWillUnmount() {
+// 	this.props.clearUserData();
+// };
+
 const someHandler =() => {
 	return (
 		<div>
@@ -151,6 +155,7 @@ const someHandler =() => {
 		</div>
 	)
 }
+
 
 const handleShowOrg  = (props, isShow) => {
 	props.showOrgChangePage(isShow);
@@ -206,15 +211,19 @@ const getLoginOptions = (props, classes) => {
 			{ getLoginElements() }
 		</div>
 		<div style={{position:"absolute", left:"90px", bottom: "0px"}}>
+		{props.orgName !== "" &&
 		<Typography variant="body2" display="inline" align="left" className={classes.labelTitle}>
 			Organisation :&nbsp;
 		</Typography>
+		}
 		<Typography variant="caption" display="inline" align="left" className={classes.labelValue}>
 			{props.orgName}
 		</Typography>
+		{props.projectName !== "" &&
 		<Typography variant="body2" display="inline" align="left"  className={classes.labelTitle} style={{marginLeft:"10px"}}>
 			Project :&nbsp;
 		</Typography>
+		}
 		<Typography variant="caption" display="inline" align="left" className={classes.labelValue}>
 			{props.projectName}
 		</Typography>
@@ -384,7 +393,7 @@ function NavigationBar(props) {
 const mapStateToProps = (state) => {
 	return {
 		loginData: state.loginData,
-		projectName: state.appData.currentProject.project_name,
+		projectName: state.appData.currentProject ? state.appData.currentProject.project_name : "",
 		orgName: state.appData.currentOrg !== null ? state.appData.currentOrg.org_name : "" ,
 	}
 };

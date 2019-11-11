@@ -94,7 +94,6 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
     };
 
     render(){
-        console.log('defaultProjectList',  this.props.defaultProjectList)
         const { profileDetails } = this.state;
         return(
             <div>
