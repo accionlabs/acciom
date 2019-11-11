@@ -423,12 +423,19 @@ onYesBtnClickHandler = (child_data) => {
                 </TableCell>
                 <TableCell>
                     {eachrow.src_query?<BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,8)}}/>:
-                    <EditRounded onClick={(e) => {this.showDialog(index,8)}}/>} 
+                     <IconButton disabled={this.CheckNullorDuplicate(eachrow.test_class)} >
+                    <EditRounded  onClick={(e) => {this.showDialog(index,8)}}/>
+                    </IconButton>
+                    } 
                 </TableCell> 
-                <TableCell  >
-
+                <TableCell>
                   {eachrow.target_query?<BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,9)}}/>:
-                  <EditRounded onClick={(e) => {this.showDialog(index,9)}}/>} 
+                  <IconButton>
+
+                  <EditRounded onClick={(e) => {this.showDialog(index,9)}}/>
+                  </IconButton>
+
+                  } 
 
                 </TableCell>
           
@@ -464,7 +471,12 @@ ValidRows(){
   }
 }
 ValidFields = (item) =>{
+  if(item.test_class=='nullcheck'){
+    return  item.test_description &&  item.target_table &&  item.target_db_connection_id
+
+  }else{
   return  item.test_description && item.src_table && item.target_table && item.source_db_connection_id && item.target_db_connection_id
+}
 }
 showMinus = () =>{
   if ((this.state.CaseData_Description).length !=1){
@@ -488,6 +500,7 @@ showMinus = () =>{
                     <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create back-btn" bsStyle="primary"> Back</Button></Link></span>
                     <span style={{marginLeft:"5px",display:'inline'}}><Button className="button-create" bsStyle="primary" 
                     onClick={ () => this.handleTestSuiteUploadClick()}
+                    disabled={checkValid}
                     >Save</Button></span>
         <Paper className={classes.root}>
                         <Table className={classes.table}>
@@ -503,6 +516,7 @@ showMinus = () =>{
                     </Paper>
                     <div>
                     <IconButton 
+                    disabled = {showAddBtn}
                     onClick={() => this.addRow()} >
                                 <PlusCircle  />
                             </IconButton>

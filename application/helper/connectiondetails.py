@@ -76,13 +76,17 @@ def get_connection_name(db_connection_id):
         Returns data base name if exist or return message saying that db not
         exist.
     """
-    db_obj = DbConnection.query.filter(
-        DbConnection.db_connection_id == db_connection_id,
-        DbConnection.is_deleted == False).first()
-    if db_obj:
-        return db_obj.db_connection_name
-    else:
+    if db_connection_id == APIMessages.DB_NOT_EXIST: 
         return APIMessages.DB_NOT_EXIST
+    else:
+
+        db_obj = DbConnection.query.filter(
+            DbConnection.db_connection_id == db_connection_id,
+            DbConnection.is_deleted == False).first()
+        if db_obj:
+            return db_obj.db_connection_name
+        else:
+            return APIMessages.DB_NOT_EXIST
 
 
 def check_db_id(db_connection_id):
@@ -96,13 +100,16 @@ def check_db_id(db_connection_id):
         Return data base connection id if data base exist or return message
         saying that data base not exist.
     """
-    db_obj = DbConnection.query.filter(
-        DbConnection.db_connection_id == db_connection_id,
-        DbConnection.is_deleted == False).first()
-    if db_obj:
-        return db_connection_id
-    else:
+    if db_connection_id == APIMessages.DB_NOT_EXIST: 
         return APIMessages.DB_NOT_EXIST
+    else:
+        db_obj = DbConnection.query.filter(
+            DbConnection.db_connection_id == db_connection_id,
+            DbConnection.is_deleted == False).first()
+        if db_obj:
+            return db_connection_id
+        else:
+            return APIMessages.DB_NOT_EXIST
 
 
 def get_case_detail(suite_id):
@@ -120,12 +127,12 @@ def get_case_detail(suite_id):
     all_case = [{"case_id": each_case.test_case_id,
                 "test_case_id":each_case.test_case_id,
                 "test_description": each_case.test_case_detail.get('test_desc',
-                                                             APIMessages.NO_NAME_DEFINE),
+                                                            APIMessages.NO_NAME_DEFINE),
                  "case_name": each_case.test_case_detail.get('test_desc',
-                                                             APIMessages.NO_NAME_DEFINE),
-                                                           
-                 'test_class_name': SupportedTestClass().get_test_class_display_name_by_id(
-                     each_case.test_case_class),
+                                                            APIMessages.NO_NAME_DEFINE),
+                                                    
+                'test_class_name': SupportedTestClass().get_test_class_display_name_by_id(
+                    each_case.test_case_class),
                 "test_class":SupportedTestClass().get_test_class_name_by_id(
                      each_case.test_case_class),
                  'test_class_id': each_case.test_case_class,
@@ -153,9 +160,12 @@ def get_case_detail(suite_id):
                  }
                 for each_case in suite_obj.test_case if
                 each_case.is_deleted == False]
+   
+   
     payload = {"suite_id": suite_obj.test_suite_id,
                "suite_name": suite_obj.test_suite_name,
-               "all_cases": all_case}
+                  "all_cases": all_case
+               }
     return payload
 
 def get_table(table,origin):
