@@ -25,6 +25,10 @@ class AuthToken extends Component{
 		this.props.generateToken(JSON.stringify(accessTokenObj));
 	}
 
+	goToBackBtnPage = () => {
+        this.props.history.goBack();
+    };
+
 	render(){
 		return(
 			<div className=''>
@@ -34,7 +38,7 @@ class AuthToken extends Component{
 						<input className= "needTokeneditbox" placeholder="Why you need this Token ?"></input>
 					</Panel.Heading >
 					<Panel.Body className="panelheight sub_title"><h5>Personal Access Token</h5>
-					<Link to="/dashboard"><Button variant="contained" className="backbutton_colors generatetokenbackbutton">Back</Button></Link>
+					<Button variant="contained" onClick={this.goToBackBtnPage} className="backbutton_colors generatetokenbackbutton">Back</Button>
 						<Button variant="contained" title="Click here to Generate Token"  className="generatetokenbutton button-colors" onClick={(e) => {this.onGenerateButtonClick(e)}}>Generate Token</Button>                  
 					</Panel.Body>
 					{this.state.isToken ? (

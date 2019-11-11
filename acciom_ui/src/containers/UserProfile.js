@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PersonIcon from '@material-ui/icons/Person';
-import { showOrgChangePage, updateSelectedOrganization, getProjectListByOrganaisationId } from '../actions/appActions';
+import { showOrgChangePage, updateSelectedOrganization, defaultOrgId } from '../actions/appActions';
 import { showProjectSwitchPage, updateSelectedProject } from '../actions/appActions';
 import { userProfilesDetailes, updateUserProfileNames,userProfileDropdown, clearUserData, defaultProjectOrgId } from '../actions/userManagementActions';
 import Paper from '@material-ui/core/Paper';
@@ -48,15 +48,20 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
 
     componentDidMount(){
         this.props.userProfilesDetailes();
+        this.props.defaultOrgId(window.sessionStorage.getItem('default_org_id'));
     }
 
     componentWillUnmount(){
         this.props.clearUserData();
     }
 
+    goToBackBtnPage = () => {
+        this.props.history.goBack();
+    };
+
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if (nextProps.userProfiles.email_id && (nextProps.userProfiles.email_id !== prevState.profileDetails.email_id)) {
-			const profileDetails = nextProps.userProfiles;
+            const profileDetails = nextProps.userProfiles;
             return { ...prevState, profileDetails };
         }
     }
@@ -74,7 +79,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
 	};
 	handleOrgChange = (e) => {
         this.setState({selectedOrgId: e.target.value});
-        this.props.getProjectListByOrganaisationId(e.target.value);
+        this.props.defaultOrgId(e.target.value);
 
     };
     renderProjectListOptions=()=>{
@@ -171,6 +176,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                         </tr>
                         </tbody>
                     </table>
+                    <Button onClick={this.goToBackBtnPage} variant="contained" className="userProfileBackButton backbutton_colors">Back</Button>
                 </div>
             </Paper>
             </div>
@@ -191,7 +197,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		updateSelectedOrganization: (data) => dispatch(updateSelectedOrganization(data)),
-        getProjectListByOrganaisationId: (data) => dispatch(getProjectListByOrganaisationId(data)),
+        defaultOrgId: (data) => dispatch(defaultOrgId(data)),
         userProfilesDetailes: () => dispatch(userProfilesDetailes()),
         clearUserData: () => dispatch(clearUserData()),
         updateUserProfileNames: (data) => dispatch(updateUserProfileNames(data)),
