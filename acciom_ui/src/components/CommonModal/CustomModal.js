@@ -72,13 +72,13 @@ const customModal =(props)=>{
             }
           
             <Modal.Footer className="popboxfooter">
-                <Button className="backbutton_colors addOrgCancelButton" 
+                <Button className="button-colors addOrgCancelButton" 
                 variant="contained"
                 onClick={variant ===DELETE?onYesBtnClicked:onCancelBtnClicked}>
                 {variant ===DELETE?'Yes':'Cancel'}
                 </Button>
                 
-                <Button className="button-colors addOrgAddButton" 
+                <Button className="backbutton_colors addOrgAddButton" 
                 variant="contained"
                 onClick={variant ===DELETE?onNoBtnClicked:onSaveBtnClicked}
                 disabled={variant===ADD && !validateFields}>

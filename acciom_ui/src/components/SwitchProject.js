@@ -58,7 +58,7 @@ class SwitchProject extends React.Component {
 
 			<Modal id="orgChangeModal" show={this.props.isProjectSwitchPageVisible} 
 				onHide={(event) => { hidePopup()}} container={this}
-				aria-labelledby="contained-modal-title" bsSize="medium" className="switchprojectpopbox">
+				aria-labelledby="contained-modal-title" className="switchprojectpopbox">
 
 				<Modal.Header closeButton className="switchprojectpopbox main_title switchprojectpopboxheader">
 					<Modal.Title id="contained-modal-title" >

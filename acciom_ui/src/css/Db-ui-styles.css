@@ -326,6 +326,7 @@ body,html{
 
 .deleteconfirmpopupfieldtext{
     padding: 5px 16px;
+    color: #69717D;
 }
 
 .editpanelhead{
@@ -552,8 +553,9 @@ body,html{
 
 .editRolesaveButton{
     float: right;
-    border: none;
     margin-right: 58px;
+    padding: 5px !important;
+    text-transform: none !important;
 
 }
 
@@ -567,9 +569,7 @@ body,html{
     float: right;
     text-transform: none !important;
     margin-right: 12px !important;
-    color: #fff !important;
-    border: none;
-
+    padding: 5px !important;
 }
 
 .userbackbtn:hover,
@@ -1538,7 +1538,7 @@ body,html{
 }
 
 .commonTablePaperMargin{
-    margin-top: 13px;
+    margin-top: 12px;
     margin-left: -3px;
 }
 
@@ -1787,12 +1787,13 @@ body,html{
     text-transform: none !important;
     padding: 5px !important;
     margin-right: 9px !important;
+    float: right;
 }
 
 .addOrgAddButton{
     text-transform: none !important;
     padding: 5px !important;
-    margin-right: 16px !important;
+    margin-right: 10px !important;
 }
 
 .orgNameText{
@@ -1813,4 +1814,17 @@ body,html{
     float: right;
     margin-right: 46px !important;
     margin-top: 9px !important;
+}
+
+.deleteDBNoConnection{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.deleteDBConnection{
+    margin-right: 10px !important;
+    margin-bottom: -2px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+    float: right;
 }

@@ -67,6 +67,7 @@ const appData = (state = initialState, action) => {
 					currentProject = item;
 				}
 			})
+			// window.sessionStorage.setItem('current_project_id', action.response.data.projects_under_organization.project_details[0].project_id);
 		return {
 			...state,
 			projectList: action.response.data.projects_under_organization.project_details,
