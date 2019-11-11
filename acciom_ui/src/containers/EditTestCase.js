@@ -120,6 +120,7 @@ export class EditTestCase extends Component {
         {label: 'Target query','required':false }
     ],
       isTestClassSelected:true,	
+      DisableSrc:false
     };
             this.onYesBtnClickHandler = this.onYesBtnClickHandler.bind(this)
             this.getConnectionData = this.getConnectionData.bind(this)
@@ -148,9 +149,9 @@ export class EditTestCase extends Component {
    
   }
 
-  handleChange = (e,index,col_event) =>{
+  handleChange = (e,index,col_event,reset=false) =>{
+
     switch (col_event){
-        
         case 2:
             const temp_SuiteData_desc = [...this.state.CaseData_Description]
             temp_SuiteData_desc[index]['test_description'] = e.target.value;
@@ -158,12 +159,12 @@ export class EditTestCase extends Component {
             break;
         case 5:
             const temp_SuiteData_table = [...this.state.CaseData_Description]
-            temp_SuiteData_table[index]['src_table'] = e.target.value;
+            temp_SuiteData_table[index]['src_table'] = reset ? "":e.target.value;
             this.setState({suiteData:temp_SuiteData_table})
             break;
         case 6:
             const temp_SuiteData_table_tar = [...this.state.CaseData_Description]
-            temp_SuiteData_table_tar[index]['target_table'] = e.target.value;
+            temp_SuiteData_table_tar[index]['target_table'] = reset ? "":e.target.value;
             this.setState({suiteData:temp_SuiteData_table_tar})
             break;
         case 7:
@@ -204,7 +205,22 @@ export class EditTestCase extends Component {
       })
       return test  
   }
+  CheckNullorDuplicate = (DbType) =>{
+    if ((DbType == ('duplicatecheck')) || (DbType == ('nullcheck'))){
+        return true;
+    }
+    else{
+      return false;
+    }
+    
+  }
+
   handleDBTypeChange = (index,e)=>{
+
+    if ((e.target.value == ('duplicatecheck')) || (e.target.value == ('nullcheck'))){
+      this.handleExistingDBTypeChange(index,e,0)
+      this.handleChange(e,index,5,true)
+    }
     const temp =[...this.state.CaseData_Description]
     temp[index]['test_class'] = e.target.value
     this.setState({CaseData_Description:temp})
@@ -226,6 +242,9 @@ renderExistingDBTypes = (ExistingDBlist,classes) =>{
         {item.db_connection_name} 
         </MenuItem>)     
         })
+        test.splice( 0,0,<MenuItem value="">
+        <em>None</em>
+      </MenuItem>)
         return test;
 }
 showDialog = (index,v_index) =>{
@@ -264,6 +283,14 @@ handleExistingDBTypeChange = (index,e,v_index) =>{
           tar_connection['target_db_connection_id']= e.target.value
           this.setState({temp_tar:tar_connection})
           break;
+      case 0:
+          const temp_src =[...this.state.CaseData_Description]
+          const src_connection_temp =temp_src[index]
+          src_connection_temp['source_db_connection_id']= ""
+          this.setState({temp_src:src_connection_temp})
+          break;
+        
+
   }
 }
 getConnectionData = (data) =>{
@@ -314,8 +341,15 @@ onYesBtnClickHandler = (child_data) => {
 
   handleTestSuiteUploadClick = () =>{
     const TestCaseDataUpload={}
+    const temp_SuiteData=[]
     TestCaseDataUpload.test_suite_id=this.state.suite_id
-    TestCaseDataUpload.test_case_detail=this.state.CaseData_Description
+    this.state.CaseData_Description.map((item,key)=>{
+      const temp_obj = Object.assign(item)
+      temp_obj['source_db_connection_id'] == "" ? delete(temp_obj['source_db_connection_id']):temp_obj['source_db_connection_id']
+      temp_SuiteData.push(temp_obj)
+      
+  })
+    TestCaseDataUpload.test_case_detail=temp_SuiteData
     this.props.SubmitTestSuiteData(JSON.stringify(TestCaseDataUpload))
   }
 
@@ -350,8 +384,9 @@ onYesBtnClickHandler = (child_data) => {
                 <Select
                         style={{width:'10vw'}}
                         value={eachrow.source_db_connection_id}
+                        disabled = {this.CheckNullorDuplicate(eachrow.test_class)}
                         onChange={ (e) => this.handleExistingDBTypeChange(index,e,3) }> 
-                        {this.renderExistingDBTypes(this.props.allConnections,classes)}
+                        {this.CheckNullorDuplicate(eachrow.test_class)} ? {this.renderExistingDBTypes(this.props.allConnections,classes)} : ""
                     </Select>
                 </TableCell>
 
@@ -368,6 +403,7 @@ onYesBtnClickHandler = (child_data) => {
                             <TextField autoFocus={true} 
                             value={eachrow.src_table} 
                             placeholder="source table"
+                            disabled = {this.CheckNullorDuplicate(eachrow.test_class)}
                             error={(ISSPACE).test((eachrow.src_table).trim())}
                             helperText={(ISSPACE).test((eachrow.src_table).trim())?"Table cannot have space":""}
                             onChange={()=> this.handleChange(event,index,5)}  />
@@ -375,7 +411,7 @@ onYesBtnClickHandler = (child_data) => {
                 <TableCell  className={classes.tablecell}>
                             <TextField autoFocus={true} 
                             value={eachrow.target_table} 
-                            placeholder="source table"
+                            placeholder="target table"
                             error={(ISSPACE).test((eachrow.target_table).trim())}
                             helperText={(ISSPACE).test((eachrow.target_table).trim())?"Table cannot have space":""}
                             onChange={()=> this.handleChange(event,index,6)}  />
@@ -386,16 +422,14 @@ onYesBtnClickHandler = (child_data) => {
                   
                 </TableCell>
                 <TableCell>
-                  {/* <Tooltip title={this.showData(eachrow.source_query,8)} className={classes.customWidth } aria-label="add"> */}
                     {eachrow.src_query?<BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,8)}}/>:
                     <EditRounded onClick={(e) => {this.showDialog(index,8)}}/>} 
-                  {/* </Tooltip> */}
                 </TableCell> 
                 <TableCell  >
-                  {/* <Tooltip title={this.showData(eachrow.source_query,9)} className={classes.customWidth } aria-label="add"> */}
+
                   {eachrow.target_query?<BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,9)}}/>:
                   <EditRounded onClick={(e) => {this.showDialog(index,9)}}/>} 
-                  {/* </Tooltip> */}
+
                 </TableCell>
           
                 <TableCell className={classes.tablepopup}>
@@ -439,20 +473,22 @@ showMinus = () =>{
 }
 
     render() {
+
       const { classes } = this.props;
       const checkValid = !this.ValidRows()  
       const showAddBtn = !this.ValidRows()
-
+      const DisableSrc= this.state.DisableSrc
         return (
             <div className="AddSuiteLayout">
                 <i class="fa fa-th fa-lg" aria-hidden="true"></i>
                 <label className="main_titles">EditTestCase:</label><br/>
-              {/* <Button className="button-colors savebtn" bsStyle="primary" disabled={checkValid}
+
               
-              onClick={ () => this.handleTestSuiteUploadClick()}>Save</Button> */}
-              <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create back-btn" bsStyle="primary"> Back</Button></Link></span>
+
+                    <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create back-btn" bsStyle="primary"> Back</Button></Link></span>
                     <span style={{marginLeft:"5px",display:'inline'}}><Button className="button-create" bsStyle="primary" 
-                    onClick={ () => this.handleTestSuiteUploadClick()} disabled={checkValid}>Save</Button></span>
+                    onClick={ () => this.handleTestSuiteUploadClick()}
+                    >Save</Button></span>
         <Paper className={classes.root}>
                         <Table className={classes.table}>
                             <TableHead className={classes.tablehead}>
@@ -466,18 +502,19 @@ showMinus = () =>{
                         </Table>
                     </Paper>
                     <div>
-                    <IconButton disabled={showAddBtn} onClick={() => this.addRow()} >
+                    <IconButton 
+                    onClick={() => this.addRow()} >
                                 <PlusCircle  />
                             </IconButton>
                     </div> 
                     <div>
                         {
-                            this.state.showQueryModal ?
+                            this.state.showQueryModal &&
                             <QueryModal
                                 QueryData =  {this.getConnectionData}
                                 onYesBtnClickHandler={ this.onYesBtnClickHandler}
                                 connectionDetail ={this.state.ModalData}>
-                            </QueryModal>:null
+                            </QueryModal>
                         }
                     </div> 
                 </div>

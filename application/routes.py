@@ -143,9 +143,9 @@ api.add_resource(TestSuiteAPI, '/api/test-suite')
 api.add_resource(TestCaseLogAPI, '/api/each-case-detail')
 api.add_resource(TestCaseJob, '/api/test-case-job')
 api.add_resource(TestCaseSparkJob,
-                 '/api/spark-job-status/<int:test_case_log_id>')
+                '/api/spark-job-status/<int:test_case_log_id>')
 api.add_resource(TestCaseLogDetail,
-                 '/api/test-case-log')
+                '/api/test-case-log')
 api.add_resource(ExportTestLog, '/api/export')
 api.add_resource(ProjectAPI, '/api/project')
 api.add_resource(OrganizationAPI, '/api/organization/')

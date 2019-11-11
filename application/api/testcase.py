@@ -397,12 +397,15 @@ class EditTestCase(Resource):
                          project_id_org_id[0],
                          project_id_org_id[1])
         test_case_detail = test_case_obj.test_case_detail
-        source_db_id = test_case_detail["src_db_id"]
+        source_db_id = test_case_detail.get("src_db_id","")
         target_db_id = test_case_detail["target_db_id"]
         table_names_dic = get_table_name(test_case_detail["table"])
-        DbConnection_object_src = DbConnection.query.filter(
-            DbConnection.db_connection_id == source_db_id,
-            DbConnection.is_deleted == False).first()
+        if source_db_id:
+            DbConnection_object_src = DbConnection.query.filter(
+                DbConnection.db_connection_id == source_db_id,
+                DbConnection.is_deleted == False).first()
+        else:
+            DbConnection_object_src=None
         if DbConnection_object_src == None:
             src_db_name = APIMessages.DB_NOT_EXIST
             src_db_type = APIMessages.DB_NOT_EXIST
@@ -415,7 +418,7 @@ class EditTestCase(Resource):
             src_db_type = SupportedDBType().get_db_name_by_id(
                 DbConnection_detail_src["db_type"])
             src_connection_name = DbConnection_detail_src["db_connection_name"]
-            srcdbid = test_case_detail["src_db_id"]
+            srcdbid = test_case_detail.get("src_db_id","")
 
         DbConnection_object_target = DbConnection.query.filter(
             DbConnection.db_connection_id == target_db_id,
@@ -517,7 +520,7 @@ class EditTestCase(Resource):
         put_testcase_parser.add_argument('src_qry', type=str)
         put_testcase_parser.add_argument('target_qry', type=str)
         put_testcase_parser.add_argument('column', type=str)
-        put_testcase_parser.add_argument('src_db_id', type=int)
+        put_testcase_parser.add_argument('src_db_id',type=int)
         put_testcase_parser.add_argument('target_db_id', type=int)
         user_test_case_detail = put_testcase_parser.parse_args()
         test_case_id = user_test_case_detail["test_case_id"]

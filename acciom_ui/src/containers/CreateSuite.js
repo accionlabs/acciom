@@ -125,7 +125,6 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
                     {label: 'Target query','required':false }
                 ]	,suitename:'',
                 showQueryModal:false,
-                show_input:'a,b',
                 suiteName:'',
                 selectedDBType:1,
                 isTestClassSelected:true,
@@ -171,15 +170,6 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
                 break;
     
             }
-        }
-
-        switchstate =(index,v_index)=>{
-            this.setState({show_input:index+','+v_index});
-        }
-
-        splitAndMatch = (index,vIndex) => {
-            const selected = this.state.show_input.split(",");
-            return !(selected[0] == index && selected[1] == vIndex);
         }
         onYesBtnClickHandler = (child_data) => {
             this.setState({showQueryModal:child_data})

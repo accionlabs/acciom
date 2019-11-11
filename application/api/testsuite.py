@@ -334,7 +334,8 @@ class TestSuiteAPI(Resource):
                     table={}
                     if "src_table" in keys:
                         src_table = each_test_case["src_table"]
-            
+                    else:
+                        src_table = ""
                     if "target_table" in keys:
                         target_table = each_test_case["target_table"]
                     table[src_table]=target_table
