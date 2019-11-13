@@ -174,7 +174,7 @@ export class EditTestCase extends Component {
             break;
         case 8:
             const temp_SuiteData_table_src_qry = [...this.state.suiteData]
-            temp_SuiteData_table_src_qry[index]['source_query'] = e.target.value;
+            temp_SuiteData_table_src_qry[index]['source_query'] = reset ? "":e.target.value;;
             this.setState({suiteData:temp_SuiteData_table_src_qry})
             break;
         case 9:
@@ -220,6 +220,7 @@ export class EditTestCase extends Component {
     if ((e.target.value == ('duplicatecheck')) || (e.target.value == ('nullcheck'))){
       this.handleExistingDBTypeChange(index,e,0)
       this.handleChange(e,index,5,true)
+      // this.handleChange(e,index,8,true)
     }
     const temp =[...this.state.CaseData_Description]
     temp[index]['test_class'] = e.target.value
@@ -471,7 +472,7 @@ ValidRows(){
   }
 }
 ValidFields = (item) =>{
-  if(item.test_class=='nullcheck'){
+  if((item.test_class=='nullcheck') || (item.test_class=='duplicatecheck')){
     return  item.test_description &&  item.target_table &&  item.target_db_connection_id
 
   }else{

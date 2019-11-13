@@ -21,8 +21,6 @@
     import EditRounded from '@material-ui/icons/EditRounded';
     import MenuItem from '@material-ui/core/MenuItem';
     import Select from '@material-ui/core/Select';
-    import Tooltip from '@material-ui/core/Tooltip';
-
     import { ISSPACE } from '../constants/FieldNameConstants';
     import QueryModal from '../components/QueryModal';
 import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
@@ -175,7 +173,7 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
             this.setState({showQueryModal:child_data})
         }
 
-        handleChange = (e,index,col_event) =>{
+        handleChange = (e,index,col_event,reset=false) =>{
             switch (col_event){
                 
                 case 2:
@@ -185,7 +183,7 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
                     break;
                 case 5:
                     const temp_SuiteData_table = [...this.state.suiteData]
-                    temp_SuiteData_table[index]['source_table'] = e.target.value;
+                    temp_SuiteData_table[index]['source_table'] = reset ? "":e.target.value;
                     this.setState({suiteData:temp_SuiteData_table})
                     break;
                 case 6:
@@ -200,7 +198,7 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
                     break;
                 case 8:
                     const temp_SuiteData_table_src_qry = [...this.state.suiteData]
-                    temp_SuiteData_table_src_qry[index]['source_query'] = e.target.value;
+                    temp_SuiteData_table_src_qry[index]['source_query'] = reset ? "":e.target.value;;;
                     this.setState({suiteData:temp_SuiteData_table_src_qry})
                     break;
                 case 9:
@@ -212,6 +210,14 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
             }
         }
         handleDBTypeChange = (index,e)=>{
+
+            if ((e.target.value == ('duplicatecheck')) || (e.target.value == ('nullcheck'))){
+                this.handleExistingDBTypeChange(index,e,0)
+                this.handleChange(e,index,5,true)
+                this.handleChange(e,index,8,true)
+
+            }
+
             const temp =[...this.state.suiteData]
             temp[index]['test_case_class'] = e.target.value
             this.setState({suiteData:temp,isTestClassSelected:false})
@@ -244,6 +250,12 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
                     tar_connection['target_db_existing_connection']= e.target.value
                     this.setState({temp_tar:tar_connection})
                     break;
+                    case 0:
+                const temp_src =[...this.state.suiteData]
+                const src_connection_temp =temp_src[index]
+                src_connection_temp['source_db_existing_connection']= ""
+                this.setState({temp_src:src_connection_temp})
+                break;
             }
         }
 
@@ -296,6 +308,16 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
             })
             return test  
         }
+        CheckNullorDuplicate = (DbType) =>{
+            if ((DbType == ('duplicatecheck')) || (DbType == ('nullcheck'))){
+                return true;
+            }
+            else{
+            return false;
+            }
+            
+        }
+        
         renderData = (classes) =>{
             {
                 return this.state.suiteData.map((eachrow,index) =>(  
@@ -323,7 +345,7 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
                         <TableCell >
                                        
                         <Select
-                        disabled={!this.state.suiteData[index]['test_case_class']}
+                        disabled = {this.CheckNullorDuplicate(eachrow.test_case_class) || !this.state.suiteData[index]['test_case_class']}
                         style={{width:'10vw'}}
                         value={this.state.suiteData[index]['source_db_existing_connection']}
                         onChange={ (e) => this.handleExistingDBTypeChange(index,e,3) }> 
@@ -345,8 +367,8 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
   
                         <TableCell  className={classes.tablecell}>
                             <TextField autoFocus={true} 
-                            disabled={!this.state.suiteData[index]['test_case_class']}
-                             value={eachrow.source_table} 
+                        disabled = {this.CheckNullorDuplicate(eachrow.test_case_class) || !this.state.suiteData[index]['test_case_class']}
+                        value={eachrow.source_table} 
                             placeholder="source table"
                             error={(ISSPACE).test((eachrow.source_table).trim())}
                             helperText={(ISSPACE).test((eachrow.source_table).trim())?"Table cannot have space":""}
@@ -371,16 +393,24 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
                         
                         
                         <TableCell className={classes.tablecell}>
-                        <Tooltip className={ classes.customWidth } title={this.showData(eachrow.source_query,8)} aria-label="add">
-                        {eachrow.source_query?<BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,8)}}/>:<EditRounded onClick={(e) => {this.showDialog(index,8)}}/>} 
-                        </Tooltip>
+                        {eachrow.source_query?
+                        <IconButton>
+                        <BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,8)}}/>
+                        </IconButton>:
+                        <IconButton disabled={this.CheckNullorDuplicate(eachrow.test_case_class)} >
+                        <EditRounded onClick={(e) => {this.showDialog(index,8)}}/>
+                        </IconButton>
+                        } 
                         
                         </TableCell>           
                         
                         <TableCell className={classes.tablecell}>
-                        <Tooltip title={this.showData(eachrow.target_query,9)} className={classes.customWidth } aria-label="add">
-                        {eachrow.target_query?<BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,9)}}/>:<EditRounded onClick={(e) => {this.showDialog(index,9)}}/>} 
-                            </Tooltip>
+                        {eachrow.target_query?
+                        <IconButton>
+                        <BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,9)}}/></IconButton>:
+                        <IconButton>
+                        <EditRounded onClick={(e) => {this.showDialog(index,9)}}/>
+                        </IconButton>} 
                           </TableCell>
                         
                         <TableCell className={classes.tablepopup}>
@@ -424,7 +454,11 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
             return stateData.every(this.ValidFields)
         }
         ValidFields = (item) =>{
+            if((item.test_case_class=='nullcheck') || (item.test_case_class=='duplicatecheck')){
+                return  item.test_description &&  item.target_table &&  item.target_db_existing_connection
+            }else{ 
             return (item.test_description && item.source_table && item.target_table && (item.source_db_existing_connection) && (item.target_db_existing_connection))
+            }
         }
         ValidTable(){
             const stateData = [...this.state.suiteData]

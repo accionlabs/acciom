@@ -575,9 +575,9 @@ class AddTestSuiteManually(Resource):
                                     STATUS_BAD_REQUEST)
             if "test_description" not in keys:
                 each_test_case["test_description"] = APIMessages.NO_NAME_DEFINE
-            if "source_table " and "target_table" not in keys:
-                return api_response(False, APIMessages.PASS_TABLES,
-                                    STATUS_BAD_REQUEST)
+            # if "source_table " and "target_table" not in keys:
+            #     return api_response(False, APIMessages.PASS_TABLES,
+            #                         STATUS_BAD_REQUEST)
             if "source_db_existing_connection" in keys:
                 source_db_existing_connection = each_test_case[
                     "source_db_existing_connection"]
@@ -590,19 +590,7 @@ class AddTestSuiteManually(Resource):
                     "target_db_existing_connection"]
             for key, value in dict(each_test_case).items():
                 each_test_case[key] = value.strip()
-            if "source_db_existing_connection" not in keys:
-                src_db_id = create_dbconnection(session.user_id,
-                                                each_test_case[
-                                                    'source_db_type'].lower(),
-                                                each_test_case[
-                                                    'source_db_name'],
-                                                each_test_case[
-                                                    'source_db_server'].lower(),
-                                                each_test_case[
-                                                    'source_db_username'],
-                                                test_suite_data[
-                                                    "project_id"])
-            else:
+            if "source_db_existing_connection" in keys:
                 db_obj = DbConnection.query.filter(
                     DbConnection.db_connection_id == source_db_existing_connection,
                     DbConnection.is_deleted == False).first()
@@ -610,19 +598,7 @@ class AddTestSuiteManually(Resource):
                     return api_response(False, APIMessages.DB_NOT_EXIST,
                                         STATUS_BAD_REQUEST)
                 src_db_id = source_db_existing_connection
-            if "target_db_existing_connection" not in keys:
-                target_db_id = create_dbconnection(session.user_id,
-                                                   each_test_case[
-                                                       'target_db_type'].lower(),
-                                                   each_test_case[
-                                                       'target_db_name'],
-                                                   each_test_case[
-                                                       'target_db_server'].lower(),
-                                                   each_test_case[
-                                                       'target_db_username'],
-                                                   test_suite_data[
-                                                       "project_id"])
-            else:
+            if "target_db_existing_connection" in keys:
                 db_obj = DbConnection.query.filter(
                     DbConnection.db_connection_id == target_db_existing_connection,
                     DbConnection.is_deleted == False).first()
@@ -630,22 +606,21 @@ class AddTestSuiteManually(Resource):
                     return api_response(False, APIMessages.DB_NOT_EXIST,
                                         STATUS_BAD_REQUEST)
                 target_db_id = target_db_existing_connection
-
             table = {}
-            table[each_test_case["source_table"]] = each_test_case[
+            if "source_table" in keys:
+                table[each_test_case["source_table"]] = each_test_case[
+                    "target_table"]
+            else:
+                table[''] = each_test_case[
                 "target_table"]
-            if "column" not in keys:
+            if "columns" not in keys:
                 column = {}
             else:
-                each_test_case["column"] = each_test_case[
-                    "column"].replace(
-                    " ",
-                    "")
-                if each_test_case["column"] == "":
+                if each_test_case["columns"] == "":
                     column = {}
-                elif ";" and ":" in each_test_case["column"]:
+                elif ";" and ":" in each_test_case["columns"]:
                     column = {}
-                    user_columns = each_test_case["column"].split(
+                    user_columns = each_test_case["columns"].split(
                         ";")
                     for columnpair in user_columns:
                         if ":" in columnpair:
@@ -655,15 +630,15 @@ class AddTestSuiteManually(Resource):
                                 singlecolumn[1]
                         else:
                             column[columnpair] = columnpair
-                elif ";" in each_test_case["column"]:
+                elif ";" in each_test_case["columns"]:
                     column = {}
-                    columns = each_test_case["column"].split(";")
+                    columns = each_test_case["columns"].split(";")
                     for singlecolumn in columns:
                         column[singlecolumn] = singlecolumn
                 else:
                     column = {}
-                    column[each_test_case["column"]] = \
-                        each_test_case["column"]
+                    column[each_test_case["columns"]] = \
+                        each_test_case["columns"]
             query = {}
             if "source_query" not in keys and "target_query" not in keys:
                 query["sourceqry"] = ""
@@ -674,15 +649,19 @@ class AddTestSuiteManually(Resource):
             else:
                 query["sourceqry"] = each_test_case["source_query"]
                 query["targetqry"] = each_test_case["target_query"]
-            jsondict = {"column": column, "table": table, "query": query,
-                        "src_db_id": src_db_id,
-                        "target_db_id": target_db_id,
-                        "test_desc": each_test_case["test_description"]}
+            jsondict={}
+            jsondict['column'] = column
+            jsondict['table'] = table
+            jsondict['query'] = query
+            if "source_db_existing_connection" in keys:
+                jsondict['src_db_id'] = src_db_id
+            jsondict['target_db_id'] = target_db_id
+            jsondict['test_desc'] = each_test_case["test_description"]
             test_case = TestCase(test_suite_id=test_suite.test_suite_id,
-                                 owner_id=session.user_id,
-                                 test_case_class=SupportedTestClass().
+                                owner_id=session.user_id,
+                                test_case_class=SupportedTestClass().
                                  get_test_class_id_by_name(
-                                     each_test_case["test_case_class"]),
+                                    each_test_case["test_case_class"]),
                                  test_case_detail=jsondict)
 
             test_case.save_to_db()
