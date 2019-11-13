@@ -11,7 +11,8 @@ import {
 	RESET_DATA_FOR_SHEET_PAGE,
 	GET_ALL_TEST_SUITES_SUCCESS,
 	SUBMIT_SUITE_NAME_SUCCESS,
-	SUBMIT_SUITE_NAME_ERROR
+	SUBMIT_SUITE_NAME_ERROR,
+	SUBMIT_CASE_DATA_SUCCESS
 } from '../constants/ActionTypes';
 
 const initialState = {
@@ -154,10 +155,12 @@ const testSuiteUploadData = (state = initialState, action) => {
 		return {
 			...state,
 			redirectToSuiteList: true
-
-
+		};
+		case SUBMIT_CASE_DATA_SUCCESS:
+		return {
+			...state,
+			redirectToSuiteList: true
 		}
-
 	default:
 		return state;
 	}

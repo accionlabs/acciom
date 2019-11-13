@@ -21,10 +21,10 @@
     import EditRounded from '@material-ui/icons/EditRounded';
     import MenuItem from '@material-ui/core/MenuItem';
     import Select from '@material-ui/core/Select';
-    import Tooltip from '@material-ui/core/Tooltip';
-
     import { ISSPACE } from '../constants/FieldNameConstants';
     import QueryModal from '../components/QueryModal';
+import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
+
     import { getallClassNames,SubmitTestSuiteData } from '../actions/dbDetailsActions';
     import { 
         getAllTestSuites,
@@ -106,12 +106,7 @@
         constructor(props) {
             super(props);
             this.state = {
-                suitename:'',
-                showQueryModal:false,
-                show_input:'a,b',
-                suiteName:'',
-                selectedDBType:1,
-                isTestClassSelected:true,
+                
                 suiteData : [{
                     ...data
                 }],
@@ -126,9 +121,12 @@
                     {label: 'Columns','required':false },
                     {label: 'Source query' ,'required':false},
                     {label: 'Target query','required':false }
-                ]	
+                ]	,suitename:'',
+                showQueryModal:false,
+                suiteName:'',
+                selectedDBType:1,
+                isTestClassSelected:true,
             };
-            console.log("datadata",data)
             this.onYesBtnClickHandler = this.onYesBtnClickHandler.bind(this)
             this.getConnectionData = this.getConnectionData.bind(this)
             this.baseState = this.state 
@@ -137,7 +135,6 @@
         componentDidMount = () =>{
             this.props.getallClassNames()
             this.props.getAllConnections(this.props.currentProject.project_id)  
-            console.log(this.state) 
             this.props.getAllTestSuites(this.props.currentProject.project_id)
         }
         
@@ -172,20 +169,11 @@
     
             }
         }
-
-        switchstate =(index,v_index)=>{
-            this.setState({show_input:index+','+v_index});
-        }
-
-        splitAndMatch = (index,vIndex) => {
-            const selected = this.state.show_input.split(",");
-            return !(selected[0] == index && selected[1] == vIndex);
-        }
         onYesBtnClickHandler = (child_data) => {
             this.setState({showQueryModal:child_data})
         }
 
-        handleChange = (e,index,col_event) =>{
+        handleChange = (e,index,col_event,reset=false) =>{
             switch (col_event){
                 
                 case 2:
@@ -195,7 +183,7 @@
                     break;
                 case 5:
                     const temp_SuiteData_table = [...this.state.suiteData]
-                    temp_SuiteData_table[index]['source_table'] = e.target.value;
+                    temp_SuiteData_table[index]['source_table'] = reset ? "":e.target.value;
                     this.setState({suiteData:temp_SuiteData_table})
                     break;
                 case 6:
@@ -210,7 +198,7 @@
                     break;
                 case 8:
                     const temp_SuiteData_table_src_qry = [...this.state.suiteData]
-                    temp_SuiteData_table_src_qry[index]['source_query'] = e.target.value;
+                    temp_SuiteData_table_src_qry[index]['source_query'] = reset ? "":e.target.value;;;
                     this.setState({suiteData:temp_SuiteData_table_src_qry})
                     break;
                 case 9:
@@ -222,6 +210,14 @@
             }
         }
         handleDBTypeChange = (index,e)=>{
+
+            if ((e.target.value == ('duplicatecheck')) || (e.target.value == ('nullcheck'))){
+                this.handleExistingDBTypeChange(index,e,0)
+                this.handleChange(e,index,5,true)
+                this.handleChange(e,index,8,true)
+
+            }
+
             const temp =[...this.state.suiteData]
             temp[index]['test_case_class'] = e.target.value
             this.setState({suiteData:temp,isTestClassSelected:false})
@@ -234,11 +230,11 @@
         renderExistingDBTypes = (ExistingDBlist,classes) =>{
 
             const test =  ExistingDBlist.map((item) =>{
-                  return ( <MenuItem  value={item.db_connection_id}>
-                  {item.db_connection_name} 
-                  </MenuItem>)     
-                  })
-                  return test;
+                return ( <MenuItem  value={item.db_connection_id}>
+                {item.db_connection_name} 
+                </MenuItem>)     
+                })
+                return test;
         }
         handleExistingDBTypeChange = (index,e,v_index) =>{
             switch(v_index){
@@ -252,8 +248,14 @@
                     const temp_tar =[...this.state.suiteData]
                     const tar_connection =temp_tar[index]
                     tar_connection['target_db_existing_connection']= e.target.value
-                    this.setState({temp_tar:src_connection})
+                    this.setState({temp_tar:tar_connection})
                     break;
+                    case 0:
+                const temp_src =[...this.state.suiteData]
+                const src_connection_temp =temp_src[index]
+                src_connection_temp['source_db_existing_connection']= ""
+                this.setState({temp_src:src_connection_temp})
+                break;
             }
         }
 
@@ -306,7 +308,16 @@
             })
             return test  
         }
-
+        CheckNullorDuplicate = (DbType) =>{
+            if ((DbType == ('duplicatecheck')) || (DbType == ('nullcheck'))){
+                return true;
+            }
+            else{
+            return false;
+            }
+            
+        }
+        
         renderData = (classes) =>{
             {
                 return this.state.suiteData.map((eachrow,index) =>(  
@@ -334,7 +345,7 @@
                         <TableCell >
                                        
                         <Select
-                        disabled={!this.state.suiteData[index]['test_case_class']}
+                        disabled = {this.CheckNullorDuplicate(eachrow.test_case_class) || !this.state.suiteData[index]['test_case_class']}
                         style={{width:'10vw'}}
                         value={this.state.suiteData[index]['source_db_existing_connection']}
                         onChange={ (e) => this.handleExistingDBTypeChange(index,e,3) }> 
@@ -356,8 +367,8 @@
   
                         <TableCell  className={classes.tablecell}>
                             <TextField autoFocus={true} 
-                            disabled={!this.state.suiteData[index]['test_case_class']}
-                             value={eachrow.source_table} 
+                        disabled = {this.CheckNullorDuplicate(eachrow.test_case_class) || !this.state.suiteData[index]['test_case_class']}
+                        value={eachrow.source_table} 
                             placeholder="source table"
                             error={(ISSPACE).test((eachrow.source_table).trim())}
                             helperText={(ISSPACE).test((eachrow.source_table).trim())?"Table cannot have space":""}
@@ -382,18 +393,24 @@
                         
                         
                         <TableCell className={classes.tablecell}>
-                        <Tooltip className={ classes.customWidth } title={this.showData(eachrow.source_query,8)} aria-label="add">
+                        {eachrow.source_query?
+                        <IconButton>
+                        <BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,8)}}/>
+                        </IconButton>:
+                        <IconButton disabled={this.CheckNullorDuplicate(eachrow.test_case_class)} >
                         <EditRounded onClick={(e) => {this.showDialog(index,8)}}/>
-                        </Tooltip>
-                        {/* <div className={classes.tablepopup} style={{textDecoration:"underline", color:"blue", cursor:"pointer"}} onClick={(e) => {this.showDialog(index,8)}}>{this.showData(eachrow.source_query,8)}</div> */}
+                        </IconButton>
+                        } 
                         
                         </TableCell>           
                         
                         <TableCell className={classes.tablecell}>
-                        <Tooltip title={this.showData(eachrow.source_query,9)} className={classes.customWidth } aria-label="add">
-                            <EditRounded onClick={(e) => {this.showDialog(index,9)}}/>
-                            {/* <div className={classes.tablepopup} style={{textDecoration:"underline", color:"blue", cursor:"pointer"}} onClick={(e) => {this.showDialog(index,9)}}>{this.showData(eachrow.target_query,9)}</div> */}
-                            </Tooltip>
+                        {eachrow.target_query?
+                        <IconButton>
+                        <BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,9)}}/></IconButton>:
+                        <IconButton>
+                        <EditRounded onClick={(e) => {this.showDialog(index,9)}}/>
+                        </IconButton>} 
                           </TableCell>
                         
                         <TableCell className={classes.tablepopup}>
@@ -437,7 +454,11 @@
             return stateData.every(this.ValidFields)
         }
         ValidFields = (item) =>{
+            if((item.test_case_class=='nullcheck') || (item.test_case_class=='duplicatecheck')){
+                return  item.test_description &&  item.target_table &&  item.target_db_existing_connection
+            }else{ 
             return (item.test_description && item.source_table && item.target_table && (item.source_db_existing_connection) && (item.target_db_existing_connection))
+            }
         }
         ValidTable(){
             const stateData = [...this.state.suiteData]
@@ -497,8 +518,8 @@
                     <i class="fa fa-th fa-lg" aria-hidden="true"></i>
                     <label className="db_page_title main_titles">Create Suite</label><br/>
                     <span style={{display:'block'}}><TextField style={{width:"250px"}} 
-                     error={this.isNameAlreadyExist}
-                     helperText={this.isNameAlreadyExist?"Suite Name already Exists":""}
+                    error={this.isNameAlreadyExist}
+                    helperText={this.isNameAlreadyExist?"Suite Name already Exists":""}
                     type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/></span>
                     <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create back-btn" bsStyle="primary"> Back</Button></Link></span>
                     <span style={{marginLeft:"5px",display:'inline'}}><Button className="button-create" bsStyle="primary" disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>

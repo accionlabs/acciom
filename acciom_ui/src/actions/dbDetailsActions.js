@@ -22,7 +22,8 @@ import {
 	CLASS_NAME_DETAILS_ERROR,
 	SUBMIT_SUITE_NAME_SUCCESS,
 	SUBMIT_SUITE_NAME_ERROR,
-	GET_ALL_TEST_SUITES_SUCCESS,
+	SUBMIT_CASE_DATA_SUCCESS,
+	SUBMIT_CASE_DATA_ERROR
 
 } from '../constants/ActionTypes'; 
 
@@ -168,3 +169,17 @@ export const SubmitTestSuiteData = (formData) =>{
 		})
 	}
 }
+	export const SubmitTestCaseData = (formData) =>{
+		return {
+			types:[
+				'',
+				SUBMIT_CASE_DATA_SUCCESS,
+				SUBMIT_CASE_DATA_ERROR
+			],
+			callAPI: () =>fetch(`${BASE_URL}/test-suite`,{
+				method:'put',
+				headers,
+				body: formData
+			})
+		}
+	}

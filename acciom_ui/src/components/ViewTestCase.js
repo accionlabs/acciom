@@ -101,11 +101,13 @@ class TestCaseDetails extends React.Component {
 	}
 
 	handleTestCaseUpdate = () => {
+		console.log("=====",typeof(this.state.formData.sourceConnection))
 		const payload = {
 			test_case_id: this.state.formData.testCaseId,
 			src_table: this.state.formData.sourceTable,
 			target_table: this.state.formData.targetTable,
-			src_db_id: this.state.formData.sourceConnection,
+			// src_db_id: typeof(this.state.formData.sourceConnection)===typeof("ddds")?-1:this.state.formData.sourceConnection,
+			src_db_id:this.state.formData.sourceConnection,
 			target_db_id: this.state.formData.targetConnection,
 			src_qry: this.state.formData.sourceQuery,
 			target_qry: this.state.formData.targetQuery,
