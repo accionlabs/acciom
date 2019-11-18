@@ -513,7 +513,6 @@
             
             return(
                 <div className="AddSuiteLayout">
-                    {/* <i class="fa fa-th fa-lg" aria-hidden="true"></i> */}
                     <PlaylistAddIcon className="createSuite" />
                     <label className="db_page_title main_titles">Create Suite</label><br/>
                     <span style={{display:'block'}}><TextField style={{width:"250px"}} 
