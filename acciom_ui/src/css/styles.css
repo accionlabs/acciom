@@ -4128,6 +4128,7 @@ html
     margin-right: -50%;
     transform: translate(-50%, -50%);
     margin-top: 15px;
+    color: #69717D;
 }
 
 
@@ -4366,6 +4367,7 @@ html
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+    color: #69717D;
   }
 
   .DQIprojectGauge {

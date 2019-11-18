@@ -1,11 +1,8 @@
     import React, { Component } from 'react'
     import { connect } from 'react-redux';
     import '../css/Db-ui-styles.css';
-    // import Button from '@material-ui/core/Button';
-    import {Button} from 'react-bootstrap';
-
+    import Button from '@material-ui/core/Button';
     import { Link } from 'react-router-dom';
-
     import { withStyles } from '@material-ui/core/styles';
     import PropTypes from 'prop-types';
     import Table from '@material-ui/core/Table';
@@ -23,7 +20,8 @@
     import Select from '@material-ui/core/Select';
     import { ISSPACE } from '../constants/FieldNameConstants';
     import QueryModal from '../components/QueryModal';
-import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
+    import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
+    import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
     import { getallClassNames,SubmitTestSuiteData } from '../actions/dbDetailsActions';
     import { 
@@ -515,14 +513,15 @@ import BorderColorRoundedIcon from '@material-ui/icons/BorderColorRounded';
             
             return(
                 <div className="AddSuiteLayout">
-                    <i class="fa fa-th fa-lg" aria-hidden="true"></i>
+                    {/* <i class="fa fa-th fa-lg" aria-hidden="true"></i> */}
+                    <PlaylistAddIcon className="createSuite" />
                     <label className="db_page_title main_titles">Create Suite</label><br/>
                     <span style={{display:'block'}}><TextField style={{width:"250px"}} 
                     error={this.isNameAlreadyExist}
                     helperText={this.isNameAlreadyExist?"Suite Name already Exists":""}
                     type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/></span>
-                    <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create back-btn" bsStyle="primary"> Back</Button></Link></span>
-                    <span style={{marginLeft:"5px",display:'inline'}}><Button className="button-create" bsStyle="primary" disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>
+                    <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create backbutton_colors" variant="contained"> Back</Button></Link></span>
+                    <span style={{marginLeft:"5px",display:'inline'}}><Button className="createButton-create button-colors" variant="contained" disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>
                     <Paper className={classes.root}>
                         <Table className={classes.table}>
                             <TableHead className={classes.tablehead}>
