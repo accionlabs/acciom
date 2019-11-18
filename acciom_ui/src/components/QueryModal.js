@@ -1,7 +1,8 @@
 import React,{Component} from 'react';
-import {Button, Modal} from 'react-bootstrap';
+import { Modal} from 'react-bootstrap';
 import '../css/Db-ui-styles.css';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
     
 class RenderManageConnectionDialog extends Component{
 
@@ -44,7 +45,8 @@ onYesBtnClickHandlers = () =>{
         // const inValid = !this.formValidation() && !this.ConnectionExists()
     return (
 
-        <Modal show={true} className="deleteconfirmpopupbox" bsSize="large">
+        <Modal show={true} className="deleteconfirmpopupbox" bsSize="large"
+        onHide={ (e) => {this.onCloseBtnClickHandlers()}}>
             <Modal.Header closeButton={true} className="popboxheader">
                 <Modal.Title className="sub_title">Write Query</Modal.Title>
             </Modal.Header>
@@ -64,9 +66,9 @@ onYesBtnClickHandlers = () =>{
         </Modal.Body>
 
             <Modal.Footer className="popboxfooter">
-                <Button className="onDeleteDbYesBtnClick button-colors" bsStyle="primary" 
+                <Button className="editSaveButton button-colors" variant="contained" 
                 onClick={ (e) => {this.onYesBtnClickHandlers()}} >Save</Button>
-                <Button className="onDeleteDbYesBtnClick button-colors" bsStyle="primary" 
+                <Button className="editCloseButton backbutton_colors" variant="contained" 
                 onClick={ (e) => {this.onCloseBtnClickHandlers()}}>Close</Button>
             </Modal.Footer>
         </Modal>
