@@ -220,11 +220,11 @@
             temp[index]['test_case_class'] = e.target.value
             this.setState({suiteData:temp,isTestClassSelected:false})
         }
-        deleteRow = (index)=>{
-            const temp =[...this.state.suiteData]
-            temp.splice(index,1)
-            this.setState({suiteData:temp})
-        }
+            deleteRow = (index)=>{
+                const temp =[...this.state.suiteData]
+                temp.splice(index,1)
+                this.setState({suiteData:temp})
+            }
         renderExistingDBTypes = (ExistingDBlist,classes) =>{
 
             const test =  ExistingDBlist.map((item) =>{

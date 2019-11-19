@@ -8,6 +8,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import { showProjectSwitchPage } from '../actions/appActions';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import DeleteIcon from '@material-ui/icons/Delete';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+
 import Button from '@material-ui/core/Button';
 export class ViewSuite extends Component {
     constructor(props) {
@@ -42,6 +44,9 @@ export class ViewSuite extends Component {
                 <EditIcon fontSize="small"  style={{color:"#696969"}} />
                 </Link>
                 <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} />
+                <Link to={`/clone-suite/${item.test_suite_id}`}>
+                <span ><FileCopyIcon fontSize="small"  style={{color:"#696969"}}/></span>
+                </Link>
                 </td>
             </tr>	
         );
