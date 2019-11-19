@@ -202,8 +202,8 @@ body,html{
 
 .table_head{
     vertical-align: middle;
-    background-color: #BD4951;
-    color: #fff;
+    background-color: #BD4951 !important;
+    color: #fff !important;
 }
 
 .table_head tr th{
@@ -226,17 +226,19 @@ body,html{
     font-size: 12px;
     color: #555555;
     height: auto;
+    border: none !important;
 
 }
 
 .table_body tr td{
-    line-height: 8px !important;
+    line-height: 20px !important;
     text-align: left;
     vertical-align: middle !important;
     overflow: hidden;
     font-size: 13px;
     border-top: none !important;
-    padding: 4px 10px !important;
+    padding: 0px 10px !important;
+    border: none;
 }
 
 .table_body tr:hover {
@@ -284,6 +286,7 @@ body,html{
     margin-top: -28px !important;
     padding: 5px 24px !important;
     border: none !important;
+    text-transform: none !important;
 }
 
 .testConnectionButton{
@@ -589,11 +592,10 @@ body,html{
 }
 
 .addProjectPlusIcon{
-    margin-top: 10px !important;
-    margin-left: 15px !important;
+    margin-top: 18px !important;
+    margin-left: 9px !important;
     background-color: #BD4951 !important;
     font-size: 12px !important;
-    border-radius: 3px;
     text-align: center;
     color: #fff !important;
     height: 30px;
@@ -614,16 +616,22 @@ body,html{
     border: none !important;
 }
 .button-create{
-    background-color: #6A6E7D !important;
-    color: #fff;
-    font-size: 13px;
-    border-radius: 3px;
-    text-align: center;
-    width: 121px;
-    height:31px;
-    margin-top:10px;
-    /* margin-left: 5px; */
+    margin-top:10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 5px !important;
 }
+
+.createButton-create{
+    margin-top:10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.createButton-create:disabled{
+    background-color: #E29898 !important;
+}
+
 .back-btn{
     background-color: #BD4951 !important;
     border-color: #BD4951 !important;
@@ -1022,7 +1030,9 @@ body,html{
 }
 
 .newSuite{
-    margin-right: 10px;
+    margin-right: 10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
 }
 
 .tablecontent{
@@ -1596,7 +1606,7 @@ body,html{
 }
 
 .mandatory{
-    color: rgb(245, 96, 106);
+    color: #fff;
     font-size: 14px;
 }
 .AddSuiteLayout{
@@ -1826,5 +1836,107 @@ body,html{
     margin-bottom: -2px !important;
     text-transform: none !important;
     padding: 5px !important;
+    float: right;
+}
+
+.testSwitchProject{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.createSuite{
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 3px;
+    margin-bottom: -7px;
+}
+
+.editsuite{
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 3px;
+    margin-bottom: -4px;
+}
+
+.editSaveButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 10px !important;
+}
+
+.editCloseButton{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.accountHoverColor{
+    color: #69717D !important;
+}
+
+.accountHoverColor:hover{
+    color: #69717D !important;
+}
+
+.editSuitePaper{
+    margin-top: -12px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 114%;
+}
+
+.editSuitemargin{
+    width: auto !important;
+}
+
+.testSuitBodyScroll{
+    display:block;
+    height: 365px;
+    overflow:auto;
+    width: 1155px;
+    overflow-x: auto;
+}
+
+.paperTestSuite{
+    padding-bottom: 10px !important;
+}
+
+.testSuitHead{
+    vertical-align: middle;
+    background-color: #BD4951 !important;
+}
+
+.testSuitHead tr th{
+    border-bottom: none !important;
+    line-height: 10px !important;
+    overflow: hidden;
+    text-align: left;
+    font-size: 13px;
+    padding: 13px 10px !important;
+    color: #fff !important;
+    font-family: Open sans !important;
+}
+
+.countCheckSelect{
+    font-size: 12px !important;
+    color: #69717D !important;
+}
+
+.MuiInputBase-input{
+    color: #69717D !important;
+    font-size: 12px !important;
+    font-family: Open sans !important;
+}
+
+.minusCircle{
+    font-size: 12px !important;
+}
+
+.testSuiteEditIcon{
+    margin-left: 13px !important;
+}
+
+.testSuitButtonDiv{
+    margin-top: 8px;
+    margin-right: 12px;
     float: right;
 }

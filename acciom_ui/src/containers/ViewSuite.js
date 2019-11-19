@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import '../css/Db-ui-styles.css';
 import { Link } from 'react-router-dom';
-import { Panel, Table, Button, Modal} from 'react-bootstrap';
+import { Panel, Table, Modal} from 'react-bootstrap';
 import { getAllTestSuites } from '../actions/testSuiteListActions';
 import EditIcon from '@material-ui/icons/Edit';
 import { showProjectSwitchPage } from '../actions/appActions';
@@ -10,6 +10,7 @@ import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 
+import Button from '@material-ui/core/Button';
 export class ViewSuite extends Component {
     constructor(props) {
 		super(props);
@@ -61,12 +62,12 @@ export class ViewSuite extends Component {
 				<div className='btnContainer'>
                 <BusinessCenterIcon className="manageSuitIcon" />
 				<label className="db_page_title main_titles">Manage Test Suites</label>
-					<div className='project-switch'><Button className="button-colors" bsStyle="primary" onClick={ (e) => this.handleSwitchProject()}>Switch Project</Button> </div>
+					<div className='project-switch'><Button className="button-colors testSwitchProject" variant="contained" onClick={ (e) => this.handleSwitchProject()}>Switch Project</Button> </div>
                     <div className='project-switch'>
                     <Link to={"/create_suite"}>
-                    <Button className="button-colors newSuite" type="button" bsStyle="primary">New Suite</Button>
+                    <Button className="button-colors newSuite" type="button" variant="contained">New Suite</Button>
                     </Link>
-                     </div>
+                    </div>
 
 				</div>
 				<Table responsive className="manage-db-table">

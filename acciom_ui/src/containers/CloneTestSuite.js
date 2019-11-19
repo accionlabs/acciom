@@ -328,6 +328,9 @@ export class CloneTestSuite extends Component {
             UploadBody.test_case_detail = temp_SuiteData
             this.props.SubmitTestSuiteData(JSON.stringify(UploadBody))
         }
+        SuiteNameValid (){
+          return (this.state.suiteName == '')? true:false
+          }
         renderData = (SuiteData,classes)=>{
             {
               const	suite_id = (this.props.match && this.props.match.params) ? this.props.match.params.suite_id : null;
@@ -526,7 +529,7 @@ export class CloneTestSuite extends Component {
 			return isNameAlreadyExist;
 		}
           render(){
-            const checkValid = !this.ValidRows()
+            const checkValid = !this.ValidRows() ||  this.SuiteNameValid()
             const showAddBtn = !this.ValidRows()
             let testSuites = this.props.testSuites;
             this.isNameAlreadyExist = this.checkNameAlreadyExist(testSuites,this.state.suiteName);
