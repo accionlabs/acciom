@@ -228,13 +228,8 @@ export class EditTestCase extends Component {
 }
 deleteRow = (index)=>{
   const temp =[...this.state.CaseData_Description]
-  if(!temp[index]['case_id']){
-    temp.splice(index,1)
-  }
-  else{
-  temp[index]['is_deleted']=1
-  }
-  this.setState({CaseData_Description:temp})
+  temp.splice(index,1)
+  this.setState({CaseData_Description:temp,firstLoad:false})
 }
 renderExistingDBTypes = (ExistingDBlist,classes) =>{
 
@@ -361,7 +356,6 @@ onYesBtnClickHandler = (child_data) => {
       if (!SuiteData[suite_id]) return null;  
       return this.state.CaseData_Description.map((eachrow,index) =>(
         <TableRow className="table-create-suite-row">
-          { !Boolean(eachrow.is_deleted) ?
           <Fragment>
                 {
                   <TableCell className="DropDown-SelectClass">
@@ -449,8 +443,7 @@ onYesBtnClickHandler = (child_data) => {
                             :""
                         }
                 </TableCell>
-          </Fragment>:null
-                      }
+          </Fragment>
         </TableRow>
       
       
