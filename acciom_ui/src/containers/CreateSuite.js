@@ -11,7 +11,8 @@
     import TableHead from '@material-ui/core/TableHead';
     import TableRow from '@material-ui/core/TableRow';
     import Paper from '@material-ui/core/Paper';
-    import { TextField } from '@material-ui/core';
+    import TextField from '@material-ui/core/TextField';
+    import Tooltip from '@material-ui/core/Tooltip';
     import IconButton from '@material-ui/core/IconButton';
     import PlusCircle from '@material-ui/icons/AddCircle';
     import MinusCircle from '@material-ui/icons/RemoveCircle';
@@ -55,7 +56,6 @@
             whiteSpace: 'nowrap', 
             maxWidth: '5vw',
             overflow: 'hidden',
-            textOverflow: 'ellipsis', 
         },
         tablehead:{
             verticalAlign: 'middle',
@@ -118,7 +118,8 @@
                     {label: 'Target Table','required':true },
                     {label: 'Columns','required':false },
                     {label: 'Source query' ,'required':false},
-                    {label: 'Target query','required':false }
+                    {label: 'Target query','required':false },
+                    { label: 'Action', required: false }
                 ]	,suitename:'',
                 showQueryModal:false,
                 suiteName:'',
@@ -270,10 +271,11 @@
             }
         }
         showMinus = () =>{
-            if ((this.state.suiteData).length !=1){
+            if ((this.state.suiteData).length !=0){
                 return true
             }
         }
+        
         showDialog = (index,v_index) =>{
             switch(v_index){
                 case 8:
@@ -297,12 +299,11 @@
             }
         }
         showClass = (classNameList,classes) =>{
-          const test =  classNameList.map((item) =>{
-          const key = Object.keys(item)[0][0]
+        const test =  classNameList.map((item) =>{
+        const key = Object.keys(item)[0][0]
             return ( <MenuItem value={item[key]['supported_test_class']}>
             {item[key]['supported_test_class_display_name']} 
             </MenuItem>)
-                   
             })
             return test  
         }
@@ -321,8 +322,7 @@
                 return this.state.suiteData.map((eachrow,index) =>(  
                     <TableRow className="table-create-suite-row">
                         {
-                        <TableCell className="DropDown-SelectClass">
-                               
+                        <TableCell className="DropDown-SelectClass"> 
                         <Select
                             style={{width:'10vw'}}
                             value={this.state.suiteData[index]['test_case_class']}
@@ -337,11 +337,10 @@
                             className={classes.textField}
                             disabled={!this.state.suiteData[index]['test_case_class']}
 
-                             placeholder="description" value={eachrow.test_description}
+                            placeholder="description" value={eachrow.test_description}
                             onChange={()=> this.handleChange(event,index,2) }/>
                         </TableCell>}              
                         <TableCell >
-                                       
                         <Select
                         disabled = {this.CheckNullorDuplicate(eachrow.test_case_class) || !this.state.suiteData[index]['test_case_class']}
                         style={{width:'10vw'}}
@@ -351,11 +350,10 @@
                     </Select>
                         </TableCell>
                         <TableCell>
-                           
                             <Select
                             disabled={!this.state.suiteData[index]['test_case_class']}
 
-                             style={{width:'10vw'}}
+                            style={{width:'10vw'}}
                         value={this.state.suiteData[index]['target_db_existing_connection']}
                         onChange={ (e) => this.handleExistingDBTypeChange(index,e,4) }> 
                         {this.renderExistingDBTypes(this.props.allConnections,classes)}
@@ -380,7 +378,7 @@
                             placeholder="target table"
                             disabled={!this.state.suiteData[index]['test_case_class']}
                             helperText={(ISSPACE).test((eachrow.target_table).trim())?"Table cannot have space":""}
-                              value={eachrow.target_table}
+                            value={eachrow.target_table}
                             onChange={()=> this.handleChange(event,index,6)}  />
                         </TableCell>
                         <TableCell className={classes.tablecell}>
@@ -409,12 +407,12 @@
                         <IconButton>
                         <EditRounded onClick={(e) => {this.showDialog(index,9)}}/>
                         </IconButton>} 
-                          </TableCell>
+                        </TableCell>
                         
                         <TableCell className={classes.tablepopup}>
                             {this.showMinus()?
                             
-                                <IconButton  onClick={() => this.deleteRow(index)}>
+                                <IconButton disabled = {this.state.suiteData.length == 1} className="editButtonDisabled" onClick={() => this.deleteRow(index)}>
                                     <MinusCircle />
                                 </IconButton>
                                 :""
@@ -515,29 +513,69 @@
                 <div className="AddSuiteLayout">
                     <PlaylistAddIcon className="createSuite" />
                     <label className="db_page_title main_titles">Create Suite</label><br/>
-                    <span style={{display:'block'}}><TextField style={{width:"250px"}} 
-                    error={this.isNameAlreadyExist}
-                    helperText={this.isNameAlreadyExist?"Suite Name already Exists":""}
-                    type="textbox" onChange={()=> this.handleSuiteNameChange(event) } placeholder="&nbsp;Enter SuiteName"/></span>
-                    <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create backbutton_colors" variant="contained"> Back</Button></Link></span>
-                    <span style={{marginLeft:"5px",display:'inline'}}><Button className="createButton-create button-colors" variant="contained" disabled={checkValid} onClick={ () => this.handleTestSuiteUploadClick()}> Create Suite</Button></span>
-                    <Paper className={classes.root}>
-                        <Table className={classes.table}>
-                            <TableHead className={classes.tablehead}>
+                    <Paper className="createSuitePaper">
+                    <TextField
+                        className="createTextbox"
+                        error={this.isNameAlreadyExist}
+                        helperText={
+                            this.isNameAlreadyExist
+                                ? 'Suite Name already Exists'
+                                : ''
+                        }
+                        type="textbox"
+                        onChange={() => this.handleSuiteNameChange(event)}
+                        label="Enter Suite Name"
+                    />
+                    <div className="creatSuitBodyScroll">
+                        <Table className="disabledColor">
+                            <TableHead className="testSuitHead">
                             <TableRow>
                                 {this.showHeader(classes)}
                             </TableRow>
                             </TableHead>
-                            <TableBody className="table_body-new-suite">
+                            <TableBody className="table_body-new-suite table_body">
                                 {this.renderData( classes )}
                             </TableBody>
                         </Table>
+                        </div>
+                        <Tooltip title="Add Testcase" placement="top">
+                        <Button
+                            variant="contained"
+                            className="addProjectPlusIcon"
+                            disabled={showAddBtn}
+                            onClick={() => this.addRow()}
+                        >
+                            <i className="fas fa-plus-circle"></i>
+                            &nbsp;&nbsp;Add
+                        </Button>
+                    </Tooltip>
+                    <div className="createSuiteButtons">
+                        <span style={{ display: 'inline' }}>
+                            <Link to="/view_suites">
+                                <Button
+                                    className="button-create backbutton_colors"
+                                    variant="contained"
+                                >
+                                    {' '}
+                                    Back
+                                </Button>
+                            </Link>
+                        </span>
+                        <span style={{ marginLeft: '5px', display: 'inline' }}>
+                            <Button
+                                className="createButton-create button-colors"
+                                variant="contained"
+                                disabled={checkValid}
+                                onClick={() =>
+                                    this.handleTestSuiteUploadClick()
+                                }
+                            >
+                                {' '}
+                                Create Suite
+                            </Button>
+                        </span>
+                    </div>
                     </Paper>
-                    <div>
-                            <IconButton disabled={showAddBtn} onClick={() => this.addRow()} >
-                                <PlusCircle  />
-                            </IconButton>
-                    </div>  
                     <div>
                         {
                             this.state.showQueryModal ?

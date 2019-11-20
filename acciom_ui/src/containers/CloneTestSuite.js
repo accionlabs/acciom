@@ -1,18 +1,19 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
-
-import {Button} from 'react-bootstrap';
+import Button from '@material-ui/core/Button';
 import '../css/Db-ui-styles.css';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Tooltip from '@material-ui/core/Tooltip';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Table from '@material-ui/core/Table';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import { ISSPACE } from '../constants/FieldNameConstants';
 import IconButton from '@material-ui/core/IconButton';
 import PlusCircle from '@material-ui/icons/AddCircle';
@@ -59,7 +60,6 @@ const useStyles = theme => ({
         whiteSpace: 'nowrap', 
         maxWidth: '5vw',
         overflow: 'hidden',
-        textOverflow: 'ellipsis', 
     },
     tablehead:{
         verticalAlign: 'middle',
@@ -115,7 +115,8 @@ export class CloneTestSuite extends Component {
         {label: 'Target Table','required':true },
         {label: 'Columns','required':false },
         {label: 'Source query' ,'required':false},
-        {label: 'Target query','required':false }
+        {label: 'Target query','required':false },
+        { label: 'Action', required: false }
     ],
       isTestClassSelected:true,	
       DisableSrc:false
@@ -398,27 +399,36 @@ export class CloneTestSuite extends Component {
                           
                         </TableCell>
                         <TableCell>
-                            {eachrow.src_query?<BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,8)}}/>:
+                            {eachrow.src_query?<Tooltip title="Edit Query" placement="top">
+                            <IconButton><BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,8)}}/></IconButton></Tooltip>:
+                            <Tooltip
+                            title="Add Source Query"
+                            placement="top"
+                            >
                             <IconButton disabled={this.CheckNullorDuplicate(eachrow.test_class)} >
                             <EditRounded  onClick={(e) => {this.showDialog(index,8)}}/>
-                            </IconButton>} 
+                            </IconButton></Tooltip>} 
                         </TableCell> 
                         <TableCell>
-                            {eachrow.target_query?<BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,9)}}/>:
-                            <IconButton>
+                            {eachrow.target_query?
+                            <Tooltip title="Edit Query" placement="top"><IconButton><BorderColorRoundedIcon onClick={(e) => {this.showDialog(index,9)}}/></IconButton></Tooltip>:
+                            <Tooltip
+                              title="Add Target Query"
+                              placement="top"
+                            ><IconButton>
                             <EditRounded onClick={(e) => {this.showDialog(index,9)}}/>
-                        </IconButton>} 
+                        </IconButton></Tooltip>} 
 
                         </TableCell>
                   
                         <TableCell className={classes.tablepopup}>
                         {this.showMinus()?
-                                    
+                                    <Tooltip title="Remove Testcase" placement="top">
                                     <IconButton 
-                                     onClick={() => this.deleteRow(index)}
-                                     >
+                                    disabled={this.state.CaseData_Description.length  == 1} className="editButtonDisabled"  onClick={() => this.deleteRow(index)}
+                                    >
                                         <MinusCircle />
-                                    </IconButton>
+                                    </IconButton></Tooltip>
                                     :""
                                 }
                         </TableCell>
@@ -430,7 +440,7 @@ export class CloneTestSuite extends Component {
           }}
         
           showMinus = () =>{
-            if ((this.state.CaseData_Description).length > 1){
+            if ((this.state.CaseData_Description).length > 0){
                 return true
             }
             else{
@@ -538,38 +548,53 @@ export class CloneTestSuite extends Component {
                 
                 return(
                     <div className="AddSuiteLayout">
-                        <i class="fa fa-th fa-lg" aria-hidden="true"></i>
+                        <FileCopyIcon className="CloneSuiteIcon" />
                         <label className="db_page_title main_titles">Clone Suite</label><br/>
-                        <span style={{display:'block'}}><TextField style={{width:"250px"}} 
+
+
+                  
+                        
+                        <Paper className="createSuitePaper">
+                        <TextField
+                        className="createTextbox" 
                         error={this.isNameAlreadyExist}
                         helperText={this.isNameAlreadyExist?"Suite Name already Exists":""}
                         type="textbox" onChange={()=> this.handleSuiteNameChange(event) }
-                        type="textbox"  placeholder="&nbsp;Enter SuiteName"/></span>
-                        <span style={{display:'inline'}}><Link to="/view_suites"><Button className="button-create back-btn" bsStyle="primary"> Back</Button></Link></span>
-                        <span style={{marginLeft:"5px",display:'inline'}}><Button className="button-create" bsStyle="primary"
-                        disabled={checkValid}
-                        onClick={ () => this.handleSuiteClone()}> Clone</Button></span>
-                        <Paper className={classes.root}>
+                        type="textbox"  label="Enter SuiteName"/>
+                        <div className="creatSuitBodyScroll">
                             <Table className={classes.table}>
-                                <TableHead className={classes.tablehead}>
+                                <TableHead className="testSuitHead">
                                 <TableRow>
                                     {this.showHeader(classes)}
                                 </TableRow>
                                 </TableHead>
-                                <TableBody className="table_body-new-suite">
+                                <TableBody className="table_body-new-suite table_body">
                                     {this.renderData(this.props.suiteData, classes)}
                                 </TableBody>
                             </Table>
-                        </Paper>
-                        <div>
-                                <IconButton
-                                 disabled={showAddBtn}
-                                 >
-                                    <PlusCircle 
-                                    onClick={() => this.addRow()}
-                                    />
-                                </IconButton>
+                            </div>
+                            <div>
+                        <Tooltip title="Add Testcase" placement="top">
+                        <Button
+                            variant="contained"
+                            className="addProjectPlusIcon"
+                            disabled={showAddBtn}
+                            onClick={() => this.addRow()}
+                        >
+                            <i className="fas fa-plus-circle"></i>
+                            &nbsp;&nbsp;Add
+                        </Button>
+                    </Tooltip>
+                        </div>
+                        <div className="cloneSuiteButtons">
+                        <Link to="/view_suites"><Button className="cloneBackButton backbutton_colors"
+                                    variant="contained"> Back</Button></Link>
+                        <Button className="button-colors buttonClone" variant="contained" 
+                        disabled={checkValid}
+                        variant="contained" 
+                        onClick={ () => this.handleSuiteClone()}> Clone</Button>
                         </div>  
+                        </Paper>
                         <div>
                             {
                                 this.state.showQueryModal ?

@@ -599,6 +599,7 @@ body,html{
     text-align: center;
     color: #fff !important;
     height: 30px;
+    border: none;
 }
 
 .addProjectPlusIcon:disabled{
@@ -620,6 +621,16 @@ body,html{
     text-transform: none !important;
     padding: 5px !important;
     margin-right: 5px !important;
+    border: none;
+}
+
+.buttonClone{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.buttonClone:disabled{
+    background-color: #E29898 !important;
 }
 
 .createButton-create{
@@ -1851,6 +1862,13 @@ body,html{
     margin-bottom: -7px;
 }
 
+.CloneSuiteIcon{
+    color: #69717D;
+    font-size: 23px !important;
+    margin-top: 3px;
+    margin-bottom: -7px;
+} 
+
 .editsuite{
     color: #69717D;
     font-size: 25px !important;
@@ -1939,4 +1957,51 @@ body,html{
     margin-top: 8px;
     margin-right: 12px;
     float: right;
+}
+
+
+.editSuiteIconMrgin{
+    color: #69717D;
+    margin-left: 10px !important;
+}
+
+.createTextbox{
+    margin-left: 10px !important;
+    padding-bottom: 10px !important;
+    width: 20%;
+}
+
+.creatSuitBodyScroll{
+    display:block;
+    height: 295px;
+    overflow:auto;
+    width: auto !important;
+    overflow-x: auto;
+}
+
+.createSuiteButtons{
+    float: right;
+    margin-right: 13px;
+}
+
+.cloneSuiteButtons{
+    float: right;
+    margin-right: 13px;
+    margin-top: -28px;
+}
+
+.createSuitePaper{
+    padding-top: 10px;
+    padding-bottom: 30px;
+    width: 112%;
+}
+
+.cloneBackButton{
+    margin-right: 8px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.editButtonDisabled:disabled{
+    opacity: .7;
 }
