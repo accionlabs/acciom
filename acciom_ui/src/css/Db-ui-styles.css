@@ -239,6 +239,7 @@ body,html{
     border-top: none !important;
     padding: 0px 10px !important;
     border: none;
+    color: #69717D;
 }
 
 .table_body tr:hover {
@@ -675,6 +676,7 @@ body,html{
 
 .updatedataprofillabel{
     color: #69717D;
+    margin-left: 5px;
 }
 
 .profileicon2{
@@ -1075,14 +1077,10 @@ body,html{
 }
 
 .browse-txt {
-    height: 29px;
-    width: 301px;
+    width: 250px;
     margin-right: 10px;
-    margin-top: 2px;
-    margin-left: -50px;
-    background-color: #fff;
-    border-radius: 3px;
-    border: 1px solid #ccc;
+    margin-top: 45px !important;
+    margin-left: -37px !important;
 }
 .suite-text{
     height: 29px;
@@ -1103,14 +1101,14 @@ body,html{
 }
 
 .updateBrowsButton{
-    text-transform: none !important;
-    padding: 5px !important;
+    margin-top: 42px !important;
+    margin-left: 10px !important;
 }
 
 .margin-button {
-    margin-top: 20px !important;
-    text-transform: none !important;
-    padding: 5px !important;
+    margin-top: 10px !important;
+    margin-left: 10px !important;
+    padding-bottom: 11px;
 }
 
 .uploadbtn{
@@ -1130,19 +1128,20 @@ body,html{
 }
 
 .updateandexcbtn{
-    width: 144px !important;
     text-transform: none !important;
-    padding: 5px !important;    
+    padding: 5px !important;
+    margin-right: 10px !important;  
+    width: 145px !important;  
+}
+
+.uploadBackButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 10px !important;  
 }
 
 .updateandexcbtn:disabled{
     background-color: rgb(226, 152, 152) !important;
-}
-
-.suiteditbox{
-    border-radius: 3px;
-    border: 1px solid #ccc;
-    height: 30px;
 }
 
 .dataprofilingtitle{
@@ -1700,7 +1699,7 @@ body,html{
 }
 
 .userSubmitButton{
-    margin-left: 93px !important;
+    margin-left: 242px !important;
     margin-top: 25px!important;
     text-transform: none !important;
 }
@@ -1902,6 +1901,19 @@ body,html{
     width: 114%;
 }
 
+.uploadDataPaper{
+    margin-top: -12px;
+    padding-top: 20px;
+    width: 73%;
+}
+
+.uploadPaperdiv{
+    margin-top: -12px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    /* width: 112%; */
+}
+
 .editSuitemargin{
     width: auto !important;
 }
@@ -1910,12 +1922,17 @@ body,html{
     display:block;
     height: 365px;
     overflow:auto;
-    width: 1155px;
     overflow-x: auto;
+    margin-top: 15px;
 }
 
 .paperTestSuite{
     padding-bottom: 10px !important;
+}
+
+.uploadPaperSuite{
+    padding-bottom: 46px !important;
+    margin-top: 15px;
 }
 
 .testSuitHead{
@@ -2004,4 +2021,72 @@ body,html{
 
 .editButtonDisabled:disabled{
     opacity: .7;
+}
+
+.uploadDatapfrofilingtable{
+    vertical-align: middle;
+    background-color: #BD4951 !important;
+}
+
+
+.uploadDatapfrofilingtable tr th{
+    border-bottom: none !important;
+    line-height: 10px !important;
+    overflow: hidden;
+    text-align: left;
+    font-size: 13px;
+    color: #fff !important;
+    font-family: Open sans !important;
+}
+
+.uploadDataCheckBox{
+    padding: 0px 5px 0px 10px !important;
+}
+
+.uploadTestSuitName{
+    width: 40%;
+}
+
+.uploadTestSuitLabel{
+    color: red;
+}
+
+.uploadTestSuitNameMargin{
+    margin-left: 416px;
+    margin-top: -46px;
+}
+
+.uploadButtonDiv{
+    float: right;
+    margin-top: 9px;
+    margin-right: 5px;
+}
+
+.uploadSuiteTabPaper{
+    padding-bottom: 0px !important;
+    width: 73%;
+}
+
+.uploadBackButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 10px !important;
+}
+
+.uploadBrowsButton{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+#controlled-tab-example{
+    border: none !important;
+}
+
+.viewDBconnPaper{
+    padding-top: 65px;
+    padding-bottom: 20px;
+}
+
+.viewDbCell{
+    padding: 0px 5px 0px 10px !important;
 }

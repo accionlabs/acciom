@@ -62,6 +62,13 @@ export const EDIT_ROLES ='Edit Roles';
 export const EDIT='EDIT';
 
 
+export const CONNECTIONAME = 'Connection Name';
+export const DATABASETYPE = 'Database Type';
+export const DATABASENAME = 'Database Name';
+export const HOSTNAME = 'Host Name';
+export const USERNAME = 'User Name';
+
+
 
 
 
