@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import XLSX from 'xlsx';
-import { Panel, Table, Tabs, Tab } from 'react-bootstrap';
+import { Panel, Tabs, Tab} from 'react-bootstrap';
 import { showProjectSwitchPage } from '../actions/appActions';
 import Button from '@material-ui/core/Button';
 import PublishIcon from '@material-ui/icons/Publish';
+import Paper from '@material-ui/core/Paper';
 import { 
 	onTestSuiteSheetSelect, 
 	testCaseSelectionChange, 
@@ -22,6 +23,14 @@ import {
 } from '../actions/testSuiteListActions';
 import { getAllDBDetails } from '../actions/dbDetailsActions';
 import { red } from '@material-ui/core/colors';
+
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Table from '@material-ui/core/Table';
+import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
 
 const TAB_UPLOAD_FILE = 1;
 const TAB_UPLOAD_SHEET = 2;
@@ -101,6 +110,10 @@ class TestSuiteUpload extends React.Component {
 		this.testSuiteFile = file;
 		fileReader.readAsArrayBuffer(file);
 	};
+	
+	goToBackBtnPage = () => {
+        this.props.history.goBack();
+    };
 
 	loadTestSuiteSheet = (page) => {
 		this.selectedSheet = page;
@@ -156,6 +169,7 @@ class TestSuiteUpload extends React.Component {
 	};
 
 	render() {
+		console.log("this.props.history", this.props.history)
 		const MODE_UPLOAD = 0;
 		const MODE_UPLOAD_AND_EXECUTE = 1;
 
@@ -223,8 +237,7 @@ class TestSuiteUpload extends React.Component {
 					return (
 						<div key={index} className='sheetListItem'>
 							<label className="form-check-label updatedataprofillabel">
-								<input
-									type="radio"
+								<Checkbox
 									className="form-check-input"
 									value={page.name}
 									checked={page.selected}
@@ -240,8 +253,9 @@ class TestSuiteUpload extends React.Component {
 					<div>
 						<h5 className="margin-title">Please select the sheet to be loaded</h5>
 						<div>{ sheetList } </div>
-						<div>
-							<Button variant="contained" className="button-colors margin-button" onClick={ (e) => onContinueClick()}>Load Test Cases</Button> 
+						<div className="margin-button">
+							<Button variant="contained" onClick={this.goToBackBtnPage} className="backbutton_colors uploadBackButton">Back</Button>
+							<Button variant="contained" className="button-colors uploadBrowsButton" onClick={ (e) => onContinueClick()}>Load Test Cases</Button> 
 						</div>
 					</div>
 				);
@@ -254,56 +268,52 @@ class TestSuiteUpload extends React.Component {
 			if (this.props.allCases && this.props.allCases.length > 0) {
 				testCasesList = this.props.allCases.map((testCase, index) => {
 					return (
-						<tr key={index}>
-							<td>{testCase.description}</td>
-							<td>{testCase.name}</td>
-							<td>
-								<input
-									type="checkbox"
+						<TableRow key={index}>
+							<TableCell>{testCase.description}</TableCell>
+							<TableCell>{testCase.name}</TableCell>
+							<TableCell>
+								<Checkbox
 									value={testCase.selected}
 									id={testCase.name}
 									name={testCase.name}
 									checked={testCase.selected}
 									onChange={ (e) => handleTestCaseCheckChange(testCase)}
 								/>
-							</td>
-						</tr>	
+							</TableCell>
+						</TableRow>	
 					)
 				});
 				
 				return (
 					<div className='testCaseListContainer'>
-						<Panel className='testCaseListPanel'>
-							<Panel.Body>
-								<Table responsive>
-									<thead className="sub_title">
-										<tr>
-											<th>Test Case Description</th>
-											<th>Test Class</th>
-											<th>
-												<input
-													type="checkbox"
+						<Paper className="uploadPaperSuite">
+						<div className="testSuitBodyScroll">
+								<Table>
+									<TableHead className="uploadDatapfrofilingtable">
+										<TableRow>
+											<TableCell className="uploadDataCheckBox">Test Case Description</TableCell>
+											<TableCell className="uploadDataCheckBox">Test Class</TableCell>
+											<TableCell className="uploadDataCheckBox">
+												<Checkbox 
+													onChange={ (e) => handleSelectAllChange()}
 													value="Select All"
 													id="Select All"
-													name="Select All"
-													checked= {this.props.selectAll}
-													onChange={ (e) => handleSelectAllChange()}
-												/> Select All
-											</th>
-										</tr>
-									</thead>
-									<tbody>
+												/>Select All
+											</TableCell>
+										</TableRow>
+									</TableHead>
+									<TableBody className="table_body-new-suite table_body">
 										{testCasesList}
-									</tbody>
+									</TableBody>
 								</Table>
-								<div>
-									{/* <Link to="uploadDataProfile"><Button variant="contained" className="backbutton_colors">Back</Button></Link> */}
-									<Button variant="contained" className="button-colors updateandexcbtn" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD_AND_EXECUTE)} disabled={this.isNameAlreadyExist || !isValid()}>Upload and Execute</Button>								
-									<Button variant="contained" className="button-colors uploadbtn" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD)} disabled={this.isNameAlreadyExist || !isValid()}>Upload</Button> 
 								</div>
-							</Panel.Body>
-						</Panel>
-					</div>
+								<div className="uploadButtonDiv">
+									<Button variant="contained" onClick={this.goToBackBtnPage} className="backbutton_colors uploadBackButton">Back</Button> 
+									<Button variant="contained" className="button-colors updateandexcbtn" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD_AND_EXECUTE)} disabled={this.isNameAlreadyExist || !isValid()}>Upload and Execute</Button>								
+									<Button variant="contained" className="button-colors uploadbtn" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD)} disabled={this.isNameAlreadyExist || !isValid()}>Upload</Button>
+								</div>
+								</Paper>
+								</div>
 				)
 			}
 		};
@@ -325,11 +335,16 @@ class TestSuiteUpload extends React.Component {
 				let displayName = selectedPage ? selectedPage.displayName : '';
 				this.isNameAlreadyExist = checkNameAlreadyExist(testSuites,displayName);
 				element = (
-					<div className="row">
-						<h5 className="suite-name-title sub_title">Test Suite Name: </h5>
-						<input type="textbox" className="suite-test-input suiteditbox" maxlength="50" onChange={e => handleInputChange(e,i)} value={ displayName } />
+					<div className="uploadTestSuitNameMargin">
+						<TextField 
+							label = "Test Suite Name"
+							className= "uploadTestSuitName"
+							maxlength="50"
+							onChange={e => handleInputChange(e,i)} 
+							value={ displayName }
+						/>
 						{this.isNameAlreadyExist &&
-							<span style={{color:"red", paddingLeft:"10px"}}>Test suite Name already exist</span>
+							<span className="uploadTestSuitLabel">Test suite Name already exist</span>
 						}
 					</div>
 				);
@@ -358,6 +373,7 @@ class TestSuiteUpload extends React.Component {
 					<h4 className='pageTitle update-data-profiling-title main_titles'>Update Data Profiling</h4>
 					<Button variant="contained" className="button-colors brows-btn" onClick={ (e) => handleSwitchProject()}>Switch Project</Button>
 				</div>
+				
 				<Tabs activeKey={this.state.key} onSelect={handleSelect} id="controlled-tab-example" >
 					<Tab className="updatedataprofilingtab" eventKey={TAB_UPLOAD_FILE} title="Upload Data Profiling">
 						<div className='testSuiteUploadOptions'>
@@ -365,8 +381,16 @@ class TestSuiteUpload extends React.Component {
 								<input  id="testSuiteUploadFile" type="file" className="file" placeholder="Upload file" accept=".xlsx" 
 									onChange={ (e) => handleChange(e)}/>
 							</div>
-							<input className="browse-txt" type="textbox" placeholder="&nbsp; example.xlsx" value={this.props.file} disabled/>
-							<Button className="button-colors updateBrowsButton" onClick={ (e) => handleTestSuiteUploadClick()}>Browse File</Button>							
+							<TextField 
+								placeholder="&nbsp; example.xlsx"
+								value={this.props.file}
+								disabled
+								className="browse-txt"
+							/>
+							<div className="updateBrowsButton">
+							<Button variant="contained" onClick={this.goToBackBtnPage} className="backbutton_colors uploadBackButton">Back</Button>
+							<Button variant="contained" className="button-colors uploadBrowsButton" onClick={ (e) => handleTestSuiteUploadClick()}>Browse File</Button>
+							</div>						
 						</div>
 					</Tab>
 			
@@ -381,7 +405,7 @@ class TestSuiteUpload extends React.Component {
 						{ getTestCasesList() }
 					</Tab>
 				</Tabs>
-			</div>
+				</div>
 		)
 	}
 }
