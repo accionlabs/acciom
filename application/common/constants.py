@@ -140,7 +140,8 @@ class APIMessages:
     LIMIT_TEN = " limit 10;"
     TOP_TEN = " top 10"
     LIMIT_TENTHOUSAND = " limit 10000;"
-    TOP_TENTHOUSAND = " top 10000"
+    TOP_TENTHOUSAND = " top 10000",
+    QUERY_DELETED = "Query Deleted Successfully"
 
 
 class GenericStrings:

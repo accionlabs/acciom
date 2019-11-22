@@ -375,7 +375,11 @@ def execute_query(query_obj, export):
         query_obj.execution_status = result['res']
         query_obj.save_to_db()
         socketio = SocketIO(message_queue='amqp://guest@localhost//')
-        socketio.emit('my_response', {'data': result['query_result']},
+        socketio.emit('my_response', {
+            "success": True,
+            "message": result['user_res'],
+            'data': result['query_result']
+        },
                       room='1',
                       namespace='/socket')
 
