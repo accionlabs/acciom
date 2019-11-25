@@ -5,6 +5,7 @@ import { Panel, Tabs, Tab} from 'react-bootstrap';
 import { showProjectSwitchPage } from '../actions/appActions';
 import Button from '@material-ui/core/Button';
 import PublishIcon from '@material-ui/icons/Publish';
+import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
 import { 
 	onTestSuiteSheetSelect, 
@@ -29,8 +30,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Table from '@material-ui/core/Table';
-import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
+
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Typography from '@material-ui/core/Typography';
 
 const TAB_UPLOAD_FILE = 1;
 const TAB_UPLOAD_SHEET = 2;
@@ -42,13 +47,15 @@ class TestSuiteUpload extends React.Component {
 		super(props);
 		this.state = {
 			key: TAB_UPLOAD_FILE,
-			sheets:[]
+			sheets:[],
+			activeStep:0,
+			checkedA: false,
 		};
 		this.testSuiteFile = null;
 		this.selectedSheet = null;
 		this.workbook = {};
 		this.pages = [];
-		this.isNameAlreadyExist = false;
+		this.isNameAlreadyExist = true;
 	}
 
 	componentDidMount() {
@@ -145,6 +152,12 @@ class TestSuiteUpload extends React.Component {
 		return payload;
 	};
 
+	testSuitName(){
+		if(this.testSuiteFile){
+			return this.testSuiteFile.name
+		}
+	}
+
 	onUploadBtnClick = (mode) => {
 		let suiteName = '';
 		const selectedTestCases = [];
@@ -169,7 +182,7 @@ class TestSuiteUpload extends React.Component {
 	};
 
 	render() {
-		console.log("this.props.history", this.props.history)
+		console.log("steps", this.testSuiteFile);
 		const MODE_UPLOAD = 0;
 		const MODE_UPLOAD_AND_EXECUTE = 1;
 
@@ -254,7 +267,12 @@ class TestSuiteUpload extends React.Component {
 						<h5 className="margin-title">Please select the sheet to be loaded</h5>
 						<div>{ sheetList } </div>
 						<div className="margin-button">
-							<Button variant="contained" onClick={this.goToBackBtnPage} className="backbutton_colors uploadBackButton">Back</Button>
+							<Checkbox 
+							checked={this.state.checkedA}
+							// onChange={handleChange('checkedA')}
+							value="checkedA"
+							onClick={ (e) => onContinueClick()}
+							/>
 							<Button variant="contained" className="button-colors uploadBrowsButton" onClick={ (e) => onContinueClick()}>Load Test Cases</Button> 
 						</div>
 					</div>
@@ -365,6 +383,69 @@ class TestSuiteUpload extends React.Component {
 				return data.selected === true
 			})
 		}
+
+		const getStepContent = (stepIndex)=>{
+			switch (stepIndex){
+				case 0:
+				return (
+					<div className='testSuiteUploadOptions'>
+							<div className="hideElement">
+								<input  id="testSuiteUploadFile" type="file" className="file" placeholder="Upload file" accept=".xlsx" 
+									onChange={ (e) => handleChange(e)}/>
+							</div>
+							<TextField 
+								placeholder="example.xlsx"
+								value={this.testSuitName()}
+								disabled
+								className="browse-txt"
+							/>
+							<div className="updateBrowsButton">
+							<Button variant="contained" className="button-colors uploadBrowsButton" onClick={ (e) => handleTestSuiteUploadClick()}>Browse File</Button>
+							</div>						
+						</div>
+				)
+				
+				case 1:
+				return (
+					<div>
+						{getSheetsList()}
+					</div>
+				)
+				case 2:
+				return (
+					<div>
+							{ renderTestSuiteName() }
+							<div>
+							{getTestCasesList()}
+							</div>
+					</div>
+
+				)
+				default:
+				return 'Unknown stepIndex';
+			}
+		}
+
+		const handleNext = () => {
+			this.setState({ 
+				activeStep: this.state.activeStep + 1
+			});
+		};
+
+		const handleBack = () => {
+			this.setState({ 
+				activeStep: this.state.activeStep - 1
+			});
+		};
+
+		const handleReset = () => {
+			this.setState({ 
+				activeStep: 0
+			});
+		};
+
+		const { activeStep } = this.state;
+		const steps = ['Upload Data Profiling', 'Create an ad group', 'Create an ad'];
 		return (
 			
 			<div id="suite-upload">
@@ -373,7 +454,41 @@ class TestSuiteUpload extends React.Component {
 					<h4 className='pageTitle update-data-profiling-title main_titles'>Update Data Profiling</h4>
 					<Button variant="contained" className="button-colors brows-btn" onClick={ (e) => handleSwitchProject()}>Switch Project</Button>
 				</div>
-				
+				<div><Stepper className="uploadSuiteStepper" activeStep = {activeStep} alternativeLabel>
+						{steps.map(label => (
+							<Step key = {label}>
+								<StepLabel>{label}</StepLabel>
+							</Step>
+						))}
+					</Stepper>
+					<div>
+						{activeStep === steps.length ?(
+					<div>
+						<Typography>All steps Completed</Typography>
+						<Button onClick={handleReset}>Reset</Button>
+					</div>
+						) : (
+							<div>
+								<Typography>
+									{getStepContent(activeStep)}
+								</Typography>
+							<div>
+							<Button disabled = {activeStep === 0} variant="contained"
+							onClick = {handleBack} 
+							className="backbutton_colors">Back</Button>
+							<Button disabled={!this.testSuitName()} variant="contained" 
+							className="button-colors" 
+							onClick={handleNext}>
+								{activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+							</Button>
+							</div>
+							</div>
+						)}
+					</div>
+					</div>
+
+
+				{/* <div>
 				<Tabs activeKey={this.state.key} onSelect={handleSelect} id="controlled-tab-example" >
 					<Tab className="updatedataprofilingtab" eventKey={TAB_UPLOAD_FILE} title="Upload Data Profiling">
 						<div className='testSuiteUploadOptions'>
@@ -405,8 +520,9 @@ class TestSuiteUpload extends React.Component {
 						{ getTestCasesList() }
 					</Tab>
 				</Tabs>
+				</div> */}
 				</div>
-		)
+		);
 	}
 }
 

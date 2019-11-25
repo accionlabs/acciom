@@ -2082,11 +2082,8 @@ body,html{
     border: none !important;
 }
 
-.viewDBconnPaper{
-    padding-top: 65px;
-    padding-bottom: 20px;
-}
-
-.viewDbCell{
-    padding: 0px 5px 0px 10px !important;
+.uploadSuiteStepper{
+    background-color: #FAFAFA !important;
+    margin-left: -9%;
+    margin-top: -20px;
 }
