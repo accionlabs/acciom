@@ -6,6 +6,7 @@ import { showProjectSwitchPage } from '../actions/appActions';
 import Button from '@material-ui/core/Button';
 import PublishIcon from '@material-ui/icons/Publish';
 import Checkbox from '@material-ui/core/Checkbox';
+import Radio from '@material-ui/core/Radio';
 import Paper from '@material-ui/core/Paper';
 import { 
 	onTestSuiteSheetSelect, 
@@ -31,6 +32,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Table from '@material-ui/core/Table';
 import TextField from '@material-ui/core/TextField';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -182,7 +184,6 @@ class TestSuiteUpload extends React.Component {
 	};
 
 	render() {
-		console.log("steps", this.testSuiteFile);
 		const MODE_UPLOAD = 0;
 		const MODE_UPLOAD_AND_EXECUTE = 1;
 
@@ -250,7 +251,7 @@ class TestSuiteUpload extends React.Component {
 					return (
 						<div key={index} className='sheetListItem'>
 							<label className="form-check-label updatedataprofillabel">
-								<Checkbox
+								<Radio
 									className="form-check-input"
 									value={page.name}
 									checked={page.selected}
@@ -266,15 +267,6 @@ class TestSuiteUpload extends React.Component {
 					<div>
 						<h5 className="margin-title">Please select the sheet to be loaded</h5>
 						<div>{ sheetList } </div>
-						<div className="margin-button">
-							<Checkbox 
-							checked={this.state.checkedA}
-							// onChange={handleChange('checkedA')}
-							value="checkedA"
-							onClick={ (e) => onContinueClick()}
-							/>
-							<Button variant="contained" className="button-colors uploadBrowsButton" onClick={ (e) => onContinueClick()}>Load Test Cases</Button> 
-						</div>
 					</div>
 				);
 			}
@@ -326,7 +318,6 @@ class TestSuiteUpload extends React.Component {
 								</Table>
 								</div>
 								<div className="uploadButtonDiv">
-									<Button variant="contained" onClick={this.goToBackBtnPage} className="backbutton_colors uploadBackButton">Back</Button> 
 									<Button variant="contained" className="button-colors updateandexcbtn" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD_AND_EXECUTE)} disabled={this.isNameAlreadyExist || !isValid()}>Upload and Execute</Button>								
 									<Button variant="contained" className="button-colors uploadbtn" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD)} disabled={this.isNameAlreadyExist || !isValid()}>Upload</Button>
 								</div>
@@ -353,7 +344,7 @@ class TestSuiteUpload extends React.Component {
 				let displayName = selectedPage ? selectedPage.displayName : '';
 				this.isNameAlreadyExist = checkNameAlreadyExist(testSuites,displayName);
 				element = (
-					<div className="uploadTestSuitNameMargin">
+					<div>
 						<TextField 
 							label = "Test Suite Name"
 							className= "uploadTestSuitName"
@@ -361,9 +352,10 @@ class TestSuiteUpload extends React.Component {
 							onChange={e => handleInputChange(e,i)} 
 							value={ displayName }
 						/>
+						<div className="uploadTestSuitLabel">
 						{this.isNameAlreadyExist &&
-							<span className="uploadTestSuitLabel">Test suite Name already exist</span>
-						}
+							<FormHelperText style={{color:'red'}}>Test suite Name already exist</FormHelperText>
+						}</div>
 					</div>
 				);
 			}
@@ -427,6 +419,7 @@ class TestSuiteUpload extends React.Component {
 		}
 
 		const handleNext = () => {
+			onContinueClick();
 			this.setState({ 
 				activeStep: this.state.activeStep + 1
 			});
@@ -445,7 +438,7 @@ class TestSuiteUpload extends React.Component {
 		};
 
 		const { activeStep } = this.state;
-		const steps = ['Upload Data Profiling', 'Create an ad group', 'Create an ad'];
+		const steps = ['Upload Data Profiling', 'Select Sheet', 'Select Test Cases'];
 		return (
 			
 			<div id="suite-upload">
@@ -454,6 +447,7 @@ class TestSuiteUpload extends React.Component {
 					<h4 className='pageTitle update-data-profiling-title main_titles'>Update Data Profiling</h4>
 					<Button variant="contained" className="button-colors brows-btn" onClick={ (e) => handleSwitchProject()}>Switch Project</Button>
 				</div>
+				<Paper style={{'height':'200px'}}>
 				<div><Stepper className="uploadSuiteStepper" activeStep = {activeStep} alternativeLabel>
 						{steps.map(label => (
 							<Step key = {label}>
@@ -472,55 +466,26 @@ class TestSuiteUpload extends React.Component {
 								<Typography>
 									{getStepContent(activeStep)}
 								</Typography>
-							<div>
+							<div className="uploadSuiteProfileButtons">
+							{activeStep !== 0 && (
 							<Button disabled = {activeStep === 0} variant="contained"
 							onClick = {handleBack} 
-							className="backbutton_colors">Back</Button>
+							className={activeStep == 2 ? 'uploadFinishButton':"uploadBackButtons"}>Back</Button>
+							)}
+							{activeStep !== 2 && (
+							
 							<Button disabled={!this.testSuitName()} variant="contained" 
-							className="button-colors" 
+							className={activeStep == 1 ? 'uploadNextButton':'uploadNextButtons'} 
 							onClick={handleNext}>
-								{activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+								{activeStep == 0? 'Next' : 'Load Test Case'}
 							</Button>
+							
+							)}
 							</div>
 							</div>
 						)}
 					</div>
-					</div>
-
-
-				{/* <div>
-				<Tabs activeKey={this.state.key} onSelect={handleSelect} id="controlled-tab-example" >
-					<Tab className="updatedataprofilingtab" eventKey={TAB_UPLOAD_FILE} title="Upload Data Profiling">
-						<div className='testSuiteUploadOptions'>
-							<div className="hideElement">
-								<input  id="testSuiteUploadFile" type="file" className="file" placeholder="Upload file" accept=".xlsx" 
-									onChange={ (e) => handleChange(e)}/>
-							</div>
-							<TextField 
-								placeholder="&nbsp; example.xlsx"
-								value={this.props.file}
-								disabled
-								className="browse-txt"
-							/>
-							<div className="updateBrowsButton">
-							<Button variant="contained" onClick={this.goToBackBtnPage} className="backbutton_colors uploadBackButton">Back</Button>
-							<Button variant="contained" className="button-colors uploadBrowsButton" onClick={ (e) => handleTestSuiteUploadClick()}>Browse File</Button>
-							</div>						
-						</div>
-					</Tab>
-			
-					<Tab eventKey={TAB_UPLOAD_SHEET} title="Select Sheet" disabled={this.props.isSheetListPageDisabled}>
-						{ getSheetsList() }
-					</Tab>
-
-					<Tab eventKey={TAB_UPLOAD_CASES} title="Select Test Cases" disabled={this.props.isCaseListPageDisabled}>
-						<div>
-							{ renderTestSuiteName() }
-						</div>
-						{ getTestCasesList() }
-					</Tab>
-				</Tabs>
-				</div> */}
+					</div></Paper>
 				</div>
 		);
 	}

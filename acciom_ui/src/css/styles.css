@@ -4181,9 +4181,9 @@ html
     color:#337ab7;
 }
 
-/* .MuiTableCell-root {
+.MuiTableCell-root {
     padding: 10px 6px 6px 10px !important;
-} */
+}
 
 .viewUpdateBtn {
     margin-left: 85px;
