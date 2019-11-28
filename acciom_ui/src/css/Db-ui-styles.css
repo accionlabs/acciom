@@ -677,6 +677,7 @@ body,html{
 .updatedataprofillabel{
     color: #69717D;
     margin-left: 5px;
+    margin-top: -15px;
 }
 
 .profileicon2{
@@ -1079,7 +1080,7 @@ body,html{
 .browse-txt {
     width: 250px;
     margin-right: 10px;
-    margin-top: 45px !important;
+    margin-top: -18px !important;
     margin-left: -37px !important;
 }
 .suite-text{
@@ -1101,7 +1102,7 @@ body,html{
 }
 
 .updateBrowsButton{
-    margin-top: 42px !important;
+    margin-top: -7px !important;
     margin-left: 10px !important;
 }
 
@@ -1134,10 +1135,16 @@ body,html{
     width: 145px !important;  
 }
 
-.uploadBackButton{
-    text-transform: none !important;
+.uploadBackButtons{
+    background-color: #69717D !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px !important;
+    text-align: center !important;
+    width: 121px !important;
+    height: 31px !important; 
     padding: 5px !important;
-    margin-right: 10px !important;  
+    text-transform: none !important;
 }
 
 .updateandexcbtn:disabled{
@@ -1932,7 +1939,13 @@ body,html{
 
 .uploadPaperSuite{
     padding-bottom: 46px !important;
-    margin-top: 15px;
+}
+
+.uploadProfileSuiteNameLabel{
+    color: red;
+    margin-top: 18px;
+    font-family: Open Sans;
+    font-size: 12px;
 }
 
 .testSuitHead{
@@ -2044,11 +2057,14 @@ body,html{
 }
 
 .uploadTestSuitName{
-    width: 40%;
+    width: 20%;
+    margin-left: 20px !important;
+    margin-top: 4px !important;
 }
 
 .uploadTestSuitLabel{
-    color: red;
+    margin-left: 226px;
+    margin-top: -18px !important;
 }
 
 .uploadTestSuitNameMargin{
@@ -2082,11 +2098,97 @@ body,html{
     border: none !important;
 }
 
-.viewDBconnPaper{
-    padding-top: 65px;
-    padding-bottom: 20px;
+.uploadSuiteStepper{
+    margin-left: -10%;
+    margin-top: -20px;
+    width: 120%;
+    padding: 0 !important;
+    background: none !important;
 }
 
-.viewDbCell{
-    padding: 0px 5px 0px 10px !important;
+.uploadNextButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-top: -28px !important;
+    background-color: #BD4951 !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px;
+    text-align: center !important;
+    width: 121px;
+    height: 31px;
+    border: none !important;
+    margin-left: 10px !important;
+    margin-top: 0px !important;
+}
+
+.uploadNextButtons{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-top: -120px !important;
+    background-color: #BD4951 !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px;
+    text-align: center !important;
+    width: 121px;
+    height: 31px;
+    border: none !important;
+}
+
+.uploadNextButtons:disabled{
+    background-color: #E29898 !important;
+}
+
+.uploadBackButton{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.uploadBackButton:disabled{
+    opacity: 0.7;
+}
+
+.uploadSuiteProfileButtons{
+    float: right;
+    margin-top: -52px;
+    margin-right: 37px;
+}
+
+.uploadLabelColor{
+    color: #69717D !important;
+}
+
+.uploadFinishButton{
+    margin-top: 15px !important;
+    background-color: #69717D !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px !important;
+    text-align: center !important;
+    width: 121px !important;
+    height: 31px !important;
+    text-transform: none !important;
+    position: absolute !important;
+    margin-left: -385px !important;
+}
+
+.stepColor:active{
+    background-color: #BD4951 !important;
+}
+
+.MuiStepIcon-root.MuiStepIcon-active{
+    color: #BD4951 !important;
+}
+
+.MuiStepIcon-root.MuiStepIcon-completed {
+    color: #BD4951 !important;
+}
+
+.MuiStepIcon-root{
+    color: #E29898 !important;
+}
+
+.uploadSuiteRadioButton{
+
 }

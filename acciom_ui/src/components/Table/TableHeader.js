@@ -21,7 +21,7 @@ function TableHeader(props) {
                         align='left'
                     
                         sortDirection={orderBy === header.id ? order : false}
-                      
+                    
                     >
                         <TableSortLabel
                             className="commonTableHovercolor"
