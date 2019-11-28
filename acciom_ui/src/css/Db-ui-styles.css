@@ -677,6 +677,7 @@ body,html{
 .updatedataprofillabel{
     color: #69717D;
     margin-left: 5px;
+    margin-top: -15px;
 }
 
 .profileicon2{
@@ -1079,7 +1080,7 @@ body,html{
 .browse-txt {
     width: 250px;
     margin-right: 10px;
-    margin-top: 21px !important;
+    margin-top: -18px !important;
     margin-left: -37px !important;
 }
 .suite-text{
@@ -1101,7 +1102,7 @@ body,html{
 }
 
 .updateBrowsButton{
-    margin-top: 20px !important;
+    margin-top: -7px !important;
     margin-left: 10px !important;
 }
 
@@ -1938,7 +1939,13 @@ body,html{
 
 .uploadPaperSuite{
     padding-bottom: 46px !important;
-    margin-top: 30px;
+}
+
+.uploadProfileSuiteNameLabel{
+    color: red;
+    margin-top: 18px;
+    font-family: Open Sans;
+    font-size: 12px;
 }
 
 .testSuitHead{
@@ -2056,8 +2063,8 @@ body,html{
 }
 
 .uploadTestSuitLabel{
-    margin-left: 227px;
-    margin-top: -17px !important;
+    margin-left: 226px;
+    margin-top: -18px !important;
 }
 
 .uploadTestSuitNameMargin{
@@ -2085,10 +2092,6 @@ body,html{
 .uploadBrowsButton{
     text-transform: none !important;
     padding: 5px !important;
-}
-
-.uploadBrowsButton:disabled{
-    opacity: 0.7;
 }
 
 #controlled-tab-example{
@@ -2122,7 +2125,7 @@ body,html{
 .uploadNextButtons{
     text-transform: none !important;
     padding: 5px !important;
-    margin-top: -29px !important;
+    margin-top: -120px !important;
     background-color: #BD4951 !important;
     color: #fff !important;
     font-size: 13px !important;
@@ -2148,7 +2151,7 @@ body,html{
 
 .uploadSuiteProfileButtons{
     float: right;
-    margin-top: -68px;
+    margin-top: -52px;
     margin-right: 37px;
 }
 
@@ -2157,7 +2160,7 @@ body,html{
 }
 
 .uploadFinishButton{
-    margin-top: 31px !important;
+    margin-top: 15px !important;
     background-color: #69717D !important;
     color: #fff !important;
     font-size: 13px !important;
@@ -2167,7 +2170,7 @@ body,html{
     height: 31px !important;
     text-transform: none !important;
     position: absolute !important;
-    margin-left: -386px !important;
+    margin-left: -385px !important;
 }
 
 .stepColor:active{
@@ -2184,4 +2187,8 @@ body,html{
 
 .MuiStepIcon-root{
     color: #E29898 !important;
+}
+
+.uploadSuiteRadioButton{
+
 }
