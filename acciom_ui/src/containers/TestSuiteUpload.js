@@ -252,7 +252,7 @@ class TestSuiteUpload extends React.Component {
 						<div key={index} className='sheetListItem'>
 							<label className="form-check-label updatedataprofillabel">
 								<Radio
-									className="form-check-input"
+									className="uploadSuiteRadioButton"
 									value={page.name}
 									checked={page.selected}
 									onChange={ (e) => handleSheetCheckChange(page)}
@@ -352,7 +352,6 @@ class TestSuiteUpload extends React.Component {
 							onChange={e => handleInputChange(e,i)} 
 							value={ displayName }
 						/>
-						
 						{this.isNameAlreadyExist &&
 							<label className="uploadProfileSuiteNameLabel">Test suite Name already exist</label>
 						}
@@ -448,6 +447,7 @@ class TestSuiteUpload extends React.Component {
 					<Button variant="contained" className="button-colors brows-btn" onClick={ (e) => handleSwitchProject()}>Switch Project</Button>
 				</div>
 				<Paper style={{'height':'200px','marginTop':'8px'}}>
+
 				<div><Stepper className="uploadSuiteStepper" activeStep = {activeStep} alternativeLabel>
 						{steps.map(label => (
 							<Step key = {label}>
@@ -478,6 +478,7 @@ class TestSuiteUpload extends React.Component {
 							className={activeStep == 1 ? 'uploadNextButton':'uploadNextButtons'} 
 							onClick={handleNext}>
 								{activeStep == 0? 'Next' : 'Next'}
+
 							</Button>
 							
 							)}

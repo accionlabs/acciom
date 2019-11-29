@@ -92,7 +92,8 @@ class QueryAnalyser(Resource):
                                 APIMessages.NO_RESOURCE.format('Project'),
                                 STATUS_BAD_REQUEST)
         query_obj_list = Query.query.filter_by(
-            project_id=query_data['project_id']).all()
+            project_id=query_data['project_id'],is_deleted=False).order_by(
+            Query.query_id.desc()).all()
         query_list = list()
         for query_obj in query_obj_list:
             query_list.append(
@@ -106,6 +107,34 @@ class QueryAnalyser(Resource):
                  })
         return api_response(True, APIMessages.SUCCESS, STATUS_OK,
                             {'queries': query_list})
+
+    @token_required
+    def delete(self, session):
+        """
+        To delete the query for the user provided query id.
+
+        Args:
+            session (object):By using this object we can get the user_id.
+
+        Returns:
+            Standard API Response with message(returns message saying
+            that Query Deleted Successfully) and http status code.
+        """
+        delete_query_parser = reqparse.RequestParser()
+        delete_query_parser.add_argument('query_id',
+                                         required=True,
+                                         type=int,
+                                         location='json')
+        deletedata = delete_query_parser.parse_args()
+        query_obj = Query.query.filter_by(query_id=deletedata["query_id"],
+                                          is_deleted=False).first()
+        if not query_obj:
+            return api_response(False,
+                                APIMessages.NO_RESOURCE("Query"),
+                                STATUS_BAD_REQUEST)
+        query_obj.is_deleted = True
+        query_obj.save_to_db()
+        return api_response(True, APIMessages.QUERY_DELETED, STATUS_OK)
 
 
 class QueryExporter(Resource):
