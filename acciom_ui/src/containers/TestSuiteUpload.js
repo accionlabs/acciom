@@ -352,10 +352,10 @@ class TestSuiteUpload extends React.Component {
 							onChange={e => handleInputChange(e,i)} 
 							value={ displayName }
 						/>
-						<div className="uploadTestSuitLabel">
+						
 						{this.isNameAlreadyExist &&
-							<FormHelperText style={{color:'red'}}>Test suite Name already exist</FormHelperText>
-						}</div>
+							<label className="uploadProfileSuiteNameLabel">Test suite Name already exist</label>
+						}
 					</div>
 				);
 			}
@@ -447,7 +447,7 @@ class TestSuiteUpload extends React.Component {
 					<h4 className='pageTitle update-data-profiling-title main_titles'>Update Data Profiling</h4>
 					<Button variant="contained" className="button-colors brows-btn" onClick={ (e) => handleSwitchProject()}>Switch Project</Button>
 				</div>
-				<Paper style={{'height':'200px'}}>
+				<Paper style={{'height':'200px','marginTop':'8px'}}>
 				<div><Stepper className="uploadSuiteStepper" activeStep = {activeStep} alternativeLabel>
 						{steps.map(label => (
 							<Step key = {label}>
@@ -477,7 +477,7 @@ class TestSuiteUpload extends React.Component {
 							<Button disabled={!this.testSuitName()} variant="contained" 
 							className={activeStep == 1 ? 'uploadNextButton':'uploadNextButtons'} 
 							onClick={handleNext}>
-								{activeStep == 0? 'Next' : 'Load Test Case'}
+								{activeStep == 0? 'Next' : 'Next'}
 							</Button>
 							
 							)}

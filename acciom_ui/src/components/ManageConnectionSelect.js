@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
-
 import { manageConnectionsCaseUpdate } from '../actions/testSuiteListActions';
+
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 const BootstrapInput = withStyles(theme => ({
 	root: {
@@ -101,18 +103,19 @@ function ManageConnectionSelect(props) {
 							<label className="manageConnectionHeading sub_title selectcaselabel">Select Connection</label>
 						</td>
 						<td className="changeconnpanelheadborder">
-							<select className="form-control selecteditbox"
+							<Select
+								className="manageConnectionSelect"
 								value={props.selectedConnection}
 								onChange={props.onConnectionChange}
 								name="selectConnection"
 							>
-								<option value="" disabled>Select Connection</option>
-								{ props.allConnections.map(connection => (
+								{props.allConnections.map(connection => (
 									connection ?
-										<option key={connection.db_connection_id} value={connection.db_connection_id}>{connection.db_connection_name}</option> : null
+										<MenuItem key={connection.db_connection_id} value={connection.db_connection_id}>{connection.db_connection_name}</MenuItem> : null
 								))
 								}
-							</select>
+								
+							</Select>
 						</td>
 					</tr> 
 					<tr>
@@ -121,7 +124,7 @@ function ManageConnectionSelect(props) {
 						</td>
 						<td className="manageConnectionLabel">
 							{
-							    renderTestCases(props.allCases[props.testSuiteId])
+								renderTestCases(props.allCases[props.testSuiteId])
 							}
 						</td>
 					</tr>
