@@ -4211,7 +4211,7 @@ html
 }
 
 .manageSelectConnection .MuiSelect-root {
-    width:160px;
+    width:280px;
 }
 
  #editMode>tbody>tr>td, .manageConnection>tbody>tr>td, #viewLogDetails>tbody>tr>td { 
@@ -4256,6 +4256,7 @@ html
     padding-left:8px;
     font-weight: 200;
     margin-bottom: 0px !important;
+    margin-top: 14px;
 }
 
 

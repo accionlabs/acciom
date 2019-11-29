@@ -1021,8 +1021,7 @@ body,html{
 }
 
 .viewclosebtn{
-    margin-left: -128px !important;
-    border: none;
+    margin-right: 10px !important;
     text-transform: none !important;
     padding: 5px !important;
 }
@@ -1038,7 +1037,7 @@ body,html{
 }
 
 .viewbackbtn{
-    margin-left: 162px !important;
+    margin-right: 10px !important;
     text-transform: none !important;
     padding: 5px !important;
 }
@@ -1072,7 +1071,6 @@ body,html{
 }
 
 .updatebtnmargin{
-    float: right;
     text-transform: none !important;
     padding: 5px !important;
 }
@@ -1209,7 +1207,6 @@ body,html{
 }
 
 .selectconnectioneditbox1{
-    margin-top: -9px;
     border-radius: 3px;
 }
 
@@ -1221,6 +1218,7 @@ body,html{
     width: 100%;
     border-radius: 3px;
     resize: vertical;
+    margin-top: -3px !important;
 }
 
 .raidolabel{
@@ -1939,6 +1937,7 @@ body,html{
 
 .uploadPaperSuite{
     padding-bottom: 46px !important;
+    margin-top: -10px;
 }
 
 .uploadProfileSuiteNameLabel{
@@ -2063,8 +2062,10 @@ body,html{
 }
 
 .uploadTestSuitLabel{
-    margin-left: 226px;
-    margin-top: -18px !important;
+    color: red;
+    margin-left: 227px;
+    margin-top: -17px !important;
+
 }
 
 .uploadTestSuitNameMargin{
@@ -2125,7 +2126,7 @@ body,html{
 .uploadNextButtons{
     text-transform: none !important;
     padding: 5px !important;
-    margin-top: -120px !important;
+    margin-top: -105px !important;
     background-color: #BD4951 !important;
     color: #fff !important;
     font-size: 13px !important;
@@ -2151,7 +2152,7 @@ body,html{
 
 .uploadSuiteProfileButtons{
     float: right;
-    margin-top: -52px;
+    margin-top: -35px;
     margin-right: 37px;
 }
 
@@ -2160,7 +2161,7 @@ body,html{
 }
 
 .uploadFinishButton{
-    margin-top: 15px !important;
+    margin-top: -2px !important;
     background-color: #69717D !important;
     color: #fff !important;
     font-size: 13px !important;
@@ -2189,6 +2190,23 @@ body,html{
     color: #E29898 !important;
 }
 
-.uploadSuiteRadioButton{
+.uploadProfileSuiteNameLabel{
+    color: red;
+    margin-top: 18px;
+    font-family: Open Sans;
+    font-size: 12px
+}
 
+.manageConnectionSelect{
+    margin-right: -56px !important;
+
+}
+
+.dataProfilingSelect{
+    width: 100%;
+}
+
+.viewTestCaseButtonDiv{
+    float: right;
+    margin-bottom: 15px;
 }

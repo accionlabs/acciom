@@ -2,7 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import { Table, FormGroup, FormControl} from 'react-bootstrap';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import { 
 	hideTestCaseDialog, 
 	showTestCaseEditEnabled, 
@@ -96,7 +99,7 @@ class TestCaseDetails extends React.Component {
 	renderConnectionsOptions = () => {
 		return this.props.allConnections.map(connection => (
 			connection ?
-				<option key={connection.db_connection_id} value={connection.db_connection_id}>{connection.db_connection_name}</option> : null
+				<MenuItem key={connection.db_connection_id} value={connection.db_connection_id}>{connection.db_connection_name}</MenuItem> : null
 		));
 	}
 
@@ -136,18 +139,19 @@ class TestCaseDetails extends React.Component {
 						<Modal.Body className="tablecontent">
 							{ this.props.showTestCaseEdit ?
 								<form id="testEditMode">
-									<Table id="editMode">
+									<Table id="editMode" style = {{marginTop:'-14px'}}>
 										<tbody>
 											<tr className="selectconnectioneditbox ">
 												<td className="other-titles"><label className="testViewDataLabel">Source Connection</label></td>
 												<td>
-													<select className="form-control"
+													<Select 
+														className="dataProfilingSelect"
 														value={this.state.formData.sourceConnection}
 														onChange={this.handleInputChange}
 														name="sourceConnection"
 													>
 														{ this.renderConnectionsOptions() }
-													</select>
+													</Select>
 												</td>
 											</tr>
 											<tr className="selectconnectioneditbox">
@@ -155,13 +159,14 @@ class TestCaseDetails extends React.Component {
 													<label className="testViewDataLabel">Target Connection</label>
 												</td>
 												<td>
-													<select className="form-control"
+													<Select
+														className="dataProfilingSelect"
 														value={this.state.formData.targetConnection}
 														onChange={this.handleInputChange}
 														name="targetConnection"
 													>
 														{ this.renderConnectionsOptions() }
-													</select>
+													</Select>
 												</td>
 											</tr>
 											<tr className="selectconnectioneditbox1">
@@ -169,57 +174,94 @@ class TestCaseDetails extends React.Component {
 													<label className="testViewDataLabel">Source Table</label>
 												</td>
 												<td>
-													<FormGroup>
-														<FormControl type="textbox" className="sourceTableEditbox" name="sourceTable"  value={this.state.formData.sourceTable} maxlength ="50" onChange={this.handleInputChange}/>
-													</FormGroup>
+													<TextField
+														name="sourceTable"
+														className="dataProfilingSelect"
+														value={this.state.formData.sourceTable}
+														onChange={this.handleInputChange}
+														inputProps = {{
+															maxLength: 50,
+														}}
+													/>
 												</td>
 											</tr>
 											<tr>
 												<td className="other-titles"><label className="testViewDataLabel">Target Table</label></td>
 												<td>
-													<FormGroup>
-														<FormControl type="textbox" name="targetTable" className="selectconnectioneditbox1"  value={this.state.formData.targetTable} maxlength ="50" onChange={this.handleInputChange}/>
-													</FormGroup>
+													<TextField 
+														name="targetTable"
+														value={this.state.formData.targetTable}
+														onChange={this.handleInputChange}
+														className="dataProfilingSelect"
+														inputProps = {{
+															maxLength: 50,
+														}}
+													/>
 												</td>
 											</tr>
 											
 											<tr>
 												<td className="other-titles"><label className="testViewDataLabel">Column</label></td>
 												<td>
-													<FormGroup>
-														<FormControl type="textbox" className="selectconnectioneditbox1" name="column" value={this.state.formData.column} maxlength="50" onChange={this.handleInputChange}/>
-													</FormGroup>
+													<TextField 
+														className="dataProfilingSelect"
+														name="column"
+														value={this.state.formData.column}
+														onChange={this.handleInputChange}
+														inputProps = {{
+															maxLength: 50,
+														}}
+													/>
 												</td>
 											</tr>
 
 											<tr>
 												<td className="other-titles"><label className="testViewDataLabel">Source Query</label></td>
 												<td>
-													<FormGroup>
-														<textarea rows="4" name="sourceQuery" className="textarea1 selectconnectioneditbox1 " value={this.state.formData.sourceQuery} onChange={this.handleInputChange}/>
-													</FormGroup>
+													<TextField
+														rows="4"
+														name="sourceQuery"
+														className="textarea1 selectconnectioneditbox1"
+														value={this.state.formData.sourceQuery}
+														onChange={this.handleInputChange}
+														variant="outlined"
+														margin="normal"
+														multiline
+													/>
+
 												</td>
 											</tr>
 											<tr>
 												<td className="other-titles"><label className="testViewDataLabel ">Target Query</label></td>
 												<td>
-													<FormGroup>
-														<textarea rows="4" name="targetQuery" className="textarea1 selectconnectioneditbox1" value={this.state.formData.targetQuery} onChange={this.handleInputChange}/>
-													</FormGroup>
+													<TextField 
+														rows="4"
+														name="targetQuery"
+														className="textarea1 selectconnectioneditbox1"
+														value={this.state.formData.targetQuery}
+														onChange={this.handleInputChange}
+														variant="outlined"
+														margin="normal"
+														multiline
+													/>
 												</td>
 											</tr>
 											<tr>
 												<td className="other-titles"></td>
 												<td>
+													<div className="viewTestCaseButtonDiv">
 													<Button className="backbutton_colors viewclosebtn" variant="contained" onClick={this.handleCaseDialogBoxClose}>Close</Button>
 													<Button className="button-colors viewbackbtn" variant="contained" onClick={this.handleTestCaseViewMode}><i className="fas fa-long-arrow-alt-left"></i>&nbsp;View Details</Button>
 													<Button className="button-colors updatebtnmargin" variant="contained" onClick={e => this.handleTestCaseUpdate(e)}>
 														Update
 													</Button>
+													</div>
 												</td>
 											</tr>
 										</tbody>
 									</Table>
+									
+
 								</form>
 								:  
 								<Table className="manageConnection" id="viewMode">
