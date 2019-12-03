@@ -1124,6 +1124,7 @@ body,html{
     font-size: 25px !important;
     color: #69717D;
     margin-bottom: -4px;
+    margin-left: -5px;
 }
 
 .updateandexcbtn{
@@ -1143,6 +1144,7 @@ body,html{
     height: 31px !important; 
     padding: 5px !important;
     text-transform: none !important;
+    margin-top: -27px !important;
 }
 
 .updateandexcbtn:disabled{
@@ -1565,6 +1567,7 @@ body,html{
 .commonTablePaperMargin{
     margin-top: 12px;
     margin-left: -3px;
+    min-width: 901px !important;
 }
 
 .commonTableData{
@@ -1631,6 +1634,14 @@ body,html{
     margin-left: -5px;
     margin-top: -12px;
     color: #69717D;
+}
+
+.addDBIcon{
+    margin-left: -5px !important;
+    margin-top: -12px !important;
+    color: #69717D;
+    font-size: 25px !important;
+    margin-bottom: -4px !important;
 }
 
 .userProfileTitle{
@@ -2120,13 +2131,13 @@ body,html{
     height: 31px;
     border: none !important;
     margin-left: 10px !important;
-    margin-top: 0px !important;
+    /* margin-top: 0px !important; */
 }
 
 .uploadNextButtons{
     text-transform: none !important;
     padding: 5px !important;
-    margin-top: -105px !important;
+    margin-top: -160px !important;
     background-color: #BD4951 !important;
     color: #fff !important;
     font-size: 13px !important;
@@ -2209,4 +2220,35 @@ body,html{
 .viewTestCaseButtonDiv{
     float: right;
     margin-bottom: 15px;
+}
+
+.adDbDetailsPaper{
+    padding-left: 36px;
+    padding-bottom: 90px;
+    margin-top: 38px;
+    padding-top: 20px;
+    min-width: 465px !important;
+    margin-left: 73%;
+    padding-right: 30px;
+}
+
+.addDbDetailsButtonDIv{
+    padding-top: 30px;
+    margin-right: 18px;
+    float: right;
+}
+
+.adDbDetilsText{
+    width: 399px;
+    padding-right: 18px !important;
+}
+
+.addDBTitles{
+    position: absolute;
+    margin-top: -4px;
+}
+
+.testSuiteUploadPapers{
+    height: 163px;
+    margin-top: 3px;
 }

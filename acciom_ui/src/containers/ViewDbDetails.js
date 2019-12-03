@@ -9,8 +9,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import StorageIcon from '@material-ui/icons/Storage';
 import DeleteIcon from '@material-ui/icons/Delete';
 import '../css/Db-ui-styles.css';
-import CustomTable from '../components/Table/CustomTable';
-import CustomModal from '../components/CommonModal/CustomModal';
 
 class ViewDbDetails extends Component {
 
@@ -73,7 +71,7 @@ class ViewDbDetails extends Component {
 		)
 		// this.props.deleteDBDetails(connectionID);
 	}
-	
+
 	renderDBDetailsList = (dbDetailsList) => {
 		return dbDetailsList.map((item, index) => {
 			return (
@@ -96,7 +94,7 @@ class ViewDbDetails extends Component {
 	};
 
 	render() {
-		return (
+ 		return (
 			<div className="viewDbDetailsForm">
 				<div className='btnContainer'>
 				<StorageIcon className="manageDbIcon" />
@@ -128,10 +126,6 @@ class ViewDbDetails extends Component {
 						this.renderDeleteConfirmationPopup()
 						: null
 				}
-
-				{/* <CustomTable 
-
-				/> */}
 			</div>
 		);
 	}

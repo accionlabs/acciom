@@ -446,7 +446,7 @@ class TestSuiteUpload extends React.Component {
 					<h4 className='pageTitle update-data-profiling-title main_titles'>Update Data Profiling</h4>
 					<Button variant="contained" className="button-colors brows-btn" onClick={ (e) => handleSwitchProject()}>Switch Project</Button>
 				</div>
-				<Paper style={{'height':'200px','marginTop':'8px'}}>
+				<Paper className="testSuiteUploadPapers">
 
 				<div><Stepper className="uploadSuiteStepper" activeStep = {activeStep} alternativeLabel>
 						{steps.map(label => (
@@ -478,7 +478,6 @@ class TestSuiteUpload extends React.Component {
 							className={activeStep == 1 ? 'uploadNextButton':'uploadNextButtons'} 
 							onClick={handleNext}>
 								{activeStep == 0? 'Next' : 'Next'}
-
 							</Button>
 							
 							)}
