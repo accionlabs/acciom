@@ -54,6 +54,7 @@ body,html{
 
 .changePasswordPage{
     position: absolute;
+    width: 51%;
 }
 
 .logineditbox{
@@ -1529,8 +1530,6 @@ body,html{
 
 }
 
-/* common table css  */
-
 
 .commonTableHead{
     vertical-align: middle;
@@ -1666,35 +1665,26 @@ body,html{
 }
 
 .select_Project_default{
-    margin-left: 25px;
-    width: 204%;
+    margin-left: 46px;
+    width: 285px;
     color: #69717D !important;
 }
 
 .userProfileProjectLabel{
-    margin-top: 40px;
-    margin-left: 25px;
+    margin-top: 46px;
+    margin-left: 46px;
     color: #69717D;
-    font-weight: 300;
-    font-size: 13px;
+    font-weight: 500;
 }
 
 .userProfileFname{
-    padding-left: 231px;
-    padding-top: 21px;
-    color: #69717D;
-    font-size: 21px;
-    font-family: Open sans;
-    font-weight: 500 ;
+    width: 258px;
+    margin-left: 10px !important;
 }
 
 .userProfileEmail{
-    padding-left: 231px;
-    padding-top: 21px;
-    color: #69717D;
-    font-size: 21px;
-    font-family: Open sans;
-    font-weight: 500 ;
+    width: 250px;
+    margin-left: 47px !important;
 }
 
 .userProfileLabel{
@@ -1705,25 +1695,16 @@ body,html{
     font-size: 13px;
 }
 
-.userProfileFname{
-    width: 126% !important;
-    margin-left: 10px !important;
-}
-
 .userProfileLname{
-    margin-left: 89px !important;
-    width: 100% !important;
-}
-
-.userProfileEmail{
-    margin-left: 150px !important;
-    width: 75% !important;
+    width: 283px !important;
+    margin-left: 47px !important;
 }
 
 .userSubmitButton{
-    margin-left: 242px !important;
+    float: right;
     margin-top: 25px!important;
     text-transform: none !important;
+    margin-right: 50px !important;
 }
 
 .border_user_profile{
@@ -1855,7 +1836,7 @@ body,html{
     padding: 5px !important;
     float: right;
     margin-right: 46px !important;
-    margin-top: 9px !important;
+    margin-top: -25px !important;
 }
 
 .deleteDBNoConnection{
@@ -2256,6 +2237,7 @@ body,html{
 .addDBTitles{
     position: absolute;
     margin-top: -4px;
+    width: 46%;
 }
 
 .testSuiteUploadPapers{
@@ -2281,4 +2263,8 @@ body,html{
 
 .chngpasswbtn:disabled{
     opacity: 0.7;
+}
+
+.userProfileDiv{
+    
 }
