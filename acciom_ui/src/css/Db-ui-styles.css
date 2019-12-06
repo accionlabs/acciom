@@ -36,32 +36,21 @@ body,html{
 }
 
 .sign-upbtn{
-    float: right;
     text-transform: none !important;
     padding: 5px !important;
 }
 
-.loginpanelhead{
-    margin-left: 89px;
-    margin-top: -47px;
-    margin-right: -87px;
-}
-
-.loginformhead{
-    background-color: #BD4951 !important;
-    color: #fff !important;
+.loginPageButtonDiv{
+    margin-left: 135px;
+    padding-top: 20px;
 }
 
 .changePasswordPage{
     position: absolute;
-    width: 51%;
+    width: 50%;
+    margin: auto;
 }
 
-.logineditbox{
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: #fff !important;
-}
 .usericon2{
     font-size: 20px;
     color: #69717D;
@@ -410,6 +399,16 @@ body,html{
     padding-top: 20px;
     min-width: 465px !important;
     margin-left: 69%;
+    padding-right: 30px;
+}
+
+.loginPagePaper{
+    padding-left: 36px;
+    padding-bottom: 20px;
+    margin-top: 59px;
+    padding-top: 20px;
+    min-width: 465px !important;
+    margin-left: 83%;
     padding-right: 30px;
 }
 
@@ -1570,7 +1569,7 @@ body,html{
 }
 
 .commonTablePaperMargin{
-    margin-top: 12px;
+    margin-top: 20px;
     margin-left: -3px;
     min-width: 901px !important;
 }
@@ -2265,6 +2264,11 @@ body,html{
     opacity: 0.7;
 }
 
-.userProfileDiv{
-    
+
+#saidBarclass{
+    display: none !important;
+}
+
+#saidBarclassFlex{
+    display: flex;
 }

@@ -337,7 +337,7 @@ function NavigationBar(props) {
         setOpen(false);
     }
     return (
-        <div className={classes.root}>
+        <div id="saidBarclassFlex" >
             <CssBaseline />
             <AppBar
                 id="db_top_bar"
@@ -354,6 +354,7 @@ function NavigationBar(props) {
                 </Toolbar>
             </AppBar>
             <Drawer
+                id = {props.projectName == '' ? 'saidBarclass':'saidBarclassFlex'}
                 variant="permanent"
                 className={clsx(classes.drawer, {
                     [classes.drawerOpen]: open,

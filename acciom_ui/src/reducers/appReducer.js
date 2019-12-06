@@ -113,8 +113,7 @@ const appData = (state = initialState, action) => {
 			window.sessionStorage.removeItem('default_org_id');
 			window.sessionStorage.removeItem('default_project_id');
 			window.sessionStorage.removeItem('current_project_id');
-			window.sessionStorage.removeItem('current_organaisation_id');
-			console.log('clicked');		
+			window.sessionStorage.removeItem('current_organaisation_id');	
 		return {
 			...state,
 			currentOrg: null,

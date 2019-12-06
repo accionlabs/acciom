@@ -71,7 +71,6 @@ class RoleManagement extends Component {
     };
     render() {
         const { headers, roleDetailsList } = this.state;
-
         const roleModifyData = [];
         if (roleDetailsList) {
             roleDetailsList.forEach((role, index) => {

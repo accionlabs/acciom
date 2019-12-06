@@ -5,6 +5,11 @@ import { isEmail, isEmpty, isLength, isContainWhiteSpace } from '../shared/valid
 import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 import { loginToPortal } from '../actions/loginActions';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+// import logo from '../assets/images/logo.png';
+import FormHelperText from '@material-ui/core/FormHelperText';
+
 
 class Login extends Component {
 
@@ -79,33 +84,31 @@ class Login extends Component {
 	}
 
 	render() {
-
 		const { errors, formSubmitted } = this.state;
-
+		console.log(this.state.formData)
 		return (
-			<div className="loginForm">
-				<Panel className="loginpanelhead">
-					<Panel.Heading className="loginformhead">User Login</Panel.Heading>
-					<Panel.Body>
+			<div className="changePasswordPage">
+				<Paper className="loginPagePaper">
 						<form onSubmit={this.login}>
 							<FormGroup controlId="email" validationState={ formSubmitted ? (errors.email ? 'error' : 'success') : null }>
-								<ControlLabel style={{color:'#69717D'}}>Email</ControlLabel>
-								<FormControl type="text" name="email" className="logineditbox" placeholder="Enter your email" onChange={this.handleInputChange} />
+								<TextField type="text" name="email" className="chnagePasswordText" label="Email "  onChange={this.handleInputChange} />
 								{ errors.email && 
-									<HelpBlock>{errors.email}</HelpBlock> 
+									<FormHelperText>{errors.email}</FormHelperText> 
 								}
 							</FormGroup >
 							<FormGroup controlId="password" validationState={ formSubmitted ? (errors.password ? 'error' : 'success') : null }>
-								<ControlLabel style={{color:'#69717D'}}>Password</ControlLabel>
-								<FormControl type="password" className="logineditbox" name="password" placeholder="Enter your password" onChange={this.handleInputChange} />
+								
+								<TextField type="password" className="chnagePasswordText" name="password" label="Password" onChange={this.handleInputChange} />
 								{ errors.password && 
-									<HelpBlock>{errors.password}</HelpBlock> 
+									<FormHelperText>{errors.password}</FormHelperText> 
 								}
-							</FormGroup>
-							<Button type="submit" variant="contained" className="button-colors sign-upbtn" bsStyle="primary">Sign-In</Button>
+							</FormGroup>			
 						</form>
-					</Panel.Body>
-				</Panel>
+						<div className="loginPageButtonDiv">
+						<Button type="submit" onClick={this.login} variant="contained" className="button-colors sign-upbtn">Sign-In</Button>	
+						</div>
+				</Paper>
+				
 			</div>
 		)
 	}
