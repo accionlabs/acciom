@@ -85,27 +85,24 @@ class Login extends Component {
 
 	render() {
 		const { errors, formSubmitted } = this.state;
-		console.log(this.state.formData)
+		console.log(this.props.loginToPortal)
 		return (
 			<div className="changePasswordPage">
 				<Paper className="loginPagePaper">
-						<form onSubmit={this.login}>
 							<FormGroup controlId="email" validationState={ formSubmitted ? (errors.email ? 'error' : 'success') : null }>
+								<div style = {{paddingBottom:'30px'}}>
 								<TextField type="text" name="email" className="chnagePasswordText" label="Email "  onChange={this.handleInputChange} />
-								{ errors.email && 
-									<FormHelperText>{errors.email}</FormHelperText> 
-								}
+									<FormHelperText style={{color: 'red'}}>{errors.email}</FormHelperText>
+								</div>
 							</FormGroup >
 							<FormGroup controlId="password" validationState={ formSubmitted ? (errors.password ? 'error' : 'success') : null }>
-								
+								<div>
 								<TextField type="password" className="chnagePasswordText" name="password" label="Password" onChange={this.handleInputChange} />
-								{ errors.password && 
 									<FormHelperText>{errors.password}</FormHelperText> 
-								}
-							</FormGroup>			
-						</form>
+								</div>
+							</FormGroup>
 						<div className="loginPageButtonDiv">
-						<Button type="submit" onClick={this.login} variant="contained" className="button-colors sign-upbtn">Sign-In</Button>	
+						<Button type="submit" onClick={(e) => this.login(e)} variant="contained" className="button-colors sign-upbtn">Sign-In</Button>	
 						</div>
 				</Paper>
 				
