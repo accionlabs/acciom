@@ -85,7 +85,6 @@ class Login extends Component {
 
 	render() {
 		const { errors, formSubmitted } = this.state;
-		console.log(this.props.loginToPortal)
 		return (
 			<div className="changePasswordPage">
 				<Paper className="loginPagePaper">
