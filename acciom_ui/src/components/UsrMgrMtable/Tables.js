@@ -432,15 +432,15 @@ class CustomPaginationActionsTable extends React.Component {
     const {firstName,lastName,email}=this.state;
     let firstNameValue =(   <Tooltip title=" Kindly enter the FirstName">
     <TextField
-id="firstNameInfo"
-placeholder="FirstName"
-type="search"
-className={classes.textFieldEdit}
-style ={{marginLeft:'20px'}}
-margin="normal"
-onChange ={this.onTextFieldHandler}
-value ={firstName}
-name="firstName"
+        id="firstNameInfo"
+        placeholder="FirstName"
+        type="search"
+        className={classes.textFieldEdit}
+        style ={{marginLeft:'20px'}}
+        margin="normal"
+        onChange ={this.onTextFieldHandler}
+        value ={firstName}
+        name="firstName"
 />
 
     </Tooltip>);

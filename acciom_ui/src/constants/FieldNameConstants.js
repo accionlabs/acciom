@@ -61,12 +61,21 @@ export const CREATE_ROLE_SUCCESS_MSG ="Role is Successfully Created";
 export const EDIT_ROLES ='Edit Roles';
 export const EDIT='EDIT';
 
+export const CONNECTIONAMELABEL = 'Connection Name';
+export const CONNECTIONAME = 'Connection_name';
+export const DATABASETYPELABEL = 'Database Type';
+export const DATABASETYPE = 'database_type';
+export const DATABASENAMELABEL = 'DatabaseName';
+export const DATABASENAME = 'database_name';
+export const HOSTNAMELABEL = 'Host Name';
+export const HOSTNAME = 'host_name';
+export const USERNAMELABEL = 'User Name';
+export const USERNAME = 'db_username';
 
-export const CONNECTIONAME = 'Connection Name';
-export const DATABASETYPE = 'Database Type';
-export const DATABASENAME = 'Database Name';
-export const HOSTNAME = 'Host Name';
-export const USERNAME = 'User Name';
+export const SUITENAMEID = 'suite_name';
+export const SUITENAMELABEL =  'Suite Name';
+export const UPLOADATID = 'upload_at';
+export const UPLOADATLABEL = 'Upload at';
 
 
 

@@ -257,7 +257,7 @@ class AddDbDetails extends Component {
                                 variant="contained"
                                 className="backbutton_colors backbtnbackgroundcolor"
                             >
-                                Back
+                                Cancel
                             </Button>
                         </Link>
                         <Button

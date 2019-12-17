@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import '../css/Db-ui-styles.css';
 import { Link } from 'react-router-dom';
@@ -9,13 +9,25 @@ import { showProjectSwitchPage } from '../actions/appActions';
 import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import CustomTable from '../components/Table/CustomTable';
+import {
+    SUITENAMEID,
+    SUITENAMELABEL,
+    UPLOADATID,
+    ACTION,
+    UPLOADATLABEL,
+    SMALL
+} from '../constants/FieldNameConstants';
 
 import Button from '@material-ui/core/Button';
 export class ViewSuite extends Component {
     constructor(props) {
 		super(props);
 		this.state = {
-			
+			headers: [
+                { id: SUITENAMEID, label: SUITENAMELABEL },
+                {id: UPLOADATID, label: UPLOADATLABEL }
+            ]
 		};
     }
     
@@ -31,32 +43,46 @@ export class ViewSuite extends Component {
         return null;
     }
 
-    renderSuiteList = (suiteList) =>{
-       return suiteList.map((item,index)=>{
-        return (
-            <tr key={index}>
-            
-                <td>{item.test_suite_name}</td>
-                <td>{item.created_at}</td>
-                <td>
-                    
-                <Link to={`/edit_test_case/${item.test_suite_id}`}>
-                <EditIcon fontSize="small"  style={{color:"#696969"}} />
-                </Link>
-                <DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} />
-                <Link to={`/clone-suite/${item.test_suite_id}`}>
-                <span ><FileCopyIcon fontSize="small"  style={{color:"#696969"}}/></span>
-                </Link>
-                </td>
-            </tr>	
-        );
-       })
-    };
-
     handleSwitchProject = () => {
 		this.props.showProjectSwitchPage(true);
 	};
     render() {
+        const {headers} = this.state;
+        const {suitelist} = this.props;
+
+        const modifyBodyData = [];
+        if(suitelist){
+            suitelist.forEach((testsuitename, index)=>{
+                modifyBodyData.push({
+                    suite_name: testsuitename.test_suite_name,
+                    upload_at: testsuitename.created_at,
+
+                    action: (
+						<Fragment>
+							<Link to={`/clone-suite/${testsuitename.test_suite_id}`}>
+                                <EditIcon
+                                    fontSize={SMALL}
+                                    className="editicon2"
+                                    style={{
+                                        color: '#696969',
+                                        marginRight: '8px'
+                                    }}
+                                />
+                            </Link>
+							<DeleteIcon 
+								className="cursorhover"
+                                fontSize={SMALL}
+                                style={{ color: '#696969', marginRight: '8px' }}
+							/>
+                            <Link to={`/clone-suite/${testsuitename.test_suite_id}`}>
+                            <span ><FileCopyIcon fontSize="small"  style={{color:"#696969"}}/></span>
+                            </Link>
+						</Fragment>
+					)
+                })
+            })
+        }
+
         return (
                 <div className="viewDbDetailsForm">
 				<div className='btnContainer'>
@@ -68,21 +94,12 @@ export class ViewSuite extends Component {
                     <Button className="button-colors newSuite" type="button" variant="contained">New Suite</Button>
                     </Link>
                     </div>
-
 				</div>
-				<Table responsive className="manage-db-table">
-					<thead className="table_head">
-						<tr>
-						
-							<th>Suite Name</th>
-							<th>Uploaded at</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody className="table_body">
-						{ this.renderSuiteList(this.props.suitelist) }
-					</tbody>
-				</Table>
+                <CustomTable 
+                    headers={headers}
+					bodyData={modifyBodyData}
+					actionLabel={ACTION}
+                />
             </div>
         )
     }

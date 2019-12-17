@@ -8,6 +8,8 @@ import PublishIcon from '@material-ui/icons/Publish';
 import Checkbox from '@material-ui/core/Checkbox';
 import Radio from '@material-ui/core/Radio';
 import Paper from '@material-ui/core/Paper';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import { 
 	onTestSuiteSheetSelect, 
 	testCaseSelectionChange, 
@@ -283,6 +285,8 @@ class TestSuiteUpload extends React.Component {
 							<TableCell>{testCase.name}</TableCell>
 							<TableCell>
 								<Checkbox
+									checkedIcon={<CheckBoxIcon className="checkBoxSize" />}
+									icon={<CheckBoxOutlineBlankIcon className="checkBoxSize" />}
 									value={testCase.selected}
 									id={testCase.name}
 									name={testCase.name}
@@ -305,6 +309,8 @@ class TestSuiteUpload extends React.Component {
 											<TableCell className="uploadDataCheckBox">Test Class</TableCell>
 											<TableCell className="uploadDataCheckBox">
 												<Checkbox 
+													checkedIcon={<CheckBoxIcon className="checkBoxSize" />}
+													icon={<CheckBoxOutlineBlankIcon className='checkBoxSize' />}
 													onChange={ (e) => handleSelectAllChange()}
 													value="Select All"
 													id="Select All"

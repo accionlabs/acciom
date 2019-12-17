@@ -106,10 +106,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                     </tbody>
                 </table>
             <Paper className="UserProfilePaper">
-                <table>
-                    <tbody>
-                    <tr>
-                        <td>
+                <div>
                         <TextField
                         className="userProfileFname"
 						name="first_name"
@@ -118,8 +115,6 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                         value = {profileDetails.first_name}
 						onChange = {this.handleInputChange}
 						/>
-                        </td>
-                        <td>
                         <TextField
 						className="userProfileLname"
 						name="last_name"
@@ -128,8 +123,7 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                         value = {profileDetails.last_name}
 						onChange = {this.handleInputChange}
 						/>
-                        </td>
-                        <td>
+                        
                         <TextField
                         className="userProfileEmail"
 						name="email_id"
@@ -138,11 +132,8 @@ this.handleOrgChange = this.handleOrgChange.bind(this)
                         value = {profileDetails.email_id}
                         disabled = {profileDetails.email_id || !profileDetails.email_id}
                         />
-                        </td>
-                        <td><Button variant="contained" onClick={() => this.userProfileSubmit()} className="button-colors userSubmitButton">Submit</Button></td>
-                    </tr>
-                    </tbody>
-                </table>
+                        <Button variant="contained" onClick={() => this.userProfileSubmit()} className="button-colors userSubmitButton">Submit</Button>
+                        </div>
                 <div>
                     <table>
                         <tbody>

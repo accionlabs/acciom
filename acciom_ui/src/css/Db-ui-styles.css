@@ -36,27 +36,21 @@ body,html{
 }
 
 .sign-upbtn{
-    float: right;
     text-transform: none !important;
     padding: 5px !important;
 }
 
-.loginpanelhead{
-    margin-left: 89px;
-    margin-top: -47px;
-    margin-right: -87px;
+.loginPageButtonDiv{
+    margin-left: 135px;
+    padding-top: 10px;
 }
 
-.loginformhead{
-    background-color: #BD4951 !important;
-    color: #fff !important;
+.changePasswordPage{
+    position: absolute;
+    width: 50%;
+    margin: auto;
 }
 
-.logineditbox{
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: #fff !important;
-}
 .usericon2{
     font-size: 20px;
     color: #69717D;
@@ -399,9 +393,23 @@ body,html{
 }
 
 .passw_chng_panel_margin{
-    margin-left: 45px;
-    margin-right: -20px;
-    margin-top: -53px;
+    padding-left: 36px;
+    padding-bottom: 80px;
+    margin-top: 59px;
+    padding-top: 20px;
+    min-width: 465px !important;
+    margin-left: 69%;
+    padding-right: 30px;
+}
+
+.loginPagePaper{
+    padding-left: 36px;
+    padding-bottom: 20px;
+    margin-top: 59px;
+    padding-top: 20px;
+    min-width: 465px !important;
+    margin-left: 78%;
+    padding-right: 30px;
 }
 
 .chgpasswtable{
@@ -410,14 +418,12 @@ body,html{
 }
 
 .changepasswbackbutton{
-    float: left;
-    margin-left: 190px !important;
     text-transform: none !important;
     padding: 5px !important;
+    margin-right: 9px !important;
 }
 
 .chngpasswbtn{
-    float: right;
     text-transform: none !important;
     padding: 5px !important;
 }
@@ -1523,8 +1529,6 @@ body,html{
 
 }
 
-/* common table css  */
-
 
 .commonTableHead{
     vertical-align: middle;
@@ -1565,7 +1569,7 @@ body,html{
 }
 
 .commonTablePaperMargin{
-    margin-top: 12px;
+    margin-top: 20px;
     margin-left: -3px;
     min-width: 901px !important;
 }
@@ -1574,7 +1578,6 @@ body,html{
     color: #fff !important;
     font-size: 13px !important;
     font-family:  Open sans !important;
-    padding: 1px 50px 3px 11px !important;
 }
 
 .commonTableHovercolor{
@@ -1660,35 +1663,26 @@ body,html{
 }
 
 .select_Project_default{
-    margin-left: 25px;
-    width: 204%;
+    margin-left: 46px;
+    width: 285px;
     color: #69717D !important;
 }
 
 .userProfileProjectLabel{
-    margin-top: 40px;
-    margin-left: 25px;
+    margin-top: 46px;
+    margin-left: 46px;
     color: #69717D;
-    font-weight: 300;
-    font-size: 13px;
+    font-weight: 500;
 }
 
 .userProfileFname{
-    padding-left: 231px;
-    padding-top: 21px;
-    color: #69717D;
-    font-size: 21px;
-    font-family: Open sans;
-    font-weight: 500 ;
+    width: 258px;
+    margin-left: 10px !important;
 }
 
 .userProfileEmail{
-    padding-left: 231px;
-    padding-top: 21px;
-    color: #69717D;
-    font-size: 21px;
-    font-family: Open sans;
-    font-weight: 500 ;
+    width: 250px;
+    margin-left: 47px !important;
 }
 
 .userProfileLabel{
@@ -1699,25 +1693,16 @@ body,html{
     font-size: 13px;
 }
 
-.userProfileFname{
-    width: 126% !important;
-    margin-left: 10px !important;
-}
-
 .userProfileLname{
-    margin-left: 89px !important;
-    width: 100% !important;
-}
-
-.userProfileEmail{
-    margin-left: 150px !important;
-    width: 75% !important;
+    width: 283px !important;
+    margin-left: 47px !important;
 }
 
 .userSubmitButton{
-    margin-left: 242px !important;
+    float: right;
     margin-top: 25px!important;
     text-transform: none !important;
+    margin-right: 50px !important;
 }
 
 .border_user_profile{
@@ -1849,7 +1834,7 @@ body,html{
     padding: 5px !important;
     float: right;
     margin-right: 46px !important;
-    margin-top: 9px !important;
+    margin-top: -25px !important;
 }
 
 .deleteDBNoConnection{
@@ -1936,7 +1921,7 @@ body,html{
 
 .testSuitBodyScroll{
     display:block;
-    height: 365px;
+    height: 300px;
     overflow:auto;
     overflow-x: auto;
     margin-top: 15px;
@@ -2243,12 +2228,46 @@ body,html{
     padding-right: 18px !important;
 }
 
+.chnagePasswordText{
+    width: 399px;
+}
+
 .addDBTitles{
     position: absolute;
     margin-top: -4px;
+    width: 46%;
 }
 
 .testSuiteUploadPapers{
     height: 163px;
     margin-top: 3px;
+}
+
+
+.checkBoxSize{
+    font-size: 12px !important;
+    color: #BD4951;
+}
+
+.checkBoxSize:active{
+    font-size: 12px !important;
+}
+
+.changePasswordDiv{
+    float: right;
+    padding-top: 20px;
+    margin-right: 79px !important;
+}
+
+.chngpasswbtn:disabled{
+    opacity: 0.7;
+}
+
+
+#saidBarclass{
+    display: none !important;
+}
+
+#saidBarclassFlex{
+    display: flex;
 }

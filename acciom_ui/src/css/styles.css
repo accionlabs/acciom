@@ -4182,7 +4182,7 @@ html
 }
 
 .MuiTableCell-root {
-    padding: 10px 6px 6px 10px !important;
+    padding: 5px 6px 6px 10px !important;
 }
 
 .viewUpdateBtn {
@@ -4356,6 +4356,7 @@ html
 
   .MuiIconButton-label .MuiSvgIcon-root {
       color:#69717D;
+      /* font-size: 13px; */
   }
 
   .DQIprojectGaugeDetail {

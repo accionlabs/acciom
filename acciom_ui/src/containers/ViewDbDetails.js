@@ -1,14 +1,32 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Panel, Table, Modal} from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
-import { showProjectSwitchPage } from '../actions/appActions';
+import { showProjectSwitchPage, headers } from '../actions/appActions';
 import { getAllDBDetails, deleteDBDetails } from '../actions/dbDetailsActions';
 import EditIcon from '@material-ui/icons/Edit';
 import StorageIcon from '@material-ui/icons/Storage';
 import DeleteIcon from '@material-ui/icons/Delete';
 import '../css/Db-ui-styles.css';
+import CustomTable from '../components/Table/CustomTable';
+
+import {
+	PROJECTNAME,
+	CONNECTIONAME,
+	CONNECTIONAMELABEL,
+	DATABASETYPE,
+	DATABASETYPELABEL,
+	DATABASENAME,
+	HOSTNAMELABEL,
+	DATABASENAMELABEL,
+	USERNAMELABEL,
+    HOSTNAME,
+    USERNAME,
+	ACTION,
+	PROJNAME,
+	SMALL, 
+} from '../constants/FieldNameConstants';
 
 class ViewDbDetails extends Component {
 
@@ -16,7 +34,15 @@ class ViewDbDetails extends Component {
 		super(props);
 		this.state = {
 			showDeleteConfirmationDialog: false,
-			deleteConnectionID: null
+			deleteConnectionID: null,
+			headers: [
+			{ id: PROJECTNAME, label: PROJNAME },
+			{ id: CONNECTIONAME, label: CONNECTIONAMELABEL },
+			{ id: DATABASETYPE, label: DATABASETYPELABEL },
+			{ id: DATABASENAME, label: DATABASENAMELABEL },
+			{ id: HOSTNAME, label: HOSTNAMELABEL },
+			{ id: USERNAME, label: USERNAMELABEL },
+			]
 		};
 	}
 
@@ -72,28 +98,45 @@ class ViewDbDetails extends Component {
 		// this.props.deleteDBDetails(connectionID);
 	}
 
-	renderDBDetailsList = (dbDetailsList) => {
-		return dbDetailsList.map((item, index) => {
-			return (
-				<tr key={index}>
-					<td>{item.project_name}</td>
-					<td>{item.db_connection_name}</td>
-					<td>{item.db_type}</td>
-					<td>{item.db_name}</td>
-					<td>{item.db_hostname}</td>
-					<td>{item.db_username}</td>
-					<td>
-						<Link to={`/add_db_details/${item.db_connection_id}`}>
-							<EditIcon fontSize="small"  style={{color:"#696969"}} />
-						</Link> &nbsp;
-						<DeleteIcon className="cursorhover" fontSize="small" style={{color:"#696969"}} onClick={ (e) => {this.deleteViewDBDetails(item.db_connection_id)}} />
-					</td>
-				</tr>	
-			);
-		});
-	};
-
 	render() {
+		const {headers} = this.state;
+		const { dbDetailsList } = this.props;
+
+		const modifyData = [];
+		if(dbDetailsList){
+			dbDetailsList.forEach((project, index)=>{
+				modifyData.push({
+					project_name: project.project_name,
+					Connection_name: project.db_connection_name,
+					database_type: project.db_type,
+					database_name: project.db_username,
+					host_name: project.db_hostname,
+					db_username: project.db_username,
+
+					action: (
+						<Fragment>
+							<Link to={`/add_db_details/${project.db_connection_id}`}>
+                                <EditIcon
+                                    fontSize={SMALL}
+                                    className="editicon2"
+                                    style={{
+                                        color: '#696969',
+                                        marginRight: '8px'
+                                    }}
+                                />
+                            </Link>
+							<DeleteIcon 
+								className="cursorhover"
+                                fontSize={SMALL}
+                                style={{ color: '#696969', marginRight: '8px' }}
+                                onClick={ (e) => {this.deleteViewDBDetails(project.db_connection_id)}}
+							/>
+						</Fragment>
+					)
+				})
+			})
+		}
+
  		return (
 			<div className="viewDbDetailsForm">
 				<div className='btnContainer'>
@@ -104,28 +147,16 @@ class ViewDbDetails extends Component {
 						<Button variant="contained" className="button-colors addDbBtn" type="button"> Add DB Details </Button>
 					</Link>
 				</div>
-				<Table responsive className="manage-db-table">
-					<thead className="table_head">
-						<tr>
-							<th>Project Name</th>
-							<th>Connection Name</th>
-							<th>Database Type</th>
-							<th>Database Name</th>
-							<th>Host Name</th>
-							<th>User Name</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody className="table_body">
-						{ this.renderDBDetailsList(this.props.dbDetailsList) }
-					</tbody>
-				</Table>
-
 				{ 
 					this.state.showDeleteConfirmationDialog ?
 						this.renderDeleteConfirmationPopup()
 						: null
 				}
+				<CustomTable
+					headers={headers}
+					bodyData={modifyData}
+					actionLabel={ACTION}
+				/>
 			</div>
 		);
 	}
