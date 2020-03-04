@@ -16,7 +16,7 @@ const initialState = {
 	token: null,
 	authTokenExpired: false,
 	passwordChanged: false,
-	accessToken:''
+	accessToken:'',
 };
 
 const storeUserData = ({token}) => {
@@ -51,7 +51,7 @@ const loginData = (state = initialState, action) => {
 
 	case LOGIN_TO_PORTAL_ERROR:
 		return {
-			...state
+			...state,
 		};
 	
 	case AUTHENTICATION_EXPIRED:
@@ -72,7 +72,7 @@ const loginData = (state = initialState, action) => {
 			...state,
 			passwordChanged: true
 		};
-      
+		
 	case FORGET_PASSWORD_SUCCESS:
 		return {
 			...state,

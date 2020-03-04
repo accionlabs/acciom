@@ -51,13 +51,13 @@ const appData = (state = initialState, action) => {
 			fetchProjectDetails: true,
 			isOrganisationInitialised: true,
 			reloadOrgList: false
-		 };
+		};
 	
 	case GET_ORGANIZATION_LIST_ERROR:
 		return {
 			...state,
 			organizationList: []
-		 };	
+		};	
 	
 	case GET_PROJECT_LIST_BY_ORG_ID_SUCCESS:
 			const currentProjectId = window.sessionStorage.getItem('current_project_id');

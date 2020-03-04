@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
-import { Row, FormGroup, FormControl, ControlLabel, HelpBlock, Panel } from 'react-bootstrap';
-import { isEmail, isEmpty, isLength, isContainWhiteSpace } from '../shared/validator';
+import { FormGroup } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
-import styled from 'styled-components';
 import { loginToPortal } from '../actions/loginActions';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-// import logo from '../assets/images/logo.png';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 
@@ -17,10 +14,14 @@ class Login extends Component {
 		super(props);
 
 		this.state = {
-			formData: {}, // Contains login form data
+			formData: {
+				email: '',
+				password: ''
+			}, // Contains login form data
 			errors: {}, // Contains login field errors
 			formSubmitted: false, // Indicates submit status of login form 
-			loading: false // Indicates in progress state of login form
+			loading: false, // Indicates in progress state of login form
+			isSubmit: false,
 		}
 	}
 
@@ -30,68 +31,48 @@ class Login extends Component {
 		}
 		return null;
 	}
-
-	handleInputChange = ({target}) => {
-		const { value, name } = target;
-
+	handleInputChange = () => {
+		const { value, name } = event.target;
 		const { formData } = this.state;
-		formData[name] = value;
-
+		formData[name] = value
 		this.setState({
-			formData
-		});
+			formData: formData
+		})
 	}
 
-	validateLoginForm = (e) => {
-		
-		const errors = {};
+	isEmailValid = () => {
 		const { formData } = this.state;
-
-		if (isEmpty(formData.email)) {
-			errors.email = "Email can't be blank";
-		} else if (!isEmail(formData.email)) {
-			errors.email = "Please enter a valid email";
-		}
-
-		if (isEmpty(formData.password)) {
-			errors.password = "Password can't be blank";
-		} else if (isContainWhiteSpace(formData.password)) {
-			errors.password = "Password should not contain white spaces";
-		} 
-		// else if (!isLength(formData.password, { gte: 6, lte: 16, trim: true })) {
-		// 	errors.password = "Password's length must between 6 to 16";
-		// }
-
-		if (isEmpty(errors)) {
-			return true;
-		} else {
-			return errors;
-		}
-	}
+        const emailRegx = /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return emailRegx.test(String(formData.email.toLowerCase()));
+    };
 
 	login = (e) => {
+		const { formData } = this.state;
 		e.preventDefault();
-		const errors = this.validateLoginForm();
-
-		if (errors === true){
-			this.props.loginToPortal(this.state.formData);
+		if (this.isEmailValid()){
+			this.props.loginToPortal(formData);
 		} else {
 			this.setState({
-				errors,
-				formSubmitted: true
+				isSubmit: true
 			});
 		}
 	}
 
 	render() {
-		const { errors, formSubmitted } = this.state;
+		const { errors, formSubmitted, isSubmit, formData } = this.state;
 		return (
 			<div className="changePasswordPage">
 				<Paper className="loginPagePaper">
 							<FormGroup controlId="email" validationState={ formSubmitted ? (errors.email ? 'error' : 'success') : null }>
 								<div style = {{paddingBottom:'30px'}}>
-								<TextField type="text" name="email" className="chnagePasswordText" label="Email "  onChange={this.handleInputChange} />
-									<FormHelperText style={{color: 'red'}}>{errors.email}</FormHelperText>
+								<TextField type="text" name="email" className="chnagePasswordText" label="Email "  onChange={this.handleInputChange} 
+									error={!this.isEmailValid() && isSubmit}
+									helperText={
+									!this.isEmailValid() && isSubmit
+										? "Please Enter a Valid Email"
+										: ""
+									}
+								/>
 								</div>
 							</FormGroup >
 							<FormGroup controlId="password" validationState={ formSubmitted ? (errors.password ? 'error' : 'success') : null }>
@@ -101,7 +82,7 @@ class Login extends Component {
 								</div>
 							</FormGroup>
 						<div className="loginPageButtonDiv">
-						<Button type="submit" onClick={(e) => this.login(e)} variant="contained" className="button-colors sign-upbtn">Sign-In</Button>	
+						<Button type="submit" onClick={(e) => this.login(e)} disabled={!formData.email || !formData.password} variant="contained" className="button-colors sign-upbtn">Sign-In</Button>	
 						</div>
 				</Paper>
 				

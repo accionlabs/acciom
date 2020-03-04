@@ -69,6 +69,9 @@ function callAPIMiddleware({ dispatch, getState }) {
             .then(
                 response => {
                     if (hasStandardErrorStatus(fullResponse.status)) {
+                        if (response.success === false && response.message.length > 0) {
+                            toast.error(response.message);
+                        }
                         if (fullResponse.statusText === 'UNAUTHORIZED') {
                             dispatch(authenticationExpired());
                         } else {
@@ -88,6 +91,7 @@ function callAPIMiddleware({ dispatch, getState }) {
                             response.data &&
                             Object.keys(response.data).length === 0 &&
                             response.message
+                    
                         ) {
                             if (response.success) {
                                 toast.success(response.message);

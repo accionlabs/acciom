@@ -40,6 +40,10 @@ body,html{
     padding: 5px !important;
 }
 
+.sign-upbtn:disabled {
+    opacity: 0.5;
+}
+
 .loginPageButtonDiv{
     margin-left: 135px;
     padding-top: 10px;
