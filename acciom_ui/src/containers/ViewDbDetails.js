@@ -109,7 +109,7 @@ class ViewDbDetails extends Component {
 					project_name: project.project_name,
 					Connection_name: project.db_connection_name,
 					database_type: project.db_type,
-					database_name: project.db_username,
+					database_name: project.db_name,
 					host_name: project.db_hostname,
 					db_username: project.db_username,
 
