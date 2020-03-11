@@ -1088,7 +1088,7 @@ body,html{
 .browse-txt {
     width: 250px;
     margin-right: 10px;
-    margin-top: -18px !important;
+    margin-top: 54px !important;
     margin-left: -37px !important;
 }
 .suite-text{
@@ -1110,7 +1110,7 @@ body,html{
 }
 
 .updateBrowsButton{
-    margin-top: -7px !important;
+    margin-top: 64px !important;
     margin-left: 10px !important;
 }
 
@@ -2126,7 +2126,7 @@ body,html{
 .uploadNextButtons{
     text-transform: none !important;
     padding: 5px !important;
-    margin-top: -160px !important;
+    margin-top: -15px !important;
     background-color: #BD4951 !important;
     color: #fff !important;
     font-size: 13px !important;
@@ -2243,7 +2243,7 @@ body,html{
 }
 
 .testSuiteUploadPapers{
-    height: 163px;
+    min-height: 163px;
     margin-top: 3px;
 }
 

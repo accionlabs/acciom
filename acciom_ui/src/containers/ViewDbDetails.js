@@ -137,7 +137,7 @@ class ViewDbDetails extends Component {
 			})
 		}
 
- 		return (
+	return (
 			<div className="viewDbDetailsForm">
 				<div className='btnContainer'>
 				<StorageIcon className="manageDbIcon" />
