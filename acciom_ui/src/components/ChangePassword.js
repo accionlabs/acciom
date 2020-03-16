@@ -118,6 +118,6 @@ class ChangePasswordComponent extends Component {
 
 const mapDispatchToProps = dispatch => ({
 	changePassword: (data) => dispatch(changePassword(data))
-})
+});
 
 export default connect(null, mapDispatchToProps)(ChangePasswordComponent);
