@@ -328,7 +328,7 @@ class TestSuiteUpload extends React.Component {
 									<Button variant="contained" className="button-colors uploadbtn" onClick={ (e) => this.onUploadBtnClick(MODE_UPLOAD)} disabled={this.isNameAlreadyExist || !isValid()}>Upload</Button>
 								</div>
 								</Paper>
-								</div>
+							</div>
 				)
 			}
 		};
@@ -453,7 +453,6 @@ class TestSuiteUpload extends React.Component {
 					<Button variant="contained" className="button-colors brows-btn" onClick={ (e) => handleSwitchProject()}>Switch Project</Button>
 				</div>
 				<Paper className="testSuiteUploadPapers">
-
 				<div><Stepper className="uploadSuiteStepper" activeStep = {activeStep} alternativeLabel>
 						{steps.map(label => (
 							<Step key = {label}>
@@ -491,7 +490,8 @@ class TestSuiteUpload extends React.Component {
 							</div>
 						)}
 					</div>
-					</div></Paper>
+					</div>
+					</Paper>
 				</div>
 		);
 	}

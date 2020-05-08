@@ -1,25 +1,22 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect }from 'react-redux'
-import { Row, FormGroup, FormControl, ControlLabel, HelpBlock, Panel } from 'react-bootstrap';
+import { FormGroup,} from 'react-bootstrap';
 import { changePassword } from '../actions/loginActions';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 class ChangePasswordComponent extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			formData: {}, // Contains login form data
-			errors: {}, // Contains login field errors
-			formSubmitted: false, // Indicates submit status of login form 
-			loading: false, // Indicates in progress state of login form
+			formData: {},
+			errors: {}, 
+			formSubmitted: false,
+			loading: false,
 			newpassword_error: '',
-			confirmpassword_error:'',
-			disabled: false
+			confimPasswodMatch: '',
 		};
 	}
 	getConfirmtionMessage() {
@@ -49,15 +46,16 @@ class ChangePasswordComponent extends Component {
 			'old_password': formData.old_password,
 			'new_password': formData.new_password
 		};
-		if (this.state.formData.new_password === this.state.formData.old_password) {
-			this.setState({newpassword_error: "Old password and new password are same"});
-			return;
+		if(formData.new_password !== formData.confirm_password) {
+			this.setState({confimPasswodMatch: 'New Password and Confirm Password did Not Match'})
+		}else if(formData.old_password === formData.new_password) {
+			this.setState({newpassword_error: 'Old Password and New Password are Same'})
+			return false
+		}else {
+			this.props.changePassword(JSON.stringify(formObj));
+			location.reload();
+			return true
 		}
-		if (this.state.formData.new_password !== this.state.formData.confirm_password) {
-			this.setState({confirmpassword_error: 'New password and Confirm password did not match'});
-			return;
-		}
-		this.props.changePassword(JSON.stringify(formObj));
 	};
 
 	goToBackBtnPage = () => {
@@ -65,7 +63,8 @@ class ChangePasswordComponent extends Component {
     };
 
 	render() {
-		const { errors, formSubmitted } = this.state;
+		const { errors, formSubmitted, formData, 
+				confimPasswodMatch, newpassword_error, } = this.state;
 		return(
 			<div className="changePasswordPage">
 				<div className="addDBTitles">
@@ -83,7 +82,6 @@ class ChangePasswordComponent extends Component {
 										label="Old Password"
 									/>
 								</FormGroup>
-								&nbsp; &nbsp;
 								<TextField 
 										className="chnagePasswordText"
 										type="password"
@@ -91,8 +89,9 @@ class ChangePasswordComponent extends Component {
 										onChange={this.handleInputChange}
 										label="New Password"
 										inputProps = {{maxLength: 50,}}
+										error={newpassword_error}
+										helperText={newpassword_error}
 									/>
-									<FormHelperText style={{color:'red'}}>{this.state.newpassword_error}</FormHelperText>
 								</FormGroup >
 							<FormGroup controlId="password">
 								<TextField 
@@ -101,12 +100,14 @@ class ChangePasswordComponent extends Component {
 										name="confirm_password"
 										onChange={this.handleInputChange}
 										label="Confirm Password"
+										error={confimPasswodMatch}
+										helperText={confimPasswodMatch}
 									/>
-								<FormHelperText style={{color:'red'}}>{this.state.confirmpassword_error}</FormHelperText>
 							</FormGroup>
 							<div className="changePasswordDiv">
 							<Button onClick={this.goToBackBtnPage} variant="contained" className="backbutton_colors changepasswbackbutton">Cancel</Button>
-							<Button onClick={(e) => this.submitNewPassWord(e)} variant="contained" type="submit" disabled={this.state.disabled} className="button-colors chngpasswbtn">Submit</Button>
+							<Button onClick={(e) => this.submitNewPassWord(e)} variant="contained" type="submit" disabled={!formData.new_password || !formData.old_password 
+								|| !formData.confirm_password} className="button-colors chngpasswbtn">Submit</Button>
 							</div>
 					</Paper>
 			</div>
@@ -117,6 +118,6 @@ class ChangePasswordComponent extends Component {
 
 const mapDispatchToProps = dispatch => ({
 	changePassword: (data) => dispatch(changePassword(data))
-})
-  
+});
+
 export default connect(null, mapDispatchToProps)(ChangePasswordComponent);

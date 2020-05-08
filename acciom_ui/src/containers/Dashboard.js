@@ -13,7 +13,7 @@ class Dashboard extends React.Component {
 	}
 	
 	componentDidMount() {
-		if (this.props.currentOrg) {
+		if (this.props.currentOrg && this.props.currentProject) {
 			this.props.getOrgDataQuality(this.props.currentOrg.org_id);
 			this.props.getDQIprojectDetails(this.props.currentProject.project_id);
 			this.props.getHistoryGraphdata(this.props.currentProject.project_id);
