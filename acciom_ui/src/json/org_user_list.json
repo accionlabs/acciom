@@ -1,0 +1,24 @@
+{
+    "success": true,
+    "message": "success",
+    "data": {
+      "org_id": 1,
+      "users": [
+        {
+          "first_name": "Lalith",
+          "email": "lalith@accion.com",
+          "user_id": 1
+        },
+        {
+          "first_name": "Harshad",
+          "email": "harshad@accion.com",
+          "user_id": 2
+        },
+        {
+          "first_name": "Akhil",
+          "email": "akhil@accion.com",
+          "user_id": 3
+        }
+      ]
+    }
+  }

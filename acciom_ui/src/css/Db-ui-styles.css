@@ -1,0 +1,2277 @@
+body,html{
+    font-family: Open sans !important;
+}
+
+.projectLabel{
+    display: inline-block;
+    width: 40%;
+    color: #69717D !important;
+    margin-left: 15px;
+    padding-top: 19px;
+}
+.main_titles{
+    color: #69717D !important;
+    font-size: 17px !important;
+    font-weight: bold !important;
+}
+
+.sub_title{
+    color: #69717D !important;
+    font-size: 15px;
+    font-weight: bold;
+
+}
+.sub_title_add{
+    color: #69717D !important;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 24px;
+}
+
+.other-titles{
+    color: #69717D;
+    font-size: 13px !important;
+    font-family: Open sans !important;
+    font-weight: 500 !important;
+}
+
+.sign-upbtn{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.sign-upbtn:disabled {
+    opacity: 0.5;
+}
+
+.loginPageButtonDiv{
+    margin-left: 135px;
+    padding-top: 10px;
+}
+
+.changePasswordPage{
+    position: absolute;
+    width: 50%;
+    margin: auto;
+}
+
+.usericon2{
+    font-size: 20px;
+    color: #69717D;
+    margin-top: 0px;
+}
+
+.editicon2{
+    color: rgb(105, 105, 105);
+    font-size: 23px;
+    margin-left: 9px;
+}
+
+.maillabel {
+    position: absolute;
+    margin-left: 57%;
+    margin-top: 8px;
+
+}
+
+.maillabel1 {
+    margin-left: 62%;
+    margin-top: 9px;
+}
+
+.usernamelabel {
+    margin-top: -21px;
+    margin-bottom: 10px;
+    margin-left: 15px;
+}
+
+.lastNameLabel{
+    margin-top: -21px;
+    margin-bottom: 10px;
+    margin-left: 125px;
+}
+
+.userroles{
+    margin-top: 6px;
+    font-size: 16px;
+    margin-left: 16px;
+}
+
+.usermanagetitle2{
+    position: absolute;
+    margin-top: -2px;
+    margin-left: 7px;
+}
+
+.statusPlayIcon{
+    color: #69717D !important;
+}
+.statussmalltable{
+    color: #69717D !important;
+}
+
+.farfa-sticky{
+    color: #69717D;
+}
+
+.db_page_title{
+    padding-left: 8px;
+    padding-bottom: 10px;
+}
+.manageDbIcon{
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 3px;
+    margin-bottom: -4px;
+}
+
+.manageSuitIcon{
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 3px;
+    margin-bottom: -3px;
+}
+
+.cursorhover{
+    cursor: pointer;
+}
+
+.logo {
+    width: 70px;
+    height: 70px;
+    margin-left: -23px;
+}
+
+#db_top_bar{
+    background-image: linear-gradient(to right, white, #f8f8f8);
+    width: 100%;   
+}
+
+.MuiDrawer-paperAnchorLeft{
+    background-color: #69717D !important;
+}
+
+.left_dropdown_btn{
+    position: fixed;
+    bottom: 10px;
+    z-index: 2000;
+    margin-left: 20px;
+    flex-wrap: wrap;
+
+}
+
+.usericon{
+    margin-left: -4px;
+}
+
+#dashbcolor:hover{
+    color: #fff !important;
+}
+
+.dashboard_switch_btn{
+    float: right;
+    border: none;
+}
+
+#dashbcolor{
+    color: #fff !important;
+    margin-left: 0px;
+    font-size: 13px;
+}
+
+.checkresultlabel{
+    margin-left: 8px;
+}
+
+.leftbar_closebtn{
+    float: right;
+}
+
+.ChevronLeftIconcolor{
+    color: #fff !important;
+    margin-left: 2px;;
+}
+
+
+
+.table-responsive {
+    overflow: unset;
+}
+
+.table_head{
+    vertical-align: middle;
+    background-color: #BD4951 !important;
+    color: #fff !important;
+}
+
+.table_head tr th{
+    border-bottom: none !important;
+    line-height: 20px !important;
+    overflow: hidden;
+    text-align: left;
+    font-size: 13px;
+    padding: 4px 10px !important;
+}
+
+.table_body{
+    line-height: 1px;
+    font-size: 10px;
+    color: #555555;
+
+}
+.table_body-new-suite{
+    line-height: 2px;
+    font-size: 12px;
+    color: #555555;
+    height: auto;
+    border: none !important;
+
+}
+
+.table_body tr td{
+    line-height: 20px !important;
+    text-align: left;
+    vertical-align: middle !important;
+    overflow: hidden;
+    font-size: 13px;
+    border-top: none !important;
+    padding: 0px 10px !important;
+    border: none;
+    color: #69717D;
+}
+
+.table_body tr:hover {
+    background-color: #eff4fc;
+    cursor: default; 
+}
+
+.table_body tr:nth-child(even){
+    background : #c5d8f5b4;
+}
+
+.addDbBtn{
+    margin-bottom: -48px !important;
+    margin-right: 10px !important;
+    margin-left: 6px !important;
+    float: right !important;
+    margin-top: -3px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.switchProjectButton{
+    float: right;
+    margin-bottom: 10px !important;
+    margin-top: -3px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.adddblabels{
+    color: #69717D !important;
+    font-weight: none !important;
+}
+
+.addDBDetailsEditbox{
+    border: 1px solid #ccc !important;
+    border-radius: 3px !important;
+}
+
+.deleteconfirmpopup{
+    margin: 170px;
+}
+
+.account_button{
+    margin-top: -28px !important;
+    padding: 5px 24px !important;
+    border: none !important;
+    text-transform: none !important;
+}
+
+.testConnectionButton{
+    margin-right: 9px !important;
+    text-transform: none !important;
+    padding: 5px !important;   
+}
+
+.testConnectionButton:disabled{
+    background-color: rgb(226, 152, 152) !important;
+}
+
+.MuiButton-root {
+    font-family: Open sans !important;
+}
+
+.submitButton{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.submitButton:disabled{
+    background-color: rgb(226, 152, 152) !important;
+}
+
+.backbtn{
+    padding-right: 9px;
+}
+
+.backbtnbackgroundcolor{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.deleteconfirmpopupbox{
+    margin-left: 1rem;
+    margin-top: 12.5%;
+}
+
+
+.deleteconfirmpopupfieldtext{
+    padding: 5px 16px;
+    color: #69717D;
+}
+
+.editpanelhead{
+    background-color: #BD4951 !important;
+    color: #fff !important;
+}
+
+.popboxheader{
+    border-bottom: none;
+}
+
+.popboxfooter{
+    border-top: none;
+}
+.rolesSaveButton{
+    float: right;
+    margin-top: 23px !important;
+    margin-right: 30px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.rolesBackButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    float: right;
+    margin-top: 23px !important;
+    margin-right: 11px !important;
+}
+
+.switchprojectpopbox{
+    margin-left: 1rem;
+    margin-top: 5%;
+}
+
+.switchprojectpopboxheader{
+    margin-top: 0px;
+    margin-left: 0px;
+    border-bottom-width: 0px;
+}
+
+.editbox{
+    margin-left: -30px;
+    width: 109%;
+}
+
+.switchProjectCancelButton{
+    margin-top: 4px !important;
+    margin-right: 10px !important;
+    padding: 5px !important;
+    text-transform: none !important;
+}
+
+.selectlabel{
+    font-size: 14px;
+    margin-left: 22px;
+    margin-top: 6px;
+    font-weight: none !important;
+}
+
+.switchProjectSaveButton{
+    margin-right: 9px !important;
+    margin-top: 4px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.passw_chng_panel_margin{
+    padding-left: 36px;
+    padding-bottom: 80px;
+    margin-top: 59px;
+    padding-top: 20px;
+    min-width: 465px !important;
+    margin-left: 69%;
+    padding-right: 30px;
+}
+
+.loginPagePaper{
+    padding-left: 36px;
+    padding-bottom: 20px;
+    margin-top: 59px;
+    padding-top: 20px;
+    min-width: 465px !important;
+    margin-left: 78%;
+    padding-right: 30px;
+}
+
+.chgpasswtable{
+    background-color: #BD4951 !important;
+    color: #fff !important;
+}
+
+.changepasswbackbutton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 9px !important;
+}
+
+.chngpasswbtn{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.chnageorglabel{
+    font-size: 14px;
+    margin-left: -2px;
+    margin-top: 6px;
+    font-weight: 100 !important;
+    color: #69717D !important;
+}
+
+.chngorgeditbox{
+    width: 104%;
+    margin-left: -13px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+.chngorgsavebtn{
+    margin-right: 10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.closebtn{
+    margin-right: 9px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.accesstknheader{
+    background-color: #69717D !important;
+    color: #fff !important;
+}
+
+.panelheight{
+    margin-bottom: 10px !important;
+    margin-top: -13px !important;
+}
+
+.needTokeneditbox{
+    width: 40%;
+    color: #000;
+    margin-left: 18px; 
+}    
+
+.generatetokenbackbutton{
+    float: left;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.generatetokenbackbutton:hover{
+    color: #fff !important;
+}
+
+.generatetokenbutton{
+    margin-left: 9px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.msginline{
+    display: inline;
+}
+
+.usermanagelogo{
+    color: #69717D;
+    color: #69717D;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.manageuserrolestable{
+    border: 1px solid rgb(32, 31, 31,25%);
+    vertical-align: middle;
+    margin-top: 21px;
+    width: 60%;
+}
+
+.manageUsersIcon{
+    margin-bottom: -5px;
+    margin-left: -3px;
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 1px;
+}
+
+.hovercolor tr:hover {
+    background-color: #eff4fc;
+    cursor: default; 
+}
+
+.hovercolor tr:nth-child(even){
+    background : #c5d8f5b4;
+}
+
+.hovercolor tr td{
+    line-height: 8px !important;
+    text-align: left;
+    vertical-align: middle !important;
+    overflow: hidden;
+    font-size: 13px;
+    border-top: none !important;
+    padding: 4px 10px !important;
+}
+
+.manageuserrolestablehead{
+    color: #fff;
+    background-color: #BD4951;
+}
+
+.manageuserrolestablehead th{
+    border-bottom: none !important;
+    padding: 4px 10px !important;
+}
+
+.usermanagetitle{
+    margin-top: -24px;
+    margin-left: 31px;
+
+}
+
+.userBackButton{
+    background-color: #69717D !important;
+    border-color: #69717D;
+    color: #fff;
+    font-size: 13px !important;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height: 31px;
+    margin-right: 61px !important;
+    margin-top: 10px !important;
+}
+
+.editRolesaveButton{
+    float: right;
+    margin-right: 58px;
+    padding: 5px !important;
+    text-transform: none !important;
+
+}
+
+.editRoleEditIcon{
+    margin-left: -2px;
+    margin-top: 2px;
+    color: #69717D;
+}
+
+.editUserRoleBackbtn{
+    float: right;
+    text-transform: none !important;
+    margin-right: 12px !important;
+    padding: 5px !important;
+}
+
+.userbackbtn:hover,
+.userbackbtn:active{
+    border-color: #69717D;
+    background-color: #69717D;
+}
+
+.submailtitle{
+    margin-bottom: 12px;
+    margin-left: 16px;
+}
+
+.minuscirclecolor{
+    color: #fff !important;
+    margin-left: -21px;
+}
+
+.addProjectPlusIcon{
+    margin-top: 18px !important;
+    margin-left: 9px !important;
+    background-color: #BD4951 !important;
+    font-size: 12px !important;
+    text-align: center;
+    color: #fff !important;
+    height: 30px;
+    border: none;
+}
+
+.addProjectPlusIcon:disabled{
+    background-color: rgb(226, 152, 152) !important;
+}
+
+.button-colors{
+    background-color: #BD4951 !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px;
+    text-align: center !important;
+    width: 121px;
+    height: 31px;
+    border: none !important;
+}
+.button-create{
+    margin-top:10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 5px !important;
+    border: none;
+}
+
+.buttonClone{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.buttonClone:disabled{
+    background-color: #E29898 !important;
+}
+
+.createButton-create{
+    margin-top:10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.createButton-create:disabled{
+    background-color: #E29898 !important;
+}
+
+.back-btn{
+    background-color: #BD4951 !important;
+    border-color: #BD4951 !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height:31px;
+}
+
+.backbutton_colors{
+    background-color: #69717D !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px !important;
+    text-align: center !important;
+    width: 121px !important;
+    height: 31px !important;
+}
+
+.addRoleIcon{
+    margin-bottom: 22px !important;
+}
+
+.update-data-profiling-title{
+    margin-top: 1px;
+    margin-left: 8px;
+}
+
+.updatedataprofillabel{
+    color: #69717D;
+    margin-left: 5px;
+    margin-top: -15px;
+}
+
+.profileicon2{
+    color: #69717D;
+    margin-top: -10px;
+    position: absolute;
+    font-size: 25px !important;
+}
+
+.tableheaderborder{
+    border-bottom: none;
+}
+
+.editcaselabe{
+    margin-left: 21px;
+    padding-top: 0px;
+}
+
+.sublabelmargin{
+    margin-left: 7px;
+    font-weight: 300px;
+}
+
+.editclosebtn{
+    float: right;
+    margin-right: -252px !important;
+    border: none;
+    margin-bottom: 20px !important;
+    margin-top: 23px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.caselogbodymargin{
+    width: fit-content;
+    margin-top: 94px !important;
+    height: 500px;
+    max-width: 1100px;
+}
+
+.ddlCheckMissmatchHighlight{
+    background-clip: border-box;
+    background-color: yellow;
+}
+
+.executionTableLog{
+    border: 1px solid rgb(32, 31, 31,25%);
+    margin-right: 16px;
+    margin-top: 5px;
+}
+
+.executiontablebottomborder{
+    border: 1px solid rgb(32, 31, 31,25%);
+}
+
+.nullchecklabel{
+    margin-left: -5px;
+}
+
+.getappicon{
+    margin-left: 69px !important;
+    margin-bottom: -8px !important;
+    color: #69717D !important;
+}
+
+.nullCheckRecords{
+    margin-left: 134px;
+    color: #69717D;
+    font-size: 13px !important;
+}
+
+.nullCheckResultLabel{
+    margin-left: -3px;
+}
+
+.duplicateCheckResultlabel{
+    margin-left: -10px;
+}
+
+.duplicateCheckLabel{
+    margin-left: 65px;
+    color: #69717D;
+    font-size: 13px;
+}
+
+.table_namelabel{
+    font-weight: 300;
+    color: #69717D;
+}
+
+.statuslabel{
+    margin-left: 253px;
+    color: #69717D;
+}
+
+.duplicateCheckStatusLabel{
+    margin-left: 8px;
+}
+
+.datavalitable1{
+    border: 1px solid rgb(32, 31, 31,25%);
+    margin-left: 18px;
+}
+.dataValidationSecoundTable{
+    border: 1px solid rgb(32, 31, 31,25%);
+    margin-left: 18px;
+    width: 95%;
+    margin-top: 5px;
+}
+
+.dataValidationResultLabel{
+    margin-left: 9px;
+}
+
+.dataValidationStatusLabel{
+    margin-left: 168px;
+}
+
+.dataValidationResultValue{
+    margin-left: -11px;
+}
+
+.datValidationTableFont{
+    font-weight: 300;
+    font-size: 12px;
+    flex-basis: 33.33%;
+    flex-shrink: 0;
+    padding-left: 9px;
+    line-height: 20px;
+}
+
+.tableHeadBackgroundcolor{
+    background-color: #BD4951;
+    color: #fff !important;
+    line-height: 20px;
+    vertical-align: middle;
+    font-size: 12px;
+    margin-bottom: 0px !important;
+    margin-left: 0px !important
+}
+
+.ddlCheckSecoundTableMargin{
+    border: 1px solid rgb(32, 31, 31,25%);
+    text-align: center;
+    line-height: 20px;
+    width: 124px;
+}
+
+.ddlSecoundPartpadding{
+    padding-left: 4px;
+}
+
+.nullCheckGetIcon{
+    margin-left: 300px !important;
+}
+
+.dataValidationGetIconMargin{
+    margin-left: 456px !important;
+    margin-top: -2px !important;
+}
+
+.duplicateCheckGetIcon{
+    margin-left: 76px !important;
+}
+
+.ddlCheckGetIcon{
+    margin-left: 149px !important;
+}
+
+.logbody{
+    margin-top: -15px;
+    overflow-y: auto;
+    max-height: 470px;
+    /* width: 400px; */
+    /* max-width: fit-content; */
+}
+
+.bgColorOddRow{
+    background-color: #c5d8f5b4;
+    font-size: 11px;
+    line-height: 20px !important;
+    vertical-align: middle;
+}
+
+.Duplicateline{
+    line-height: 20px !important;
+}
+
+.countchecklineheight{
+    line-height: 20px !important;
+}
+
+.countcheckMarginBottom{
+    margin-bottom: 0px !important;
+    margin-left: -12px;
+}
+
+.bgColorNull{
+    background-color: yellow;
+    background-clip: content-box;
+    display: inline;
+}
+
+.bgColorNullMargin{
+    background-color: yellow;
+    background-clip: content-box;
+    margin-left: 11px;
+    margin-top: 5px;
+    display: unset;
+    color: #69717D
+}
+
+.loglabel{
+    margin-left: 13px;
+}
+
+.bgColorEvenRow{
+    font-size: 11px;
+    line-height: 20px;
+}
+
+.evenBackgroundColor{
+    font-size: 11px;
+    line-height: 20px;
+    color: #69717D;
+    
+}
+
+.oddBackgroundColor{
+    background-color: #c5d8f5b4;
+    font-size: 11px;
+    line-height: 20px;
+    vertical-align: middle;
+    color: #69717D;
+}
+
+.dataValidationBorderPadding{
+    padding-right: 14px;
+    padding-left: 0px;
+    padding-top: 5px;
+}
+
+.dataValidationSourceCountLabel{
+    margin-left: 6px;
+    margin-top: 6px;
+}
+
+.resultlabel{
+    margin-left: 8px;
+}
+
+.ddlchecklogborder1{
+    padding-left: 21px;
+}
+
+.ddlchecklogborder2{
+    padding-left: 32px;
+}
+
+.ddlresultlabel{
+    margin-left: 22px;
+    /* margin-top: -21px; */
+    margin-bottom: 9px;
+}
+
+.ddlchecktable{
+    width: 857px !important;
+    /* margin-top: -21px; */
+    
+}
+
+.ddlrighttable{
+    widows: 100px;
+}
+
+.ddlchecktableborder{
+    border: 1px solid rgb(32, 31, 31,25%);
+}
+
+.ddlstatuslabel{
+    margin-left: 22px;
+    color: #69717D;
+}
+
+.resultmargin{
+    margin-left: 6px;
+    color: #69717D;
+    font-weight: 100;
+}
+
+.ddlnamelabel{
+    margin-top: 9px;
+    margin-left: 13px;
+}
+
+.dataValidationSubLabel{
+    margin-left: 10px;
+    margin-top: 6px;
+}
+
+.dataValidationLabel{
+    margin-left: 5px;
+}
+
+.countcheckstatuslabel{
+    margin-left: 54px;
+    color: #69717D;
+    font-size: 14px;
+}
+
+.downloaddataicon{
+    margin-left: 134px !important;
+}
+
+.countCheckLabelFont{
+    font-size: 17px !important;
+    margin-left: 5px;
+}
+
+.dataValidationSecoundSubLabel{
+    margin-left: 26px;
+}
+
+.targetcountlabel{
+    margin-left: 252px;
+}
+
+.ddlborder{
+    border-top: none !important;
+}
+
+.datavalidationsql{
+    border: 1px solid rgb(105, 105, 105);
+}
+
+.tablenamelabel{
+    margin-left: 12px;
+    margin-top: 6px;
+    color: #69717D;
+
+}
+
+.viewclosebtn{
+    margin-right: 10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.casesubtitles{
+    min-width: 350px;
+    max-width: 350px;
+}
+
+
+.tablefooterborder{
+    border-top: none;
+}
+
+.viewbackbtn{
+    margin-right: 10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.newSuite{
+    margin-right: 10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.tablecontent{
+    padding: 15px;
+    margin-left: 26px;
+    margin-right: 26px;
+}
+
+.editboxmargin{
+    margin-left: 83px;
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.goeditbtn{
+    float: right;
+    margin-right: -384px !important;
+    color: #fff !important;
+    margin-top: 23px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.updatebtnmargin{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.browse-txt {
+    width: 250px;
+    margin-right: 10px;
+    margin-top: 54px !important;
+    margin-left: -37px !important;
+}
+.suite-text{
+    height: 29px;
+    width: 301px;
+    margin-right: 10px;
+    margin-top: 2px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ccc; 
+}
+
+.brows-btn{
+    margin-top: -3px !important;
+    margin-bottom: 25px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+    float: right;
+}
+
+.updateBrowsButton{
+    margin-top: 64px !important;
+    margin-left: 10px !important;
+}
+
+.margin-button {
+    margin-top: 10px !important;
+    margin-left: 10px !important;
+    padding-bottom: 11px;
+}
+
+.uploadbtn{
+    margin-right: 10px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.uploadbtn:disabled{
+    background-color: rgb(226, 152, 152) !important;
+}
+
+.uploadicon{
+    font-size: 25px !important;
+    color: #69717D;
+    margin-bottom: -4px;
+    margin-left: -5px;
+}
+
+.updateandexcbtn{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 10px !important;  
+    width: 145px !important;  
+}
+
+.uploadBackButtons{
+    background-color: #69717D !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px !important;
+    text-align: center !important;
+    width: 121px !important;
+    height: 31px !important; 
+    padding: 5px !important;
+    text-transform: none !important;
+    margin-top: -27px !important;
+}
+
+.updateandexcbtn:disabled{
+    background-color: rgb(226, 152, 152) !important;
+}
+
+.dataprofilingtitle{
+    position: absolute;
+    margin-top: -8px;
+    margin-left: 30px;
+}
+
+.selectcaselabel{
+    margin-left: 7px;
+    margin-top: 5px;
+    font-weight: 200;
+}
+
+.manageConnectionLabel{
+    border-top: none !important;
+    color: #69717D;
+    font-weight: 200;
+}
+
+.manageconnectionsavebtn{
+    margin-right: 12px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.manageconnectionsavebtn:disabled{
+    background-color: rgb(226, 152, 152) !important;
+}
+
+.manageconnclosebtn{
+    margin-right: 5px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.selectcaselabel2{
+    margin-left: 7px;
+    font-weight: 200;
+}
+
+.panelheadborder{
+    border-bottom: none !important;
+}
+
+.changeconnpanelheadborder{
+    border-top: none !important;
+}
+
+.selectconnectiontype{
+    margin-left: 11px;
+    font-weight: 200;
+}
+
+.selectconnectioneditbox{
+    margin-top: -7px;
+    margin-top: 10px;
+}
+
+.selectconnectioneditbox1{
+    border-radius: 3px;
+}
+
+.sourceTableEditbox{
+    border-radius: 3px;
+}
+
+.textarea1{
+    width: 100%;
+    border-radius: 3px;
+    resize: vertical;
+    margin-top: -3px !important;
+}
+
+.raidolabel{
+    font-size: 12px !important;
+    margin-left: 10px;
+}
+
+.radiobtnmargin{
+    margin-right: 180px;
+}
+
+.footertable{
+    border: none;
+}
+
+.selecteditbox{
+    width: 95%;
+}
+
+.selectconnection {
+    width: 97% !important;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-weight: 200 !important;
+    margin-left: -59px;
+}
+.profileicon{
+    position: absolute;
+    background-color: #fff;
+    color: #69717D;
+    margin-top: -8px;
+    margin-left: -2px;
+    margin-bottom: 10px;
+}
+
+.playicon{
+    color: #69717D;
+}
+
+.playicon:hover{
+    color: #69717D !important;
+}
+
+.switchprojectbtn{
+    margin-top: -13px !important;
+    margin-bottom: 10px !important;
+    border: none !important;
+    text-transform: none !important;
+    padding: 5px !important;
+
+}
+
+.QLindex-title{
+    margin-left: -41px;
+    margin-top: -2px;
+    margin-bottom: 6px;
+}
+
+.QulityIndexIcon{
+    color: #69717D;
+    font-size: 25px !important;
+    position: absolute;
+    margin-left: -71px;
+    margin-top: -3px;
+}
+
+.naviQulityIndexIcon{
+    font-size: 30px !important;
+    margin-left: -6px;
+}
+
+.navSuitIconMargin{
+    margin-left: 4px !important;
+}
+
+.panelbg{
+    background-color: #eaebed!important;   
+}
+
+.paneltopmargin{
+    width: 100%;
+    margin-top: -22px;
+}
+
+.paneltop{
+    margin-top: 28px;
+}
+
+.backtablebg{
+    background-color: #eaebed;
+}
+.lname{
+    padding: 10px;
+    vertical-align: -webkit-baseline-middle;
+}
+.create-suite{
+    font-family: inherit;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 121px;
+    height: 31px;
+
+}
+.minus-btn{
+    float:right;
+}
+
+
+.table_head_create_suite{
+    vertical-align: middle;
+    color: rgb(32, 31, 31,75%);
+}
+.manage-suite-icon{
+    font-size: 50px;
+}
+.savebtn{
+    float: right;
+    margin-right: 10px;
+}
+
+.DropDown-SelectClass{
+    width: 11vw; 
+}
+
+.addUserButton{
+    float: right;
+    margin-top: -10px !important;
+}
+
+.addRoleButton{
+    float: right;
+    margin-top: -42px !important;
+    text-transform: none !important;
+
+}
+
+.navIconPadding{
+    padding-top: 6px !important;
+}
+
+.manageUserRoleTitles{
+    margin-top: -2px;
+    padding-left: 8px;
+}
+
+.emailEditBox{
+    margin-left: 100px !important;
+    width: 94%;
+    color: #69717D;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.editUserProjectSelect{
+    color: #69717D !important;
+    margin-left: 15px;
+    width: 30%;
+    font-family: Open sans !important;
+}
+
+.editUserRoleSelect{
+    margin-left: 118px;
+    width: 40%;
+    height: auto !important;
+}
+
+.roleChip{
+    height: 20px !important;
+    font-family: Open sans !important;
+}
+
+.MuiMenuItem-root{
+    font-family: Open sans !important;
+    color: #69717D !important;
+}
+
+.projectRoleLabel{
+    margin-left: 16px;
+    color: #69717D;
+}
+
+.removeButton{
+    background-color: #69717D !important;
+    font-size: 12px !important;
+    border-radius: 3px;
+    text-align: center;
+    text-transform: none !important;
+    color: #fff !important;
+    height: 30px;
+    margin-left: 15px !important;
+    padding-right: 10px !important;
+    font-family: Open sans !important;
+}
+
+.verifyButtons{
+    margin-top: 27px !important;
+    margin-bottom: 8px !important;
+    border: 0px !important;
+    margin-left: 151px !important;
+    text-transform: none !important;
+    padding-top: 5px !important;
+}
+
+.adduserBackButton{
+    float: right;
+    text-transform: none !important;
+    margin-top: 10px !important;
+    margin-right: 62px !important;
+    color: #fff !important;
+    padding-top: 4px !important;
+}
+
+.adduserSaveButton{
+    margin-top: 9px !important;
+    float: right !important;
+    margin-left: -51px !important;
+    text-transform: none !important;
+    padding-top: 5px !important;
+}
+
+.adduserSaveButton:disabled{
+    background-color: rgb(226, 152, 152) !important;
+}
+
+.verifyButtons:disabled{
+    background-color: rgb(226, 152, 152) !important;
+}
+
+
+.editRoleFnameLabel{
+    width: 110%;
+    margin-left: 10px !important;
+    color: #69717D;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.lnameMargin{
+    font-weight: 300 !important;
+}
+
+.editRoleLanameLabel{
+    width: 103%;
+    margin-left: 63px !important;
+    color: #69717D !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.addUserBackButton{
+    margin-left: 105px;
+    border: none;
+    margin-top: -3px;
+}
+
+.listDots{
+    list-style: none;
+    list-style: none;
+    margin-left: -5px !important;
+    margin-top: 15px !important;
+}
+
+.addUserIcon{
+    color: #69717D;
+    margin-left: -3px;
+}
+
+.organizationManagementIcon{
+    margin-left: -6px;
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 1px;
+}
+
+.organizationManageIcon{
+    color: #69717D;
+    font-size: 25px !important;
+    margin-left: -5px;
+    margin-top: -1px;
+}
+
+.projectManagementMargin{
+    display: inherit;
+    margin-left: 25px;
+    margin-top: -28px;
+}
+
+.projectManagementMar{
+    display: inherit;
+    margin-left: 25px;
+    margin-top: -28px;
+}
+
+.projectManagementNavIcon{
+    color: #fff;
+    margin-left: 3px;
+    font-size: 29px !important;
+
+}
+
+
+.commonTableHead{
+    vertical-align: middle;
+    background-color: #BD4951;
+    color: #fff !important;
+    font-size: 20px;
+    border: 1px solid rgb(32, 31, 31,25%);
+}
+
+.commonTableBody{
+    text-align: left;
+    vertical-align: middle !important;
+    overflow: hidden;
+    font-size: 13px;
+    border-top: none !important;
+    padding: 4px 10px !important;
+    border: 1px solid rgb(32, 31, 31,25%);
+    color: #69717D !important;
+}
+
+.commonTableBody tr:nth-child(even){
+    background : #c5d8f5b4;
+}
+
+.commonTableBody tr:hover{
+    background-color: #eff4fc !important;
+    cursor: default;
+}
+
+.commonTableCellWidth{
+    width: 10%;
+    min-width: 100px;
+    color: #fff !important;
+    font-weight: bold !important;
+    font-size: 13px !important;
+    padding-right: 8px !important;
+    font-family: Open sans !important;
+}
+
+.commonTablePaperMargin{
+    margin-top: 20px;
+    margin-left: -3px;
+    min-width: 901px !important;
+}
+
+.commonTableData{
+    color: #fff !important;
+    font-size: 13px !important;
+    font-family:  Open sans !important;
+}
+
+.commonTableHovercolor{
+    color: #fff !important;
+    font-weight: bold;
+}
+
+.commonTableHovercolor:hover
+.commonTableHovercolor:active{
+    color: #fff !important;
+}
+
+.commonTableCellTextColor{
+    color: #69717D !important; 
+    border-bottom: none !important;
+    padding: 3px 6px 6px 10px !important;
+    font-family: Open sans !important;
+    font-weight: 300 !important;
+
+    line-height: 20px !important;
+}
+.commonTableCellBorder{
+    border-bottom: none !important;
+
+    line-height: 0px !important;
+    font-size: 13px !important;
+}
+
+.commonTableCellBorder{
+    border-bottom: none !important;
+}
+
+.editRolePaper{
+    margin-top: 32px;
+    padding-top: 20px;
+    padding-bottom: 52px;
+}
+.backbutton_colors_project{
+    background-color: #69717D !important;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    text-align: center;
+    width: 127px;
+    height: 31px;
+    margin-top: -33px;
+}
+
+.mandatory{
+    color: #fff;
+    font-size: 14px;
+}
+.AddSuiteLayout{
+    margin-bottom: 35px;
+}
+.userAccount{
+    margin-left: -5px;
+    margin-top: -12px;
+    color: #69717D;
+}
+
+.addDBIcon{
+    margin-left: -5px !important;
+    margin-top: -12px !important;
+    color: #69717D;
+    font-size: 25px !important;
+    margin-bottom: -4px !important;
+}
+
+.userProfileTitle{
+    margin-bottom: 12px;
+    margin-left: 5px;
+}
+
+.upload_user_picture{
+    margin-top: 23px;
+}
+
+.select_organization_default{
+    width:260px;
+    margin-left: 10px;
+    color: #69717D !important;
+}
+
+.select_Project_default{
+    margin-left: 46px;
+    width: 285px;
+    color: #69717D !important;
+}
+
+.userProfileProjectLabel{
+    margin-top: 46px;
+    margin-left: 46px;
+    color: #69717D;
+    font-weight: 500;
+}
+
+.userProfileFname{
+    width: 258px;
+    margin-left: 10px !important;
+}
+
+.userProfileEmail{
+    width: 250px;
+    margin-left: 47px !important;
+}
+
+.userProfileLabel{
+    margin-top: 40px;
+    margin-left: 10px;
+    color: #69717D;
+    font-weight: 300;
+    font-size: 13px;
+}
+
+.userProfileLname{
+    width: 283px !important;
+    margin-left: 47px !important;
+}
+
+.userSubmitButton{
+    float: right;
+    margin-top: 25px!important;
+    text-transform: none !important;
+    margin-right: 50px !important;
+}
+
+.border_user_profile{
+    margin-left:150px;
+    margin-right: 50px;
+    margin-top: 40px;
+    height: 550px;
+}
+
+.submit_button_user_profile{
+    margin-left: 789px;
+    margin-top: 20px;
+}
+
+.UserProfilePaper{
+    margin-top: 9px;
+    width: 107%;
+    padding-left: 10px;
+    padding-bottom: 61px;
+    padding-top: 15px;
+}
+
+.addUserPaper{
+    margin-top: 22px;
+    width: 107%;
+    padding-left: 10px;
+    padding-bottom: 61px;
+    padding-top: 15px;
+}
+
+.addOrgAddButton:disabled{
+    background-color: #E29898 !important;
+}
+
+.userRoleChangeSelect{
+    display: inline-block;
+    width: 40%;
+    margin-left: 15px;
+    color: #000 !important;
+}
+
+.multiuserRoleChangeSelect{
+    display: inline-block;
+    width: 40%;
+    margin-left: 15px;
+    color: #000 !important;
+}
+
+.manageRolePaper{
+    margin-top: 32px;
+    padding-top: 20px;
+    padding-bottom: 80px;
+    height:100%;
+}
+
+.formStyle{
+    min-width: 120;
+    width:95%;
+    margin-top: 34px !important;
+    margin-left:20px !important;
+}
+.chipStyle{
+    display: flex;
+ }
+.singleChipStyle{
+ margin: 2px;
+ }
+ .textFieldStyleName{
+     margin-left: 20px !important;
+     margin-top: 11px;
+     width: 45%;
+   
+ }
+ .textFieldStyleDesc{
+    margin-right: 33px !important;
+    margin-top: 11px;
+    width: 45%;
+    float: right;
+}
+.saveButton{
+    float: right;
+    padding-left: 8px !important;
+    margin-right: 24px !important;
+    margin-top:10px !important ;
+    margin-bottom: 10px !important;
+
+}
+
+.backButton{
+    float:right;
+    margin-right: 10px !important;
+    width: 130px !important;
+    margin-top:10px !important;
+    margin-bottom: 10px !important;
+
+}
+.inputLabel{
+    margin-bottom: 2px !important;
+    padding-bottom:3px !important;
+}
+
+.addOrgCancelButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 9px !important;
+    float: right;
+}
+
+.addOrgAddButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 10px !important;
+}
+
+.orgNameText{
+    width: 250px;
+}
+
+.orgDecText{
+    width: 274px;
+}
+
+.navMarginToolTip{
+    margin-left: 10px;
+}
+
+.userProfileBackButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    float: right;
+    margin-right: 46px !important;
+    margin-top: -25px !important;
+}
+
+.deleteDBNoConnection{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.deleteDBConnection{
+    margin-right: 10px !important;
+    margin-bottom: -2px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+    float: right;
+}
+
+.testSwitchProject{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.createSuite{
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 3px;
+    margin-bottom: -7px;
+}
+
+.CloneSuiteIcon{
+    color: #69717D;
+    font-size: 23px !important;
+    margin-top: 3px;
+    margin-bottom: -7px;
+} 
+
+.editsuite{
+    color: #69717D;
+    font-size: 25px !important;
+    margin-top: 3px;
+    margin-bottom: -4px;
+}
+
+.editSaveButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 10px !important;
+}
+
+.editCloseButton{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.accountHoverColor{
+    color: #69717D !important;
+}
+
+.accountHoverColor:hover{
+    color: #69717D !important;
+}
+
+.editSuitePaper{
+    margin-top: -12px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 114%;
+}
+
+.uploadDataPaper{
+    margin-top: -12px;
+    padding-top: 20px;
+    width: 73%;
+}
+
+.uploadPaperdiv{
+    margin-top: -12px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    /* width: 112%; */
+}
+
+.editSuitemargin{
+    width: auto !important;
+}
+
+.testSuitBodyScroll{
+    display:block;
+    height: 300px;
+    overflow:auto;
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+.paperTestSuite{
+    padding-bottom: 10px !important;
+}
+
+.uploadPaperSuite{
+    padding-bottom: 46px !important;
+    margin-top: -10px;
+}
+
+.uploadProfileSuiteNameLabel{
+    color: red;
+    margin-top: 18px;
+    font-family: Open Sans;
+    font-size: 12px;
+}
+
+.testSuitHead{
+    vertical-align: middle;
+    background-color: #BD4951 !important;
+}
+
+.testSuitHead tr th{
+    border-bottom: none !important;
+    line-height: 10px !important;
+    overflow: hidden;
+    text-align: left;
+    font-size: 13px;
+    padding: 13px 10px !important;
+    color: #fff !important;
+    font-family: Open sans !important;
+}
+
+.countCheckSelect{
+    font-size: 12px !important;
+    color: #69717D !important;
+}
+
+.MuiInputBase-input{
+    color: #69717D !important;
+    font-size: 12px !important;
+    font-family: Open sans !important;
+}
+
+.minusCircle{
+    font-size: 12px !important;
+}
+
+.testSuiteEditIcon{
+    margin-left: 13px !important;
+}
+
+.testSuitButtonDiv{
+    margin-top: 8px;
+    margin-right: 12px;
+    float: right;
+}
+
+
+.editSuiteIconMrgin{
+    color: #69717D;
+    margin-left: 10px !important;
+}
+
+.createTextbox{
+    margin-left: 10px !important;
+    padding-bottom: 10px !important;
+    width: 20%;
+}
+
+.creatSuitBodyScroll{
+    display:block;
+    height: 295px;
+    overflow:auto;
+    width: auto !important;
+    overflow-x: auto;
+}
+
+.createSuiteButtons{
+    float: right;
+    margin-right: 13px;
+}
+
+.cloneSuiteButtons{
+    float: right;
+    margin-right: 13px;
+    margin-top: -28px;
+}
+
+.createSuitePaper{
+    padding-top: 10px;
+    padding-bottom: 30px;
+    width: 112%;
+}
+
+.cloneBackButton{
+    margin-right: 8px !important;
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.editButtonDisabled:disabled{
+    opacity: .7;
+}
+
+.uploadDatapfrofilingtable{
+    vertical-align: middle;
+    background-color: #BD4951 !important;
+}
+
+
+.uploadDatapfrofilingtable tr th{
+    border-bottom: none !important;
+    line-height: 10px !important;
+    overflow: hidden;
+    text-align: left;
+    font-size: 13px;
+    color: #fff !important;
+    font-family: Open sans !important;
+}
+
+.uploadDataCheckBox{
+    padding: 0px 5px 0px 10px !important;
+}
+
+.uploadTestSuitName{
+    width: 20%;
+    margin-left: 20px !important;
+    margin-top: 4px !important;
+}
+
+.uploadTestSuitLabel{
+    color: red;
+    margin-left: 227px;
+    margin-top: -17px !important;
+
+}
+
+.uploadTestSuitNameMargin{
+    margin-left: 416px;
+    margin-top: -46px;
+}
+
+.uploadButtonDiv{
+    float: right;
+    margin-top: 9px;
+    margin-right: 5px;
+}
+
+.uploadSuiteTabPaper{
+    padding-bottom: 0px !important;
+    width: 73%;
+}
+
+.uploadBackButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-right: 10px !important;
+}
+
+.uploadBrowsButton{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+#controlled-tab-example{
+    border: none !important;
+}
+
+.uploadSuiteStepper{
+    margin-left: -10%;
+    margin-top: -20px;
+    width: 120%;
+    padding: 0 !important;
+    background: none !important;
+}
+
+.uploadNextButton{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-top: -28px !important;
+    background-color: #BD4951 !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px;
+    text-align: center !important;
+    width: 121px;
+    height: 31px;
+    border: none !important;
+    margin-left: 10px !important;
+    /* margin-top: 0px !important; */
+}
+
+.uploadNextButtons{
+    text-transform: none !important;
+    padding: 5px !important;
+    margin-top: -15px !important;
+    background-color: #BD4951 !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px;
+    text-align: center !important;
+    width: 121px;
+    height: 31px;
+    border: none !important;
+}
+
+.uploadNextButtons:disabled{
+    background-color: #E29898 !important;
+}
+
+.uploadBackButton{
+    text-transform: none !important;
+    padding: 5px !important;
+}
+
+.uploadBackButton:disabled{
+    opacity: 0.7;
+}
+
+.uploadSuiteProfileButtons{
+    float: right;
+    margin-top: -35px;
+    margin-right: 37px;
+}
+
+.uploadLabelColor{
+    color: #69717D !important;
+}
+
+.uploadFinishButton{
+    margin-top: -2px !important;
+    background-color: #69717D !important;
+    color: #fff !important;
+    font-size: 13px !important;
+    border-radius: 3px !important;
+    text-align: center !important;
+    width: 121px !important;
+    height: 31px !important;
+    text-transform: none !important;
+    position: absolute !important;
+    margin-left: -385px !important;
+}
+
+.stepColor:active{
+    background-color: #BD4951 !important;
+}
+
+.MuiStepIcon-root.MuiStepIcon-active{
+    color: #BD4951 !important;
+}
+
+.MuiStepIcon-root.MuiStepIcon-completed {
+    color: #BD4951 !important;
+}
+
+.MuiStepIcon-root{
+    color: #E29898 !important;
+}
+
+.uploadProfileSuiteNameLabel{
+    color: red;
+    margin-top: 18px;
+    font-family: Open Sans;
+    font-size: 12px
+}
+
+.manageConnectionSelect{
+    margin-right: -56px !important;
+
+}
+
+.dataProfilingSelect{
+    width: 100%;
+}
+
+.viewTestCaseButtonDiv{
+    float: right;
+    margin-bottom: 15px;
+}
+
+.adDbDetailsPaper{
+    padding-left: 36px;
+    padding-bottom: 90px;
+    margin-top: 38px;
+    padding-top: 20px;
+    min-width: 465px !important;
+    margin-left: 73%;
+    padding-right: 30px;
+}
+
+.addDbDetailsButtonDIv{
+    padding-top: 30px;
+    margin-right: 18px;
+    float: right;
+}
+
+.adDbDetilsText{
+    width: 399px;
+    padding-right: 18px !important;
+}
+
+.chnagePasswordText{
+    width: 399px;
+}
+
+.addDBTitles{
+    position: absolute;
+    margin-top: -4px;
+    width: 46%;
+}
+
+.testSuiteUploadPapers{
+    min-height: 163px;
+    margin-top: 3px;
+}
+
+
+.checkBoxSize{
+    font-size: 12px !important;
+    color: #BD4951;
+}
+
+.checkBoxSize:active{
+    font-size: 12px !important;
+}
+
+.changePasswordDiv{
+    float: right;
+    padding-top: 20px;
+    margin-right: 79px !important;
+}
+
+.chngpasswbtn:disabled{
+    opacity: 0.7;
+}
+
+
+#saidBarclass{
+    display: none !important;
+}
+
+#saidBarclassFlex{
+    display: flex;
+}
