@@ -80,7 +80,7 @@
     "dependencies": {
         "@material-ui/core": "4.2.0",
         "@material-ui/icons": "^4.2.0",
-        "apexcharts": "^3.8.3",
+        "apexcharts": "^3.24.0",
         "bootstrap": "^3.3.7",
         "cross-env": "^5.2.0",
         "prop-types": "^15.7.2",
