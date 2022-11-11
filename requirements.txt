@@ -30,7 +30,7 @@ py4j==0.10.7
 pycryptodome==3.8.2
 PyMySQL==0.9.3
 pyodbc==4.0.26
-pyspark==2.4.3
+pyspark==3.2.2
 python-dateutil==2.8.0
 python-editor==1.0.4
 pytz==2019.1
